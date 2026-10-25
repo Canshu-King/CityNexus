@@ -101,16 +101,18 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
           { headers: { Accept: "application/json", ...travelerAuthHeaders() }, cache: "no-store" },
         ).catch(() => null);
         if (progressResponse?.ok) {
-          const progress = await progressResponse.json() as {
-            proposals?: Array<{ status?: string }>;
-            guardian_runs?: Array<{ proposal_id?: string | null }>;
-          };
-          setAcceptanceHasProposal(Boolean(
-            (progress.proposals ?? []).some((item) => item.status === "PRESENTED")
-            || (progress.guardian_runs ?? []).some((item) => Boolean(item.proposal_id)),
-          ));
-        } else {
-          setAcceptanceHasProposal(false);
+          try {
+            const progress = await progressResponse.json() as {
+              proposals?: Array<{ status?: string }>;
+              guardian_runs?: Array<{ proposal_id?: string | null }>;
+            };
+            setAcceptanceHasProposal(Boolean(
+              (progress.proposals ?? []).some((item) => item.status === "PRESENTED")
+              || (progress.guardian_runs ?? []).some((item) => Boolean(item.proposal_id)),
+            ));
+          } catch {
+            // Keep the last reading; one bad payload must not hide the resume key.
+          }
         }
       }
       const planId = typeof nextCurrent.run?.state?.plan_version_id === "string"
@@ -140,18 +142,16 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
 
   useEffect(() => {
     if (!visible) return;
-    let cancelled = false;
     const tick = () => {
-      void refresh().catch(() => {
-        if (!cancelled) setHidden(true);
-      });
+      // A transient network error must not hide the console; refresh() itself
+      // hides only when both endpoints answer 404/405 (not deployed).
+      void refresh().catch(() => {});
     };
     tick();
     // The clock strip on the same screen advances the same run; without polling this
     // panel would keep showing the hour it saw on mount while the strip moves on.
     const timer = window.setInterval(tick, 10_000);
     return () => {
-      cancelled = true;
       window.clearInterval(timer);
     };
   }, [visible, refresh]);

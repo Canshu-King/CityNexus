@@ -231,3 +231,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 带票直达 → 守护提案「移除故宫博物院；路上少 66 分钟」（卡片在视口内，y=384 h=162）→ 接受 → 第一站变天坛公园 → 刷新后时钟 10:00 → 蓝点天坛（39.8805, 116.4046，WGS84 模拟位置）；25.1 秒、无 console 错误（`classroom-rehearsal-14.txt`）。
 - 彩排会消费提案并改计划；跑完已用启动器恢复开场（`CLOCK=09:00`、`SIM_CONSOLE=NOT_STARTED`、新票、`DEMO_READY=true`）。
 - 这也印证速查卡第 8 条：守护支线只需「看提案 + 接受」，不需要按「交给守护助手」。
+
+### 02:19 控制台不再因一次网络抖动消失
+
+- 之前任何一次 `refresh` 抛错（例如代理返回非 JSON）都会把 `hidden` 置真，控制台永久消失；progress 载荷坏掉时还会把 `acceptanceHasProposal` 置假、藏掉「继续模拟」。
+- 现在：tick 的 catch 不再隐藏面板（只有两个端点都 404/405 才隐藏）；progress 坏载荷保留上一次读数。正常路径用 r58 复跑确认无回归（+30 → 09:30/10:00、到下一站 12:18 第 6 步、刷新同步、`ERRORS []`）。
