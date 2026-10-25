@@ -101,8 +101,37 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
         lastStatus = response.status;
         if (step === "complete") completed = response.ok;
       }
+      let aligned = "";
+      if (completed) {
+        const twinAfterResponse = await fetch(`/api/v1/journeys/${journeyId}/twin`, { headers: { Accept: "application/json" } });
+        const twinAfter = twinAfterResponse.ok
+          ? (await twinAfterResponse.json() as { current_activity_id?: string | null; active_plan_version_id?: string | null })
+          : null;
+        if (twinAfter?.active_plan_version_id && twinAfter.current_activity_id) {
+          const planResponse = await fetch(`/api/v1/plans/${twinAfter.active_plan_version_id}`, { headers: { Accept: "application/json" } });
+          if (planResponse.ok) {
+            const plan = await planResponse.json() as { activities?: Array<{ id?: string; start_at?: string }> };
+            const stop = (plan.activities ?? []).find((activity) => activity.id === twinAfter.current_activity_id);
+            const stopMs = stop?.start_at ? Date.parse(stop.start_at) : Number.NaN;
+            const clockMs = Date.parse(clock.virtual_now);
+            // A next stop can fall on the following day; the clock must follow it or the
+            // strip would show a 12/04 station under a 12/03 time.
+            if (Number.isFinite(stopMs) && Number.isFinite(clockMs) && stopMs > clockMs) {
+              const advanced = await fetch(`/api/v1/demo/simulation-clock/${journeyId}/advance`, {
+                method: "POST",
+                headers: { Accept: "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({ minutes: Math.ceil((stopMs - clockMs) / 60000), expected_version: clock.version }),
+              });
+              if (advanced.ok) {
+                setClock(await advanced.json() as ClockPayload);
+                aligned = "；时钟已对齐到这一站";
+              }
+            }
+          }
+        }
+      }
       await read();
-      setStopNote(completed ? "已按模拟执行走到下一站" : `推进未完成（最后一次 http_status=${lastStatus}）`);
+      setStopNote(completed ? `已按模拟执行走到下一站${aligned}` : `推进未完成（最后一次 http_status=${lastStatus}）`);
     } catch {
       setStopNote("推进请求没有完成");
     } finally {
