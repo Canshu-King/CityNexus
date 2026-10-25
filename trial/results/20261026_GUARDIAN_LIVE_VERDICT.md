@@ -73,6 +73,7 @@
 - Guardian 提案绑定当前事件：第三次现场 `47aa3925` 的 `trigger_event_id` 与 run pending 一致。
 - AI 关闭快速 503 已在**隔离副本**现场验证（见下节）。
 - 守护屏接受路径现场闭环（r100）：屏上是当前事件的 Agent 提案，点「接受这份调整」后 4 秒内事件 `RESOLVED`、提案 `ACCEPTED`，回控制台点「继续模拟」→ `RUNNING` sequence 3（`guardian-panel-accept-100.txt`）。
+- 双屏同一 run（r102）：平板开演并 +30，投影在 2.5 秒内读到 `09:30 · 第 1 步`，两屏无错误（`two-screen-sync-102.txt`）。
 - 无票只开根地址时的入口文案：在「我的旅程」点「课堂演示：进入示例行程」，红条写清「课堂入口需要启动器签发的一次性配对链接…」，按钮仍在、无错误（`entry-no-ticket-99.txt`）。
 
 **仍未闭环（Issue #47 保持开放）**

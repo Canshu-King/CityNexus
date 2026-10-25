@@ -316,6 +316,19 @@ def main() -> int:
                      reentry_screen.get("banner"), reentry_screen.get("clock"),
                      reentry_screen.get("presenter"), reentry_screen.get("entry"))))
     entry99 = lines_of("entry-no-ticket-99.txt")
+    sync102 = lines_of("two-screen-sync-102.txt")
+    projector_initial = line_json(sync102, "PROJECTOR_INITIAL")
+    projector_synced = line_json(sync102, "PROJECTOR_SYNCED")
+    phone_plus = line_json(sync102, "PHONE_AFTER_PLUS")
+    rows.append(("双屏同一 run 同步（390 + 1280）",
+                 "绿" if "09:30" in (projector_synced.get("virtual") or "")
+                 and projector_synced.get("virtual") == phone_plus.get("virtual")
+                 and "PHONE_ERRORS []" in sync102
+                 and "PROJECTOR_ERRORS []" in sync102 else "红",
+                 "two-screen-sync-102.txt, classroom-two-screen-102.png",
+                 "投影初始=%s；平板+30=%s；投影同步=%s" % (
+                     projector_initial.get("virtual"), phone_plus.get("virtual"),
+                     projector_synced.get("virtual"))))
     rows.append(("无票根地址的课堂入口文案",
                  "绿" if "一次性配对链接" in find(entry99, "BANNER_AFTER")
                  and "SESSION_BUTTON 1" in entry99
