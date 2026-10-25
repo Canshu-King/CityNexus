@@ -1,0 +1,5 @@
+RUNTIME {"status":200,"ai_state":"CONFIGURED_UNVERIFIED","runtime_identity":"HERMES_COMPAT_ENDPOINT"}
+HEADER_TITLE "AI 已配置 · 未验证"
+AI_SERVICE_LINE ""
+AFTER_TRIPS_TITLE "AI 已配置 · 未验证"
+ERRORS []

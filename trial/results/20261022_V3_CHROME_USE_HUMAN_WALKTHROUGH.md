@@ -3082,3 +3082,11 @@ Codex 新分支（`6136d0a1`）把守护明确绑到本 run 注入的事件，�
 真课堂栈上把 OpenStreetMap 瓦片全部拦掉（`tile.openstreetmap.org` 的请求一律 abort），再点「加载地图」：屏上出现「底图暂时没有加载成功，下面的地点列表仍可查看。」，蓝点与它的模拟位置说明仍在，地图画布仍在，页面零错误（`trial/results/20261022_v3_human_chrome/classroom-map-failure-43.txt:2`、`:4`、`:5`、`:7`；被拦请求数见 `:3`）。屏证 `classroom-map-failure-43.png`。
 
 所以这条兜底不是纸面：校园网到 OSM 真断的时候，老师看到的是一句人话加可读的列表，不是一块白屏加问号。边界：今天有网的时候瓦片是正常的，这条只量了「全拦」；「部分瓦片慢」没单独量。
+
+## 一百二十三、「AI 建议可试」其实是「已配置未验证」：把话说准
+
+课堂栈的运行时状态是 `CONFIGURED_UNVERIFIED`（`trial/results/20261022_v3_human_chrome/classroom-ai-state-44.txt:1`，`agent/runtime-status` 现读），但右上角标题一直落到「AI 建议可试」——比实际更强。课堂里老师讲「服务器检测过、规则引擎生成了这张卡」，屏上却说 AI 可以试，两句互相拆台。
+
+改法：把这个状态单独命名成「AI 已配置 · 未验证」（`frontend/src/trial/RevolutionFirstLook.tsx:686`）。修复后首屏与行程页两处标题一致（`classroom-ai-state-44.txt:2`、`:4`），页面零错误（`:5`）。屏证 `classroom-ai-state-44-home.png`、`-trips.png`。
+
+边界：其它状态（未配置、被运营关闭、供应商拒绝）的文案没动；这次只把「已配置未验证」从「可试」里分出来。

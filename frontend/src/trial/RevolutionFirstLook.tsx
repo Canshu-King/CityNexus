@@ -683,7 +683,9 @@ export function RevolutionFirstLook() {
               ? "AI 尚未连接"
               : runtimeAiState === "PROVIDER_REFUSED"
                 ? "AI 暂时没响应"
-                : "AI 建议可试";
+                : runtimeAiState === "CONFIGURED_UNVERIFIED"
+                  ? "AI 已配置 · 未验证"
+                  : "AI 建议可试";
   const agentStatusDetail = agentStatusChecking
     ? "正在准备 AI。"
     : agentCheckError
