@@ -117,6 +117,65 @@ def _candidate_id(activity: Activity) -> str:
     return str(metadata.get("source_candidate_id") or "")
 
 
+def _task_place_aliases(session: Session, task: dict) -> dict[str, set[str | None]]:
+    """Map this task's exact lead/canonical keys to existing canonical Place rows.
+
+    A provider lead and its canonical row are two identifiers for one place.  Only the task's
+    server-owned lead list establishes that relationship; a dangling lead, a name, or coordinates do
+    not.  Sets deliberately preserve collisions so callers can reject ambiguous aliases.
+    """
+    aliases: dict[str, set[str]] = {}
+    for lead in task.get("research_places") or []:
+        if not isinstance(lead, dict):
+            continue
+        lead_id = str(lead.get("id") or "")
+        canonical_id = str(lead.get("canonical_place_id") or "")
+        # A canonical id is usable only when the database confirms the actual Place row.  A lead that
+        # already uses a canonical id without the separate field is also supported when that exact id
+        # names a Place row.
+        place = session.get(Place, canonical_id) if canonical_id else None
+        if place is None and not canonical_id and lead_id:
+            place = session.get(Place, lead_id)
+        if place is None:
+            # Keep dangling aliases as unresolved entries so they cannot silently collapse onto a
+            # different valid lead that happens to reuse the same identifier.
+            for alias in (lead_id, canonical_id):
+                if alias:
+                    aliases.setdefault(alias, set()).add(None)
+            continue
+        place_id = str(place.id)
+        for alias in (lead_id, canonical_id, place_id):
+            if alias:
+                aliases.setdefault(alias, set()).add(place_id)
+    return aliases
+
+
+def _resolve_task_place_id(alias: str, aliases: dict[str, set[str | None]]) -> str | None:
+    """Resolve only a unique alias established by this task and a real Place row."""
+    matches = aliases.get(str(alias or ""), set())
+    if len(matches) != 1:
+        return None
+    place_id = next(iter(matches))
+    return place_id if isinstance(place_id, str) else None
+
+
+def _activity_cache_place_id(activity: Activity, place: Place,
+                             aliases: dict[str, set[str | None]]) -> str | None:
+    """Use the Activity FK as identity, checking any recognized source alias against it."""
+    place_id = str(place.id)
+    if _resolve_task_place_id(place_id, aliases) != place_id:
+        return None
+    source_id = _candidate_id(activity)
+    source_matches = aliases.get(source_id) if source_id else None
+    # Unknown metadata is not an alias and never overrides the FK.  A known ambiguous or conflicting
+    # alias is evidence that this Activity must not borrow a cached route.
+    if source_matches is not None and (
+        len(source_matches) != 1 or next(iter(source_matches)) != place_id
+    ):
+        return None
+    return place_id
+
+
 def _same_day(previous: Activity, current: Activity) -> bool:
     return str(previous.start_at)[:10] == str(current.start_at)[:10]
 
@@ -141,22 +200,31 @@ def used_edges(session: Session, plan: PlanVersion) -> list[tuple[Activity, Acti
             if previous.place_id != current.place_id]
 
 
-def _stored_route(task: dict, origin_key: str, destination_key: str) -> dict | None:
+def _stored_route(task: dict, origin_key: str, destination_key: str,
+                  aliases: dict[str, set[str | None]]) -> tuple[dict | None, bool]:
+    """Find a route by normalized task-scoped identities; return whether lookup is reversed."""
     for row in task.get("research_routes") or []:
         if not isinstance(row, dict):
             continue
-        pair = {str(row.get("from_place_id") or ""), str(row.get("to_place_id") or "")}
-        if pair == {origin_key, destination_key} and row.get("duration_seconds") is not None:
-            return row
-    return None
+        route_from = _resolve_task_place_id(str(row.get("from_place_id") or ""), aliases)
+        route_to = _resolve_task_place_id(str(row.get("to_place_id") or ""), aliases)
+        if row.get("duration_seconds") is None or route_from is None or route_to is None:
+            continue
+        if route_from == origin_key and route_to == destination_key:
+            return row, False
+        if route_from == destination_key and route_to == origin_key:
+            return row, True
+    return None, False
 
 
 def _orient_reused_route(route: dict, origin_key: str, destination_key: str,
-                         origin: Place, destination: Place) -> dict:
+                         origin: Place, destination: Place, *, reverse: bool | None = None) -> dict:
     """Reverse stored geometry for a reverse reuse while retaining the original provider receipt."""
     measured_from = str(route.get("from_place_id") or "")
     measured_to = str(route.get("to_place_id") or "")
-    if measured_from != destination_key or measured_to != origin_key:
+    if reverse is None:
+        reverse = measured_from == destination_key and measured_to == origin_key
+    if not reverse:
         return route
 
     oriented = dict(route)
@@ -589,21 +657,25 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
     """Verify every walked edge, then freeze the whole set or nothing."""
     edges: list[dict] = []
     facts: list[tuple[str, str, dict]] = []
+    aliases = _task_place_aliases(session, task)
     cap_m = _walking_cap_m(session, journey, task)
     for origin_row, destination_row in used_edges(session, plan):
         origin = session.get(Place, str(origin_row.place_id))
         destination = session.get(Place, str(destination_row.place_id))
         if origin is None or destination is None:
             continue
-        origin_key = _candidate_id(origin_row) or _candidate_id_for(task, origin)
-        destination_key = _candidate_id(destination_row) or _candidate_id_for(task, destination)
-        route = _stored_route(task, origin_key, destination_key)
+        origin_key = _activity_cache_place_id(origin_row, origin, aliases)
+        destination_key = _activity_cache_place_id(destination_row, destination, aliases)
+        route, reverse_lookup = (None, False)
+        if origin_key is not None and destination_key is not None:
+            route, reverse_lookup = _stored_route(task, origin_key, destination_key, aliases)
         status = REUSED
         if route is None:
             route = _measure_now(session, task, origin, destination, arrival=destination_row.start_at)
             status = MEASURED if route is not None else UNAVAILABLE
         if route is not None:
-            route = _orient_reused_route(route, origin_key, destination_key, origin, destination)
+            route = _orient_reused_route(route, origin.id, destination.id, origin, destination,
+                                         reverse=reverse_lookup)
             route = {**route, **_route_geometry_fields(route, provider_call_id=route.get("id"))}
         if _over_cap_walk(route, cap_m):
             # Whether the number came from the Agent's own research row or from a call this press made,
