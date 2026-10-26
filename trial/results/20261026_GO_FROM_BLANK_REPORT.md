@@ -248,3 +248,19 @@ DB 回执：`r12-receipt.txt`（journey `e8f81207…`、mission `e99b4180…`、
 **课堂控制台 run 级差异（r29 读数）**：注入一次性票后进屏成功，第一站「天坛公园 · 12月4日 09:00」（§18 的日期修复仍在）；点「开演（模拟两日）」→ `模拟进行中 · 12-03 09:00`；点一次「到下一站」→ `模拟行程已完成 · 12-04 10:00`，界面写「两日模拟走完，这趟行程已封存」。**这一轮没有 CLOSURE 事件**，所以 `PAUSED_FOR_ACCEPTANCE` 与 `rev-presenter-diff` 都没出现（与 r18 的 `DIFF false` 同因）。要拿 run 级差异块，得让模拟序列里带一个事件；这需要重新起一次课堂演示（会重置 demo 库），排在 430 收口之后。
 
 **票的可用做法**（本机 canary，不打印票值）：`demo_pairing.py` 的 issue 需要启动器随机生成的 presenter key，重启后就换了；但票表只校验 `sha256(ticket)`。复制库一份备份后，往 `demo_pairing_tickets` 插一行（`expires_at=now+3600`）即可用 `#pair=` 进屏；票是一次性的，用完再插。落盘只写 `journey_id` 与文件名。
+
+## 23. 接受旁的差异块（真屏 + 真点击，2026-10-26 14:48 本地）
+
+**课堂栈重起（prepare_classroom_scene_r1.py）**：`DEMO_READY=true`、`PAIRING=OK`、`CITY_IDENTITY=BOUND:110000`、`SAVED_PLAN=true`；journey `2e9cd67d…` 仍为 `ACTIVE`，新方案 `e74a5edb-3f6d-40c3-910c-52e449619d40`；注入事件 `880cec4e…`（`CLOSURE`）；直接 replan 提案 `d28062b2…`（`PRESENTED`，`replan_http_status=201`）。票值只在 `.demo_pairing_ticket` 与启动器输出里，本报告不抄。
+
+**屏上差异句**（`[data-testid="rev-guardian-proposal-diff"]`，390×844，`guardian-diff-390-panel.png`）：
+
+> 找到一份可行的调整
+> **移除故宫博物院；费用：不变；路上少 66 分钟。**
+> 规则引擎生成 · 不是大模型现场推理
+
+这三段分别来自 `pendingProposalSentence`（`GuardianRealityPanel.tsx`）：`removed` 的地点标题 → `added` → 每个 `moved` 的「时间：X 从 A 挪到 B（晚/早 N 分钟）」→ `cost_delta_minor`（0 写「不变」，非 0 写「多/省 ¥N」，非数值写「未知」）。本提案没有 `moved` 项，所以屏上没有「时间：」行——这是数据形状，不是渲染缺口。
+
+**真点「接受这份调整」**：`ACCEPT_HIT true`（`elementFromPoint` 命中按钮自身）→ `POST /replans/…/accept` **HTTP 200** → 9 秒后回读第一站 **「天坛公园 · 12月4日 09:00」**，路线「约 54 分钟」（`guardian-diff-390-after.png`）。
+
+**run 级 `rev-presenter-diff` 仍缺**：课堂控制台只在 `PAUSED_FOR_ACCEPTANCE` 渲染它。r29 实测：开演 → `模拟进行中 · 12-03 09:00` → 点一次「到下一站」→ `模拟行程已完成 · 12-04 10:00`，界面写「两日模拟走完，这趟行程已封存」；这一轮的模拟序列里没有 CLOSURE，所以没有暂停点。要拿 run 级差异，得让演示序列带事件（重启课堂演示后再开演），排在 430 收口之后。
