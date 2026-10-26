@@ -183,6 +183,8 @@ def _emit_event(
     reason_code: str | None = None,
     consent: dict[str, bool] | None = None,
     budget: dict[str, int] | None = None,
+    reuse_source_task_id: str | None = None,
+    reused_place_ids: list[str] | None = None,
 ) -> dict[str, Any]:
     task = intent[_TASK_KEY]
     sequence = int(task.get("event_sequence") or 0) + 1
@@ -199,6 +201,9 @@ def _emit_event(
         "consent": consent,
         "budget": budget,
     }
+    if reuse_source_task_id is not None:
+        event["reuse_source_task_id"] = reuse_source_task_id
+        event["reused_place_ids"] = list(reused_place_ids or [])
     record_audit(
         session,
         action=_EVENT_ACTION,
@@ -441,17 +446,63 @@ def refuse_draft_edit(reason: str) -> HTTPException:
     return refused
 
 
-def update_goal_draft(session, journey, member, mission_id, *, days, expected_revision):
+def update_goal_draft(
+    session,
+    journey,
+    member,
+    mission_id,
+    *,
+    days,
+    expected_revision,
+    reuse_source_task_id=None,
+):
     journey, member, mission, intent, task = _require_task(session, journey, member, mission_id, require_draft=True)
     if task.get("status") == "WORKING":
         raise refuse_draft_edit(DRAFT_RESEARCH_RUNNING)
     current = task.get("draft_artifact") or empty_draft(journey)
     if current["revision"] != expected_revision:
         raise refuse_draft_edit(DRAFT_CHANGED_RELOAD)
-    task["draft_artifact"] = reconcile_user_draft(journey, task, days)
+
+    draft_task = task
+    reused_place_ids: list[str] = []
+    if reuse_source_task_id is not None:
+        from app.agent.goal_place_reuse import validate_source_task_place_reuse
+
+        reused_place_ids = validate_source_task_place_reuse(
+            session,
+            journey,
+            member,
+            mission.id,
+            reuse_source_task_id,
+            days,
+        )
+        candidate_place_ids = list(task.get("candidate_place_ids") or [])
+        for place_id in reused_place_ids:
+            if place_id not in candidate_place_ids:
+                candidate_place_ids.append(place_id)
+        if len(candidate_place_ids) > 80:
+            raise HTTPException(422, "GOAL_TASK_PLACE_LIMIT_EXCEEDED")
+        # Keep the not-yet-committed scope expansion off the persisted task until
+        # the ordinary full-draft normalizer has accepted every supplied day/slot.
+        draft_task = {**task, "candidate_place_ids": candidate_place_ids}
+
+    updated_draft = reconcile_user_draft(journey, draft_task, days)
+    if reused_place_ids:
+        task["candidate_place_ids"] = list(draft_task["candidate_place_ids"])
+    task["draft_artifact"] = updated_draft
     task["updated_at"] = _now()
     mission.intent_json = _json_dump(intent)
-    _emit_event(session, journey, member, mission, intent, event_type="TASK_DRAFT_UPDATED", status=task["status"])
+    _emit_event(
+        session,
+        journey,
+        member,
+        mission,
+        intent,
+        event_type="TASK_DRAFT_UPDATED",
+        status=task["status"],
+        reuse_source_task_id=(str(reuse_source_task_id) if reused_place_ids else None),
+        reused_place_ids=reused_place_ids if reused_place_ids else None,
+    )
     session.commit()
     return read_goal_task(session, journey, member, mission.id)
 

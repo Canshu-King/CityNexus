@@ -245,6 +245,7 @@ class GoalDraftUpdateRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     days: list[dict[str, Any]] = Field(min_length=1, max_length=14)
     expected_revision: int = Field(ge=0)
+    reuse_source_task_id: UUID | None = None
 
 
 class MobileCompatAgentRunStartRequest(BaseModel):

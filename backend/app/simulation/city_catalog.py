@@ -9,7 +9,7 @@ from fastapi import HTTPException
 from sqlalchemy import ForeignKey, String, Text, select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.db.models import Base, ProviderCall
+from app.db.models import Base, Journey, ProviderCall
 
 
 class SimulationCityIdentity(Base):
@@ -146,23 +146,44 @@ def publish_city(session, journey, actor_id):
     binding = session.get(SimulationCityIdentity, journey.id)
     if binding is None:
         raise HTTPException(409, "CITY_PROVIDER_IDENTITY_REQUIRED")
-    report = cities_for(session, actor_id, 0, journey_ids={journey.id}, include_public=False)
+    owner_city_journey_ids = set(
+        session.scalars(
+            select(Journey.id).where(
+                Journey.traveler_id == journey.traveler_id,
+                Journey.city_code == journey.city_code,
+                Journey.deleted_at.is_(None),
+            )
+        )
+    )
+    owner_city_journey_ids.add(journey.id)
+    report = cities_for(
+        session,
+        actor_id,
+        0,
+        journey_ids=owner_city_journey_ids,
+        include_public=False,
+    )
     candidate = next(
         (
             row
             for row in report["cities"]
-            if row.get("provider_city_adcode") == binding.provider_adcode
+            if row.get("city_code") == journey.city_code
         ),
         None,
     )
-    if not candidate or candidate["missing"]:
+    if (
+        not candidate
+        or candidate["missing"]
+        or candidate.get("provider_city_adcode") != binding.provider_adcode
+    ):
+        missing = candidate["missing"] if candidate else ["ACQUIRED_PUBLIC_FACTS_REQUIRED"]
+        if candidate and candidate.get("provider_city_adcode") != binding.provider_adcode:
+            missing = [*missing, "CITY_IDENTITY_BINDING_CONFLICT"]
         raise HTTPException(
             409,
             {
                 "code": "CITY_SNAPSHOT_INCOMPLETE",
-                "missing": candidate["missing"]
-                if candidate
-                else ["ACQUIRED_PUBLIC_FACTS_REQUIRED"],
+                "missing": list(dict.fromkeys(missing)),
             },
         )
     # Only public facts are copied: no Journey/Plan/member/task identities.
@@ -193,6 +214,11 @@ def publish_city(session, journey, actor_id):
                 "minutes",
                 "provider",
                 "captured_at",
+                "fact_quality",
+                "route_geometry",
+                "geometry_crs",
+                "geometry_provider",
+                "route_provenance",
                 "snapshot_sha256",
                 "provenance",
             )
