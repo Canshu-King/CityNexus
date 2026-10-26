@@ -1266,7 +1266,21 @@ def resume_goal_task(
                 and (asks_for_schedule_change(normalized_message) or asks_for_plan_versions(normalized_message))
                 and any(day.get("slots") for day in ((task.get("draft_artifact") or {}).get("days") or []))):
             interaction_mode = "RESEARCH"
-        task["interaction_mode"] = interaction_mode
+        # The chat dock sends every typed follow-up as DISCUSS, including the one that supplies a missing
+        # place right after the traveller already ended the questions. Writing that value back turned a
+        # research round into a discussion round, whose only tools are ask_traveler and inspect_journey:
+        # measured on the 430 walk, the model's second discover_places call answered TOOL_NOT_ALLOWED and
+        # the trip stayed at a blank draft. A blank trip (no slots yet) has nothing to discuss, so typed
+        # text there stays a research round; once the draft has slots, a plain question may go back to
+        # discussion (tests/test_qoder_draft_revision_receipt_r1.py keeps that arm pinned).
+        draft_has_slots = any(day.get("slots") for day in ((task.get("draft_artifact") or {}).get("days") or []))
+        stick_to_research = (
+            interaction_mode == "DISCUSS"
+            and task.get("interaction_mode") == "RESEARCH"
+            and not draft_has_slots
+        )
+        if not stick_to_research:
+            task["interaction_mode"] = interaction_mode
     task["pending_question"] = None
     task["budget"] = budget
     task["usage"] = {

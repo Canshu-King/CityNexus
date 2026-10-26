@@ -157,6 +157,21 @@ function pendingProposalSentence(proposal: ReplanProposal, titles: Record<string
   if (proposal.diff.added.length > 0) {
     parts.push(added.length > 0 ? `加入${added.join("、")}` : `加入 ${proposal.diff.added.length} 站`);
   }
+  for (const item of proposal.diff.moved) {
+    const title = titles[item.semantic_key] ?? "一处安排";
+    const from = timeLabel(item.old_start_at);
+    const to = timeLabel(item.new_start_at);
+    const direction = item.delta_minutes >= 0 ? "晚" : "早";
+    parts.push(from && to
+      ? `时间：${title} 从 ${from} 挪到 ${to}（${direction} ${Math.abs(item.delta_minutes)} 分钟）`
+      : `时间：${title} ${direction} ${Math.abs(item.delta_minutes)} 分钟`);
+  }
+  const cost = proposal.diff.cost_delta_minor;
+  if (typeof cost === "number") {
+    parts.push(cost === 0 ? "费用：不变" : `费用：${cost > 0 ? "多" : "省"} ¥${(Math.abs(cost) / 100).toFixed(0)}`);
+  } else {
+    parts.push("费用：未知");
+  }
   const travel = proposal.diff.travel_delta_min;
   if (typeof travel === "number" && travel !== 0) {
     parts.push(travel < 0 ? `路上少 ${Math.abs(travel)} 分钟` : `路上多 ${travel} 分钟`);

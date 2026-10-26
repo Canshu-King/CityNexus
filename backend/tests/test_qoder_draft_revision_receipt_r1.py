@@ -676,3 +676,30 @@ def test_a_versions_request_is_not_left_in_discussion_mode(goal_scope, monkeypat
     session.expire_all()
     restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
     assert restored["interaction_mode"] == "RESEARCH"
+
+
+def test_a_blank_trip_keeps_researching_when_the_dock_sends_a_plain_followup(goal_scope, monkeypatch):
+    """A blank trip has nothing to discuss, so a typed follow-up must not collapse the tool set.
+
+    Measured on the 430 walk: after 「不选了，直接按现在的方向开始研究」 the next typed message carried
+    the chat dock's default DISCUSS, the stored mode went back to DISCUSS, and the model's
+    discover_places call answered TOOL_NOT_ALLOWED -- research_places stayed empty and the draft had no
+    slots, so the trip could never reach a candidate. Only a draft that already has slots may fall back
+    to discussion for a plain question (test_a_typed_question_about_the_trip_stays_a_discussion).
+    """
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=8, max_tool_calls=8,
+                      online_research_consent=True)
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: TextOnly())
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="按已经定下的方向开始研究，不用再问我", message_id=str(uuid4()),
+        interaction_mode="RESEARCH",
+    )
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="再补一个故宫附近的咖啡店", message_id=str(uuid4()), interaction_mode="DISCUSS",
+    )
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+    assert restored["interaction_mode"] == "RESEARCH"

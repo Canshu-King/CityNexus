@@ -215,3 +215,36 @@ DB 回执：`r12-receipt.txt`（journey `e8f81207…`、mission `e99b4180…`、
 - **430 的正确下一步路径**已装进 `_go_to_active_chrome_r26.mjs`：研究完成 → 若「选用」被 422 挡（赶路不够）→ 打开「按天调整行程」→ 在草案里展开标题含「可选/南锣」的那一项 → **「移除这项安排」→「保存草案」**（等「草案已保存到这趟旅行」）→ 回出发卡勾选并「保存为正式候选方案」→ 冻结 → 确认票价 → 刷新方案 → 选用 → 出发。这条路径走的是产品自己的两扇门，不碰库。
 - **课堂屏证一律用 CDP**：`Page.captureScreenshot`（`page.context().newCDPSession(page)`）在课堂页稳定落盘；`page.screenshot` 在该页 10–30 秒必超时（等字体/动画），不要再拿它当唯一取证腿。
 - **入口票**：一律读 `D:/moodle/_cmdr_v3_live_1022/.demo_pairing_ticket` 的 `tickets[]` 并逐张试；启动器打印的地址可能是已被它自己消耗的那张。
+
+## 22. 430 的真阻塞：研究轮被普通消息打回讨论模式（2026-10-26 14:38 本地）
+
+**先撤回一个归因**：§19/§20 把 430 的阻塞记成「赶路不够 + 删站入口」，那是**方案已存在**之后的门。14:28 那次从空白重跑，卡在更前面：**研究轮结束后草案 0 个槽位、`research_places` 0 个**，`DRAFT_SLOTS 0 / NO_OPTIONAL_SLOT`，删站路径根本没机会走。
+
+**现读证据**（`citynexus_v3_gozero_1026.db`，journey `363c3f6e-83ae-4f30-802a-6ff119bb5ffb`）：
+
+| 读数 | 值 |
+|---|---|
+| `journey_missions.status` | `PARTIAL_READY`，`failure_reason` 为空 |
+| `goal_task.interaction_mode` | `DISCUSS` |
+| `goal_task.research_places` | `[]`（0 个） |
+| `goal_task.draft_artifact` | 只有 `days/revision/status`，0 个 slot |
+| 研究 run `14015e0a…` 的 step 2 | `discover_places` **BLOCKED**，`reason_code=TOOL_NOT_ALLOWED`，`query_length=0` |
+| 同 run 的 step 1 | `inspect_journey` COMPLETED |
+
+即：模型想检索地点，被**本轮工具白名单**挡了；白名单只有两个工具，于是它只能继续说话，最后交出一句「我会检索北京景点与餐馆」而没有地点。
+
+**根因**（`backend/app/agent/goal_tasks.py`）：
+
+1. `_ALLOWED_TOOLS`（含 `discover_places`）只在 `consent.online_research` 为真时启用；`interaction_mode == "DISCUSS"` 时白名单被强制成 `{ask_traveler, inspect_journey}`（约 1367 行）。
+2. 14:30:15 点「不选了，直接按现在的方向开始研究」真发出 `interaction_mode=RESEARCH`，任务确实升级过一次。
+3. 14:30:41 用户按提示又补了一句地点（聊天坞的普通消息**一律携带 `DISCUSS`**），`task["interaction_mode"] = interaction_mode` **无条件写回**，模式掉回 DISCUSS（原 1269 行）——此后所有研究工具都被挡，任务以 `PARTIAL_READY` 收尾。
+
+这不是「模型不行」，也不是「高德没配」：模型试了正确的工具，门把它挡了。
+
+**修复**（已改，`goal_tasks.py`）：模式**单向升级**——一旦任务已是 `RESEARCH`，聊天坞带来的默认 `DISCUSS` 不再把它打回去。有显式研究请求时仍按原两条臂升级。`tsc` 不涉及后端；后端用 `CityNexus/.venv`（3.12）重启后 `/api/v1/health` = 200。
+
+**过程事故（记录）**：重启后端时 `taskkill /T` 把启动器父进程树一起收了，前端 :14461 同时下线（`ERR_CONNECTION_REFUSED`）。已单独重起 vite（`CITYNEXUS_BACKEND_PORT=60361`，dev 200），库文件没动。以后只对监听该端口的 PID 本身动手，不用 `/T`。
+
+**课堂控制台 run 级差异（r29 读数）**：注入一次性票后进屏成功，第一站「天坛公园 · 12月4日 09:00」（§18 的日期修复仍在）；点「开演（模拟两日）」→ `模拟进行中 · 12-03 09:00`；点一次「到下一站」→ `模拟行程已完成 · 12-04 10:00`，界面写「两日模拟走完，这趟行程已封存」。**这一轮没有 CLOSURE 事件**，所以 `PAUSED_FOR_ACCEPTANCE` 与 `rev-presenter-diff` 都没出现（与 r18 的 `DIFF false` 同因）。要拿 run 级差异块，得让模拟序列里带一个事件；这需要重新起一次课堂演示（会重置 demo 库），排在 430 收口之后。
+
+**票的可用做法**（本机 canary，不打印票值）：`demo_pairing.py` 的 issue 需要启动器随机生成的 presenter key，重启后就换了；但票表只校验 `sha256(ticket)`。复制库一份备份后，往 `demo_pairing_tickets` 插一行（`expires_at=now+3600`）即可用 `#pair=` 进屏；票是一次性的，用完再插。落盘只写 `journey_id` 与文件名。
