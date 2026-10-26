@@ -264,3 +264,20 @@ DB 回执：`r12-receipt.txt`（journey `e8f81207…`、mission `e99b4180…`、
 **真点「接受这份调整」**：`ACCEPT_HIT true`（`elementFromPoint` 命中按钮自身）→ `POST /replans/…/accept` **HTTP 200** → 9 秒后回读第一站 **「天坛公园 · 12月4日 09:00」**，路线「约 54 分钟」（`guardian-diff-390-after.png`）。
 
 **run 级 `rev-presenter-diff` 仍缺**：课堂控制台只在 `PAUSED_FOR_ACCEPTANCE` 渲染它。r29 实测：开演 → `模拟进行中 · 12-03 09:00` → 点一次「到下一站」→ `模拟行程已完成 · 12-04 10:00`，界面写「两日模拟走完，这趟行程已封存」；这一轮的模拟序列里没有 CLOSURE，所以没有暂停点。要拿 run 级差异，得让演示序列带事件（重启课堂演示后再开演），排在 430 收口之后。
+
+## 24. 430 的三次重跑：模型网关 503，不是产品门（2026-10-26 15:12 本地）
+
+**模式修复在真栈上生效了**：14:47 读 `journey 8bdeb603` 的 `goal_task.interaction_mode` = **RESEARCH**（此前同一位置是 DISCUSS）。但地点仍是 0：
+
+| journey | 时间 | 结局 | 上游读码 |
+|---|---|---|---|
+| `8bdeb603…` | 14:39–14:47 | `FAILED_RECOVERABLE` | run `2657bf91` **MODEL_TIMEOUT**（06:39:19→06:42:20）、run `dc214a13` **MODEL_HTTP_503**（06:42:23→06:44:45） |
+| `b5062aca…` | 14:59–15:02 | `FAILED_RECOVERABLE` | `MODEL_HTTP_503` |
+
+同一时刻直接打网关（`/v1/chat/completions`，8 token）**HTTP 200 / 15.9 秒**——网关活着，长上下文的研究轮被上游 503。屏上是产品自己的失败句（脚本点到了「按讨论的方向开始研究」的重试按钮，`recover-ask`），不是假死。**430 的 ACTIVE 仍缺**；390 的同号收据（§12–§13）不受影响。
+
+**「只改半天」的入口事实**：`MissionCockpit.tsx:387` 只在**未出发**时把这一块叫「按天调整行程」；`journey.status === "ACTIVE"` 时同一位置是「执行与待办」，没有草案编辑器。所以已在执行中的 390/课堂旅程都改不了半天，必须在 DRAFT/CANDIDATE 上做。
+
+**gozero 栈开票的办法（已验）**：`redeem` 要求 `CITYNEXUS_DEMO_DATABASE_PATH` 指向实际库（否则 503 `DEMO_DATABASE_NOT_ISOLATED`）。`_restart_gozero_backend_r1.py` 已加这一项；往 `demo_pairing_tickets` 插一行后 `POST /api/v1/demo/pairing/redeem` 回 **200**，票绑定 `a22411b7`（未出发、CANDIDATE、DB 里草案 7 个 slot）。
+
+**进去之后的新读数（未定性，待查）**：屏上「按天调整行程」写 **0 项安排 · 0 天**、「1 份正式候选方案」，而同一 journey 的 `goal_task.draft_artifact.days[].slots` 合计 **7**。前端读 `task.draft_artifact`（`MissionCockpit.tsx:392`），DB 读 `intent_json.goal_task.draft_artifact`——两处对不上。还差一次逐字段对拍（GET 返回体的 `draft_artifact` vs DB），确认是读取清洗还是取了另一个 mission；在没对拍前不改代码。
