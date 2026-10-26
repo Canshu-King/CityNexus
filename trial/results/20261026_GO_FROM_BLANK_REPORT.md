@@ -652,3 +652,11 @@ G 臂（`trial/human_walk/_map_walk_r49.mjs` → `map-planned-390-r49.txt`，jou
 前端"已排入日程"的判子只按 id 相等（`MissionCockpit.tsx` 里 `draftPlaceIds.has(point.candidate_id)`，`:297-304`），而计划点的 `candidate_id` 是 `real-place-…`，草案给的是 `amap:…` ⇒ 永远不匹配，于是可见集只剩 55 枚研究线索里那 6 枚同名站（`id` 就是 `amap:…`、CRS 按供应商推成 GCJ02），落到「高德地点」列表、既不上图也没有「已排入当前方案」。**这正是本项目早已记过的老坑（同一物理地点两套 id，只按 id 比会静默匹配不到），本晚它换了个位置复现。**
 
 **改法（已落尖 `f2f65020b9`）**：① `MissionCockpit.tsx` 的 `allMapPoints` 里，凡研究线索的 `id`/`provider_object_id` 等于某枚 `PLAN_ACTIVITY` 点的 `external_id`（库里现读 `places.external_id` 正是 `amap:B000A8UIN8` 这种形制，逐字可用），就不再列它——同一处站点不画两遍；② 行程判子改为跨命名空间桥接：先收草案槽的 id，再把"外部 id 已被排进草案"的那枚计划点自己的 id 也放进去；`WorkspaceMapPoint` 补 `external_id?: string`。`npx tsc -p tsconfig.check.json --noEmit` RC=0。屏证：H 臂（`_map_walk_r50.mjs`，profile `_chrome_gozero_r50`）在跑，判据沿用 §37 那两格（`MAP_PLANNED_TAGS` 与 `MAP_LIST_ITEMS` 应等于活动数、计数行应变成「地图地点 N 处」），不绿就照实继续挂 §31。
+
+## 46. 勘误一处（§45 里的行号坐标写错，现读改回）
+
+§45 写「前端"已排入日程"的判子只按 id 相等（`MissionCockpit.tsx` 里 `draftPlaceIds.has(point.candidate_id)`，`:297-304`）」——那三个行号是我凭上一段的排版估的，现读纠正：这条判子在 `frontend/src/trial/mobile/MissionCockpit.tsx:317`（`itineraryMapPoints` 那个 `useMemo` 的第一行条件）。
+
+受影响范围只有这一处坐标；§45 的其余读数（`departure/commit http_status=200`、`MAP_READS_EVERY candidates=6 / origin=PLAN_ACTIVITY / WGS84`、草案槽 `amap:B000A81CB2` 对活动 `real-place-dc53719dde41c9cb48b7b9b6` 交集为 0、屏上「地图地点 0 处 · 高德地点 6 处」）都是同一时代现读取到的，逐字不改。判据本身也不受影响：`:317` 与它下面的 `defaultMapIds`、`photoPriorityIds` 用的都是同一个 `draftPlaceIds`，所以 §45 ②那处桥接改的正是这三处共同的输入。
+
+同时记两条同代新读数，避免下一位再猜：H 臂（`map-planned-390-r50.txt`，journey `6d653155-12e2-4a3a-8e6a-46d7461708c1`）根本没走到出发门——`prepare-plan` 连回 `http_status=422`（round 2 内第 1 到 11 次保存全被拒），这一形态与 §38 那条"保存被拒"属另一族，本晚未展开；I 臂（`_map_walk_r51.mjs`，430×932，profile `_chrome_gozero_r51`）带着 §45 的桥接在跑，判据仍是 §37 那两格。
