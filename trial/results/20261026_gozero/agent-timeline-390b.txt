@@ -1,0 +1,16 @@
+HIT continue true t=5.6
+HIT tab-chat true t=8.7
+HIT settings true t=10.6
+HIT close-settings true t=12.2
+HIT send true t=13.4
+HIT skip true t=32.3
+SKIPPED
+DRAFT t=183.2
+IDLE t=204.3
+HIT tab-chat true t=204.6
+TIMELINE true t=206.7
+SUMMARY "Agent 工具时间线 · 11 步" STEPS 11 STATUSES ["完成","完成","完成","完成","完成","完成","完成","完成"]
+NEXT "下一步：草案已保存；确认时间后可以准备正式候选。"
+SHOT 390-agent-timeline
+BOX {"x":43,"y":400,"w":289,"h":1122}
+ERRORS []

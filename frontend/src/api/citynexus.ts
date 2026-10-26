@@ -2384,6 +2384,8 @@ export interface DraftGoalTask {
     tool_name: string;
     status: string;
     result: Record<string, unknown>;
+    created_at?: string;
+    completed_at?: string | null;
   }>;
   assistant_summary?: string | null;
   draft_artifact?: GoalDraftArtifact | null;

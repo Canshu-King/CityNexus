@@ -117,6 +117,31 @@ function readTaskPointer(actor: Context): string | null {
 function saveTaskPointer(actor: Context, taskId: string): void {
   try { localStorage.setItem(pointerKey(actor), taskId); } catch { /* server remains the task record */ }
 }
+const STEP_STATUS_TEXT: Record<string, string> = {
+  COMPLETED: "完成", FAILED: "失败", BLOCKED: "被拦下", RUNNING: "进行中", PENDING: "等待",
+};
+
+function toolStepClock(step: { created_at?: string; completed_at?: string | null; result: Record<string, unknown> }): string {
+  const stamp = (typeof step.completed_at === "string" && step.completed_at) || (typeof step.created_at === "string" ? step.created_at : "");
+  // The API sends UTC ISO strings; printing them raw showed 04:23 to a traveller whose clock says 12:23.
+  const at = new Date(stamp);
+  const clock = Number.isNaN(at.getTime())
+    ? ""
+    : `${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")}:${String(at.getSeconds()).padStart(2, "0")}`;
+  const elapsed = typeof step.result.elapsed_ms === "number" ? `${(step.result.elapsed_ms / 1000).toFixed(1)} 秒` : "";
+  return [clock, elapsed].filter(Boolean).join(" · ");
+}
+
+/** What the traveller can do right now, read from the task's own state — never a model sentence. */
+function nextActionSentence(task: { status: string; pending_question?: unknown; draft_artifact?: { days?: Array<{ slots?: unknown[] }> } | null }): string {
+  if (task.status === "WORKING") return "Agent 正在调用工具，等这一轮结束再操作。";
+  if (task.pending_question) return "等你从上面的选项里选一个，或直接按现在的方向开始研究。";
+  if ((task.draft_artifact?.days ?? []).some((day) => (day.slots ?? []).length > 0)) return "草案已保存；确认时间后可以准备正式候选。";
+  if (task.status === "FAILED_RECOVERABLE") return "这一轮没有完成；可以再按一次「按讨论的方向开始研究」重试这一轮。";
+  if (task.status === "CANCELLED") return "任务已取消。";
+  return "可以继续补充要求，或按现在的方向开始研究。";
+}
+
 function taskStepText(result: Record<string, unknown>): string {
   const route = result.route && typeof result.route === "object" ? result.route as Record<string, unknown> : null;
   if (route && typeof route.distance_m === "number" && Number.isFinite(route.distance_m) && route.distance_m >= 0
@@ -638,14 +663,17 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             </ol>
             {visibleEvents.length > 24 && <p>这里只显示最新 24 条；完整事件仍在同一任务的服务端记录中。</p>}
           </details>}
-          {(visibleTask.tool_steps ?? []).length > 0 && <details open={!embedded}><summary>工具结果 · {visibleTask.tool_steps?.length} 次</summary><ol className="rev-workspace-task-steps">
-            {(visibleTask.tool_steps ?? []).map((step) => <li key={`${step.run_id}-${step.sequence_no}`}>
+          {(visibleTask.tool_steps ?? []).length > 0 && <details className="rev-agent-tool-timeline" open={!embedded} data-testid="rev-agent-tool-timeline"><summary>Agent 工具时间线 · {visibleTask.tool_steps?.length} 步</summary><ol className="rev-workspace-task-steps">
+            {(visibleTask.tool_steps ?? []).map((step, index) => <li key={`${step.run_id}-${step.sequence_no}`} data-status={step.status}>
+              <span className="rev-agent-tool-index">{index + 1}</span>
               <strong>{TOOL_NAME[step.tool_name] ?? step.tool_name}</strong>
+              <span className={`rev-agent-tool-status is-${String(step.status || "").toLowerCase()}`} data-testid="rev-agent-tool-status">{STEP_STATUS_TEXT[step.status] ?? step.status}</span>
               {typeof step.result.public_action === "string" && <span>{step.result.public_action}</span>}
               <span>{step.tool_name === "inspect_journey" && step.status === "COMPLETED" ? "行程已读取" : taskStepText(step.result)}</span>
-              {typeof step.result.elapsed_ms === "number" && <small>{(step.result.elapsed_ms / 1000).toFixed(1)} 秒</small>}
+              <small>{toolStepClock(step)}</small>
             </li>)}
-          </ol></details>}
+          </ol>
+          <p className="rev-agent-next-action" data-testid="rev-agent-next-action">下一步：{nextActionSentence(visibleTask)}</p></details>}
           {visibleTask.research_routes?.length ? <ResearchRoutes items={visibleTask.research_routes} /> : null}
           {(visibleTask.candidate_places ?? []).length > 0 && <details className="rev-agent-research-drawer"><summary>已核对的正式地点（{visibleTask.candidate_places?.length}）</summary><ul className="rev-workspace-task-places">
             {visibleTask.candidate_places?.map((place) => <li key={place.id}>

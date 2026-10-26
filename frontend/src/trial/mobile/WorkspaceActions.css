@@ -185,3 +185,11 @@
 @media (min-width: 768px) {
   body:has([data-testid="rev-classroom-clock"]) .rev-mission-chat-dock { display: none; }
 }
+
+/* Tool timeline: status, order and clock per step, plus the one legal next action. */
+.rev-agent-tool-timeline > summary { cursor: pointer; color: #4b5b73; font-size: 12px; font-weight: 650; }
+.rev-agent-tool-index { min-width: 18px; color: #708097; font-variant-numeric: tabular-nums; }
+.rev-agent-tool-status { padding: 1px 7px; border-radius: 999px; font-size: 11px; background: #eef3ef; color: #2f5b44; }
+.rev-agent-tool-status.is-failed, .rev-agent-tool-status.is-blocked { background: #fbecec; color: #8a2c2c; }
+.rev-agent-tool-status.is-running { background: #eef2fb; color: #2c4a8a; }
+.rev-agent-next-action { margin: 6px 0 0; font-size: 12px; color: #4b5b73; }

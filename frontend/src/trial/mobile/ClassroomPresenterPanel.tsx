@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { travelerAuthHeaders } from "../../lib/travelerSession";
 import { cityNexusApi } from "../../api/citynexus";
 import { simulationApi, SimulationError, type SimulationCities, type SimulationRun } from "./simulationClient";
@@ -87,6 +87,15 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
   const [guardianRetryable, setGuardianRetryable] = useState(false);
   const [simulationProposal, setSimulationProposal] = useState<{ id: string } | null>(null);
   const [pendingResolved, setPendingResolved] = useState(false);
+  // What the presented proposal actually changes, read from the replan row the server already wrote
+  // (ReplanDiff).  The console used to show only "接受这次事件的调整" with no numbers, and the teacher
+  // had to accept a plan change they could not see.
+  const [proposalDiff, setProposalDiff] = useState<null | {
+    removed: string[]; added: string[];
+    moved: Array<{ title: string; from: string; to: string; delta: number }>;
+    cost: number | null; travel: number | null;
+  }>(null);
+  const diffedProposal = useRef<string | null>(null);
 
   const refresh = useCallback(async () => {
     const [nextCities, nextCurrent] = await Promise.all([
@@ -133,6 +142,47 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
               (item) => item.status === "PRESENTED" && typeof item.id === "string",
             );
             setSimulationProposal(presented?.id ? { id: presented.id } : null);
+            if (presented?.id && diffedProposal.current !== presented.id) {
+              diffedProposal.current = presented.id;
+              const replans = await fetch(
+                `/api/v1/journeys/${journeyId}/replans`,
+                { headers: { Accept: "application/json", ...travelerAuthHeaders() }, cache: "no-store" },
+              ).then((response) => (response.ok ? response.json() : null)).catch(() => null) as Array<{
+                id?: string; base_plan_version_id?: string;
+                diff?: {
+                  removed?: string[]; added?: string[];
+                  moved?: Array<{ semantic_key?: string; old_start_at?: string; new_start_at?: string; delta_minutes?: number }>;
+                  cost_delta_minor?: number | null; travel_delta_min?: number | null;
+                };
+              }> | null;
+              const row = (replans ?? []).find((item) => item.id === presented.id);
+              if (row?.diff) {
+                let titles: Record<string, string> = {};
+                if (row.base_plan_version_id) {
+                  const plan = await fetch(`/api/v1/plans/${row.base_plan_version_id}`, {
+                    headers: { Accept: "application/json", ...travelerAuthHeaders() }, cache: "no-store",
+                  }).then((response) => (response.ok ? response.json() : null)).catch(() => null) as
+                    { activities?: Array<{ place_id?: string; city_service_id?: string; title?: string }> } | null;
+                  titles = Object.fromEntries((plan?.activities ?? []).map((activity) => [
+                    String(activity.place_id ?? activity.city_service_id ?? activity.title ?? ""), activity.title ?? "",
+                  ]));
+                }
+                // A key with no readable title is counted, never printed: the screen must not show a
+                // place id to a teacher.
+                const name = (key: string) => titles[key] || "一处没有取名的地方";
+                setProposalDiff({
+                  removed: (row.diff.removed ?? []).map(name),
+                  added: (row.diff.added ?? []).map(name),
+                  moved: (row.diff.moved ?? []).slice(0, 3).map((item) => ({
+                    title: name(String(item.semantic_key ?? "")),
+                    from: shortTime(item.old_start_at), to: shortTime(item.new_start_at),
+                    delta: Number(item.delta_minutes ?? 0),
+                  })),
+                  cost: typeof row.diff.cost_delta_minor === "number" ? row.diff.cost_delta_minor : null,
+                  travel: typeof row.diff.travel_delta_min === "number" ? row.diff.travel_delta_min : null,
+                });
+              }
+            }
             const pendingId = progress.readiness?.pending_event_id ?? null;
             const pendingEvent = (progress.events ?? []).find((item) => item.id === pendingId);
             // Resume is refused until the pending event itself is resolved; a presented
@@ -245,6 +295,21 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
         </p>
       )}
 
+      {simulationProposal && proposalDiff && (
+        <div className="rev-presenter-diff" data-testid="rev-presenter-diff">
+          <strong>接受后计划会这样变</strong>
+          <ul>
+            {proposalDiff.removed.length > 0 && <li>移除：{proposalDiff.removed.join("、")}</li>}
+            {proposalDiff.added.length > 0 && <li>加入：{proposalDiff.added.join("、")}</li>}
+            {proposalDiff.moved.map((item) => <li key={`${item.title}-${item.from}`}>
+              时间：{item.title} {item.from}→{item.to}（{item.delta >= 0 ? "晚" : "早"} {Math.abs(item.delta)} 分钟）
+            </li>)}
+            <li>路上：{proposalDiff.travel == null ? "未知" : proposalDiff.travel === 0 ? "不变" : `${proposalDiff.travel < 0 ? "少" : "多"} ${Math.abs(proposalDiff.travel)} 分钟`}</li>
+            <li>费用：{proposalDiff.cost == null ? "未知" : proposalDiff.cost === 0 ? "不变" : `${proposalDiff.cost > 0 ? "多" : "省"} ¥${(Math.abs(proposalDiff.cost) / 100).toFixed(0)}`}</li>
+          </ul>
+        </div>
+      )}
+
       <div className="rev-presenter-actions">
         {(!run || run.status === "NOT_STARTED") && (
           <button type="button" disabled={busy} onClick={() => act(() => simulationApi.start(journeyId, 17))}>
@@ -279,6 +344,10 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
                 simulationProposal.id,
                 `classroom-accept-${simulationProposal.id.slice(0, 8)}`,
               );
+              // The accepted plan replaces the journey's current plan; the outer journey screen and the
+              // plan workbench hold their own copies, so tell them to re-read instead of leaving the
+              // map/activities on the pre-acceptance version.
+              window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: journeyId }));
               return null;
             }, "正在把这份调整写进计划；可能要几十秒，别重复按。")}
           >

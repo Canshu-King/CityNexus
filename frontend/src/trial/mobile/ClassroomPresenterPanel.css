@@ -6,7 +6,7 @@
   border: 1px dashed #c8b98e;
   border-radius: 14px;
   background: #fbf8ee;
-  color: #3f3520;
+  color: var(--rx-brown-ink);
   font-size: 13px;
 }
 
@@ -27,13 +27,13 @@
   padding: 2px 8px;
   border-radius: 999px;
   background: #f1e7c9;
-  color: #5a4a22;
+  color: var(--rx-amber-deep);
   font-size: 12px;
 }
 
 .rev-presenter-cities {
   margin: 0;
-  color: #5a4a22;
+  color: var(--rx-amber-deep);
 }
 
 .rev-presenter-cities small {
@@ -47,12 +47,12 @@
 }
 
 .rev-presenter-actions button {
-  min-height: 40px;
+  min-height: 44px;
   padding: 8px 14px;
   border: 1px solid #b9a875;
   border-radius: 10px;
   background: #fffdf6;
-  color: #3f3520;
+  color: var(--rx-brown-ink);
   font-size: 13px;
   font-weight: 600;
 }
@@ -84,7 +84,7 @@
 .rev-presenter-history {
   margin: 0;
   padding-left: 18px;
-  color: #5a4a22;
+  color: var(--rx-amber-deep);
   font-size: 12px;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .rev-presenter-scenes span {
-  color: #5a4a22;
+  color: var(--rx-amber-deep);
   font-size: 12px;
 }
 
@@ -127,12 +127,16 @@
 }
 
 .rev-presenter-scene-actions button {
-  min-height: 36px;
+  min-height: 44px;
   padding: 6px 12px;
   border: 1px solid #b9a875;
   border-radius: 9px;
   background: #fffdf6;
-  color: #3f3520;
+  color: var(--rx-brown-ink);
   font-size: 12px;
   font-weight: 600;
 }
+
+.rev-presenter-diff { margin: 10px 0; padding: 10px 12px; border: 1px solid #d8e6dc; border-radius: 12px; background: #f7faf8; }
+.rev-presenter-diff ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+.rev-presenter-diff li { font-size: 13px; line-height: 1.5; }
