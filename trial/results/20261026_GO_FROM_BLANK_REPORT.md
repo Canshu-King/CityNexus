@@ -562,3 +562,25 @@ arm B 是同代码、新浏览器 profile 的整趟重走（`trial/results/20261
 
 **已补**：在 `MobilePlanWorkbench.tsx` 的 `commitJourneyDeparture` 返回校验之后发出 `window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: journeyId }))` —— 现读落点 `frontend/src/trial/mobile/MobilePlanWorkbench.tsx:258`（提交调用在同文件 `:249`），注释写的是为什么：地图的点是挂载时读一次，390 实测 ACTIVE 的 journey 地图仍写 0 处，而同一版计划的六站就在 `places` 里；上面那句 `refresh()` 只重取本工作台。同代 `npx tsc -p tsconfig.check.json --noEmit` RC=0。这一格还没算闭上 —— 补完之后那一趟真机走查的读数写在下一节，绿了才撤 §31 的「未满足」，不绿就继续照 §31 的写法记。
 
+## 38. 本晚四趟走查臂与还开着的那一格（逐臂读数，不合并）
+
+| 臂 | 视口/库/收据 | 走到哪 | 地图层读数 |
+| --- | --- | --- | --- |
+| A（守卫前） | 390x844，`citynexus_v3_gozero_1026.db`，`armA-hy3-map-planned-390.txt` | `departure/commit` 200、`start` 200，journey `064ff631…` ACTIVE，计划 `24a70a0a…` 五条活动带 place | 「地图地点 0 处 · 高德地点 5 处」；PLANNED_TAGS 0；`MISS load-map` |
+| B（守卫后、重取线前） | 390x844，同库，`armB-390-map-planned.txt` | `departure/commit` 200（t=468.1）、`start` 200，journey `8e2f7b90…` ACTIVE，计划 `4495fc16…` 六条活动带 place；库内进程现读该 journey 的投影 = 6 枚 `origin=PLAN_ACTIVITY / WGS84 / MATCHED / READY_FOR_NATIVE_PLAN` | 「地图地点 0 处 · 高德地点 6 处」；PLANNED_TAGS 0、LIST_ITEMS 0、PINS 0、CANVAS 0；reload 后同形；`MAP_CALLS []`（当时还没装逐次读数器） |
+| C（装了读数器） | 430x932，同库，`map-planned-430-r46.txt` | `departure/commit` 422（营业时间冲突），journey `f49a9114…` 未 ACTIVE | 每一次 map-places `200 / candidates=0 / first=null`（含 reload 三次）；屏上「0 处 / 高德 6 处」 |
+| D（重取线后） | 390x844，同库，`map-planned-390-r46.txt` | `departure/commit` 422，journey `142b19e1-b037-476d-a31d-6246deeaf9e7` 未 ACTIVE（探针仍在 replan 循环里） | 未到地图层 |
+
+**还开着的那一格只有一处**：ACTIVE 的 journey 在浏览器里到底收到过什么。B 臂是 ACTIVE 且服务端投影现读有 6 枚，但那一年没装逐次读数器；C/D 两臂装了读数器却没走到 ACTIVE。C 臂顺带证了一件好事 —— 没有 active plan 时 `map-places` 返回 0 枚是正确的，屏上那六枚「高德地点」全来自研究线索，不是计划的站。
+
+**为什么不能靠"再走一趟"就补上**：模型每趟给的排程不同，`departure/commit` 是否被营业时间闸门拒（`PLACE_CLOSED`，§38 下一条）是掷硬币；而一次重启后端就把身份弄丢（§39 第 4 条），所以每一臂都要从零走完整趟（约十分钟）。本晚四臂两次穿过出发门、两次被拒，穿过的那两次一次没读数器、一次没重取线。下一臂（若跑）的判据已预先写死在 §37 末段，不事后挑读数。
+
+## 39. KNOWN_BLOCKERS（现尖，逐条带坐标与下一步）
+
+1. **`PLACE_CLOSED` 的拒答没有可点的修正动作**（本晚实测两次，其中一次连回三拍）。flash 模型那一趟（`trial/results/20261026_gozero/map-planned-390-r46-flashloop.txt`）里 `departure/commit` 每拍 `http_status=422`，点名两处用餐安排「在你排的这段时间不开放」，同拍 `freeze-routes` 却回 `http_status=200`，于是「按讨论的方向重新安排」把同一版方案原样再交一次，句子逐字复发三轮。读侧原因成形：`applyReplan` 只搬 `gaps.rows` 里已经带提议时段的行（`frontend/src/trial/mobile/DraftDepartureCard.tsx:183-186`），而算提议时段的那扇门目前只为"赶路不够"这类 hop 写 `proposed_start/proposed_end`（`backend/app/agent/goal_travel_gaps.py:185`）；`PLACE_CLOSED` 在 `departureGaps.ts:309` 只被翻成一句人话，没接动作。**下一步不用重新调查**：prepare 已经把每站的 `OpeningCheck(sequence_no, title, verdict, reason_code, window, source_text)` 算好（`backend/app/agent/goal_preparation.py:158-167`）并随 `task["prepared_plan"]["result"]["opening_checks"]` 存进任务（同文件 `:426-427`），travel-gaps 按同一 `sequence_no` 把"到达时间在窗口外"的行提议到窗口内即可，沿用它自己的上界拒发规则（`LAST_PRACTICAL_HOUR = 22`，`goal_travel_gaps.py:44`），前端 `GapRow` 已能渲染「planned→proposed」那一句（`departureGaps.ts:484`、`:501`）。本刀没动它：它跨两扇门（后端提议 + 行 id 映射 + 回归），而模型每趟给的排程不同、屏上不一定复现，深夜开这一刀会把地图和它一起做成半件。
+2. **平板 `USER_VERIFIED=PENDING`** —— 要主人亲机上 10 吋/11 吋那档，代理自测不算。
+3. **课堂随机城市池 0/3** —— 本地库 `simulation_public_city_snapshots` 现读 0 行；Codex 的 PR #56 那侧在补原生城市事实（其正文自报北京 40 POI/3 几何边、杭州 32/3、苏州 31/3、南京 32/2 仍 BLOCKED），未落本线前课堂上仍可能抽到没有快照的城。
+4. **重启身份回不来**（本晚两次实测）：启动器每次用 `secrets.token_hex(32)` 现造 `CITYNEXUS_TRAVELER_AUTH_SECRET`（`trial/human_walk/_restart_gozero_backend_r1.py:82`），换一次进程，旧 bearer 与浏览器 sessionStorage 一起失效，profile 也带不回签名（即已记的 #332）。这条直接决定屏证的形状：**每换一代产品码就得整趟重走一遍**（本晚走了三趟 390），所以任何"改一行看一屏"的想法在这条修好前都不成立。
+5. **两条 e2e spec 未执行**（要 `npm run dev` 那档带后端的栈）：`frontend/e2e/revolution-amap-research-ui.spec.ts`（本刀改了它 `:128` 钉的那句文案）与 `revolution-sim-traveller.spec.ts`、`revolution-workspace-actions.spec.ts`（各自读 `加载地图`、`rev-workspace-place-list`，`revolution-workspace-actions.spec.ts:266`）。我只逐条读了它们对哪些字符串有断言并据此改文案，**没有跑过它们**。
+6. **选中面 49 条红 + 9 errors 属预先存在**：具名对拍见 §35（现尖独有新红 零枚）；其中 `test_in_transit_reroute` 那条已定位到 simulation 合并带来的 `settings` 桩缺 `simulation_enabled`（§34），归那条线修。
+
