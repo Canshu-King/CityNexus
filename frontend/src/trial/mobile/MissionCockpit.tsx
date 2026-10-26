@@ -249,6 +249,19 @@ export function MissionCockpit({
     return () => { disposed = true; };
   }, [journeyId, refresh, identityTick]);
 
+  // The presenter console accepts an event's replan on the server; the map, activities and state are
+  // read once on mount, so without this the console says "accepted" while the journey behind it still
+  // shows the pre-acceptance plan.  The workbench already listens to this event; the journey screen
+  // has to as well, or the refresh stops at the plan card.
+  useEffect(() => {
+    const changed = (event: Event) => {
+      const detail = (event as CustomEvent<string>).detail;
+      if (!detail || detail === journeyId) setRefresh((value) => value + 1);
+    };
+    window.addEventListener("citynexus:plans-updated", changed);
+    return () => window.removeEventListener("citynexus:plans-updated", changed);
+  }, [journeyId]);
+
   const research = splitGoalResearch(task);
   const researchFingerprint = JSON.stringify([research.places, research.areas, research.unknown, research.conflicts]);
   const allMapPoints = useMemo<WorkspaceMapPoint[]>(() => {
