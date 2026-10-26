@@ -1,0 +1,162 @@
+{
+  "product_sha": "6927f06d94bfe8e605e8bbc0881d01db9599a2c4",
+  "evidence_kind": "NATIVE_SIGNED_MANUAL_SOURCE_ACQUISITION_NO_MODEL_RUN",
+  "cities": [
+    {
+      "city": "nanjing",
+      "binding": {
+        "provider_adcode": "320100",
+        "public_name": "南京市",
+        "source_call_id": "0cec8d9a-5803-4cf5-aad1-56db38df8ccc",
+        "source_sha256": "66715e6acc9775207756476721869b8aeacdc9ab14b49a77927cd1a5b4412d1b"
+      },
+      "canonical_count": 32,
+      "published": false,
+      "route_statuses": [
+        {
+          "provider_call_id": "2377aed6-7bc2-4849-bab1-4cb8421bd95b",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "南京博物院",
+          "to_name": "总统府",
+          "geometry_status": "BLOCKED_GEOMETRY_DISCONNECTED",
+          "max_junction_gap_m": 1.0143,
+          "duration_seconds": 2896,
+          "distance_m": 3620
+        },
+        {
+          "provider_call_id": "01bed1e6-fe82-4596-998f-7a16b7612813",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "总统府",
+          "to_name": "南京夫子庙",
+          "geometry_status": "AVAILABLE",
+          "max_junction_gap_m": 0.6718,
+          "duration_seconds": 2504,
+          "distance_m": 3130
+        },
+        {
+          "provider_call_id": "36284aa3-5894-430d-ab73-98ef1f3ef671",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "南京夫子庙",
+          "to_name": "玄武湖景区",
+          "geometry_status": "BLOCKED_GEOMETRY_DISCONNECTED",
+          "max_junction_gap_m": 1.014,
+          "duration_seconds": 5753,
+          "distance_m": 7191
+        },
+        {
+          "provider_call_id": "231cdd37-adb3-435c-8fa1-edd51f9c0317",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "总统府",
+          "to_name": "南京夫子庙",
+          "geometry_status": "AVAILABLE",
+          "max_junction_gap_m": 0.6718,
+          "duration_seconds": 2504,
+          "distance_m": 3130
+        },
+        {
+          "provider_call_id": "92465fa5-e334-40f2-a728-5c2458f991d3",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "南京夫子庙",
+          "to_name": "南京市博物馆",
+          "geometry_status": "BLOCKED_GEOMETRY_DISCONNECTED",
+          "max_junction_gap_m": 1.0144,
+          "duration_seconds": 2239,
+          "distance_m": 2799
+        },
+        {
+          "provider_call_id": "0e14f018-8fa5-43d7-87aa-38d96183fee3",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "南京市博物馆",
+          "to_name": "南京城墙台城景区",
+          "geometry_status": "AVAILABLE",
+          "max_junction_gap_m": 0.5831,
+          "duration_seconds": 4448,
+          "distance_m": 5560
+        }
+      ],
+      "plans": [
+        {
+          "plan_id": "ac1c039b-4274-4a37-ab5b-4024206916fe",
+          "status": "CANDIDATE"
+        },
+        {
+          "plan_id": "f2a9feca-e247-4963-9ef2-caa6a74ab521",
+          "status": "CANDIDATE"
+        }
+      ],
+      "model_turns": 0
+    },
+    {
+      "city": "hangzhou",
+      "binding": {
+        "provider_adcode": "330100",
+        "public_name": "杭州市",
+        "source_call_id": "2ada2c44-57a7-49f0-a08d-96f13c67dd90",
+        "source_sha256": "7740624bd3ee51be83eeb124aaa417d4408e7b44a36698b66370a1641e9bb119"
+      },
+      "canonical_count": 32,
+      "published": true,
+      "route_statuses": [
+        {
+          "provider_call_id": "b0d222e6-380e-48ef-bc81-9ef55d7e1300",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "杭州西湖风景名胜区-断桥残雪",
+          "to_name": "杭州西湖风景名胜区-岳王庙",
+          "geometry_status": "AVAILABLE",
+          "max_junction_gap_m": 0.6758,
+          "duration_seconds": 1790,
+          "distance_m": 2237
+        },
+        {
+          "provider_call_id": "34ac3735-88ba-4d06-a8f3-938992b77c84",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "杭州西湖风景名胜区-岳王庙",
+          "to_name": "浙江省博物馆(孤山馆区)",
+          "geometry_status": "AVAILABLE",
+          "max_junction_gap_m": 0.8645,
+          "duration_seconds": 992,
+          "distance_m": 1240
+        },
+        {
+          "provider_call_id": "0ca4f0ad-ae97-4676-862f-78d0f1c220eb",
+          "operation": "goal_amap_walking",
+          "status": "SUCCESS",
+          "http_status": 200,
+          "from_name": "浙江省博物馆(孤山馆区)",
+          "to_name": "中山公园-西泠印社社址",
+          "geometry_status": "AVAILABLE",
+          "max_junction_gap_m": 0.7347,
+          "duration_seconds": 414,
+          "distance_m": 517
+        }
+      ],
+      "plans": [
+        {
+          "plan_id": "7065b549-fd71-4f8d-86db-2573611a9bf0",
+          "status": "CANDIDATE"
+        }
+      ],
+      "model_turns": 0
+    }
+  ],
+  "after_counts": {
+    "agent_runs": 39,
+    "provider_calls": 107
+  }
+}
