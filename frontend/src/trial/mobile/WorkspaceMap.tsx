@@ -11,6 +11,7 @@ export type WorkspaceMapPoint = Omit<Pick<BootstrapDiscoveryCandidate, "candidat
   public_address?: Record<string, string>;
   kind?: "place" | "area";
   origin?: "PLAN_ACTIVITY";
+  external_id?: string;
 };
 
 const OSM_SOURCE_URL = /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/;

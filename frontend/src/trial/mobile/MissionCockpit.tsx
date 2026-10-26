@@ -267,7 +267,12 @@ export function MissionCockpit({
   const allMapPoints = useMemo<WorkspaceMapPoint[]>(() => {
     const results = new Map<string, WorkspaceMapPoint>();
     for (const point of places) if (point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT") results.set(point.candidate_id, point);
+    const plannedExternal = new Set(places.filter((point) => point.origin === "PLAN_ACTIVITY" && typeof point.external_id === "string")
+      .map((point) => String(point.external_id)));
     for (const point of [...research.places, ...research.areas, ...research.unknown]) {
+      // The same physical stop arrives as the plan's own row and as the lead that found it; the lead is
+      // the provider's un-converted numbers, so listing both would draw one place twice.
+      if (plannedExternal.has(point.id) || (point.provider_object_id && plannedExternal.has(String(point.provider_object_id)))) continue;
       if (point.region_status === "CONFLICT") continue;
       if (point.provider_provenance === "UNVERIFIED") continue;
       const coordinateSystem = point.coordinate_system ?? (typeof point.provider === "string" && point.provider.toLowerCase() === "amap" ? "GCJ02" : "WGS84");
@@ -299,7 +304,15 @@ export function MissionCockpit({
   }, [places, researchFingerprint]);
   const draftDays = task?.draft_artifact?.days ?? [];
   const draftSlots = draftDays.flatMap((day) => day.slots.map((slot) => ({ date: day.date, ...slot })));
-  const draftPlaceIds = new Set(draftSlots.map((slot) => slot.place_id).filter(Boolean));
+  const slotPlaceIds = new Set(draftSlots.map((slot) => slot.place_id).filter(Boolean) as string[]);
+  // The draft names a stop by the provider's own id (`amap:B000A81CB2`) while an accepted plan's row is
+  // the place table's id (`real-place-...`) and the two sets do not intersect at all: measured on the
+  // 390 arm that crossed the departure gate, map-places answered six PLAN_ACTIVITY points and the layer
+  // still read 「地图地点 0 处 · 高德地点 6 处」 because the schedule test could only ever match the leads.
+  const draftPlaceIds = new Set(slotPlaceIds);
+  for (const point of allMapPoints) {
+    if (typeof point.external_id === "string" && slotPlaceIds.has(point.external_id)) draftPlaceIds.add(point.candidate_id);
+  }
   const draftPlaceFingerprint = [...draftPlaceIds].sort().join("|");
   const itineraryMapPoints = useMemo(() => allMapPoints.filter((point) => draftPlaceIds.has(point.candidate_id)
     && point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT"), [allMapPoints, draftPlaceFingerprint]);
