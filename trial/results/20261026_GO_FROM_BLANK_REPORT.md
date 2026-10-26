@@ -713,3 +713,38 @@ K 臂（`trial/human_walk/_plan_hand_r53.mjs`，profile `_chrome_gozero_r52`，�
 另记一件现场事实，与代码无关但会影响今晚后面所有臂：`df` 现读 D 卷可用
 **354 MB／100% 满**（17:32）。我不动任何人的树，只把这一格挂着——新 profile 一枚约 39 MB，还能起两臂，
 再起就要先腾。
+## 48. L 臂走到「可以确认出发」，以及我把夹具那一腿撤掉的原因
+
+L 臂（`trial/human_walk/_plan_hand_r54.mjs`，390×844，profile `_chrome_gozero_r54`，收据
+`trial/results/20261026_gozero/plan-open-hand-390-r54.txt`）从空白整趟重走，写到 17:43 的读数是：
+
+- `HTTP POST 201 …/prepare-plan`、`200 …/plans/6ca97944-76c7-420b-a266-b6de913f5883/accept-unknown-price`、
+  `200 …/freeze-routes`（journey `89615b8f-ad2f-4977-be30-7703326e58e3`）
+- `GATE ["可以确认出发\n\n5 项正式安排"]`，也就是出发门 `READY_TO_DEPART`
+- `GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"]` —— 整屏只有这一条 gap
+
+这同时证实了 §47 的定位方向，也说明本刀那一按**不该**在这趟出现：这趟没有「确认了时间、还没排地点」的
+band，所以服务端 `backend/app/services.py:742` 不否决，选用门本来就是开的。我把 §47 的仪表缺陷
+（`gaps.slice(0, 2)`）修成 `GAPS_ALL` 之后，第一次拿到了完整的 gap 清单，才敢这样判。
+
+L 臂自己也暴露了**我这支走查的结构缺陷**，不是产品的：`确认方案，开始行程`（`rev-plan-start`）
+在脚本里只挂在"点 select 成功那一拍"的分支内。候选一旦变成 SELECTED，`rev-plan-select` 就不再渲染，
+于是 start 键在屏上一直没人按——L 臂就是这么空转到我把它停掉（它对本刀已无增量读数，停得有价值）。
+M 臂（`trial/human_walk/_go_active_r55.mjs`，派生器 `_derive_r55_r1.py`，profile `_chrome_gozero_r56`，
+收据 `go-active-390-r55.txt`）补了这一眼：`selCount === 0` 时单独找 `rev-plan-start` 并按中心命中测试点它，
+同时把 §47 里被我省掉的地图读数整段接回来（照抄 r52 原文，不让两臂的判据行分叉）。M 臂在跑。
+判据仍是 §37 那两格：出发之后 `MAP_READS_EVERY` 的 `candidates` 等于活动数且 `first.origin="PLAN_ACTIVITY"`，
+且 `MAP_PLANNED_TAGS`/`MAP_LIST_ITEMS` 等于活动数、计数行变「地图地点 N 处」。
+
+**夹具那一腿我试了又撤了，如实记。** 我想用 `frontend/e2e/revolution-draft-preparation.spec.ts:98`
+那格（已断言 `rev-plan-select` 计数为 0）顺带证新键在屏，加了两行 `rev-plan-open-place-explore` 断言，
+实测 **2 failed / 1 passed**，红在 `:102` 的 `toHaveCount(1)`。读 430 档的
+`test-results/…47ad9…/error-context.md`：那一格屏上只有「方案 1」「等待正式计划」「根据路线重新安排」
+「费用待确认」，**一条 `.rev-plan-gap` 说明句都没有** ⇒ 它的 select=0 与 J 臂的 select=0 不是同一个成因
+（不是 `selectable === false` 那一支）。两行断言因此是挂错格的假设，我撤回了，文件回到原样
+（`git diff` 该 spec 为空），复跑 **3 passed (13.9s)**。这条 webServer 是
+`playwright.config.ts:82` 的 `npm run dev -- --port 4173`，所以跑的是我改后的源码，不是 dist；
+但按既有口径，dev 栈的数字只当"没把这三格改红"的旁证，不当发布证据。
+
+教训写在这里：**夹具格不等于旅客格**，借夹具作证之前要先读它到底挡在哪一层，否则我造出来的是一条
+永远不会出现的断言。新键的正证仍归 M 臂那一趟真机屏读——没看到就不说它修好了。
