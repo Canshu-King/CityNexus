@@ -465,3 +465,38 @@ run `7044b8b3…` 停在 `PAUSED_FOR_ACCEPTANCE`（已接受、事件已落定�
 第二处（同一屏，未修）：地图说明行「点击图钉可定位已保存安排：加载 OpenStreetMap」被底部固定输入条压住一半（截图中可见）。属「固定输入条遮内容」这一类，已记录，未改。
 
 **因此「接受后刷新」这条的准确状态**：Journey 状态与活动（第一站/现在站）已换并刷新后保持（§27.2）；**地图未满足**；PlanVersion 以 `active_plan_version_id` 换代 + 第一站变化间接为证。
+
+## 32. 接受后地图「0 处地点」：先勘误，再摊两道读侧墙（现读）
+
+**勘误 §31 的一句**（§31 原文已随 `2176c811a8` 入线，此处不改旧正文）：§31 写「这趟课堂演示的候选为 0」。现读不是 0 —— 课堂库 `D:/moodle/_cmdr_v3_live_1022/citynexus_v3_demo_1025.db` 里 journey `2e9cd67d-10ca-4ecd-920b-76c81a350c71` 的 `real_place_candidates` 是 **amap 四十条 + overpass 十六条**（`select journey_id,provider_key,count(*) from real_place_candidates group by journey_id,provider_key`），试玩库 `citynexus_v3_gozero_1026.db` 里 journey `d2efa5b4-183b-4fe5-9cf5-7b86099abf05` 是 **amap 五十六条**。候选一直在库里，是读侧没把它们放出来。§31 的屏证本身（地图写「0 处地点 / 暂无研究地点」）仍然成立。
+
+**第一道墙在服务端**，`map_place_projection`（`backend/app/planning/travel_brief.py:150`）里有两层筛子：
+
+- `RealPlaceCandidate.provider_key.in_(("photon", "overpass"))` 把高德整类滤掉 ⇒ 那四十/五十六条高德一条都进不来。
+- 留下的还要 `_bootstrap_scope_entries(evidence)` 里存在 `member_id`+`traveler_id` 都对上当前成员的 scope，`if not scopes: continue`。现读一枚 amap 行与一枚 overpass 行的 `evidence_json` 键集，只有 `captured_at, cost_evidence, evidence_completion, opening_hours, provenance, provider, request, ttl_seconds` —— 根本没有 `bootstrap_scopes`（这两条候选的 `status=DISCOVERED`、`materialized_place_id` 已指向 `places`，属"旅程级发现"另一条血统）。⇒ 那十六条 overpass 也全被 `continue`，屏幕上才是 `candidates: []`。
+- 更要紧的是这个投影**完全不读 `journey.active_plan_version_id` 的活动**。同一库现读该计划的 6 个活动全部带 place：故宫博物院 / 景山公园 / 前门大街 / 天坛公园 / 某餐馆（天坛店）/ 陶然亭公园，`provider_key=amap`、`coordinate_system=WGS84`、`source_coordinate_system=GCJ02`（`select … from activities a left join places p on p.id=a.place_id where a.plan_version_id=?`）。旅客已经接受的站在地图答里没有一格。
+
+**第二道墙在前端**，`WorkspaceMap.validPoint()`（`frontend/src/trial/mobile/WorkspaceMap.tsx:25`）写死 `!(typeof place.provider === "string" && place.provider.toLowerCase() === "amap")`，即"高德来源一律不上底图"；而进「高德地点」列表的条件 `isAmapPoint()` 又要求 `coordinate_system === "GCJ02"`。两条夹在一起：一条 `provider=amap` 且**已经转成 WGS84** 的计划站既画不进图、也不进高德列表，只会落进 `otherCoordinatePoints` 那句「N 处其他研究地点坐标尚未用于地图」。
+
+**为什么不能只把 `"amap"` 加进那个 `in_(…)`**：`_candidate_payload`（`backend/app/execution/bootstrap_discovery.py:719`）用 `_osm_identity(row)` 造 `source_url`，署名位是 `candidate_scope.get("source_attribution") or OSM_ATTRIBUTION`（`backend/app/execution/bootstrap_discovery.py:711`）。高德行没有 OSM id，加进去就会写出「数据来自高德、署名 © OpenStreetMap」的错标 —— 这正是署名那条规矩要挡的。全仓现读也只有 `OSM_ATTRIBUTION`/`OSM_ATTRIBUTION_URL` 两枚常量（`backend/app/integrations/discovery/photon_poi.py:36`），没有高德署名常量可复用。
+
+
+## 33. 这一刀：四件改动（已施工，本节与产品改动同笔提交）
+
+1. **服务端补第二条臂**（`backend/app/planning/travel_brief.py`）：`map_place_projection` 先按现有臂收旅客自己的私有观测（未改），再在 `journey.active_plan_version_id` 存在时把活动按 `activities.place_id → places` 补成点 —— `origin="PLAN_ACTIVITY"`、经纬度与 `coordinate_system`/`source_coordinate_system` 逐字从 `places` 带出、`source_url` 取 `places.metadata_json.source_urls[0]`（高德即 `https://uri.amap.com/marker?…`）、`scheduled_start_at` 用活动自己的 `start_at`；同一 place 若已被第一条臂给出（靠 `materialized_place_id` 记 `seen_places`）不重复。没有排到地点的活动（`place_id` 为空，例如"午餐"这类自由时段）inner join 天然不进来。
+2. **署名按来源分家**：新增 `_provider_attribution(provider_key)` —— amap 给 `© 高德地图（AMAP）` 且 `source_attribution_url` 为 `None`（不编 URL），其余仍取 OSM 那两枚常量。计划站的 `provider_provenance` 干脆不发：`places` 行没有可证的观测出处，留空比给它一个"LIVE_PROVIDER"诚实。
+3. **前端把判据从"哪个供应商"换成"存的坐标是哪套"**：`validPoint()` 去掉 `!(provider === "amap")` 那半句，只保留 `coordinate_system === "WGS84"` —— GCJ02 数字照旧不上 OSM 底图（`isAmapPoint` 那条「高德地点」列表一字未动），已经转成 WGS84 的高德来源站则可以画了。来源链接统一走新的 `sourceLink()`：OSM 元素 URL 给「查看地点来源 ↗」，`uri.amap.com/marker` 给「在高德地图打开 ↗」，图钉弹层与下方列表共用同一把判子。
+4. **文案不再替底图代署名**：`OpenStreetMap 地图地点 N 处` → `地图地点 N 处`（同一行的「高德地点 M 处」没动），列表 `aria-label="OpenStreetMap 地点"` → `aria-label="地图地点"`，计划站多一行「已排入当前方案」（`data-testid="rev-map-planned-stop"`）。
+
+**改动点名一处断言（不是改松换绿）**：`frontend/e2e/revolution-amap-research-ui.spec.ts:128` 原钉整句 `OpenStreetMap 地图地点 1 处 · 高德地点 1 处`，随文案改为 `地图地点 1 处 · 高德地点 1 处`。两个计数（1 处 / 1 处）与它真正判的行为（高德 GCJ02 不进底图、单独成列）都没放松。**这条 spec 本次未执行** —— 它要 `npm run dev` 那档带后端的栈；只做了类型检查。
+
+**本次跑过的读数**（解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，即 3.12.14 那枚 venv；cwd `D:/moodle/_cmdr_rescue_v3_1022/backend`）：
+
+| 跑法 | 命令 | 读数 |
+| --- | --- | --- |
+| 新增回归 + 同域旧 suite | `-m pytest tests/test_qoder_map_active_plan_stops_r1.py tests/test_mobile_travel_brief.py -q -p no:warnings` | `10 passed`（新file 二条；旧 map-places 那几条含 `len(points)==1` 未动仍绿） |
+| 前端类型 | `npx tsc -p tsconfig.check.json --noEmit` | `TYPECHECK_RC=0` |
+| 后端 | `map-places` 新增字段只加不减，消费侧现读只有 `MissionCockpit.tsx:267` 的 `allMapPoints`（未落 `origin` 的点走原分支），故未跑全量 | 未执行全量 |
+
+新回归的两条各判什么：`test_accepted_stops_reach_the_map_with_their_own_source` 要 `[candidate_id] == [planned.id, unconverted.id]`（含"没有 place 的活动不出现"这条反证）、高德点署名不含 `OpenStreetMap`、`coordinate_system=WGS84` 与 `source_coordinate_system=GCJ02` 同时在场、`source_url` 逐字等于库里的 marker 链、GCJ02 那枚仍带 GCJ02 出去（让读侧继续不上图）；`test_a_plan_that_is_not_active_adds_no_map_points` 先要 `candidates == []`，把同一枚 place 换成 active plan 的活动后要点 `[stop_id]` —— 证明"是 active 这一格把它放上地图"，不是多了一条无条件臂。
+

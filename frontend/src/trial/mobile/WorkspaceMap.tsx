@@ -10,6 +10,7 @@ export type WorkspaceMapPoint = Omit<Pick<BootstrapDiscoveryCandidate, "candidat
   adcode?: string;
   public_address?: Record<string, string>;
   kind?: "place" | "area";
+  origin?: "PLAN_ACTIVITY";
 };
 
 const OSM_SOURCE_URL = /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/;
@@ -21,10 +22,20 @@ function isAmapPoint(place: WorkspaceMapPoint): boolean {
 }
 
 function validPoint(place: WorkspaceMapPoint): boolean {
+  // The basemap is OSM, so what decides whether a point may be drawn is the coordinate system it is
+  // stored in -- not which provider found it.  A place row converted to WGS84 by the identity layer is
+  // safe to plot even when it came from Amap; a GCJ02 number is not, whatever its provider.
   return place.region_status !== "CONFLICT" && place.selection_state !== "REGION_CONFLICT"
-    && !(typeof place.provider === "string" && place.provider.toLowerCase() === "amap") && place.coordinate_system === "WGS84"
+    && place.coordinate_system === "WGS84"
     && Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
     && Math.abs(place.latitude) <= 85 && Math.abs(place.longitude) <= 180;
+}
+
+function sourceLink(url: string | undefined): {href: string; label: string} | null {
+  if (!url) return null;
+  if (OSM_SOURCE_URL.test(url)) return {href: url, label: "查看地点来源 ↗"};
+  if (AMAP_MARKER_URL.test(url)) return {href: url, label: "在高德地图打开 ↗"};
+  return null;
 }
 
 function shortAdministrativeAddress(address?: Record<string, string>): string {
@@ -110,9 +121,10 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
         const content = document.createElement("div");
         const title = document.createElement("strong"); title.textContent = point.name; content.append(title);
         if (point.kind === "area") { const type = document.createElement("p"); type.textContent = "地区／村落线索"; content.append(type); }
-        if (point.source_url && OSM_SOURCE_URL.test(point.source_url)) {
-          const source = document.createElement("a"); source.textContent = "查看地点来源 ↗";
-          source.href = point.source_url; source.target = "_blank"; source.rel = "noreferrer";
+        const link = sourceLink(point.source_url);
+        if (link) {
+          const source = document.createElement("a"); source.textContent = link.label;
+          source.href = link.href; source.target = "_blank"; source.rel = "noreferrer";
           content.append(document.createElement("br"), source);
         }
         element.addEventListener("click", () => onSelect?.(point.candidate_id));
@@ -153,7 +165,7 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
   return <section aria-label="当前行程地图">
     <p>{travellerOnMap && !points.length && !amapPoints.length
       ? "模拟旅客 1 位 · 暂无研究地点"
-      : `OpenStreetMap 地图地点 ${points.length} 处 · 高德地点 ${amapPoints.length} 处`}</p>
+      : `地图地点 ${points.length} 处 · 高德地点 ${amapPoints.length} 处`}</p>
     {traveller && <p data-testid="rev-map-traveller-state">模拟旅客：{traveller.label} · {traveller.latitude.toFixed(4)}, {traveller.longitude.toFixed(4)}（{traveller.coordinate_system ?? "WGS84"}，模拟位置，不是物理 GPS）</p>}
     {!points.length && !amapPoints.length && !travellerOnMap && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
     {(points.length > 0 || travellerOnMap) && <>
@@ -185,10 +197,11 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       </div>
         : <div ref={host} className="rev-workspace-map" data-testid="rev-workspace-map-canvas" />}
       {failed && <p role="status">底图暂时没有加载成功，下面的地点列表仍可查看。</p>}
-      <ol className="rev-workspace-place-list" aria-label="OpenStreetMap 地点">{points.map((point) => <li key={point.candidate_id} data-selected={point.candidate_id === selectedId}><strong>{point.name}</strong>
+      <ol className="rev-workspace-place-list" aria-label="地图地点">{points.map((point) => { const link = sourceLink(point.source_url); return (
+        <li key={point.candidate_id} data-selected={point.candidate_id === selectedId}><strong>{point.name}</strong>
         <small>{point.kind === "area" ? "地区／村落线索" : point.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "地点位置"} · {point.observation_expired ? "上次搜索的地点，营业与费用需更新" : point.selection_state === "READY_FOR_NATIVE_PLAN" ? "资料可用于正式排程" : "部分营业或费用资料待核实"}</small>
-        {point.source_url && OSM_SOURCE_URL.test(point.source_url) &&
-          <a href={point.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}</li>)}</ol>
+        {point.origin === "PLAN_ACTIVITY" && <small data-testid="rev-map-planned-stop">已排入当前方案</small>}
+        {link && <a href={link.href} target="_blank" rel="noreferrer">{link.label}</a>}</li>); })}</ol>
     </>}
     {amapPoints.length > 0 && <section aria-label="高德地点" data-testid="rev-amap-research-leads">
       <h3>高德地点</h3>

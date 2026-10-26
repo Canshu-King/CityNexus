@@ -1735,6 +1735,14 @@ export interface BootstrapDiscoveryCandidate {
   source_tags: Record<string, string>;
   source_attribution?: string;
   source_attribution_url?: string;
+  // /map-places also projects the stops already accepted into the active plan, straight from `places`.
+  // Those carry no bootstrap observation, so they arrive with their own origin instead of a receipt.
+  origin?: "PLAN_ACTIVITY";
+  place_id?: string;
+  provider?: string;
+  source_coordinate_system?: string | null;
+  scheduled_start_at?: string;
+  activity_title?: string;
   public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
 }

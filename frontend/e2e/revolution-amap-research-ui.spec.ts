@@ -125,7 +125,7 @@ test("TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and
   await expect(map.getByTestId("rev-amap-research-leads")).toContainText("福建省 · 龙岩市 · 连城县");
   await expect(map).toContainText("TEST_FIXTURE 未归属 OSM 线索");
   await expect(map).not.toContainText("TEST_FIXTURE 明确冲突线索");
-  await expect(map).toContainText("OpenStreetMap 地图地点 1 处 · 高德地点 1 处");
+  await expect(map).toContainText("地图地点 1 处 · 高德地点 1 处");
   await expect(map.getByRole("button", { name: "加载地图", exact: true })).toBeEnabled();
   expect(tileRequests).toBe(0);
 
