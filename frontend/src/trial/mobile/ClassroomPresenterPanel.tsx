@@ -193,7 +193,12 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
     setSlowNote(slow ?? null);
     try {
       const next = await action();
-      if (next) setRun(next);
+      if (next) {
+        setRun(next);
+        // The clock strip on this same screen listens to this event; without it the
+        // console says "started" while the strip still shows the pre-run clock version.
+        window.dispatchEvent(new CustomEvent("citynexus:simulation-run", { detail: next }));
+      }
       await refresh();
     } catch (caught) {
       setMessage(errorText(caught));

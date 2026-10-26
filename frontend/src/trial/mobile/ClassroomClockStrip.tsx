@@ -98,6 +98,18 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
     return () => window.clearInterval(timer);
   }, [visible]);
 
+  // The console starts or advances the run; without this listener the strip keeps the
+  // pre-run clock version for up to ten seconds while the console already says "started".
+  useEffect(() => {
+    if (!visible) return;
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<SimulationRun>).detail;
+      if (detail?.run_id) setRun(detail);
+    };
+    window.addEventListener("citynexus:simulation-run", listener);
+    return () => window.removeEventListener("citynexus:simulation-run", listener);
+  }, [visible]);
+
   const freshRun = useCallback(async (): Promise<SimulationRun | null> => {
     const current = await simulationApi.current(journeyId).catch(() => null);
     const next = current && current.available ? current.run : null;

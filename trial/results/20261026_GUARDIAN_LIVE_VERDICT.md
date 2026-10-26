@@ -182,6 +182,13 @@
 - 随后删除夹具三行并把 run 放回 `PAUSED_FOR_GUARDIAN`，无 console 错误。
 - `DEMO_PRESENTER_REQUIRED` 那句仍**不可达**（课堂上控制台写操作都带当前票的权限；没有“有 traveler 无 presenter”的真实路径），所以不硬造，保留为未屏证项。
 
+### 第十六次（`dual-device-stale-135.txt`，07:09–07:13）——双设备旧序列与「本页时钟条不跟手」
+
+- 双设备（390 + 1280）同一 run：A 推进 ＋30 后，B 仍持旧序列立刻按 ＋30 → 屏上 `B_NOTE` 逐字为「别的设备刚推进过，已刷新到最新一步，请再按一次。」，随后两边都读到 `09:30 · 第 1 步`（r143，回执已被同名覆盖，读数按当轮原文转述）。
+- 同一轮还暴露一个真缺陷：**A 自己点「开演」后 2.5 秒，A 的时钟条仍写「服务器第 0 版」**，而 B 已写「执行第 0 步 · 模拟进行中」。原因是控制台 `act()` 只 `setRun`，没有把新 run 广播出去；时钟条只往面板单向广播，反向没有监听。
+- 修法：`ClassroomPresenterPanel.act()` 成功后 `dispatchEvent("citynexus:simulation-run")`；`ClassroomClockStrip` 增加同名监听并 `setRun`。typecheck 绿。
+- 复测（r145，`dual-device-stale-135.txt`）：`A_START` 变为「模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中」，与 B 同源；无 console 错误。该轮 B 的读取为空，是探针打开慢导致的时序，不作为反证（stale 文案已在 r143 证过）。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
