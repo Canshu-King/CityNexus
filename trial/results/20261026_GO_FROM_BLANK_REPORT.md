@@ -1090,3 +1090,33 @@ provenance（照口径写全，便于别人复算）：
 `git stash push -u` 那三枚（由改动者自己或号令者做）后重跑一支 R 臂，或者等这三枚进入权威线之后
 在同一代上再走一趟 390。在那之前，本晚的屏证按「真机已过、同代性带此保留」记，
 我不把它升格成"纯净尖上的验收"。
+## 60. #336 的真身找到了：只有拒绝句、没有可挪行时，那一块里一颗键都不剩
+
+现读 `frontend/src/trial/mobile/DraftDepartureCard.tsx` 的这段（行号全部取自本次读数）：
+
+    :337  {gaps && (gaps.rows.length > 0 || gaps.hops.some(…) || Boolean(replanRefusalSentence(gaps.reason_code))) && <div data-testid="rev-v3-travel-gaps">
+    :342  {gaps.reason_code && replanRefusalSentence(…) && <p data-testid="rev-v3-replan-refusal">…</p>}
+    :343  {gaps.rows.length > 0 && !planShown && <button data-testid="rev-v3-replan">…}
+    :344  {planShown && <ul data-testid="rev-v3-replan-diff">…}
+    :345  {planShown && <button data-testid="rev-v3-replan-apply">…}
+
+`:337` 的外层条件允许**只因为有一句拒绝**就整块渲染；而 `:343` 要求 `gaps.rows.length > 0`，
+`planShown` 只能由 `:343` 那颗键点亮。所以 `rows===0 且有拒绝句` 这一形态下：reveal 不渲染 ⇒ `planShown`
+永远 false ⇒ `:345` 的应用键也不渲染。**块里一颗可按的键都没有**——这就是 §43「等满 20 秒仍没等到应用键」
+与 #336「被拒后卡片取不到可挪行」的确切成因，比我先前写的"缺一次调用"更窄也更准。
+
+本刀落下（`:343` 之前新增一行，`data-testid="rev-v3-replan-reverify"`）：
+
+    {gaps.rows.length === 0 && Boolean(replanRefusalSentence(gaps.reason_code)) &&
+      <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()}>重新核实这几段</button>}
+
+为什么不把 `:343` 的条件放宽、让「应用这一版」在这种形态下出现：`rows===0` 时 `:344` 的差异列表是空的，
+点亮的 `:345` 会把一颗"没有任何行可应用"的按钮摆在旅客面前——那是更坏的假出路。
+`verifyRoutes` 是卡片自己的取数函数（`:210`），`:262` 在没有 reveal 键时本来就会退到它
+（`if (!replan.current) { void verifyRoutes(); return; }`），`routesBusy` 也是 `:328` 那颗键已在用的禁用位。
+所以这里只是把**已经存在的动作**从"由别处广播才触发"变成"句子旁边看得见、按得到"，不新增门、不动服务端。
+
+回归：`npx tsc -p tsconfig.check.json --noEmit` 退出码 0；覆盖这块的
+`frontend/e2e/revolution-draft-preparation.spec.ts` **3 passed (13.9s)**（vite dev `:4173`，跑的是改后源码）。
+屏证状态：**NOT-STARTED**——这一形态要求 `gaps` 里有 `reason_code` 却没有可挪的行，
+今晚 N/O′/Q 三趟都没再出现该形状，不能预置，也不写成已验。

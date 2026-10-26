@@ -340,6 +340,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       <ul data-testid="rev-v3-gap-shortfalls">{gaps.hops.filter((hop) => hop.short_by_minutes > 0)
         .map((hop) => <li key={`${hop.origin_title}->${hop.destination_title}`} data-testid="rev-v3-gap-shortfall">{gapShortfallSentence(hop)}</li>)}</ul>
       {gaps.reason_code && replanRefusalSentence(gaps.reason_code) && <p data-testid="rev-v3-replan-refusal">{replanRefusalSentence(gaps.reason_code)}</p>}
+      {gaps.rows.length === 0 && Boolean(replanRefusalSentence(gaps.reason_code)) && <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-replan-reverify">重新核实这几段</button>}
       {gaps.rows.length > 0 && !planShown && <button type="button" ref={replan} data-testid="rev-v3-replan" onClick={() => setPlanShown(true)}>{REPLAN_BUTTON}</button>}
       {planShown && <ul data-testid="rev-v3-replan-diff">{gaps.rows.map((row) => <li key={`${row.day_index}:${row.slot_index}`}>{replanDiffSentence(row)}</li>)}</ul>}
       {planShown && <button type="button" ref={proposal} data-testid="rev-v3-replan-apply" disabled={busy || task.status === "WORKING"} onClick={() => void applyReplan()}>{busy ? "正在保存这一版…" : REPLAN_APPLY_BUTTON}</button>}
