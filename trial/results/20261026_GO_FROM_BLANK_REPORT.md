@@ -1033,3 +1033,35 @@ SELECTED 之后 `rev-plan-select` 计数为 0。所以那句仍可能指向一�
 分辨判据换掉：不数 body 里有没有码（那是服务端的事），而是在该屏同时读
 ① `[role=status]` 的整句原文，② 同屏 `rev-plan-select` 与 `rev-plan-start` 的计数。两者同屏出现
 「再按一次「选用这份方案」」与 `PLAN_SELECT 0`，才算证到；否则这条继续挂 UNREAD。
+## 58. 同代回归证书：三刀面 129 条，聚焦两批 86 条全绿，对照臂证明 15 枚红是预先存在
+
+provenance（照口径写全，便于别人复算）：
+
+    尖 89dbbe22c15dfe7565fce220e4083fd0063d2bc0（本地与 origin/rescue/v3-final-departure-20261022 逐字相同）
+    解释器 D:/moodle/CityNexus/.venv/Scripts/python.exe（CPython 3.12.14，唯一能跑这套件的那枚）
+    cwd D:/moodle/_cmdr_rescue_v3_1022/backend
+    命令 python -m pytest -q <26 枚文件，见 trial/human_walk 选择集>
+
+聚焦两批（覆盖我这三刀实际碰到的面）：
+
+| 批 | 选择 | 读数 |
+| --- | --- | --- |
+| 一 | `test_qoder_map_active_plan_stops_r1.py`、`test_goal_preparation.py`、`test_qoder_draft_revision_receipt_r1.py`、`test_departure_activation.py`、`test_departure_readiness.py` | **47 passed**，5.24 秒 |
+| 二 | `test_qoder_departure_commit_r1.py`、`test_qoder_departure_read_r1.py`、`test_r42_departure_activation_integration.py` | **39 passed**，6.48 秒 |
+| 三（宽面） | 26 枚 map / travel_brief / replan / schedule_refusal 面文件 | **15 failed, 114 passed**，17.30 秒（合计 129 条） |
+
+第三批那 15 枚我没有直接判成"预先存在"，而是跑了对照臂：把服务端那一刀退回它前一代
+（`git checkout d9a74cdff58846b18de857b213b5c1ed40331d17 -- app/planning/travel_brief.py`，即
+`ab2ca5913a` 的父代同一文件），**同一选择集、同一解释器、同一分钟**再跑：
+
+    带刀    15 failed, 114 passed   129 条
+    退回    17 failed, 112 passed   129 条
+
+分母不变，差的正好是 2 条——就是我这一刀新增的
+`tests/test_qoder_map_active_plan_stops_r1.py` 那两条：没有产品改动时它们必须红，这才是反向对照。
+所以 15 枚红在带刀与退回两臂里同名同数，**全部早于本刀存在**，按基线红集合的子集判，本刀零新红。
+红的分布也印证它们不是我的面：`test_sol_concurrency_and_remap.py` 9 枚、
+`test_qoder_live_replans_endpoint.py` 5 枚、`test_dsh_list_replans_bound.py` 1 枚，
+都是并发锁／live replan 一族（与 §31 那类由 `persisted_simulation_business_clock` 中间件撞测试桩的
+同源红相干），**归属仍待裁**，我不在这里替它定性。
+对照跑完后 `git checkout HEAD --` 恢复，该文件 `git status` 为空。
