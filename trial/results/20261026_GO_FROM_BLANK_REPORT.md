@@ -1010,3 +1010,26 @@ plan `ccd05664-e21a-483d-b4f7-226094e9424f`）在出发门上被拒三次，body
 顺手核了自己今晚引的坐标，结果要我自报一次：我一度以为 §47 把选用支写成 `:374`、准备发一条行号勘误，
 现读报告原文（`:686`、`:698`）才发现那里本来写的就是 `:375` 与 `:376`，与新读一致——**那条勘误是我要造的
 第二个错**，已经不发。教训反过来说更准：勘误也要现读，不能凭"我记得写错过"。
+## 57. 自纠：我上一条里那句"没有 reason_code"是没证的，那一刀已经撤掉
+
+上一轮我给 `MobilePlanWorkbench.tsx` 加了一支"reason 缺失但 details.failures 有内容也走具名句"的分支，
+依据是我从收据里读到的 422 信封"只有 code/message/details"。**这个依据不成立**，因为我在仪表里写了
+`.slice(0, 500)` —— 那枚 body 被我自己的截断切掉了后半，前 500 字里没出现 `reason_code`，
+我就把它读成了"没有"。这正是我自己反复记着的同类错（词面没看到 ≠ 不存在）。
+
+现读服务端就能定：`backend/app/departure_commit.py:134-142` 的 `_refuse_transition` 对含 `is infeasible`
+的 detail 走 `_refuse(exc.status_code, detail, "PLAN_INFEASIBLE", {"detail": detail, "failures": …})`
+—— 信封里带着 reason_code，且 `:137` 的注释本身就写着"这个 reason_code 早就在线上，是方案屏没读它"。
+所以前端 `MobilePlanWorkbench.tsx:22` 的原分支条件本来就成立，**我加的那一支是冗余的死码**。
+
+已处理：`git checkout HEAD -- frontend/src/trial/mobile/MobilePlanWorkbench.tsx` 撤掉，`git diff` 该文件为空
+（本刀此前已提交的 `:70`/`:376` 两处仍在尖上，未受影响），`npx tsc -p tsconfig.check.json --noEmit` 退出码 0。
+仪表的截断同时放宽到 2000 字并重跑生成链（`trial/human_walk/_derive_r57_r1.py` → `_go_active_r57.mjs` →
+`_drift_check_r61.mjs`），这样下一次真拿到该屏的完整信封，而不是半个。
+
+#338 的方向要按新事实改写，但仍**没有**结案：如果信封带 `PLAN_INFEASIBLE`，那 `departureGaps.ts:346-348`
+那句「…再按一次「选用这份方案」」在 commit 被拒那一屏是**会渲染**的；而 §50/§52 的读数证明候选成为
+SELECTED 之后 `rev-plan-select` 计数为 0。所以那句仍可能指向一颗已退场的键——这才是待证的点。
+分辨判据换掉：不数 body 里有没有码（那是服务端的事），而是在该屏同时读
+① `[role=status]` 的整句原文，② 同屏 `rev-plan-select` 与 `rev-plan-start` 的计数。两者同屏出现
+「再按一次「选用这份方案」」与 `PLAN_SELECT 0`，才算证到；否则这条继续挂 UNREAD。

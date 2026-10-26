@@ -41,7 +41,7 @@ page.on("response", async (resp) => {
   const line = `HTTP ${method} ${resp.status()} ${url.replace(/^http:\/\/[^/]+/, "")}`;
   if (resp.status() >= 400) {
     let detail = "";
-    try { detail = JSON.stringify(await resp.json()).slice(0, 500); } catch { detail = "(unreadable body)"; }
+    try { detail = JSON.stringify(await resp.json()).slice(0, 2000); } catch { detail = "(unreadable body)"; }
     note(line + " BODY " + detail);
   } else {
     note(line);
