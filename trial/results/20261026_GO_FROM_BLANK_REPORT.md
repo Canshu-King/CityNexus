@@ -823,3 +823,47 @@ N 臂（`trial/human_walk/_go_active_r57.mjs`，390×844，profile `_chrome_goze
 还差三格，如实挂着：① 430×932 的 ACTIVE 同判据——O 臂（同一支 `_go_active_r57.mjs`，
 `RW=430 RH=932`，profile `_chrome_gozero_r59`，收据 `go-active-430-r57.txt`）在跑；
 ② 「只改指定半天／晚餐、未动时段不漂移」这一格今晚还没走到；③ §47 那一按的正证。
+## 51. 430 那一趟被 `PLACE_NOT_IN_GOAL_TASK_SCOPE` 挡住，而屏上说的却是「可以重试」
+
+O 臂（`trial/human_walk/_go_active_r57.mjs`，430×932，profile `_chrome_gozero_r59`，收据
+`trial/results/20261026_gozero/go-active-430-r57.txt`）这次没能复现 N 臂的顺利：
+journey `9e1e76cf-d1c5-45f5-9209-1956b331478a`、goal task `73613465-fdae-4f8b-8dc9-b6af47f84b90`，
+`prepare-plan` 反复给
+
+    422 {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE",
+                  "message_key":"request.invalid","trace_id":…}}
+
+我在屏上按了「保存为正式候选方案」十三拍（`SAVE_ALERT 1/1` 直到 `1/13`），每拍都是同一枚 422。
+同支脚本在 N 臂（390）拿到的是 `201` 并一路走到 ACTIVE，所以这不是代码换代造成的，是模型每次生成的
+草案内容不同——有一处地点落在了本次 goal task 的范围之外。
+
+**我的仪表第三次吞掉了原因，这次是容器读错。** 收据里 `SAVE_ALERT` 全是 `[]`，而草案卡的句子挂在
+`<p role="status">`（`frontend/src/trial/mobile/DraftDepartureCard.tsx:317`），我的选择器只写
+`.rev-plan-message, [role='alert']`。已修在生成器里（`trial/human_walk/_derive_r57_r1.py:25` 的选择器
+补上 `[role='status']`，重新生成的 `trial/human_walk/_go_active_r57.mjs` 21402 字节，
+`node --check` 通过）。所以"屏上到底有没有一句话"这一格，我从收据里读不出来——下面这段是**静态推导**，
+不是屏上证词。
+
+静态推导能确定产品说错了话。`DraftDepartureCard.tsx:137-144` 的分支链是：`named` 只认四条 SCHEDULE
+规则（`scheduleRefusalSentence(refusalRow(error))`）；这个码不含 `DRAFT_CHANGED`、也不含 `SCHEDULE`
+（body 里的串是 `PLACE_NOT_IN_GOAL_TASK_SCOPE`，`error.message` 只有 `CityNexus API 422 /…prepare-plan`），
+所以三条都落空，走兜底句——**「这次未能保存，时间仍留在这里，可以重试。」**
+而 `:142` 那行注释写的恰恰是"行已点名时，『可以重试』是错的指令：同样的数字会再拒一次"。
+旅客按了十三次，屏上一直在说可以重试。这不是新缺陷，是 #292 那一刀只补到了 SCHEDULE 四规则、
+范围码（#315 那一族）没接上的残余。
+
+本刀落下（只前端一处，不动服务端，也不替它放宽范围校验）：`frontend/src/trial/mobile/DraftDepartureCard.tsx:141`
+在 `DRAFT_CHANGED` 之后加一支——
+
+    PLACE_NOT_IN_GOAL_TASK_SCOPE → 「要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。」
+
+`npx tsc -p tsconfig.check.json --noEmit` 退出码 0。这一按之后要走的是屏上已有的「继续探索、补资料」/
+「探索」入口，我不再造第二条门。
+
+**证词状态如实分开写。** 这一句出现在旅客屏幕上：NOT-STARTED（该码由模型方差触发，无法按时预置，
+O 臂我已停；下一次 O′ 臂复用同一支脚本，`SAVE_ALERT` 已能从 `[role=status]` 读到句子）。
+430×932 走到 ACTIVE：仍未收，卡在这枚 422 上；已收的是 390×844（§50）。
+「只改指定的半天／晚餐、未动时段不漂移」：未走。§47 那枚 `rev-plan-open-place-explore`：代码在
+`0188ebd5f4`，屏证 NOT-STARTED。
+
+现读磁盘 D 卷 362 MB（18:05），O 臂的 profile 已停止增长；E 卷 47 GiB 未动。

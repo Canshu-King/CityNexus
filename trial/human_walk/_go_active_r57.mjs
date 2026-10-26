@@ -218,7 +218,7 @@ for (let round = 1; round <= 3 && !startedJourney; round += 1) {
         await page.waitForTimeout(6000);
         // Arm M pressed 保存为正式候选方案 seven times and never once wrote down what the card said
         // back, so the refusal names lived only on the screen.  Read them every press.
-        const saved = await page.locator(".rev-plan-message, [role='alert']").allInnerTexts().catch(() => []);
+        const saved = await page.locator(".rev-plan-message, [role='alert'], [role='status']").allInnerTexts().catch(() => []);
         note(`SAVE_ALERT ${round}/${i} ${JSON.stringify(saved.slice(0, 3))}`);
         continue;
       }
