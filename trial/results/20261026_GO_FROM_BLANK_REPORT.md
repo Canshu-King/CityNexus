@@ -1065,3 +1065,28 @@ provenance（照口径写全，便于别人复算）：
 都是并发锁／live replan 一族（与 §31 那类由 `persisted_simulation_business_clock` 中间件撞测试桩的
 同源红相干），**归属仍待裁**，我不在这里替它定性。
 对照跑完后 `git checkout HEAD --` 恢复，该文件 `git status` 为空。
+## 59. 一条必须自己说的削弱：今晚 dev 栈上混着别人未提交的三枚文件
+
+`git status` 现读（19:07，尖 `64a48c5431`）：
+
+     M frontend/src/app/V8Experience.tsx
+     M frontend/src/app/v8PanelRegistry.tsx
+     M frontend/src/features/inbox/JourneyInboxWorkbench.tsx
+
+这三枚不是我改的，本刀链里我一个字都没碰过它们（我的产品改动只落在
+`trial/mobile/MobilePlanWorkbench.tsx`、`trial/mobile/WorkspaceMap.tsx`、`trial/mobile/MissionCockpit.tsx`、
+`trial/mobile/DraftDepartureCard.tsx` 与 `app/planning/travel_brief.py`，逐笔可查 0a73583943 之前的五笔提交）。
+但它们就躺在我用来跑真机的 vite dev（`127.0.0.1:14461`）与跑 e2e 的 dev（`:4173`）同源树里，
+所以：
+
+- §50／§52／§53 的屏读是**真机上按得到的**，这一点不变——旅客按到的键与屏上数字就是那屏拍下来的；
+- 但"这些读数与权威尖同代"这句要打折：它们对的是「尖 + 这三枚未提交改动」的工作树，
+  不是纯净的 `64a48c5431`。我**没有**把它们 stash 或还原——那是别人的在途工作，
+  按规矩不能动（也不许 `git checkout --` 掉）；
+- 我引的后端读数不受影响：那三枚都在前端，而 §58 的 pytest 两臂跑的是 `backend/`，
+  对照臂只退回我自己那一枚文件。
+
+要把这条闭合，正路不是我去改它们，而是**在干净尖上重放一次同判据**：
+`git stash push -u` 那三枚（由改动者自己或号令者做）后重跑一支 R 臂，或者等这三枚进入权威线之后
+在同一代上再走一趟 390。在那之前，本晚的屏证按「真机已过、同代性带此保留」记，
+我不把它升格成"纯净尖上的验收"。
