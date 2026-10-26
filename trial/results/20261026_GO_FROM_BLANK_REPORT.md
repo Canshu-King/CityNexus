@@ -867,3 +867,38 @@ O 臂我已停；下一次 O′ 臂复用同一支脚本，`SAVE_ALERT` 已能�
 `0188ebd5f4`，屏证 NOT-STARTED。
 
 现读磁盘 D 卷 362 MB（18:05），O 臂的 profile 已停止增长；E 卷 47 GiB 未动。
+## 52. 430×932 也走到 ACTIVE：地图给出 8 处已排入方案的地点，刷新不丢
+
+O′ 臂（同一支 `trial/human_walk/_go_active_r57.mjs`，430×932，profile `_chrome_gozero_r60`，收据
+`trial/results/20261026_gozero/go-active-430-r57.txt`，UTC 18:23 现读）这一趟：
+journey `a87c821b-8eec-418b-8ccf-0888d5581cdd`、goal task `8ac475d1-d48f-4fa0-958d-ce7d952ec4b0`。
+
+| 格 | 现读值 |
+| --- | --- |
+| 门序列 | `prepare-plan 201` → `freeze-routes 200` → `HIT start-fallback-2-0 true t=324.7` → `departure/commit 200` → `start 200` |
+| 屏上句子（`[role=status]` 新选择器第一次读到） | 「已保存 8 项正式安排。下方可以查看日程和出发待办。」、「当前展示的是已保存版本。」 |
+| 地图计数行 | `地图地点 8 处 · 高德地点 0 处` |
+| 画布／图钉 | `MAP_CANVAS 1`、`MAP_PINS 8` |
+| 计划标／列表 | `MAP_PLANNED_TAGS 8`、`MAP_LIST_ITEMS 8` |
+| 来源链接 | `MAP_AMAP_LINKS 8` |
+| 刷新之后 | `RELOAD_MAP_COUNT_LINE` 同值、`RELOAD_PLANNED_TAGS 8`、`RELOAD_LIST_ITEMS 8` |
+| 响应形状 | `RELOAD_MAP_READS` 两条 `candidates:8`，`first` 为 `origin=PLAN_ACTIVITY`、`coordinate_system=WGS84`、`region_status=MATCHED`、`selection_state=READY_FOR_NATIVE_PLAN` |
+| 坐标系对账 | 收据内 `PLAN_ACTIVITY` 3 次、`WGS84` 3 次、`READY_FOR_NATIVE_PLAN` 3 次、`GCJ02` 0 次 |
+| 控制台 | `ERRORS []`、`ERRORS_MAP []` |
+
+活动数 8 与屏上「8 项正式安排」、地图 8 处、8 枚「已排入当前方案」标、8 条来源链接**逐格相等**，
+两档形状（390×844 与 430×932）在同一条权威线（`c160a9cea3`）上各自独立跑到，且都过刷新这一腿。
+派单第 1 刀里「同一 journey／task 从研究走到 CANDIDATE→SELECTED→ACTIVE」与「在『我的旅程』看到当前计划与
+下一站」两格，至此在两档上都有屏读；§50 的 390 读数与这节同形。
+
+两处仍然挂着，不写成完成：
+1. **「只改指定的半天／晚餐，未动时段不漂移」还没走**——已派生 P 臂（`trial/human_walk/_drift_check_r61.mjs`），
+   在出发之前只动最后一档晚餐的时间、按真实的保存键，然后逐格对回其余时段；判据 `DRIFT_COUNT=0` 且
+   被点名的那一格确实变了，否则不写这一格过。
+2. **§47 那枚 `rev-plan-open-place-explore` 与 §51 那句范围拒绝的屏证**——两趟的草案都没有再出现对应的阻塞形状
+   （N/O′ 的 `PLAN_HAND 0`，O′ 的 `prepare-plan 201`），所以这两条仍标 NOT-STARTED，不是没做而是没遇到。
+   范围码那一枚是模型方差（O 臂遇上了、O′ 臂没遇上），只能等遇到它的那一趟。
+
+仪表这一轮只改了一处就拿到了过去三趟都没记下的东西：`SAVE_ALERT` 的选择器补上 `[role=status]`
+（`trial/human_walk/_derive_r57_r1.py:25`）。这把 §49 里我标的 UNREAD 收窄了——**「屏上没有句子」这个读法
+本身没被证实过**，是我读错容器；O′ 臂的 `SAVE_ALERT 1/0` 证明卡片一直在说话。
