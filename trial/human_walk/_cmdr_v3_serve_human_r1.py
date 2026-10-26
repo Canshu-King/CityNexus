@@ -46,6 +46,8 @@ env.update({
     "CITYNEXUS_DATABASE_URL": "sqlite:///" + DB.replace("\\", "/"),
     "CITYNEXUS_TRAVELER_AUTH_SECRET": secrets.token_hex(32),
     "CITYNEXUS_DEMO_MODE": "true",
+    "CITYNEXUS_REAL_CITY_ENABLED": "true",
+    "CITYNEXUS_REAL_CITY_MODE": "live",
     "CITYNEXUS_DEMO_RESET_TOKEN": secrets.token_hex(16),
     "CITYNEXUS_AI_ENABLED": "true",
     "CITYNEXUS_AI_PROVIDER": "deepseek",

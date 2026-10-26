@@ -24,7 +24,7 @@ DB = os.path.join(CANARY, DB_NAME)
 LOG = os.path.join(OUT, "gozero_backend_restart.log")
 SHIM = r"C:/Users/仓鼠王/WorkBuddy/2026-09-15-15-47-27/wb2api/codex-shim/shim.mjs"
 GATEWAY_CHAT_URL = "http://127.0.0.1:7863/v1/chat/completions"
-MODEL = "cn:hy3"
+MODEL = os.environ.get("HUMAN_MODEL", "cn:hy3")
 PY = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
 
 
@@ -81,6 +81,8 @@ env.update({
     "CITYNEXUS_DATABASE_URL": "sqlite:///" + DB.replace("\\", "/"),
     "CITYNEXUS_TRAVELER_AUTH_SECRET": secrets.token_hex(32),
     "CITYNEXUS_DEMO_MODE": "true",
+    "CITYNEXUS_REAL_CITY_ENABLED": "true",
+    "CITYNEXUS_REAL_CITY_MODE": "live",
     "CITYNEXUS_DEMO_DATABASE_PATH": DB,
     "CITYNEXUS_DEMO_RESET_TOKEN": secrets.token_hex(16),
     "CITYNEXUS_AI_ENABLED": "true",

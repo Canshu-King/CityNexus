@@ -6,7 +6,7 @@ import { WorkspaceMap } from "./WorkspaceMap";
 import { TravelGoalPreferences } from "./MobileAiPrompt";
 import { GoalDraftEditor } from "./GoalDraftEditor";
 import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
-import { humanDistance, humanDuration, isSafeAmapNavigationUrl } from "./departureGaps";
+import { AGENT_ASK_MARK, humanDistance, humanDuration, isSafeAmapNavigationUrl } from "./departureGaps";
 import type { GoalResearchLead } from "../../api/citynexus";
 import "./WorkspaceActions.css";
 
@@ -546,7 +546,12 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
 
   const sendMessage = () => {
     window.dispatchEvent(new CustomEvent("citynexus:mission-panel", { detail: "assistant" }));
-    if (visibleTask && visibleTask.status !== "CANCELLED") void sendFollowup();
+    // 「和 Agent 补齐出发资料」 writes an execution request into this box; sending it as a discussion
+    // round leaves only ask_traveler+inspect_journey (measured on the 430 walk: the round ended
+    // TRAVELER_INPUT_REQUIRED and eight slots still had no place). The mark is the same string the
+    // departure card writes, so the two cannot drift apart.
+    const research = question.includes(AGENT_ASK_MARK);
+    if (visibleTask && visibleTask.status !== "CANCELLED") void sendFollowup(undefined, research ? "RESEARCH" : "DISCUSS");
     else void startNewTask();
   };
 

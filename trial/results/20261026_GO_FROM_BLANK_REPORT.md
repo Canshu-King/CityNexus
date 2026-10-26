@@ -302,3 +302,31 @@ DB 回执：`r12-receipt.txt`（journey `e8f81207…`、mission `e99b4180…`、
 - 截图与逐字清单：`trial/results/20261026_gozero/half-day-390.txt`（日志名沿用 r32 的 390 前缀，实际视口 430×932）。
 
 **更正 §24**：§24 末尾写「屏上 0 项 vs DB 7 slots，待查」——**不是产品缺陷**。`MissionCockpit.tsx:234` 用本地指针 `citynexus.revolution.goal-task.<owner>.<journeyId>` 定位任务，没有指针就不发那一次 GET（这是「本机指针只定位任务，读取仍由服务端授权」的设计）。补上指针后 7 项立刻显示；GET 返回体与 DB 逐字段一致（2 天 / 7 slots）。§24 那句「两处对不上」作废。
+
+## 26. 430×932 从冷首屏走到 ACTIVE（同一条 Journey/Task，2026-10-26 16:10 本地）
+
+**本轮最硬的一层不是模型，是试玩栈没开"真实城市检索"**。研究轮的工具步骤里 `discover_places` 三家 provider 都是 **3 毫秒返回 0**、`http_status` 为 null、`status=PROVIDER_DISABLED`、`reason_code=REAL_CITY_DISABLED`——开关在 `backend/app/core/config.py:111`（`CITYNEXUS_REAL_CITY_ENABLED` / `CITYNEXUS_REAL_CITY_MODE`），而 `_cmdr_v3_serve_human_r1.py` 与我的重启脚本都没写这两行。高德本身是好的：`GET /api/v1/providers/v9` 回 `amap.status=READY / provenance=LIVE`。
+
+**修复**：两个启动脚本各补 `CITYNEXUS_REAL_CITY_ENABLED=true`、`CITYNEXUS_REAL_CITY_MODE=live`，重启后端。修复后同一轮研究里：`research_places` **56** 个、草案 8 项 **8/8 都带 `place_id`**（故宫博物院、景山公园、前门大街、全聚德前门店、天坛公园、清真天義顺涮肉、北海公园、什刹海前海）。
+
+**屏上具名拒绝**（真点「选用这份方案」→ `POST /departure/commit` **422**）：
+
+> 这版方案排不下：晚餐：全聚德（前门店）在你排的这段时间不开放；什刹海前海（晚餐与胡同散步）在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。
+
+这是 §19/§20 那条「两扇门互锁」之外的第三种形状：**营业时间与排程冲突**，而屏上给了两条可走的路（挪时间/换地点）。
+
+**走的路径（全是屏上真按钮）**：按天调整行程 → Day 1 展开「晚餐：全聚德（前门店）」→ **移除这项安排**；Day 2 同样移除「什刹海前海」→ **保存草案**（回执「草案已保存到这趟旅行」）→ 勾「按以上时间准备方案」→ **保存为正式候选方案**（`prepare-plan` 201，新 plan `2e9b2c23…`）→ 确认费用 → 冻结转场（`5/5`，其中 5 段超过 1 公里已换成公共交通核实）→ **选用这份方案**（`departure/commit` **200**）→ **准备出发**。
+
+**同号收据**（现读 `citynexus_v3_gozero_1026.db`）：
+
+| 项 | 值 |
+|---|---|
+| journey | `d2efa5b4-183b-4fe5-9cf5-7b86099abf05` → **ACTIVE** |
+| goal task / mission | `23010c0d-47a5-40df-a9cc-55e5728e0dac` |
+| active plan version | `2e9b2c23-055c-4d0f-b92a-7c17f581a1bc` → **ACTIVE** |
+| 旧候选（被新候选取代） | `1b6bb394…` 仍是 CANDIDATE |
+| 出发后第一屏 | 「旅途正在继续 / 行程执行中」；第一站 **故宫博物院（午门入，中轴线慢走）· 12月3日 09:00**，接下来景山公园 |
+
+截图：`select-430-before.png`（候选卡 8 项与具名拒绝前）、`select-430-after.png`、`go-live-430-after.png`（ACTIVE 首屏）。日志：`select-430.txt`、`go-live-430.txt`。
+
+**两个尺的坑（记录）**：①「生成正式候选方案」在屏上写作「**保存为正式候选方案**」，脚本按旧名点击 MISS，于是选用了旧候选并复现同一条 422；②同一屏可同时存在两张候选卡（旧的不消失），`rev-plan-select` 取 `.first()` 会点到旧卡——取最后一张才选中新候选（`SELECT_CARDS 2` → commit 200）。

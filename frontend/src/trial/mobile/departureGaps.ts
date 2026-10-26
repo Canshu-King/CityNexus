@@ -89,6 +89,12 @@ export function gapAction(row: GapRow): string {
 // 「逐项告诉我出发前缺哪些…先不要改行程」, which asked the Agent for a report of what the screen
 // already shows and forbade the one thing the label promises.  The ask now names each open item the
 // server listed, keeps everything else untouched, and re-prepares afterwards.
+// Pressing 「和 Agent 补齐出发资料」 writes an execution request into the composer, and the composer
+// sends every typed message as DISCUSS. Measured on the 430 walk: that round could only ask_traveler or
+// inspect_journey, so it ended NEEDS_DECISION/TRAVELER_INPUT_REQUIRED and all eight slots still had no
+// place. The composer imports this mark and runs the round as research instead of asking again.
+export const AGENT_ASK_MARK = "出发前还缺这几项，请逐项去来源补齐：";
+
 const ASK_VERBS: Record<string, (title: string) => string> = {
   [ASK_FOR_PLACE]: (title) => `「${title}」还没有确定地点，请在正式地点表里找一处定下来`,
   [ASK_FOR_ROUTE]: (title) => `「${title}」前面那一段路还没核实过，请量一次并告诉我几分钟`,
@@ -108,7 +114,7 @@ export function agentAskPrompt(rows: GapRow[], priceAccepted: boolean): string {
   if (!unique.length) {
     return `屏上出发待办已经没有可问的了，${priceAccepted ? "票价也确认过了，" : ""}这份方案可以直接选用。`;
   }
-  return `出发前还缺这几项，请逐项去来源补齐：${unique.join("；")}。${keepQuiet}`
+  return `${AGENT_ASK_MARK}${unique.join("；")}。${keepQuiet}`
     + "只改上面点名的这几处安排，其它日期和其它安排都保持不变。"
     // The traveller, not the Agent, saves the plan: the draft door is POST .../prepare-plan behind this
     // card's own checkbox and idempotency key, so asking the Agent to "重新准备一份方案" would invite it
