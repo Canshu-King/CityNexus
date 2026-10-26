@@ -1212,3 +1212,37 @@ T 臂终态如实记：出发门这一趟**没有**过（无 `departure/commit 2
 地图仍是未出发形态 `地图地点 0 处 · 高德地点 7 处`、`MAP_PINS 0`、`MAP_PLANNED_TAGS 0`、
 `RELOAD_MAP_COUNT_LINE` 同值 ⇒ §47 的服务端第二臂又一次在"没出发"时正确地不发射手。
 ACTIVE 那两格仍由 §50（390，5 处）与 §52（430，8 处）撑着。
+## 64. 卡片让旅客"再保存"，可那颗键保存过一次之后就永久是灰的
+
+T／U／V 三趟（`_t_arm_r67.mjs`、`_u_arm_r68.mjs`、`_v_arm_r69.mjs`）都在出发门上撞同一个死循环：
+臂照 §61 那句具名指示去挪时间、也点了保存，**新候选里时间却还是旧的**。现读把这条钉住：
+
+- 库里 V 趟计划 `b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8` 的活动 7 项，只有我漂移腿那一次改到的
+  第 7 项落成了 `19:00–19:15`；第 1 项仍是 `09:00–10:00` —— 后面两轮 `GAP_REPAIR`（改到 09:45、09:30）
+  **一次都没进新候选**；臂侧对应的是 `HIT save-drift false t=281.4`。
+- 门没有算错：`backend/app/replanning/feasibility.py:1011-1015` 判的是
+  `previous.end_at + provider.estimate_minutes(...) > current.start_at`；这一对（`real-place-00d9e27c…` →
+  `real-place-62c2e606…`）在冻结证据里是 `mode=TRANSIT`，要求大于 60 分钟，而屏上排的是 10:00 结束、
+  11:00 开始 ⇒ 空档正好 60 分钟，**确实不够**。所以门要旅客挪时间是对的。
+- 但产品把这件事变成不可能：`frontend/src/trial/mobile/DraftDepartureCard.tsx:313` 原来是
+  `disabled={!confirmed || busy || Boolean(result)}`，文案在 `result` 存在时是**「安排已保存」**。
+  上面的 14 个时间输入仍然可编辑（`:300-308` 的 `change()` 不看 `result`），
+  而卡上唯一的提交口一旦成功就永久禁用；`:316` 那颗「生成正式候选方案」只生成、不重存时间。
+  ⇒ 卡片自己的拒绝句写着「改这一项的时间再保存」，屏上却已经没有任何"再保存"可点。
+
+本刀（前端一处，两步必须同时改）：
+1. 提交键不再因已保存而过期：`disabled={!confirmed || busy}`，`result` 存在时文案改成
+   **「按以上时间重新准备方案」**（busy 分支不变）；
+2. 重存必须换新幂等键 —— `prepare()` 里 `requestKey.current ??= crypto.randomUUID()` 之前是复用同一枚，
+   服务器会把上一次的答案原样重放，改过的时间永远到不了门。现在 `if (result) requestKey.current =
+   crypto.randomUUID();`，首次仍复用（网络未知时可按同键重试，不改既有语义）。
+
+回归：`npx tsc -p tsconfig.check.json --noEmit` 退出码 0；
+`frontend/e2e/revolution-draft-preparation.spec.ts` **3 passed (14.0s)**（vite dev `:4173`，跑的是改后源码）。
+顺带确认没有别的读者依赖旧文案：全库 `安排已保存` 只剩 `:300` 那句区域副标题
+（`${slots_count} 项安排已保存，刷新也能找回。`）与 spec `:102` 对它的断言，二者一致，未受影响。
+
+**屏证状态：NOT-STARTED**。这一刀要的真读数是一趟"保存过一次 → 被门具名拒绝 → 改时间 → 再按『按以上时间重新准备方案』
+→ 新候选里那一格真的变了 → 出发门放开 → 走到 ACTIVE 且地图按 §50 计数"。下一支臂（W，从 `_v_arm_r69.mjs`
+派生，保存前先勾『按以上时间准备方案』，因为修好之后那颗键在 `confirmed=false` 时仍按规则是灰的）
+就是为这条链写的。

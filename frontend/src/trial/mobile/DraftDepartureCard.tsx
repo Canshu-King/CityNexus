@@ -122,7 +122,10 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     const token = readTravelerBearer(), epoch = scope.current;
     if (!token) return;
     inFlight.current = true; setBusy(true); setMessage("");
-    requestKey.current ??= crypto.randomUUID();
+    // Re-saving after an accepted version is a new request, not a replay: the previous idempotency key
+    // would hand back the stored answer and the edited times would never reach the door.
+    if (result) requestKey.current = crypto.randomUUID();
+    else requestKey.current ??= crypto.randomUUID();
     try {
       const answer = await cityNexusApi.prepareGoalDraft(task.journey_id, task.task_id, task.draft_artifact.revision, schedule, requestKey.current);
       if (epoch !== scope.current || token !== readTravelerBearer()) return;
@@ -310,7 +313,10 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     </details>
     <fieldset disabled={busy || task.status === "WORKING"}>
       <label><input type="checkbox" checked={confirmed} onChange={event => setConfirmed(event.target.checked)} />按以上时间准备方案</label>
-      <button type="button" disabled={!confirmed || busy || Boolean(result)} onClick={() => void prepare()}>{busy ? "正在保存安排…" : result ? "安排已保存" : "保存为正式候选方案"}</button>
+      // Once a version is saved the time fields above stay editable — the card's own refusal text tells the
+      // traveller to move a time and save again (measured on the gozero walks: 改这一项的时间再保存，其余不用动),
+      // so keeping this key dead made that instruction impossible to follow.
+      <button type="button" disabled={!confirmed || busy} onClick={() => void prepare()}>{busy ? "正在保存安排…" : result ? "按以上时间重新准备方案" : "保存为正式候选方案"}</button>
     </fieldset>
     {result && <div className="rev-v3-generate-plans">
       <button type="button" data-testid="rev-v3-generate-plans" disabled={generating} onClick={() => void generateCandidates()}>{generating ? "正在生成正式候选…" : "生成正式候选方案"}</button>
