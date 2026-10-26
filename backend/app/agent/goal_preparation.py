@@ -24,6 +24,7 @@ from app.agent.goal_draft_patch import (
     protected_draft_slot_markers,
 )
 from app.agent import goal_opening_date
+from app.agent.goal_place_research import router as place_research_router
 from app.agent.goal_artifacts import goal_research_lead
 from app.commerce.idempotency import canonical_request_signature
 from app.concurrency_guards import journey_write_lock
@@ -116,6 +117,7 @@ def validate_draft_date_constraint(*, draft: dict, date: str, slot: dict, start_
     raise refused
 
 router = APIRouter()
+router.include_router(place_research_router)
 PATH = "/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan"
 
 # The four answers a to-do line can honestly give a traveller.  Names of operations, not sentences:

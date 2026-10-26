@@ -7,6 +7,45 @@ info:
 servers:
   - url: http://localhost:8000/api/v1
 paths:
+  /journeys/{journey_id}/agent/goal-tasks/{task_id}/research-places:
+    post:
+      summary: Research explicitly requested public places without a model run
+      operationId: research_goal_places
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      - name: task_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema: {type: string, minLength: 1, maxLength: 160}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [query, provider_consent]
+              properties:
+                query: {type: string, minLength: 2, maxLength: 120}
+                source: {type: string, enum: [amap], default: amap}
+                provider_consent: {type: boolean, const: true}
+      responses:
+        '200':
+          description: Source result with task-owned canonical Place references; no AgentRun created
+          content:
+            application/json:
+              schema: {type: object, additionalProperties: true}
+        '401': {description: Signed traveler required}
+        '403': {description: Owner or source consent required}
+        '409': {description: Task is working, not DRAFT, or request key was reused}
+        '422': {description: Invalid query or missing explicit provider consent}
   /journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan:
     post:
       summary: Prepare Plan
