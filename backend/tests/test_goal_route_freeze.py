@@ -11,6 +11,7 @@ network: an edge that comes out verified here can only have been verified from a
 """
 
 import json
+from dataclasses import replace
 from datetime import datetime, timezone
 from types import SimpleNamespace
 from uuid import uuid4
@@ -34,6 +35,9 @@ PARK = {"id": "amap:TESTFIX-FREEZE-PARK", "provider": "amap", "provider_object_i
 def _no_live_answer(monkeypatch):
     """The provider cannot answer, so a verified edge here can only come from a stored receipt."""
     monkeypatch.setattr(goal_route_freeze, "_measure_now", lambda *args, **kwargs: None)
+    # This fixture models a configured provider returning no route, not a
+    # machine without credentials. No network is reachable through the double.
+    monkeypatch.setattr(goal_route_freeze, "settings", replace(goal_route_freeze.settings, amap_web_key="TEST_FIXTURE_NOT_A_KEY"))
 
 
 def _draft_with_canonical_places(client, owner, journey_id, task_id, schedule=None, bind=True):

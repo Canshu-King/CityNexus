@@ -6,6 +6,7 @@ on:
     paths:
       - backend/app/agent/**
       - backend/app/simulation/**
+      - backend/app/integrations/china/amap_provider.py
       - backend/app/planning/day_rhythm.py
       - backend/tests/test_issue47_*.py
       - backend/tests/test_issue49_*.py
@@ -51,6 +52,10 @@ jobs:
           tests/test_ord0330_cached_replan_contract_upgrade.py
           tests/test_hermes_r5_cached_replan_compatibility.py
           tests/test_agent_runtime_gate.py
+          tests/test_mobile_amap_provider.py
+          tests/test_goal_amap.py
+          tests/test_goal_route_freeze.py
+          tests/test_qoder_amap_transit_provider_r1.py
           --junitxml=classroom-results.xml
       - name: Upload fixture test results
         if: always()

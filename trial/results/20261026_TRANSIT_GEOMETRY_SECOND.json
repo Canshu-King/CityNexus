@@ -1,0 +1,32 @@
+{
+  "evidence_kind": "REAL_AMAP_HTTP_SINGLE_REQUEST_WITH_PERSISTED_PROVIDER_RECEIPT",
+  "provider_requests": 1,
+  "status": "ROUTE_READY",
+  "reason_code": null,
+  "http_status": 200,
+  "provider_call_id": "d7aa61d8-80cd-417e-832e-3ef325f6442a",
+  "places": [
+    {
+      "id": "real-place-62c2e60619da82efebfdea8c",
+      "name": "故宫博物院"
+    },
+    {
+      "id": "real-place-00d9e27cd4cc6c7b28b6509e",
+      "name": "天安门广场"
+    }
+  ],
+  "mode": "TRANSIT",
+  "duration_seconds": 3849,
+  "distance_m": 3477,
+  "geometry_status": "BLOCKED_GEOMETRY_UNAVAILABLE",
+  "provider_segment_count": 0,
+  "geometry_provenance": {
+    "source_provider": "amap-web-service",
+    "endpoint": "/v5/direction/transit/integrated",
+    "source_coordinate_system": "GCJ02",
+    "source_fields": [],
+    "conversion": null
+  },
+  "city_preflight_eligible_not_tested": true,
+  "captured_geometry_point_count": 0
+}

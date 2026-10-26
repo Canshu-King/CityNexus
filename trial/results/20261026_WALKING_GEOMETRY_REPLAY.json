@@ -1,0 +1,20 @@
+{
+  "evidence_kind": "OFFLINE_NATIVE_CAPTURE_FROM_RECORDED_REAL_AMAP_WALKING_RESPONSE",
+  "source_provider_call_id": "eca5e4c6-01f5-432c-ad76-011528661c55",
+  "source_http_status": 200,
+  "source_provider_requests": 1,
+  "provider_requests_this_replay": 0,
+  "captured_snapshot_id": "9e94dcb2-6047-4fc4-b0ee-1ba9d08f2be1",
+  "provider_segments": 28,
+  "provider_points": 114,
+  "captured_geometry_points": 107,
+  "geometry_provider": "amap-web-service",
+  "fact_quality": "LIVE_PROVIDER_CAPTURE",
+  "junction_policy": "PROVIDER_SEGMENT_JUNCTION_WITHIN_1M",
+  "max_junction_gap_m": 0.7007,
+  "inserted_coordinate_count": 0,
+  "coordinate_conversion": "GCJ02_TO_WGS84",
+  "native_geometry_fact_count": 1,
+  "published_eligible_city_count": null,
+  "catalog_or_user_database_modified": false
+}
