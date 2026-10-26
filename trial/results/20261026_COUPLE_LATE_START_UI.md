@@ -23,3 +23,5 @@
 原生刷新增量：同页面reload后仍显示苏州Day1休息+B、Day2页签及联网未勾选；当前具名task草稿JSON逐值不变，Agent43/Provider117未增。但刷新前空输入框/禁用发送，刷新后回填已经发送过的最初整段目标＋节奏且发送可点，见[刷新收据](20261026_COUPLE_LATE_START_UI/reload-receipt.json)与[原生AX](20261026_COUPLE_LATE_START_UI/reload-ax.txt)。未点发送，不能声称已实际重复请求；这是待Qoder处理的陈旧输入恢复风险，不是草稿丢失。
 
 ![刷新恢复B草稿，但底部回填已发送的初始目标](20261026_COUPLE_LATE_START_UI/couple-reloaded-390.png)
+
+AI本次同意边界：原生取消AI勾选→输入明确不许AI/联网的文字→在输入框按一次Enter，发送保持disabled，conversation/草稿/usage不变、Agent43/Provider117不增。再reload却恢复AI勾选true与发送可点，未发送的撤回文字被旧目标替换；随后再次取消勾选，未发请求。`WorkspaceActions.tsx` savedTask恢复分支从旧task consent回填modelConsent、从goalRequest回填question，与屏证一致。只是本地“本次同意”选择丢失，历史task.consent.model仍true，不冒称服务器撤权成功或实际越权收费。[安全收据](20261026_COUPLE_LATE_START_UI/consent-refresh-receipt.json)含两张390原图和原生AX索引。
