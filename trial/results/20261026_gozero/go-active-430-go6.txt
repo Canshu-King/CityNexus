@@ -1,16 +1,77 @@
-SHOT 430-g6-cold t=27.8
-HIT continue true t=28.7
+SHOT 430-g6-cold t=5.1
+HIT continue true t=6.2
 HTTP POST 201 /api/v1/journeys
-HIT tab-chat true t=32.3
-HIT open-settings true t=34.5
+HIT tab-chat true t=9.8
+HIT open-settings true t=12.1
 CONSENT /本次允许 AI 处理旅行目标/ true
 CONSENT /本次允许查询公开地图和地点来源/ true
-HIT close-settings true t=36.4
-HIT send true t=37.8
-HTTP POST 201 /api/v1/journeys/3efeb2dd-98fd-4640-991a-8d114860882c/agent/goal-tasks
+HIT close-settings true t=13.9
+HIT send true t=15.4
+HTTP POST 201 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks
 SENT
-HIT recover-ask true t=220.3
-RECOVERY 1
-SKIPPED false
-HIT recover-research true t=407.6
-RECOVERY 2
+HTTP POST 200 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/run
+HIT skip-questions true t=31.5
+SKIP t=32.2
+SKIPPED true
+DRAFT t=272.6
+DRAFT_SEEN true
+SHOT 430-g6-after-research t=273.8
+HIT tab-chat true t=274.2
+COMPOSER_ENABLED true t=276.1
+HIT send-fix false t=276.5
+FIX_SENT t=276.5
+FIX_IDLE true t=291.5
+SHOT 430-g6-after-fix t=295.3
+HIT journey-tab true t=295.7
+HIT save-1-0 true t=301.2
+HTTP POST 201 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/prepare-plan
+HIT price-1-1 true t=309.9
+HTTP POST 200 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/plans/a89739f8-a05d-4db4-8c4a-2edb457343d7/accept-unknown-price
+HIT refresh-after-price-1 true t=316.7
+HIT freeze-1-2 true t=323.5
+HTTP POST 200 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/plans/a89739f8-a05d-4db4-8c4a-2edb457343d7/freeze-routes
+HIT refresh-after-freeze-1 true t=332.2
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=338.7
+SHOT 430-g6-plans-1 t=341.8
+HIT select-1 true t=342.1
+HTTP POST 422 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/departure/commit
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+SHOT 430-g6-selected-1 t=352.7
+HIT refresh-after-select-1 true t=353.0
+HIT replan-1 true t=358.1
+HIT replan-apply-1 true t=363.3
+HTTP POST 422 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/prepare-plan
+REPLAN_APPLIED 1
+HIT journey-tab true t=398.9
+HIT refresh-start-2 true t=403.2
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=409.2
+SHOT 430-g6-plans-2 t=411.3
+HIT select-2 true t=411.6
+HTTP POST 422 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/departure/commit
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+SHOT 430-g6-selected-2 t=419.4
+HIT refresh-after-select-2 true t=419.8
+HIT replan-2 true t=424.8
+HTTP POST 200 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/plans/a89739f8-a05d-4db4-8c4a-2edb457343d7/freeze-routes
+HIT replan-apply-2 true t=430.1
+HTTP POST 422 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/prepare-plan
+REPLAN_APPLIED 2
+HIT journey-tab true t=465.9
+HIT refresh-start-3 true t=470.2
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=476.2
+SHOT 430-g6-plans-3 t=479.2
+HIT select-3 true t=479.6
+HTTP POST 422 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/departure/commit
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+SHOT 430-g6-selected-3 t=489.1
+HIT refresh-after-select-3 true t=489.4
+HIT replan-3 true t=494.5
+HTTP POST 200 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/plans/a89739f8-a05d-4db4-8c4a-2edb457343d7/freeze-routes
+HIT replan-apply-3 true t=499.8
+HTTP POST 422 /api/v1/journeys/a22411b7-5a59-4dd1-8f0a-57bf6f5972c1/agent/goal-tasks/deeb9691-83ca-462b-b4e9-2f5c8a8469dd/prepare-plan
+REPLAN_APPLIED 3
+HIT journey-tab true t=535.6
+STATE t=539.5 {"inUse":false,"next":null}
+SHOT 430-g6-final t=632.9
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n旅行插画\n已有阶段性成果\n地图\n日程\n对话\n按天调整行程\n\n7 项安排 · 2 天\n\n你的旅行草案\n\n草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。\n\nDay 1\n12-03\nDay 2\n12-04\n2026-12-03 · 3 项安排\n上午\n· 故宫博物院（午门进·神武门出）\n点击编辑\n下午\n· 景山公园（登万春亭看全景）\n点击编辑\n晚上\n· 王府井步行街（晚餐+逛街）\n点击编辑\n＋ 添加安排\n检查草案保存状态\n\n当前展示的是已保存版本。\n\n准备出发 · 正式计划与待办\n从这份安排继续\n\n7 项安排已保存，刷新也能找回。\n\n已确认时间 · 查看或调整\n按以上时间准备方案\n安排已保存\n生成正式候选方案\n\n第 7 项「南锣鼓巷（可选·胡同漫步）」 20:41–21:41：结束时间超出了这趟旅行的结束。改这一项的时间再保存，其余不用动。\n\n转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场\n\n量回来的路上时间\n前门大街（老字号晚餐+逛街） → 南锣鼓巷（可选·胡同漫步）：这一段路上要 41 分钟，中间只留了 0 分钟。\n南锣鼓巷（可选·胡同漫步）：20:00–21:00 改成 20:41–21:41，往后 41 分钟（因为上一转）。\n按这一版安排\n故宫博物院（午门进·神武门出）\n来源写这天开放（来源写的时段 08:30—16:30）；来源另写「以官方通知为准」\n景山公园（登万春亭看全景）\n来源写这天开放（来源写的时段 06:30—20:00）\n王府井步行街（晚餐+逛街）\n来源写这天开放（来源写的时段 00:00—24:00）\n天坛公园（祈年殿·回音壁·圜丘）\n来源写这天开放（来源写的时段 06:30—22:00）\n天坛园内慢走/园中园细看·休息\n来源写这天开放（来源写的时段 06:30—22:00）\n前门大街（老字号晚餐+逛街）\n来源写这天开放（来源写的时段 00:00—24:00）\n南锣鼓巷（可选·胡同漫步）\n来源写这天开放（来源写的时段 00:00—24:00）\n\n按你的确认保存：这 6 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。这一版还需要把待办逐项补完才能选用。\n\n出发待办\n故宫博物院（午门进·神武门出）\n票价：没有来源给出这一项的价格\n景山公园（登万春亭看全景）\n票价：没有来源给出这一项的价格\n王府井步行街（晚餐+逛街）\n票价：没有来源给出这一项的价格\n天坛公园（祈年殿·回音壁·圜丘）\n票价：没有来源给出这一项的价格\n天坛园内慢走/园中园细看·休息\n票价：没有来源给出这一项的价格\n前门大街（老字号晚餐+逛街）\n票价：没有来源给出这一项的价格\n南锣鼓巷（可选·胡同漫步）\n票价：没有来源给出这一项的价格\n\n屏上的出发待办都齐了，可以直接选用这份方案。\n\nTRAVEL PLAN\n你的行程方案\n刷新方案\n等待正式计划\n\n1 份正式候选方案\n\n根据路线重新安排\n方案 1\n2 天 · 7 项安排\n费用待确认\n\n这 7 项费用你已经确认先不计入预算（总价不含这些项）。\n\n12月03日\n09:00—10:00\n故宫博物院（午门进·神武门出）\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n景山公园（登万春亭看全景）\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n王府井步行街（晚餐+逛街）\n费用待确认\n查看地点来源 ↗\n12月04日\n09:00—10:00\n天坛公园（祈年殿·回音壁·圜丘）\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n天坛园内慢走/园中园细看·休息\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n前门大街（老字号晚餐+逛街）\n费用待确认\n查看地点来源 ↗\n20:00—21:00\n南锣鼓巷（可选·胡同漫步）\n费用待确认\n查看地点来源 ↗\n选用这份方案\n准备出发\n行程守护\n同行决策\nYOUR TRIP\n我的行程\n\n还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。\n\n去发现地点 →\nAI 助手\nAI 工作动态\nAI 服务\nAI 已配置 · 未验证\n本次行程\n暂无运行记录\n\n选定真实地点后，在上方确认正式行程。\n\n正式行程开始且 AI 可用时，实际工作记录会显示在这里。\n\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认\n⚙\n继续和当前 Agent 对话\n发送 ↑\n\n消息还在确认中，刷新任务查看最新进度。"
+ERRORS []

@@ -127,7 +127,10 @@ export const ASK_HOW_IT_WORKS = "按这一个按钮会把上面这些项写进�
 // The count the card shows right above that button, so the traveller knows whether pressing it can
 // still move anything.
 export function pendingCountSentence(count: number): string {
-  if (count <= 0) return "屏上的出发待办都齐了，可以直接选用这份方案。";
+  // "Nothing left to ask" is not "selectable": on the 430 walk every askable row was answered while the
+  // plan still failed the travel-gap gate, and this sentence promised 可以直接选用 two lines above the
+  // workbench's 还需要把待办逐项补完才能选用. The gate's own verdict is the only one that may say yes.
+  if (count <= 0) return "屏上的出发待办都问过了；能不能选用，以方案卡上的按钮为准。";
   return `还有 ${count} 项要主动向来源要，按下面这一个按钮逐项去补。`;
 }
 
