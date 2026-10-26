@@ -35,7 +35,7 @@ from app.agent.goal_amap import route_public_places, route_definition
 from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
 from app.agent.guardian_stream import guardian_stream, guardian_stream_definition
 from app.agent.goal_variants import save_draft_variants, variant_definition
-from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question, plain_traveller_text, claims_written_change, asks_for_schedule_change, asks_for_plan_versions, latest_traveller_request
+from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question, plain_traveller_text, claims_written_change, asks_for_schedule_change, asks_for_plan_versions, asks_to_end_questions, latest_traveller_request
 from app.agent.goal_media import read_source_media, media_tool_definition, source_lead
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
@@ -1229,7 +1229,13 @@ def resume_goal_task(
         # giving an instruction about a schedule that already exists, so the round runs as an execution
         # round. Left in DISCUSS the Agent can only talk -- which is exactly when it starts saying the
         # change has been made.
-        if (interaction_mode == "DISCUSS" and normalized_message
+        # 「不用再问了，直接开始研究」 is the traveller ending the questions themselves. On a blank trip
+        # the draft has no slots yet, so the schedule-change arm below cannot fire; without this arm the
+        # request stays in DISCUSS, where the only tools are ask_traveler and inspect_journey, and the
+        # traveller gets a seventh question instead of a plan.
+        if (interaction_mode == "DISCUSS" and normalized_message and asks_to_end_questions(normalized_message)):
+            interaction_mode = "RESEARCH"
+        elif (interaction_mode == "DISCUSS" and normalized_message
                 and (asks_for_schedule_change(normalized_message) or asks_for_plan_versions(normalized_message))
                 and any(day.get("slots") for day in ((task.get("draft_artifact") or {}).get("days") or []))):
             interaction_mode = "RESEARCH"
@@ -1330,10 +1336,13 @@ def resume_goal_task(
     editing_existing_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
     write_tool = "replace_draft_slots" if editing_existing_draft else "save_draft_itinerary"
     tool_allowlist = frozenset(tool_allowlist - ({"save_draft_itinerary"} if editing_existing_draft else {"replace_draft_slots"}))
+    stop_asking = bool(normalized_message) and asks_to_end_questions(normalized_message)
     if task.get("interaction_mode") == "DISCUSS":
         tool_allowlist = frozenset({"ask_traveler", "inspect_journey"})
     else:
         tool_allowlist = tool_allowlist | {"ask_traveler"}
+    if stop_asking:
+        tool_allowlist = frozenset(tool_allowlist - {"ask_traveler"})
     try:
         agent = _new_goal_agent(tool_allowlist)
     except AgentRuntimeUnavailable:
@@ -1404,6 +1413,12 @@ def resume_goal_task(
             "Compare preferences and experiences; do not promise free admission, zero walking, hours or ticket prices unless verified in the source fields. "
             "Do not search, change or save an itinerary in discussion mode. Explain briefly what you would research next; "
             "the traveler starts research using the separate action. Do not expose internal reasoning or tool mechanics."})
+    if stop_asking:
+        messages.append({"role": "system", "content":
+            "The traveller has ended the preference questions and asked you to start research. "
+            "ask_traveler is unavailable this turn: do not ask another question. Use what is already "
+            "decided, research the real places and routes, then save the itinerary with the write tool. "
+            "Leave every unverified price, opening hour and walking distance unknown."})
     if task["budget"].get("unlimited"):
         messages.append({"role": "system", "content": "There is no cumulative model/tool quota for this task. Finish the requested result naturally; ask_traveler when a meaningful choice is needed. Respect pause/cancel and do not repeat failed identical queries."})
     gateway = AgentToolGateway(session, bound_run_id=run.id, allow_live_discovery=False)

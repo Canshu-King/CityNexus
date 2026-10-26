@@ -592,6 +592,15 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             </button>)}
             <small>也可以在下方直接说你的想法。</small>
           </section>}
+          {/* The Agent asks one preference question per turn and every answer buys another question;
+              a pending question also hides the research button, so the discussion screen had no door
+              to research at all. Measured on the canary: six ask_traveler calls, zero draft slots.
+              This is the traveller ending the questions, not the Agent deciding to. */}
+          {visibleTask?.pending_question && <button type="button" className="rev-agent-start-research" data-testid="rev-agent-skip-questions"
+            disabled={busy || !modelConsent || !aiReady}
+            onClick={() => { followupMessageId.current = null; void sendFollowup("按已经定下的方向开始研究：把两天的安排直接保存成草案，不用再问我；缺的资料按未知处理。", "RESEARCH"); }}>
+            不选了，直接按现在的方向开始研究
+          </button>}
           {visibleTask && !visibleTask.pending_question && visibleTask.status !== "WORKING" && visibleTask.status !== "CANCELLED" &&
             <button type="button" className="rev-agent-start-research" disabled={busy || !modelConsent || !aiReady}
               onClick={() => { followupMessageId.current = null; void sendFollowup(question.trim() || "按我们讨论的方向开始研究，遇到重要取舍先给我选择。", "RESEARCH"); }}>

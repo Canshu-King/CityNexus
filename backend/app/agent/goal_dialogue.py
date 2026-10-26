@@ -66,6 +66,20 @@ def asks_for_plan_versions(text: str) -> bool:
     return any(mark in value for mark in _VERSION_MARKS)
 
 
+# Measured on the blank-trip walk (2026-10-26): six ask_traveler calls in a row, a pending question after
+# every answer, and the research button hidden while a question is on screen. The traveller's way out is to
+# say so; when they do, the Agent must stop asking and save what it has. Only explicit "stop asking" words
+# count -- a message that merely mentions research keeps the normal door.
+_STOP_ASKING_MARKS = ("不用再问我", "不要再问我", "不用问我", "别再问", "别问了", "不要再问",
+                      "直接开始研究", "按现在的方向开始研究", "按已经定下的方向开始研究",
+                      "stop asking", "start research now")
+
+
+def asks_to_end_questions(text: str) -> bool:
+    value = plain_traveller_text(text)
+    return any(mark in value for mark in _STOP_ASKING_MARKS)
+
+
 def dialogue_definition() -> dict:
     return {"type": "function", "function": {"name": "ask_traveler",
         "description": "Ask one useful travel question with concrete choices and wait for the traveler. Use for preferences or tradeoffs, not internal execution details.",
