@@ -748,3 +748,36 @@ M 臂（`trial/human_walk/_go_active_r55.mjs`，派生器 `_derive_r55_r1.py`，
 
 教训写在这里：**夹具格不等于旅客格**，借夹具作证之前要先读它到底挡在哪一层，否则我造出来的是一条
 永远不会出现的断言。新键的正证仍归 M 臂那一趟真机屏读——没看到就不说它修好了。
+## 49. M 臂撞上 prepare-plan 422，而我的仪表第二次把原因吞了
+
+M 臂（`trial/human_walk/_go_active_r55.mjs`，390×844，profile `_chrome_gozero_r56`，收据
+`trial/results/20261026_gozero/go-active-390-r55.txt`，139 行）这一趟：
+journey `82edd9eb-15e5-44f9-b35f-e85a58dd09fb`、goal task `c7bb24dc-b927-4393-9312-271ce52e2202`，
+`run http_status=200`、`resume 200`（两拍），随后 `prepare-plan http_status=422` 连续出现
+（`HIT save-3-5 t=610.8`、`save-3-6 t=617.9`、`save-3-7 t=625.0` 各带一枚 422）。
+它停在 round 3 的 save 循环里，我把这一臂停了——继续空转不会再出增量读数。
+
+**我的仪表有两处吞因，都得认。** 第一，POST 记录器只写 `HTTP POST 422 <url>`，不取响应体，所以
+`refuse_schedule_row` 附上的 rule 与行号（`backend/app/agent/goal_preparation.py:45`）没进收据。第二，
+save 分支是"按成功就 `continue`"，而打印 `.rev-plan-message, [role='alert']` 的那行在 `continue` 之后，
+永远走不到——**屏上那句具名拒绝，一次都没被记下来**。所以我现在只能说"M 臂被 422 挡住"，不能说
+"产品没告诉旅客为什么"：那是我没读。这一格标 UNREAD，不标缺陷。
+
+同型对照放在这里，免得把方差读成回归：同一支骨架在 L 臂那趟（journey `89615b8f-…`）的
+`prepare-plan` 是 `201`，到 M 臂变 `422`。两臂之间我没有改过服务端的任何字节（本刀只动前端一枚文件
+加报告），差别只可能在模型每次生成的草案内容上——也就是 #330／#315 那一族（草案里的日期与时间
+过不了校验）。具体是哪一条 rule、哪一行，等 N 臂把响应体和屏上句带回来再说。
+
+N 臂（派生器 `trial/human_walk/_derive_r57_r1.py` → `trial/human_walk/_go_active_r57.mjs`，
+profile `_chrome_gozero_r58`，收据 `go-active-390-r57.txt`）先把仪表的两处补上：非 2xx 一律带
+响应体（截 500 字，`BODY …`），以及每次按「保存为正式候选方案」之后立刻读
+`.rev-plan-message, [role='alert']` 并写 `SAVE_ALERT <round>/<i> …`。判据仍是 §37 那两格，另加一条：
+若再遇 422，收据里必须能看到产品点名的是哪一格。
+
+顺带把一条**归属**钉清楚，免得它被误记成产品缺陷：`确认方案，开始行程`（`rev-plan-start`）
+在 L 臂那趟之后一直挂在屏上没人按，原因是我的走查只在"点 select 成功那一拍"的分支里顺带点它；候选
+一旦变成 SELECTED，`rev-plan-select` 不再渲染，那条分支就再也不进。键本身在不在、按不按得到，
+我之前没有测过——所以这是**我这支臂的结构缺陷**，M／N 已各补一眼 `start-fallback`
+（`selCount === 0` 时单独找 start 并按中心命中测试点它）。旅客那一侧要等真机读数才谈得上结论。
+
+现读磁盘：D 卷可用 458 MB（17:45），N 臂还要吃一枚约 39 MB 的 profile；E 卷 47 GiB 未动。
