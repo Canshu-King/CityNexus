@@ -19,6 +19,19 @@ const ctx = await chromium.launchPersistentContext(PROFILE, {
 });
 const page = ctx.pages()[0] ?? await ctx.newPage();
 const errors = [];
+// The reading that decides where the fault is: every map-places answer this page gets, with the shape of
+// its first point.  Recorded from the very first request, not only after the map layer is opened.
+const mapReads = [];
+page.on("response", async (resp) => {
+  if (!resp.url().includes("/map-places")) return;
+  let body = null;
+  try { body = await resp.json(); } catch { body = null; }
+  const first = (body && Array.isArray(body.candidates) && body.candidates[0]) || null;
+  mapReads.push(JSON.stringify({http_status: resp.status(), candidates: Array.isArray(body?.candidates) ? body.candidates.length : null,
+    first: first && {candidate_id: String(first.candidate_id).slice(0, 22), origin: first.origin ?? null,
+      coordinate_system: first.coordinate_system ?? null, region_status: first.region_status ?? null,
+      selection_state: first.selection_state ?? null}}));
+});
 page.on("pageerror", (error) => errors.push(String(error).slice(0, 160)));
 page.on("response", async (resp) => {
   const url = resp.url();
@@ -289,6 +302,7 @@ const pane = page.locator('[data-testid="rev-mission-layer-map"]');
 const paneText = async () => (await pane.first().innerText().catch(() => "")) || "";
 note("MAP_PANE " + await pane.count());
 note("MAP_CALLS " + JSON.stringify(mapCalls));
+note("MAP_READS_EVERY " + JSON.stringify(mapReads));
 note("MAP_HEAD " + JSON.stringify((await paneText()).replace(/\s+/g, " ").slice(0, 300)));
 note("MAP_PLANNED_TAGS " + await page.locator('[data-testid="rev-map-planned-stop"]').count());
 note("MAP_LIST_ITEMS " + await page.locator('ol[aria-label="地图地点"] li').count());
@@ -311,5 +325,6 @@ await page.waitForTimeout(3000);
 note("RELOAD_MAP_COUNT_LINE " + JSON.stringify(await page.evaluate(() => (document.body.innerText.match(/地图地点 \d+ 处 · 高德地点 \d+ 处/) || [null])[0])));
 note("RELOAD_PLANNED_TAGS " + await page.locator('[data-testid="rev-map-planned-stop"]').count());
 note("RELOAD_LIST_ITEMS " + await page.locator('ol[aria-label="地图地点"] li').count());
+note("RELOAD_MAP_READS " + JSON.stringify(mapReads.slice(-3)));
 await shot(`${TAG}-g8-map-reloaded`);
 await ctx.close();

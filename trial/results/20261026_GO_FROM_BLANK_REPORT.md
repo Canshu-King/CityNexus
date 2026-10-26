@@ -527,3 +527,25 @@ run `7044b8b3…` 停在 `PAUSED_FOR_ACCEPTANCE`（已接受、事件已落定�
 
 同代前端两道门重跑：`npx tsc -p tsconfig.check.json --noEmit` RC=0；`npx vite build` RC=0（产物 `dist/v10-sw.js` 等，见 `BUILD_RC=0`）。
 
+## 36. 撤回 §35 那句成因，并把「哪一格没送到」装成读数（arm B，430 那趟在路上）
+
+arm B 是同代码、新浏览器 profile 的整趟重走（`trial/results/20261026_gozero/map-planned-390-r46.txt`，journey `8e2f7b90-5097-4870-8c8f-c368ac7b8ecc`、goal-task `db6baf38-aa27-495d-acc0-650fbe9abf02`、计划 `4495fc16-7932-4c5d-a1bf-007a7f8e9275`）：`departure/commit` `http_status=200`（t=468.1），`POST /journeys/…/start` `http_status=200`（t=474.2），库现读 `journeys.status=ACTIVE`、`active_plan_version_id=4495fc16…`、该版 6 条活动全部带 `place_id`。屏上随后（t≈579）与整页 reload 之后（t≈615）读数同类：
+
+| 读数 | 值 |
+| --- | --- |
+| `MAP_PANE` | 1（地图层确实开了，`HIT map-layer true`） |
+| `MAP_COUNT_LINE` | 「地图地点 0 处 · 高德地点 6 处」 |
+| `MAP_PLANNED_TAGS` / `MAP_LIST_ITEMS` / `MAP_PINS` / `MAP_CANVAS` | 0 / 0 / 0 / 0 |
+| `MAP_AMAP_LINKS` | 6（六枚都只在高德列表里） |
+| `RELOAD_MAP_COUNT_LINE` / `RELOAD_PLANNED_TAGS` / `RELOAD_LIST_ITEMS` | 「地图地点 0 处 · 高德地点 6 处」/ 0 / 0 |
+
+而同代同库的服务端现读（只读引擎直连 `D:/moodle/_cmdr_v3_live_1022/citynexus_v3_gozero_1026.db`，进程内调 `map_place_projection`）给的是 **6 枚**，逐枚 `coordinate_system=WGS84`、`region_status=MATCHED`、`selection_state=READY_FOR_NATIVE_PLAN`、`origin=PLAN_ACTIVITY`，坐标如 `39.916, 116.391 / 39.895, 116.394 / 39.895, 116.390 / 39.881, 116.405 / 39.936, 116.396 / 39.940, 116.379` —— 前端 `validPoint` 的每一条判据都过。签名 API 那一层也是通的：§33 的新回归第一条就断言 `[candidate_id] == [planned.id, unconverted.id]`，跑绿。访问日志里 `GET /api/v1/journeys/8e2f7b90…/map-places` 有六条 `200 OK`（`D:/moodle/_cmdr_v3_port_1022/gozero_backend_restart.log`；uvicorn 的 access log 不带时戳，所以这六条分不出出发前还是出发后）。
+
+**因此 §35 里这句要撤回**：「§33 的服务端臂把计划站发出去之后，前端仍把它们吐回高德列表 —— `allMapPoints` 先收 `map-places` 再用研究线索同 id 覆盖」。**这不是这一屏的原因**，或至少不是唯一原因：带着 §35 那道守卫重走，屏上读数与守卫前同类（0 上图 / 6 高德），如果"覆盖"是主因，守卫之后就该看到 6 枚上图。受影响并已作废的读数就是 §35 那一句成因本身；§35 里的屏上数字、DB 现读与 §33 的红集合对照不受这句话影响，照旧成立。
+
+现在这条链剩下的唯一未证格是**「浏览器这一屏拿到的 `map-places` 里有没有那 6 枚」**：`MAP_CALLS []` 已经说明"打开地图层不触发一次读"（cockpit 只在挂载与 `citynexus:plans-updated` 时读，`MissionCockpit.tsx:237-249`），而 §35 的观察「接受后不重取」正是这一格，所以 6 枚 `高德地点` 完全可能只来自研究线索（`task.research_places`，其 `coordinate_system` 由供应商名推成 GCJ02）。上一轮我把"没重取"当成已解决的旧格（§27.2 证过 journey 状态与活动会换），这一格没证。
+
+**已把量具装上**（不是改措辞，是加读数）：`trial/human_walk/_map_walk_r46.mjs:22-33` 起，页面一创建就挂响应监听，把**每一次** `map-places` 应答的 `http_status / candidates 数 / 第一枚的 origin·coordinate_system·region_status·selection_state` 逐次记进 `MAP_READS_EVERY`，reload 之后再记最后三次（`RELOAD_MAP_READS`）。`node --check` RC=0。判法预先写死，免得到时候挑读数：若 `MAP_READS_EVERY` 里出发之后的那一次 `candidates` 就是 6 且 `first.origin="PLAN_ACTIVITY"`，那屏上还缺的就是前端渲染那一环；若是 `candidates` 为空或时间戳全在出发前，缺的就是"接受后重取"那一环（也就是 §33/§35 都还没治的那格）。430×932 那一趟（profile `_chrome_gozero_map49`）正按这套读数跑。
+
+§35 那道守卫不撤：同 id 上「行自己声明 WGS84」优先于「按供应商猜 GCJ02」这件事按现读仍成立，`backend` 里也确有 WGS84 的计划行；但它治的是"顶掉"，不治"没送到"，所以本节不把它记成已生效的修复，只记成一条仍然正确的判据。
+
