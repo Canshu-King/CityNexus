@@ -1,7 +1,7 @@
 # 交付件：QODER_GO_FROM_BLANK_AND_AGENT_VISIBILITY 三刀（2026-10-27 01:08 本地 / 17:08Z 起算的同一夜）
 
-权威枝 `rescue/v3-final-departure-20261022`，本件对应尖 **a2fa12016ea8421345a6e4497eaa12a07771276c**
-（`git ls-remote` 逐字回验相同）。明细全部在 `trial/results/20261026_GO_FROM_BLANK_REPORT.md` §47–§59。
+权威枝 `rescue/v3-final-departure-20261022`，本件对应尖 **12609ae5e3f08519c82d5a17511257ab68c2815b**
+（`git ls-remote` 逐字回验相同）。明细全部在 `trial/results/20261026_GO_FROM_BLANK_REPORT.md` §47–§60。
 
 ## 1. PRODUCT_SHA（本夜落线的产品字节，逐笔可取回）
 
@@ -12,6 +12,10 @@
 | `0188ebd5f4` | `frontend/src/trial/mobile/MobilePlanWorkbench.tsx:70` `:376` | 选用门拒绝那一屏，原因句下面给可按的一枚 |
 | `c160a9cea3` | `frontend/src/trial/mobile/DraftDepartureCard.tsx:141` | `PLACE_NOT_IN_GOAL_TASK_SCOPE` 不再谎称「可以重试」 |
 | `89dbbe22c1` | （撤回）| 我自己基于 500 字截断造的冗余分支，已撤 |
+| `12609ae5e3` | `frontend/src/trial/mobile/DraftDepartureCard.tsx:343` 前 | 只有拒绝句、没有可挪行时那一块里一颗键都不剩 → 补「重新核实这几段」 |
+
+同代回归：`npx tsc -p tsconfig.check.json --noEmit` RC=0；`e2e/revolution-draft-preparation.spec.ts`
+3 passed (13.9s)；后端聚焦 **86 passed**（47+39），宽面 129 条里 15 枚红经父代对照臂证明早于本刀（§58）。
 
 ## 2. USER_CLICK_PATH（真实 Chrome，无假 DOM、无 API 代按、无 localStorage 预置）
 
