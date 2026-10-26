@@ -303,4 +303,13 @@ note("MAP_AFTER_CONSENT " + JSON.stringify((await paneText()).replace(/\s+/g, " 
 await shot(`${TAG}-g8-map-loaded`);
 note("MAP_CALLS_AFTER " + JSON.stringify(mapCalls));
 note("ERRORS_MAP " + JSON.stringify(errors.slice(0, 3)));
+// The refresh arm: a traveller who reloads must land on the same map, not on an empty one.
+await page.reload({ waitUntil: "domcontentloaded", timeout: 60000 });
+await page.waitForTimeout(12000);
+await press(page.getByRole("button", { name: /^地图$/ }), "map-layer-after-reload", 15000);
+await page.waitForTimeout(3000);
+note("RELOAD_MAP_COUNT_LINE " + JSON.stringify(await page.evaluate(() => (document.body.innerText.match(/地图地点 \d+ 处 · 高德地点 \d+ 处/) || [null])[0])));
+note("RELOAD_PLANNED_TAGS " + await page.locator('[data-testid="rev-map-planned-stop"]').count());
+note("RELOAD_LIST_ITEMS " + await page.locator('ol[aria-label="地图地点"] li').count());
+await shot(`${TAG}-g8-map-reloaded`);
 await ctx.close();

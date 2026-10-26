@@ -270,12 +270,19 @@ export function MissionCockpit({
     for (const point of [...research.places, ...research.areas, ...research.unknown]) {
       if (point.region_status === "CONFLICT") continue;
       if (point.provider_provenance === "UNVERIFIED") continue;
+      const coordinateSystem = point.coordinate_system ?? (typeof point.provider === "string" && point.provider.toLowerCase() === "amap" ? "GCJ02" : "WGS84");
+      // The same place can reach this screen twice: once as the accepted plan's own row, whose geometry
+      // the identity layer already converted and labelled WGS84, and once as the research lead, whose
+      // numbers are still the provider's GCJ02.  The lead must not replace the row -- those numbers sit
+      // hundreds of metres off the OSM tiles, and the scheduled stop would lose its own credit line.
+      const alreadyPlotted = results.get(point.id);
+      if (alreadyPlotted && alreadyPlotted.coordinate_system === "WGS84" && coordinateSystem !== "WGS84") continue;
       results.set(point.id, {
         candidate_id: point.id,
         name: point.name,
         latitude: point.latitude,
         longitude: point.longitude,
-        coordinate_system: point.coordinate_system ?? (typeof point.provider === "string" && point.provider.toLowerCase() === "amap" ? "GCJ02" : "WGS84"),
+        coordinate_system: coordinateSystem,
         provider: point.provider,
         provider_object_id: point.provider_object_id,
         adcode: point.adcode,

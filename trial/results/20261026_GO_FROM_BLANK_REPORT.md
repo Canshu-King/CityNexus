@@ -506,3 +506,24 @@ run `7044b8b3…` 停在 `PAUSED_FOR_ACCEPTANCE`（已接受、事件已落定�
 
 **(2) Codex 的 PR #56 对现尖的只读合并预测。** `git fetch origin refs/pull/56/head:refs/local/pr56` 取回 `a40d5f9c49`（该 PR 在 07:15Z 开、现已换尖）；`git merge-tree --write-tree --name-only ab2ca5913a refs/local/pr56` **RC=0、只输出树 `9e0d4bc192…`、零枚冲突路径**。按只读口径报：这是预测不是落地，未 merge、未跑真栈。文件集对账（按 merge-base 两侧各自 diff）：本线自 merge-base 起 30 枚文件、#56 侧 46 枚，交集**只有 `backend/app/agent/goal_tasks.py` 一枚** —— 我把 `stick_to_research` 装在那儿（§24 那刀），#56 在同文件 `interaction_mode` 附近加 54 行。文本层预测不撞，语义层同一扇门：**#56 若落线，必须重跑 `backend/tests/test_qoder_draft_revision_receipt_r1.py`（现尖 16 passed）才算同代**。#56 正文自己点名的未完项与本班重叠：「课堂Chrome四站、接受后地图刷新、重开浏览器身份/独立打印票、原始屏证上传与实体USER_VERIFIED仍待Qoder/用户完成」——其中「接受后地图刷新」正是 §32/§33 这一刀，且 #56 未触碰 `backend/app/planning/travel_brief.py`（其 46 枚文件里没有这枚），所以那侧没有与本刀竞争的改动。
 
+## 35. 第二次真机走把这一刀逼出第二半（390×844，现尖代码，2026-10-26 23:20 本地）
+
+走通了出发：同一浏览器会话里逐枚真点，`HTTP POST http_status=200 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/departure/commit`，journey `064ff631…`、goal-task `19d3cbe8-0e3f-4c43-a27a-6aaf30645811`、`plan_versions` 现读该 journey 仅 `24a70a0a-b8c0-42b0-993d-35a092ca8ead` 一枚且 `status=ACTIVE`、`journeys.status=ACTIVE`、`active_plan_version_id` 同号；那一版 5 条活动全部带 `place_id`，对应 `places` 五行均 `provider_key=amap`、`coordinate_system=WGS84`、`source_coordinate_system=GCJ02`。收据 `trial/results/20261026_gozero/armA-hy3-map-planned-390.txt`，屏证 `armA-390-g8-map-preview.png`、`armA-390-g8-map-loaded.png`。
+
+按「地图」层之后的读数（同文件 `MAP_` 段，逐字）：
+
+- `MAP_PANE 1`、计数行现读 **「地图地点 0 处 · 高德地点 5 处」** —— §33 那句文案已经在屏上了（不再是「OpenStreetMap 地图地点」）。
+- `MAP_PLANNED_TAGS 0`、`MAP_LIST_ITEMS 0`、`MAP_PINS 0`、`MAP_CANVAS 0`。
+- `MAP_AMAP_LINKS 5`：五枚点都带着「在高德地图打开 ↗」落在**高德列表**里，而不是画在图上。
+- `MISS load-map`：那一屏根本没有「加载地图」这枚键。读渲染分支可知这是条件渲染（`frontend/src/trial/mobile/WorkspaceMap.tsx:171` 起，`points.length > 0 || travellerOnMap` 才渲染预览块与加载键）——试玩栈没有模拟旅客，`points` 为 0 时那枚键就不存在。这条**不是**「固定输入条压住」那一类，是分支没进去；先前把 `MISS` 当成点不到会读错。
+
+屏证到此只够证一半。§33 的服务端臂把计划站发出去之后，前端仍把它们吐回高德列表：`MissionCockpit.tsx:267` 的 `allMapPoints` 先 `results.set(point.candidate_id, …)` 收下 `map-places` 的点，再遍历 `research.places/areas/unknown` 用**同一个 id** `results.set(point.id, …)` 覆盖，而覆盖时的坐标系是按供应商猜的（`frontend/src/trial/mobile/MissionCockpit.tsx:273`：provider 是 amap 就记 `GCJ02`）。于是 `places` 行自己声明的 `WGS84` 被研究副本的 `GCJ02` 顶掉 —— `validPoint()` 按 CRS 拒画、`isAmapPoint()` 按 CRS 收进高德列表，图上无处、列表有名。
+
+有一格本轮**没有**证到，写清楚：这次探针的响应监听器是在 React 自己拉完 `map-places` 之后才挂上的（`MAP_CALLS []`、`MAP_CALLS_AFTER []`），所以「那五枚到底是 `map-places` 给的还是研究线索给的」在屏上无读。`map-places` 会带出计划站这一条，凭的是 §33 的新回归与同代库现读，不是这一张屏。
+
+**本刀的第三件（补上第二半）**：`frontend/src/trial/mobile/MissionCockpit.tsx:278-279` 加守卫 —— 同一 id 已经有一枚 `coordinate_system === "WGS84"` 的点时，不让非 WGS84 的研究副本顶掉它；两侧都是 WGS84、或本来没有既存点时，行为与改前逐字相同。注释里写的是为什么：那串 GCJ02 数字画在 OSM 瓦片上会偏几百米，而且顶掉的同时会把旅客已经接受的那一站连它自己的来源署名一起丢掉。`rev-map-planned-stop` 这枚 `data-testid` 只有服务端那条臂会带（研究副本不写 `origin`），所以下一趟走查里它的计数就是「计划站真的经 `map-places` 上了图」的判子。
+
+**红集合对照（具名对拍，不是总数）**：`-k "departure or draft or plan or map"` 选中面，现尖 `49 failed / 399 passed / 9 errors`；只把 `backend/app/planning/travel_brief.py` 退回上一枚 `2176c811a8` 再跑同一条命令 → `51 failed / 397 passed / 9 errors`。两侧 `FAILED` 名单排序后互相 `comm`：**现尖独有的新红 零枚**；只在基线独有的恰是本刀新增的两条（`tests/test_qoder_map_active_plan_stops_r1.py::test_accepted_stops_reach_the_map_with_their_own_source`、`::test_a_plan_that_is_not_active_adds_no_map_points`）——撤掉产品改动它们必须红，这正是反向对照该给的结果。解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14），cwd `D:/moodle/_cmdr_rescue_v3_1022/backend`；选中面共 448 条参与、2297 条 deselect，**不是**全量 2401 口径，因此不据此判其它域。
+
+同代前端两道门重跑：`npx tsc -p tsconfig.check.json --noEmit` RC=0；`npx vite build` RC=0（产物 `dist/v10-sw.js` 等，见 `BUILD_RC=0`）。
+
