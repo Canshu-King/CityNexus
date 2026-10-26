@@ -1,64 +1,47 @@
-SHOT 390-g4-cold t=4.9
-HIT continue true t=5.8
+SHOT 390-g4-cold t=5.0
+HIT continue true t=5.9
 HTTP POST 201 /api/v1/journeys
 HIT tab-chat true t=9.4
-HIT open-settings true t=11.6
+HIT open-settings true t=11.7
 CONSENT /本次允许 AI 处理旅行目标/ true
 CONSENT /本次允许查询公开地图和地点来源/ true
 HIT close-settings true t=13.6
 HIT send true t=15.0
-HTTP POST 201 /api/v1/journeys/b49cfe49-7987-4bf6-b8b4-47a50129c926/agent/goal-tasks
+HTTP POST 201 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/agent/goal-tasks
 SENT
-HTTP POST 200 /api/v1/journeys/b49cfe49-7987-4bf6-b8b4-47a50129c926/agent/goal-tasks/07527975-e54f-4d7a-962e-4011dcd59796/run
-HIT skip-questions true t=58.2
-SKIP t=58.9
+HTTP POST 200 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/agent/goal-tasks/49a999d6-dcf5-4c98-85a8-9055be068a18/run
+HIT skip-questions true t=28.1
+SKIP t=28.8
 SKIPPED true
-DRAFT t=131.1
+DRAFT t=125.0
 DRAFT_SEEN true
-SHOT 390-g4-after-research t=131.2
-HIT tab-chat true t=131.5
-HTTP POST 200 /api/v1/journeys/b49cfe49-7987-4bf6-b8b4-47a50129c926/agent/goal-tasks/07527975-e54f-4d7a-962e-4011dcd59796/resume
-COMPOSER_ENABLED true t=157.5
-HIT send-fix true t=157.9
-FIX_SENT t=158.6
-HTTP POST 200 /api/v1/journeys/b49cfe49-7987-4bf6-b8b4-47a50129c926/agent/goal-tasks/07527975-e54f-4d7a-962e-4011dcd59796/resume
-FIX_IDLE true t=298.9
-SHOT 390-g4-after-fix t=298.9
-HIT journey-tab true t=299.4
-HIT save-1-0 true t=302.8
-HTTP POST 201 /api/v1/journeys/b49cfe49-7987-4bf6-b8b4-47a50129c926/agent/goal-tasks/07527975-e54f-4d7a-962e-4011dcd59796/prepare-plan
-HIT price-1-1 true t=309.8
-HTTP POST 200 /api/v1/journeys/b49cfe49-7987-4bf6-b8b4-47a50129c926/agent/goal-tasks/07527975-e54f-4d7a-962e-4011dcd59796/plans/3e3c55cc-111e-4f44-9396-54228b91d29b/accept-unknown-price
-HIT refresh-after-price-1 true t=314.9
-HIT freeze-1-2 true t=320.0
-HTTP POST 200 /api/v1/journeys/b49cfe49-7987-4bf6-b8b4-47a50129c926/agent/goal-tasks/07527975-e54f-4d7a-962e-4011dcd59796/plans/3e3c55cc-111e-4f44-9396-54228b91d29b/freeze-routes
-HIT refresh-after-freeze-1 true t=327.0
-LOOP 1/3 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/4 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/5 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/6 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/7 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/8 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/9 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/10 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/11 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/12 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/13 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/14 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/15 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/16 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/17 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/18 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/19 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/20 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/21 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/22 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 1/23 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-HIT refresh-start-2 true t=437.7
-LOOP 2/0 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 2/1 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 2/2 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 2/3 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 2/4 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 2/5 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
-LOOP 2/6 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["8 项费用待确认，尚未计入完整预算。","这版方案还缺：营业时间。出发待办逐处写着找谁要。票价这一项你已经确认先不计入预算（8 处没有来源）。"] ALERT []
+SHOT 390-g4-after-research t=125.0
+HIT tab-chat true t=125.4
+HTTP POST 200 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/agent/goal-tasks/49a999d6-dcf5-4c98-85a8-9055be068a18/resume
+COMPOSER_ENABLED true t=135.3
+HIT send-fix true t=135.7
+FIX_SENT t=136.4
+HTTP POST 200 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/agent/goal-tasks/49a999d6-dcf5-4c98-85a8-9055be068a18/resume
+FIX_IDLE true t=231.6
+SHOT 390-g4-after-fix t=231.6
+HIT journey-tab true t=231.9
+HIT save-1-0 true t=235.3
+HTTP POST 201 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/agent/goal-tasks/49a999d6-dcf5-4c98-85a8-9055be068a18/prepare-plan
+HIT price-1-1 true t=242.4
+HTTP POST 200 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/agent/goal-tasks/49a999d6-dcf5-4c98-85a8-9055be068a18/plans/4cab4148-3295-4a27-8ca9-699d62b59d87/accept-unknown-price
+HIT refresh-after-price-1 true t=247.4
+HIT freeze-1-2 true t=252.5
+HTTP POST 200 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/agent/goal-tasks/49a999d6-dcf5-4c98-85a8-9055be068a18/plans/4cab4148-3295-4a27-8ca9-699d62b59d87/freeze-routes
+HIT refresh-after-freeze-1 true t=259.6
+SHOT 390-g4-plans-1 t=264.4
+HIT select-1 true t=264.7
+HTTP POST 200 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/departure/commit
+SELECT_REFUSAL []
+SHOT 390-g4-selected-1 t=270.5
+HIT start-journey true t=270.8
+HTTP POST 200 /api/v1/journeys/693a693a-6289-422c-9ca4-b2a860db5ef5/start
+SHOT 390-g4-started t=281.6
+STATE t=281.6 {"inUse":false,"next":"下一站准备情况"}
+SHOT 390-g4-final t=371.8
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n旅途正在继续。\n换地区 ›\n故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0\n行程执行中\n地图\n执行与待办\n课堂演示 · 模拟时间与推进都在课堂控制台里\n去课堂控制台 ↓\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：故宫博物院（午门进、神武门出） · 12月3日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：故宫博物院（午门进、神武门出）\n接下来：景山公园（俯瞰故宫全景）\n路线还需要检查。\n检查路线\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员。\n附近有什么可以顺路玩？\n点击后读取一次当前位置。推荐仅你可见，距离以直线计算。\n个人时间偏好\n15 分钟\n30 分钟\n45 分钟\n兴趣（可选）\n随便看看\n咖啡 / 美食\n文化\n自然\n查找附近体验\n直接搜索真实附近地点（需同意）\n你: 尚未分享位置\n集合点：故宫博物院（午门进、神武门出）（来自当前行程安排）\n显示同行者的粗略位置；浏览器定位供路线参考。\n同时看着后面的行程\nI’m watching the rest of your journey.\n未来 0 个行程点 · 看到 00:43\nAGENT 计划\n高级信息\nPlanning AI is ready.\n照看这趟行程\n你将从哪里出发？\nCityNexus 需要一个明确的起点，才能估算何时出发。\n也可以选择一个已验证的地点作为计划起点。\n下一站准备情况\n故宫博物院（午门进、神武门出）\n基本准备好了 · 仍有实时信息未确认。\n路线尚未准备好。\n\n当前没有需要你决定的调整。\n\nCITYNEXUS · 工作动态\n行程照看未开启\n未启用\n\n开启后会留意行程变化。\n\n查看最近工作记录\n行程助手\nAI 当前没有执行中的任务\n点击后把这趟行程的信息交给助手\n检查行程\n高级信息\nCITYNEXUS · AI 助手\n让助手检查当前行程\n\n暂无助手运行记录。现场模型可能要几分钟，赶时间请直接用上面的调整卡。\n\n行程进行中\n行程守护\n添加同行者后使用\n课堂时空模拟｜不是实际定位或真实灾情\n模拟时间：12/03 09:00 · 服务器第 0 版\n现实演示时间：10/26 12:44\n当前站：故宫博物院（午门进、神武门出）\n+30 分钟\n+1 小时\n到下一站\n\n行程已开始，可以在「我的旅程」继续调整。\n\n行程已经启动\n\n实时进度、变更建议和 Agent 审批现在都在「行程」里。\n\n查看当前行程 →\n当前行程\n\n这里显示行程监测、助手运行记录和待确认操作。\n\n回到行程工作台\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认\n你希望它检查什么\n发送 ↑"
+ERRORS []

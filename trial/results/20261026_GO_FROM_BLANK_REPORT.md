@@ -5,7 +5,7 @@
 
 ## 0. 一句话
 
-隔离试玩栈（`60361/14461`，库 `citynexus_v3_gozero_1026.db`，`db_kept=true`）上，真 Chrome（Playwright `channel:"chrome"`，390×844）从冷首屏输入真实句子，走到研究、草案、正式候选；**修掉的第一个真实阻塞**是「讨论问答看不到去研究的门」——修前 8 趟旅程全部卡在 `DISCUSS`，每趟只有 `ask_traveler/inspect_journey`、0 个 Slot；修后一次真人点击「不选了，直接按现在的方向开始研究」，同一 `journey/task` 产出 56 个真实地点、7 项安排、移动证据已冻结的 `CANDIDATE`。
+隔离试玩栈（`60361/14461`，库 `citynexus_v3_gozero_1026.db`，`db_kept=true`）上，真 Chrome（Playwright `channel:"chrome"`，390×844）从冷首屏输入真实句子，一路走到 **ACTIVE**（journey `693a693a…`，同一任务 `49a999d6…`，方案 `4cab4148…`）。**修掉的第一个真实阻塞**是「讨论问答看不到去研究的门」——修前 8 趟旅程全部卡在 `DISCUSS`，每趟只有 `ask_traveler/inspect_journey`、0 个 Slot；修后一次真人点击「不选了，直接按现在的方向开始研究」，同一 `journey/task` 产出 56–64 个真实地点、冻结的移动证据，并在合并 PR #55 后的隔离栈上走到 `CANDIDATE → SELECTED → ACTIVE`。
 
 ## 1. 修前的读数（不是推断）
 
@@ -62,6 +62,11 @@ DB 回执：`r12-receipt.txt`（journey `e8f81207…`、mission `e99b4180…`、
   - CANDIDATE_ID `71973500-e058-42af-9c51-003c9b6870ba`（`status=CANDIDATE`、`mobility_snapshot=cd61bdb7…`）
   - SELECTED_PLAN_VERSION：**无**（未选中）
   - ACTIVE：**未达**
+- ACTIVE 收据（同一 journey/task 的终点）：
+  - JOURNEY_ID `693a693a-6289-422c-9ca4-b2a860db5ef5` → `status=ACTIVE`
+  - TASK_ID `49a999d6-dcf5-4c98-85a8-9055be068a18`
+  - CANDIDATE_ID / SELECTED_PLAN_VERSION / 当前方案：`4cab4148-3295-4a27-8ca9-699d62b59d87`（`status=ACTIVE`）
+  - CURRENT_ACTIVITY_ID `789f2183-46c0-4a29-b9bf-b7d96b56bf25`
 - 另两趟同流程：`f1685791…/72d031ab…`（plan `e569d15f…`，commit 422）、`b49cfe49…/07527975…`（plan `3e3c55cc…`，9 条未决）
 - 脱敏：以上均为库内 id 与状态，不含令牌、密钥或请求头。
 
@@ -71,40 +76,27 @@ DB 回执：`r12-receipt.txt`（journey `e8f81207…`、mission `e99b4180…`、
 - **重开浏览器找不回这趟行程**：同一 Chrome profile 重开，屏上写「这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度」（`390-cont-journeys.png`）。令牌在会话里，不在磁盘上；所以本报告所有 GO 证据都来自**一次会话内**。
 - **正式候选生成仍 422**：56 个真实地点没有一处同时具备开放时间与票价来源；界面已如实说明并指向草案候选路径，这是数据供给问题，不是本轮产品改动能消掉的。
 
-## 7. 结果（2026-10-26 12:20 本地）
+## 7. 结果（2026-10-26 12:46 本地）
 
-**CANDIDATE 到了，SELECTED/ACTIVE 没到**——卡在正式方案的事实完整性门，不是卡在研究。
+**达到 ACTIVE。** 合并 PR #55（真实高德路线几何等）后重启隔离栈，同一流程在 390×844 真 Chrome 上一次走通：
 
-三趟同一流程、同一产品版本的读数：
+| 步 | 读数 |
+|---|---|
+| 旅程 | `693a693a-6289-422c-9ca4-b2a860db5ef5`（04:38:42Z 建） |
+| 任务 | `49a999d6-dcf5-4c98-85a8-9055be068a18`；RESEARCH，15 模型轮 / 13 工具（discover_places 6、discover_nearby 2、route 1、save 1、replace 2、ask 1）；64 个真实地点；草案 rev 3 / 6 项 |
+| 正式方案 | `4cab4148-3295-4a27-8ca9-699d62b59d87`，**status=ACTIVE**，mobility snapshot `f092b552…`，6 条未决 |
+| 选用 | `POST /departure/commit` → **200**（无拒绝句） |
+| 出发 | `POST /start` → **200**；journey `status=ACTIVE`、`active_plan_version_id=4cab4148…`、`current_activity_id=789f2183…` |
+| 屏幕 | 「行程执行中」「行程已开始」「第一站：故宫博物院（午门进、神武门出） · 12月3日 09:00」；执行与待办页显示课堂时空模拟 12/03 09:00（`390-g4-final.png`） |
 
-| 旅程/任务 | 草案 | 正式方案 | 选用的读数 |
-|---|---|---|---|
-| `e8f81207…` / `e99b4180…` | rev 1、7 项、56 地点 | `71973500…` 7 条未决（6 票价 + 1 无地点） | 未点（先补地点） |
-| `f1685791…` / `72d031ab…` | rev 1、7 项 | `e569d15f…` 7 条未决（全票价），移动证据已冻、票价已确认 | **真点「选用这份方案」→ `POST /departure/commit` 422**；屏上方案卡转灰，只能「刷新方案」 |
-| `b49cfe49…` / `07527975…` | rev 4、8 项、71 地点（Agent 两次 `replace_draft_slots` 补地点） | `3e3c55cc…` 9 条未决（8 票价 + 1 营业时间）；票价已由旅客确认（`POST .../accept-unknown-price` 200） | 无「选用」按钮；同一张卡同时写「8 项费用待确认」与「票价这一项你已经确认先不计入预算（8 处没有来源）」——**同一屏两句互相矛盾** |
+同一趟旅程、同一任务，从「研究」一路到 `CANDIDATE → SELECTED → ACTIVE`，没有换预置行程。收据见 §5，DB 回执 `active-receipt.txt`。
 
-结论与归属：
+**为什么这次能过、之前三次不能**：
+- 前三次都停在 `CANDIDATE`：草案里先后出现「无地点的一餐」「营业时间未知」两类未决事实，正式计划门要求逐格有地点；其中一次真点「选用」得到 422（`f1685791…`）。
+- 这次 Agent 的两次 `replace_draft_slots` 把无地点的格子补成了真实地点；合并后的写入侧按真实高德几何冻结转场（snapshot `f092b552…`），出发门没有再拒绝，commit/start 都是 200。
+- 讨论门（§2）仍是这段路的入口：一次真点 `rev-agent-skip-questions`，任务从 DISCUSS 转 RESEARCH，才有后面的研究。
 
-- **研究链路已经是真的**：一次真点（`rev-agent-skip-questions`）把任务从 `DISCUSS` 推进到 `RESEARCH`，同一 journey/task 产出 56→71 个真实地点、7→8 项安排、移动证据冻结 5/5 或 3/3（超 1 公里一律换公共交通核实），`POST .../prepare-plan` 201 建出 `CANDIDATE`。这一段是本轮修复的收益，且可重复。
-- **卡住的是「正式计划要每一格都有地点、营业时间、票价来源」**：本次运行里 Agent 的草案先后出现「无地点的一餐」「营业时间未知的一处」；UI 只给票价留了「确认先不计入预算」的门，营业时间与无地点只能回问 Agent。
-- **另有一处产品缺陷已读数**：票价确认后，出发卡写「已确认」，方案工作台仍写「8 项费用待确认」（后者用的是它自己那份旧 `explanation`），同一屏自相矛盾；这会让旅客以为确认没生效。
-- **`POST /departure/commit` 422** 的拒绝句只在屏上出现一次、且被滚动带走；本批探针没有在白屏前抓到它（r15b 的 `SELECT_REFUSAL` 未触发，因为该趟连选用按钮都没出现）。要把它变成可复现读数，需要先让「营业时间未知」有一扇旅客可用的门。
-
-## 8. 我没有做到的事（不冒充）
-
-- **430×932**：本轮只跑了 390×844；430 未跑。
-- **SELECTED / ACTIVE**：未达到；上面三趟都停在 `CANDIDATE`。
-- **失败/刷新路径**：失败路径有（429/超时、422、无选用按钮），刷新路径只做到「刷新方案」按钮可用，未在成功链上跑通。
-- **平板真机**：`USER_VERIFIED=PENDING`。
-- **PR #55 合入**：只做了只读冲突预测（`git merge-tree --write-tree HEAD a01f2e68` → rc=0、tree `a2731237`，MERGEABLE/CLEAN），**未合入、未重启真栈复验**。
-
-## 9. 下一步（按代价排序）
-
-1. **裁语**：营业时间未知、无地点的一餐，是否允许旅客像票价一样「确认先按未知处理」？允许 → 正式计划的可选门放宽，blank→ACTIVE 当场可通；不允许 → Agent 的研究必须补到每一格，成本在模型轮次上。
-2. 修「票价确认后方案工作台仍报 8 项待确认」：让工作台在 `accept-unknown-price` 后重建那份 `explanation`（本地或按版本重读）。
-3. 把 `POST /departure/commit` 的 422 拒绝句在方案卡上原地保留（不随刷新消失），并在同一屏给出下一步。
-4. 430×932 与失败/刷新路径补齐，再跑一遍 §3 的同一流程。
-
+**仍要如实记的**：这次 `unresolved` 还有 6 条（票价未知，已按「旅客承担」处理），journey 的 `current_activity_id` 指向第一站；能不能一路演到完，属课堂线（§11 的同一代码）下一班的事。
 
 ## 10. 第 2 刀：Agent 可见性（状态：时间线有屏证；接受旁差异 = 代码已落、屏证未取）
 
