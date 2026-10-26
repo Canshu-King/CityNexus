@@ -142,6 +142,16 @@ function nextActionSentence(task: { status: string; pending_question?: unknown; 
   return "可以继续补充要求，或按现在的方向开始研究。";
 }
 
+/** Name the model outcome instead of one generic sentence; both were measured on 2026-10-26. */
+function failureSentence(code: string): string {
+  if (code === "MODEL_HTTP_429") return "现场模型被限流（HTTP 429），这一轮没有跑完，结果也没有保存；等一会儿再试这一轮即可。";
+  if (code === "MODEL_TIMEOUT") return "现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。";
+  if (code.startsWith("MODEL_HTTP_")) return `现场模型这一轮返回失败（HTTP ${code.slice("MODEL_HTTP_".length)}），结果没有保存；可以重试这一轮。`;
+  if (code === "MODEL_EMPTY_RESPONSE" || code === "MODEL_OUTPUT_BUDGET_EXHAUSTED") return "现场模型这一轮没有给出可用内容，结果没有保存；可以重试这一轮。";
+  if (code === "MODEL_RUNTIME_UNAVAILABLE") return "这台演示机上的 Agent 运行时没有启动；请让管理员检查后重试。";
+  return "这次有一部分还没完成，你可以继续告诉我想怎么调整。";
+}
+
 function taskStepText(result: Record<string, unknown>): string {
   const route = result.route && typeof result.route === "object" ? result.route as Record<string, unknown> : null;
   if (route && typeof route.distance_m === "number" && Number.isFinite(route.distance_m) && route.distance_m >= 0
@@ -649,7 +659,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           <h3>旅行研究 · {researchHeadline(visibleTask)}</h3>
 
           {visibleTask.assistant_summary && <details><summary>本轮研究摘要</summary><p>{visibleTask.assistant_summary}</p></details>}
-          {visibleTask.failure_code && !["TRAVELER_INPUT_REQUIRED", "MODEL_BUDGET_EXHAUSTED", "TOOL_BUDGET_EXHAUSTED"].includes(visibleTask.failure_code) && <p>这次有一部分还没完成，你可以继续告诉我想怎么调整。</p>}
+          {visibleTask.failure_code && !["TRAVELER_INPUT_REQUIRED", "MODEL_BUDGET_EXHAUSTED", "TOOL_BUDGET_EXHAUSTED"].includes(visibleTask.failure_code) && <p role="alert" data-testid="rev-agent-failure">{failureSentence(visibleTask.failure_code)}</p>}
 
           {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
           {visibleEvents.length > 0 && <details className="rev-workspace-timeline" open={!embedded}>
