@@ -1,0 +1,217 @@
+SHOT 390-go-cold t=5.1
+HIT continue true t=6.0
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.6
+HIT open-settings true t=11.8
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.6
+HIT send true t=15.1
+HTTP POST 201 /api/v1/journeys/f1685791-ce1f-4fc7-8a00-ce57fb739cd3/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/f1685791-ce1f-4fc7-8a00-ce57fb739cd3/agent/goal-tasks/72d031ab-192a-4ba2-bb46-e92e131353f3/run
+SHOT 390-go-pending-question t=37.0
+HIT skip-questions true t=37.3
+SKIP_PRESSED t=38.0
+SKIPPED true
+DRAFT_SEEN t=170.3
+SHOT 390-go-after-research t=170.3
+DRAFT_SEEN true
+HIT journey-tab true t=170.6
+HTTP POST 200 /api/v1/journeys/f1685791-ce1f-4fc7-8a00-ce57fb739cd3/agent/goal-tasks/72d031ab-192a-4ba2-bb46-e92e131353f3/resume
+HIT save-1-0 true t=179.8
+HTTP POST 201 /api/v1/journeys/f1685791-ce1f-4fc7-8a00-ce57fb739cd3/agent/goal-tasks/72d031ab-192a-4ba2-bb46-e92e131353f3/prepare-plan
+SHOT 390-go-saved-1-0 t=186.5
+HIT accept-price-1-1 true t=186.9
+HTTP POST 200 /api/v1/journeys/f1685791-ce1f-4fc7-8a00-ce57fb739cd3/agent/goal-tasks/72d031ab-192a-4ba2-bb46-e92e131353f3/plans/e569d15f-f7c1-425e-8fcb-c5674dcafb9e/accept-unknown-price
+HIT freeze-1-2 true t=193.0
+HTTP POST 200 /api/v1/journeys/f1685791-ce1f-4fc7-8a00-ce57fb739cd3/agent/goal-tasks/72d031ab-192a-4ba2-bb46-e92e131353f3/plans/e569d15f-f7c1-425e-8fcb-c5674dcafb9e/freeze-routes
+ROUTE_STATE ["转场已核实 6/6（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实，另有 1 段公共交通没有答案，仍按步行核实，超过1 公里） · 已冻结进这版方案\n重新核实转场"]
+SHOT 390-go-plans-1 t=199.7
+HIT select-1-3 true t=200.1
+HTTP POST 422 /api/v1/journeys/f1685791-ce1f-4fc7-8a00-ce57fb739cd3/departure/commit
+SHOT 390-go-selected-1 t=208.8
+SHOT 390-go-plans-2 t=208.9
+HIT select-2-0 false t=209.2
+LOOP round=2 i=0 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=214.3
+HIT select-2-1 false t=214.7
+LOOP round=2 i=1 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=219.8
+HIT select-2-2 false t=220.1
+LOOP round=2 i=2 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=225.2
+HIT select-2-3 false t=225.5
+LOOP round=2 i=3 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=230.5
+HIT select-2-4 false t=230.9
+LOOP round=2 i=4 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=236.0
+HIT select-2-5 false t=236.3
+LOOP round=2 i=5 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=241.3
+HIT select-2-6 false t=241.7
+LOOP round=2 i=6 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=246.7
+HIT select-2-7 false t=247.0
+LOOP round=2 i=7 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=252.1
+HIT select-2-8 false t=252.4
+LOOP round=2 i=8 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=257.4
+HIT select-2-9 false t=257.8
+LOOP round=2 i=9 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=262.8
+HIT select-2-10 false t=263.2
+LOOP round=2 i=10 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=268.2
+HIT select-2-11 false t=268.5
+LOOP round=2 i=11 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=273.6
+HIT select-2-12 false t=273.9
+LOOP round=2 i=12 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=278.9
+HIT select-2-13 false t=279.3
+LOOP round=2 i=13 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=284.3
+HIT select-2-14 false t=284.6
+LOOP round=2 i=14 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=289.7
+HIT select-2-15 false t=290.0
+LOOP round=2 i=15 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=295.1
+HIT select-2-16 false t=295.4
+LOOP round=2 i=16 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=300.5
+HIT select-2-17 false t=300.8
+LOOP round=2 i=17 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=305.9
+HIT select-2-18 false t=306.2
+LOOP round=2 i=18 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=311.2
+HIT select-2-19 false t=311.6
+LOOP round=2 i=19 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=316.6
+HIT select-2-20 false t=317.0
+LOOP round=2 i=20 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=322.0
+HIT select-2-21 false t=322.3
+LOOP round=2 i=21 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=327.4
+HIT select-2-22 false t=327.7
+LOOP round=2 i=22 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=332.8
+HIT select-2-23 false t=333.1
+LOOP round=2 i=23 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=338.2
+HIT select-2-24 false t=338.5
+LOOP round=2 i=24 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=343.5
+HIT select-2-25 false t=343.9
+LOOP round=2 i=25 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=348.9
+HIT select-2-26 false t=349.3
+LOOP round=2 i=26 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=354.3
+HIT select-2-27 false t=354.6
+LOOP round=2 i=27 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=359.7
+HIT select-2-28 false t=360.0
+LOOP round=2 i=28 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-2 t=365.1
+HIT select-2-29 false t=365.4
+LOOP round=2 i=29 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=370.5
+HIT select-3-0 false t=370.9
+LOOP round=3 i=0 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=375.9
+HIT select-3-1 false t=376.2
+LOOP round=3 i=1 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=381.3
+HIT select-3-2 false t=381.6
+LOOP round=3 i=2 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=386.7
+HIT select-3-3 false t=387.0
+LOOP round=3 i=3 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=392.1
+HIT select-3-4 false t=392.4
+LOOP round=3 i=4 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=397.4
+HIT select-3-5 false t=397.8
+LOOP round=3 i=5 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=402.8
+HIT select-3-6 false t=403.1
+LOOP round=3 i=6 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=408.2
+HIT select-3-7 false t=408.5
+LOOP round=3 i=7 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=413.6
+HIT select-3-8 false t=413.9
+LOOP round=3 i=8 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=418.9
+HIT select-3-9 false t=419.2
+LOOP round=3 i=9 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=424.3
+HIT select-3-10 false t=424.6
+LOOP round=3 i=10 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=429.7
+HIT select-3-11 false t=430.0
+LOOP round=3 i=11 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=435.1
+HIT select-3-12 false t=435.4
+LOOP round=3 i=12 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=440.5
+HIT select-3-13 false t=440.8
+LOOP round=3 i=13 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=445.8
+HIT select-3-14 false t=446.2
+LOOP round=3 i=14 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=451.2
+HIT select-3-15 false t=451.5
+LOOP round=3 i=15 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=456.6
+HIT select-3-16 false t=456.9
+LOOP round=3 i=16 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=462.0
+HIT select-3-17 false t=462.3
+LOOP round=3 i=17 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=467.3
+HIT select-3-18 false t=467.6
+LOOP round=3 i=18 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=472.7
+HIT select-3-19 false t=473.0
+LOOP round=3 i=19 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=478.1
+HIT select-3-20 false t=478.4
+LOOP round=3 i=20 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=483.4
+HIT select-3-21 false t=483.8
+LOOP round=3 i=21 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=488.8
+HIT select-3-22 false t=489.1
+LOOP round=3 i=22 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=494.2
+HIT select-3-23 false t=494.5
+LOOP round=3 i=23 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=499.6
+HIT select-3-24 false t=499.9
+LOOP round=3 i=24 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=505.0
+HIT select-3-25 false t=505.3
+LOOP round=3 i=25 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=510.3
+HIT select-3-26 false t=510.6
+LOOP round=3 i=26 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=515.7
+HIT select-3-27 false t=516.0
+LOOP round=3 i=27 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=521.1
+HIT select-3-28 false t=521.4
+LOOP round=3 i=28 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+SHOT 390-go-plans-3 t=526.4
+HIT select-3-29 false t=526.7
+LOOP round=3 i=29 GATE ["等待正式计划\n\n1 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。"]
+STATE t=531.8 {"inUse":false,"nextStop":null}
+SHOT 390-go-final t=652.0
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0\n已有阶段性成果\n地图\n日程\n对话\n按天调整行程\n\n7 项安排 · 2 天\n\n你的旅行草案\n\n草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。\n\nDay 1\n12-03\nDay 2\n12-04\n2026-12-03 · 4 项安排\n天安门广场（看升旗/逛广场）\nN509FZ · CC BY-SA 4.0\n故宫博物院\nuser:kallgan · CC BY-SA 3.0\n上午\n· 天安门广场（看升旗/逛广场）\n点击编辑\n上午\n· 故宫博物院\n点击编辑\n下午\n· 景山公园（俯瞰故宫全景）\n点击编辑\n晚上\n· 前门大街（晚餐+老字号）\n点击编辑\n＋ 添加安排\n检查草案保存状态\n\n当前展示的是已保存版本。\n\n准备出发 · 正式计划与待办\n从这份安排继续\n\n7 项安排已保存，刷新也能找回。\n\n已确认时间 · 查看或调整\n按以上时间准备方案\n安排已保存\n生成正式候选方案\n\n转场已核实 6/6（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实，另有 1 段公共交通没有答案，仍按步行核实，超过1 公里） · 已冻结进这版方案\n重新核实转场\n\n量回来的路上时间\n天安门广场（看升旗/逛广场） → 故宫博物院：这一段路上要 78 分钟，中间只留了 60 分钟。\n根据路线重新安排\n天安门广场（看升旗/逛广场）\n来源写这天开放（来源写的时段 05:00—20:30）\n故宫博物院\n来源写这天开放（来源写的时段 08:30—16:30）；来源另写「以官方通知为准」\n景山公园（俯瞰故宫全景）\n来源写这天开放（来源写的时段 06:30—20:00）\n前门大街（晚餐+老字号）\n来源写这天开放（来源写的时段 00:00—24:00）\n颐和园\n来源写这天开放（来源写的时段 06:30—19:00）\n南锣鼓巷（胡同文艺漫步）\n来源写这天开放（来源写的时段 00:00—24:00）\n什刹海（后海夜景）\n来源写这天开放（来源写的时段 00:00—24:00）\n\n按你的确认保存：这 7 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。这一版还需要把待办逐项补完才能选用。\n\n出发待办\n天安门广场（看升旗/逛广场）\n票价：没有来源给出这一项的价格\n故宫博物院\n票价：没有来源给出这一项的价格\n景山公园（俯瞰故宫全景）\n票价：没有来源给出这一项的价格\n前门大街（晚餐+老字号）\n票价：没有来源给出这一项的价格\n颐和园\n票价：没有来源给出这一项的价格\n南锣鼓巷（胡同文艺漫步）\n票价：没有来源给出这一项的价格\n什刹海（后海夜景）\n票价：没有来源给出这一项的价格\n\n屏上的出发待办都齐了，可以直接选用这份方案。\n\nTRAVEL PLAN\n你的行程方案\n刷新方案\n等待正式计划\n\n1 份正式候选方案\n\n这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。\n\n根据路线重新安排\n方案 1\n2 天 · 7 项安排\n费用待确认\n\n7 项费用待确认，尚未计入完整预算。\n\n12月03日\n09:00—10:00\n天安门广场（看升旗/逛广场）\n费用待确认\n查看地点来源 ↗\n11:00—12:00\n故宫博物院\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n景山公园（俯瞰故宫全景）\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n前门大街（晚餐+老字号）\n费用待确认\n查看地点来源 ↗\n12月04日\n09:00—10:00\n颐和园\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n南锣鼓巷（胡同文艺漫步）\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n什刹海（后海夜景）\n费用待确认\n查看地点来源 ↗\n选用这份方案\n准备出发\n行程守护\n同行决策\nYOUR TRIP\n我的行程\n\n还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。\n\n去发现地点 →\nAI 助手\nAI 工作动态\nAI 服务\nAI 已配置 · 未验证\n本次行程\n"
+ERRORS []
