@@ -365,16 +365,51 @@ class AmapClient:
         steps = selected.get("steps")
         if distance is None or duration is None or not isinstance(steps, list):
             return {**_base_result("error", "AMAP_INVALID_RESPONSE", http_status), "route": None}
-        coordinates: list[list[float]] = []
-        for step in steps:
-            if not isinstance(step, dict) or not isinstance(step.get("polyline"), str):
+        geometry_segments: list[dict[str, Any]] = []
+        source_fields: list[str] = []
+        geometry_field_seen = False
+        incomplete = False
+        for step_index, step in enumerate(steps):
+            if not isinstance(step, dict):
+                incomplete = True
                 continue
-            for point in step["polyline"].split(";"):
-                parsed = self._parse_location(point)
-                if parsed is not None and (not coordinates or coordinates[-1] != parsed):
-                    coordinates.append(parsed)
-        if len(coordinates) < 2:
-            return {**_base_result("error", "AMAP_INVALID_RESPONSE", http_status), "route": None}
+            polyline = step.get("polyline")
+            source_field = self._polyline_source_field(
+                polyline, f"paths[0].steps[{step_index}].polyline"
+            )
+            raw_polyline = polyline.get("polyline") if isinstance(polyline, dict) else polyline
+            if isinstance(raw_polyline, str) and raw_polyline.strip():
+                geometry_field_seen = True
+                source_fields.append(source_field)
+            coordinates = self._parse_polyline(polyline)
+            if coordinates is None:
+                step_distance = _nonnegative_int(step.get("distance"))
+                if step_distance is None or step_distance > 0:
+                    incomplete = True
+                continue
+            geometry_segments.append(
+                {
+                    "segment_index": 0,
+                    "subsegment_index": step_index,
+                    "mode": "WALK",
+                    "source_field": source_field,
+                    "coordinate_system": "GCJ02",
+                    "coordinates": coordinates,
+                }
+            )
+        if not geometry_segments:
+            geometry_status = "BLOCKED_GEOMETRY_INCOMPLETE" if geometry_field_seen else "BLOCKED_GEOMETRY_UNAVAILABLE"
+            path = None
+        elif incomplete:
+            geometry_status = "BLOCKED_GEOMETRY_INCOMPLETE"
+            path = None
+        else:
+            coordinates, geometry_status = self._join_polyline_segments(geometry_segments)
+            path = (
+                {"type": "LineString", "coordinates": coordinates, "coordinate_system": "GCJ02"}
+                if coordinates is not None
+                else None
+            )
         route = {
             "provider_key": self.provider_key,
             "mode": "WALK",
@@ -383,7 +418,17 @@ class AmapClient:
             "duration_min": math.ceil(duration / 60),
             "origin": self._point(*origin_pair),
             "destination": self._point(*destination_pair),
-            "path": {"type": "LineString", "coordinates": coordinates, "coordinate_system": "GCJ02"},
+            "path": path,
+            "geometry_segments": geometry_segments,
+            "geometry_status": geometry_status,
+            "geometry_provenance": {
+                "source_provider": self.provider_key,
+                "endpoint": "/v5/direction/walking",
+                "source_coordinate_system": "GCJ02",
+                "source_fields": source_fields,
+                **self._junction_provenance(geometry_segments),
+                "conversion": None,
+            },
             "coordinate_system": "GCJ02",
             "adcode": normalized_adcode,
         }
@@ -410,8 +455,9 @@ class AmapClient:
         quietly dropped, because a daytime answer to a night question is exactly the failure this exists
         to avoid.
 
-        No geometry is returned.  Nothing in the product draws a transit polyline yet, and a half-parsed
-        one would look on the map like a route the provider never showed us.
+        Transit geometry is optional.  We retain each provider polyline with its segment/source field,
+        and expose a whole-route LineString only when every routed leg has geometry and the pieces meet.
+        A missing or discontinuous piece remains an explicit geometry gap; it is never bridged with a chord.
         """
         origin_pair = _coordinate_pair(origin)
         destination_pair = _coordinate_pair(destination)
@@ -435,7 +481,7 @@ class AmapClient:
             "destination": f"{destination_lon:.6f},{destination_lat:.6f}",
             "city1": normalized_city,
             "city2": normalized_city,
-            "show_fields": "cost",
+            "show_fields": "cost,polyline",
         }
         if date_text is not None and time_text is not None:
             params["date"] = date_text
@@ -456,17 +502,47 @@ class AmapClient:
         duration = _nonnegative_int(duration_value)
         if distance is None or duration is None:
             return {**_base_result("error", "AMAP_INVALID_RESPONSE", http_status), "route": None}
-        lines: list[str] = []
         segments = selected.get("segments")
-        for segment in segments if isinstance(segments, list) else []:
+        path, geometry_segments, geometry_status, geometry_provenance = self._transit_geometry(segments)
+        lines: list[str] = []
+        line_alternatives: list[dict[str, Any]] = []
+        for segment_index, segment in enumerate(segments if isinstance(segments, list) else []):
             if not isinstance(segment, dict):
                 continue
             bus = segment.get("bus")
             buslines = bus.get("buslines") if isinstance(bus, dict) else None
-            for line in buslines if isinstance(buslines, list) else []:
-                name = _text(line.get("name"), maximum=120) if isinstance(line, dict) else None
-                if name and name not in lines:
-                    lines.append(name)
+            if not isinstance(buslines, list) or not buslines:
+                continue
+            alternatives: list[dict[str, Any]] = []
+            for line_index, line in enumerate(buslines):
+                if not isinstance(line, dict):
+                    alternatives.append({"index": line_index, "name": None, "geometry_available": False})
+                    continue
+                name = _text(line.get("name"), maximum=120)
+                polyline = line.get("polyline")
+                alternatives.append(
+                    {
+                        "index": line_index,
+                        "name": name,
+                        "geometry_source_field": self._polyline_source_field(
+                            polyline,
+                            f"segments[{segment_index}].bus.buslines[{line_index}].polyline",
+                        ),
+                        "geometry_available": self._parse_polyline(polyline) is not None,
+                    }
+                )
+            selected_name = alternatives[0].get("name") if alternatives else None
+            if selected_name and selected_name not in lines:
+                lines.append(selected_name)
+            line_alternatives.append(
+                {
+                    "segment_index": segment_index,
+                    "selected_index": 0,
+                    "selection": "FIRST_PROVIDER_RETURNED",
+                    "alternative_count": len(buslines),
+                    "alternatives": alternatives,
+                }
+            )
         fare: int | None = None
         fare_text = cost.get("transit_fee") if isinstance(cost, dict) else None
         if fare_text not in (None, ""):
@@ -483,10 +559,15 @@ class AmapClient:
             "origin": self._point(*origin_pair),
             "destination": self._point(*destination_pair),
             "lines": lines,
+            "line_alternatives": line_alternatives,
             "walking_distance_m": _nonnegative_int(selected.get("walking_distance")),
             "fare_minor": fare,
             "nightflag": selected.get("nightflag"),
             "requested_departure": {"date": date_text, "time": time_text} if date_text and time_text else None,
+            "path": path,
+            "geometry_segments": geometry_segments,
+            "geometry_status": geometry_status,
+            "geometry_provenance": geometry_provenance,
             "coordinate_system": "GCJ02",
             "city_code": normalized_city,
         }
@@ -518,6 +599,223 @@ class AmapClient:
             return None
         latitude, longitude = pair
         return [longitude, latitude]
+
+    def _parse_polyline(self, value: Any) -> list[list[float]] | None:
+        """Parse one provider polyline without skipping a bad point and joining across its gap."""
+        if isinstance(value, dict):
+            value = value.get("polyline")
+        if not isinstance(value, str):
+            return None
+        coordinates: list[list[float]] = []
+        for raw_point in value.split(";"):
+            if not raw_point:
+                continue
+            point = self._parse_location(raw_point)
+            if point is None:
+                return None
+            if not coordinates or coordinates[-1] != point:
+                coordinates.append(point)
+        return coordinates if len(coordinates) >= 2 else None
+
+    @staticmethod
+    def _polyline_source_field(value: Any, field: str) -> str:
+        return field + ".polyline" if isinstance(value, dict) else field
+
+    @staticmethod
+    def _junction_gap_m(left, right):
+        lat1, lat2 = math.radians(left[1]), math.radians(right[1])
+        delta_lat = lat2 - lat1
+        delta_lon = math.radians(right[0] - left[0])
+        haversine = math.sin(delta_lat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(delta_lon / 2) ** 2
+        return 2 * 6371008.8 * math.asin(min(1.0, math.sqrt(haversine)))
+
+    @classmethod
+    def _junction_provenance(cls, segments):
+        gaps = [cls._junction_gap_m(a["coordinates"][-1], b["coordinates"][0]) for a,b in zip(segments, segments[1:])]
+        return {
+            "junction_policy": "PROVIDER_SEGMENT_JUNCTION_WITHIN_1M",
+            "max_junction_gap_m": round(max(gaps, default=0.0), 4),
+            "inserted_coordinate_count": 0,
+        }
+
+    @classmethod
+    def _join_polyline_segments(cls, segments):
+        if not segments:
+            return None, "BLOCKED_GEOMETRY_UNAVAILABLE"
+        coordinates = list(segments[0]["coordinates"])
+        for segment in segments[1:]:
+            points = segment["coordinates"]
+            # Real AMap steps measured sub-metre endpoint rounding differences.
+            # Retain both samples; never bridge a missing road/transfer leg.
+            if cls._junction_gap_m(coordinates[-1], points[0]) > 1.0:
+                return None, "BLOCKED_GEOMETRY_DISCONNECTED"
+            coordinates.extend(points[1:] if coordinates[-1] == points[0] else points)
+        return coordinates, "AVAILABLE"
+
+    def _transit_geometry(
+        self, segments: Any
+    ) -> tuple[dict[str, Any] | None, list[dict[str, Any]], str, dict[str, Any]]:
+        """Project AMap's real walking and transit subsegment polylines, preserving gaps."""
+        endpoint = "/v5/direction/transit/integrated"
+        if not isinstance(segments, list) or not segments:
+            return None, [], "BLOCKED_GEOMETRY_UNAVAILABLE", {
+                "source_provider": self.provider_key,
+                "endpoint": endpoint,
+                "source_coordinate_system": "GCJ02",
+                "source_fields": [],
+                "conversion": None,
+            }
+
+        geometry_segments: list[dict[str, Any]] = []
+        geometry_source_fields: list[str] = []
+        geometry_field_seen = False
+        incomplete = False
+
+        def needs_geometry(distance: Any) -> bool:
+            measured = _nonnegative_int(distance)
+            return measured is None or measured > 0
+
+        def append_polyline(
+            *, polyline: Any, segment_index: int, subsegment_index: int,
+            mode: str, source_field: str, line_name: str | None = None,
+        ) -> None:
+            nonlocal incomplete, geometry_field_seen
+            source_field = self._polyline_source_field(polyline, source_field)
+            raw_polyline = polyline.get("polyline") if isinstance(polyline, dict) else polyline
+            if isinstance(raw_polyline, str) and raw_polyline.strip():
+                geometry_field_seen = True
+                geometry_source_fields.append(source_field)
+            coordinates = self._parse_polyline(polyline)
+            if coordinates is None:
+                incomplete = True
+                return
+            item: dict[str, Any] = {
+                "segment_index": segment_index,
+                "subsegment_index": subsegment_index,
+                "mode": mode,
+                "source_field": source_field,
+                "coordinate_system": "GCJ02",
+                "coordinates": coordinates,
+            }
+            if line_name:
+                item["line_name"] = line_name
+            geometry_segments.append(item)
+
+        for segment_index, segment in enumerate(segments):
+            if not isinstance(segment, dict):
+                incomplete = True
+                continue
+            recognized_leg = False
+
+            if "walking" in segment:
+                recognized_leg = True
+                walking = segment.get("walking")
+                steps = walking.get("steps") if isinstance(walking, dict) else None
+                if not isinstance(steps, list):
+                    incomplete = incomplete or (not isinstance(walking, dict) or needs_geometry(walking.get("distance")))
+                else:
+                    for step_index, step in enumerate(steps):
+                        if not isinstance(step, dict):
+                            incomplete = True
+                            continue
+                        polyline = step.get("polyline")
+                        if polyline is None:
+                            if needs_geometry(step.get("distance")):
+                                incomplete = True
+                            continue
+                        append_polyline(
+                            polyline=polyline,
+                            segment_index=segment_index,
+                            subsegment_index=step_index,
+                            mode="WALK",
+                            source_field=f"segments[{segment_index}].walking.steps[{step_index}].polyline",
+                        )
+
+            if "bus" in segment:
+                recognized_leg = True
+                bus = segment.get("bus")
+                buslines = bus.get("buslines") if isinstance(bus, dict) else None
+                if not isinstance(buslines, list) or not buslines:
+                    incomplete = True
+                else:
+                    # Lines listed within one segment are alternatives, not
+                    # consecutive journeys to concatenate into a loop.
+                    for line_index, line in enumerate(buslines[:1]):
+                        if not isinstance(line, dict):
+                            incomplete = True
+                            continue
+                        polyline = line.get("polyline")
+                        if polyline is None:
+                            incomplete = True
+                            continue
+                        append_polyline(
+                            polyline=polyline,
+                            segment_index=segment_index,
+                            subsegment_index=line_index,
+                            mode="TRANSIT",
+                            source_field=f"segments[{segment_index}].bus.buslines[{line_index}].polyline",
+                            line_name=_text(line.get("name"), maximum=120),
+                        )
+
+            for mode_key in ("railway", "taxi"):
+                if mode_key not in segment:
+                    continue
+                recognized_leg = True
+                leg = segment.get(mode_key)
+                if not isinstance(leg, dict):
+                    incomplete = True
+                    continue
+                polyline = leg.get("polyline")
+                if isinstance(polyline, (str, dict)):
+                    append_polyline(
+                        polyline=polyline,
+                        segment_index=segment_index,
+                        subsegment_index=0,
+                        mode=mode_key.upper(),
+                        source_field=f"segments[{segment_index}].{mode_key}.polyline",
+                    )
+                    continue
+                steps = leg.get("steps")
+                if isinstance(steps, list):
+                    for step_index, step in enumerate(steps):
+                        if not isinstance(step, dict) or step.get("polyline") is None:
+                            incomplete = True
+                            continue
+                        append_polyline(
+                            polyline=step.get("polyline"),
+                            segment_index=segment_index,
+                            subsegment_index=step_index,
+                            mode=mode_key.upper(),
+                            source_field=f"segments[{segment_index}].{mode_key}.steps[{step_index}].polyline",
+                        )
+                else:
+                    incomplete = True
+
+            if not recognized_leg:
+                incomplete = True
+
+        provenance = {
+            "source_provider": self.provider_key,
+            "endpoint": endpoint,
+            "source_coordinate_system": "GCJ02",
+            "source_fields": geometry_source_fields,
+            **self._junction_provenance(geometry_segments),
+            "conversion": None,
+        }
+        if not geometry_segments:
+            status = "BLOCKED_GEOMETRY_INCOMPLETE" if geometry_field_seen else "BLOCKED_GEOMETRY_UNAVAILABLE"
+            return None, [], status, provenance
+        if incomplete:
+            return None, geometry_segments, "BLOCKED_GEOMETRY_INCOMPLETE", provenance
+
+        coordinates, joined_status = self._join_polyline_segments(geometry_segments)
+        if coordinates is None:
+            return None, geometry_segments, joined_status, provenance
+        return {
+            "type": "LineString",
+            "coordinates": coordinates,
+            "coordinate_system": "GCJ02",
+        }, geometry_segments, "AVAILABLE", provenance
 
     def _parse_places(
         self,

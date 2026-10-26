@@ -270,8 +270,25 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             "Generate deterministic candidate plans from server-owned Place IDs. This creates candidates only; it never selects or activates a plan.",
             {
                 **journey,
-                "place_ids": _property("array", items=_property("string")),
-                "candidate_count": _property("integer", minimum=1, maximum=5),
+                "place_ids": _property(
+                    "array",
+                    items=_property("string"),
+                    minItems=2,
+                    uniqueItems=True,
+                    description=(
+                        "At least two different server-owned Place IDs already returned by "
+                        "CityNexus tools; do not invent IDs."
+                    ),
+                ),
+                "candidate_count": _property(
+                    "integer",
+                    minimum=1,
+                    maximum=5,
+                    description=(
+                        "Number of alternative plans to generate; this is not the number of "
+                        "Places in a plan."
+                    ),
+                ),
                 "planning_mode": _property("string"),
             },
             ["journey_id", "place_ids"],

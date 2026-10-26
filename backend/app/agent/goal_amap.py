@@ -128,6 +128,8 @@ def _store_places(task: dict, result: dict, region: dict) -> list[dict]:
             "id": "amap:" + external_id, "name": name, "category": str(item.get("category") or "attraction")[:80],
             "provider": "amap", "provider_object_id": external_id, "provider_provenance": "LIVE_PROVIDER",
             "latitude": latitude, "longitude": longitude, "coordinate_system": "GCJ02", "adcode": adcode,
+            "requested_adcode": str(region.get("adcode") or "") or None,
+            "provider_call_id": str(result.get("provider_call_id") or "") or None,
             "public_address": address, "region_status": status, "location_kind": "POI",
             "source_url": "https://uri.amap.com/marker?" + urlencode({"position": f"{longitude},{latitude}", "name": name, "coordinate": "gaode", "callnative": "0"}),
             "captured_at": item.get("captured_at") or _now(),
@@ -177,6 +179,7 @@ def discover_amap_goal_places(session, journey, task: dict, *, query: str, publi
 
 def route_public_places(session, journey, task: dict, *, from_place_id: str, to_place_id: str, public_action: str = "") -> dict:
     from app.agent.goal_artifacts import goal_research_lead
+    from app.agent.goal_mobility import route_geometry_wgs84
     origin, destination = goal_research_lead(task, from_place_id), goal_research_lead(task, to_place_id)
     if not origin or not destination or from_place_id == to_place_id:
         raise HTTPException(403, "ROUTE_POINTS_NOT_IN_GOAL_TASK_SCOPE")
@@ -203,13 +206,67 @@ def route_public_places(session, journey, task: dict, *, from_place_id: str, to_
         result = _receipt(session, "goal_amap_walking", {"from_place_id": from_place_id, "to_place_id": to_place_id, "coordinate_system": "GCJ02"}, client.walking(start, end))
     route = result.get("route")
     if isinstance(route, dict) and result.get("status") in {"ROUTE_READY", "RESULTS", "SUCCESS"}:
-        route = {"id": result["provider_call_id"], "from_place_id": from_place_id, "to_place_id": to_place_id,
-                 "from_name": origin["name"], "to_name": destination["name"], "provider": "amap", "coordinate_system": "GCJ02",
-                 "distance_m": route.get("distance_m"), "duration_seconds": route.get("duration_seconds"), "captured_at": _now(),
-                 "source_url": "https://uri.amap.com/navigation?" + urlencode({"from": f"{start[1]},{start[0]},{origin['name']}", "to": f"{end[1]},{end[0]},{destination['name']}", "mode": "walk", "coordinate": "gaode", "callnative": "0"})}
-        task.setdefault("research_routes", []).append(route)
+        provider_route = route
+        provider_call_id = str(result["provider_call_id"])
+        captured_at = _now()
+        geometry_source = {
+            **provider_route,
+            "id": provider_call_id,
+            "provider_call_id": provider_call_id,
+            "from_place_id": from_place_id,
+            "to_place_id": to_place_id,
+            "captured_at": captured_at,
+        }
+        route_geometry = route_geometry_wgs84(geometry_source, provider_call_id=provider_call_id)
+        provider_geometry_status = str(provider_route.get("geometry_status") or "")
+        if route_geometry is not None:
+            geometry_status = provider_geometry_status or "AVAILABLE"
+        elif provider_geometry_status and provider_geometry_status != "AVAILABLE":
+            geometry_status = provider_geometry_status
+        elif isinstance(provider_route.get("path"), dict) or isinstance(provider_route.get("route_geometry"), dict):
+            geometry_status = "BLOCKED_GEOMETRY_CONVERSION_FAILED"
+        else:
+            geometry_status = "BLOCKED_GEOMETRY_UNAVAILABLE"
+        raw_provenance = provider_route.get("geometry_provenance")
+        geometry_provenance = dict(raw_provenance) if isinstance(raw_provenance, dict) else {}
+        if route_geometry is not None:
+            geometry_provenance.update(route_geometry["properties"])
+        else:
+            path = provider_route.get("path")
+            source_crs = path.get("coordinate_system") if isinstance(path, dict) else provider_route.get("coordinate_system")
+            geometry_provenance.update(
+                {
+                    "source_provider": provider_route.get("provider_key") or "amap-web-service",
+                    "provider_call_id": provider_call_id,
+                    "source_coordinate_system": source_crs or "UNKNOWN",
+                    "domain_crs": "WGS84",
+                    "conversion": "FAILED" if geometry_status == "BLOCKED_GEOMETRY_CONVERSION_FAILED" else None,
+                    "geometry_status": geometry_status,
+                }
+            )
+        stored_route = {
+            "id": provider_call_id,
+            "from_place_id": from_place_id,
+            "to_place_id": to_place_id,
+            "from_name": origin["name"],
+            "to_name": destination["name"],
+            "provider": "amap",
+            "coordinate_system": "GCJ02",
+            "distance_m": provider_route.get("distance_m"),
+            "duration_seconds": provider_route.get("duration_seconds"),
+            "captured_at": captured_at,
+            "path": provider_route.get("path"),
+            "geometry_segments": list(provider_route["geometry_segments"])
+            if isinstance(provider_route.get("geometry_segments"), list)
+            else [],
+            "geometry_status": geometry_status,
+            "route_geometry": route_geometry,
+            "geometry_provenance": geometry_provenance,
+            "source_url": "https://uri.amap.com/navigation?" + urlencode({"from": f"{start[1]},{start[0]},{origin['name']}", "to": f"{end[1]},{end[0]},{destination['name']}", "mode": "walk", "coordinate": "gaode", "callnative": "0"}),
+        }
+        task.setdefault("research_routes", []).append(stored_route)
         task["research_routes"] = task["research_routes"][-16:]
-        return {**result, "tool": "route_public_places", "status": "ROUTE_READY", "provider": "amap", "provider_provenance": "LIVE_PROVIDER", "route": route}
+        return {**result, "tool": "route_public_places", "status": "ROUTE_READY", "provider": "amap", "provider_provenance": "LIVE_PROVIDER", "route": stored_route}
     return {**result, "tool": "route_public_places", "provider": "amap", "public_action": public_action[:120]}
 
 

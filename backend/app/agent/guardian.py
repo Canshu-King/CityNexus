@@ -346,6 +346,11 @@ def _model_recovery(
                 resume.owner_claim_token = None
                 resume.owner_claimed_at = None
                 resume.updated_at = _now().isoformat()
+            # A classroom retry is a traveller action. Do not leave its failed
+            # attempt RUNNING while silently trying another billable runtime.
+            from app.simulation.clock import simulation_scope_active
+            if simulation_scope_active():
+                raise
             if index + 1 >= len(runtimes):
                 raise
         finally:

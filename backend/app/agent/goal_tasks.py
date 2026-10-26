@@ -32,7 +32,11 @@ from app.agent.goal_artifacts import (
 )
 from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, domain_result, compare_stored_routes, route_tool_definition
 from app.agent.goal_amap import route_public_places, route_definition
-from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
+from app.agent.goal_draft_patch import (
+    draft_patch_definition,
+    reconcile_user_draft,
+    replace_draft_slots,
+)
 from app.agent.guardian_stream import guardian_stream, guardian_stream_definition
 from app.agent.goal_variants import save_draft_variants, variant_definition
 from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question, plain_traveller_text, claims_written_change, asks_for_schedule_change, asks_for_plan_versions, asks_to_end_questions, latest_traveller_request
@@ -444,7 +448,7 @@ def update_goal_draft(session, journey, member, mission_id, *, days, expected_re
     current = task.get("draft_artifact") or empty_draft(journey)
     if current["revision"] != expected_revision:
         raise refuse_draft_edit(DRAFT_CHANGED_RELOAD)
-    task["draft_artifact"] = normalize_draft(journey, task, days, author="USER")
+    task["draft_artifact"] = reconcile_user_draft(journey, task, days)
     task["updated_at"] = _now()
     mission.intent_json = _json_dump(intent)
     _emit_event(session, journey, member, mission, intent, event_type="TASK_DRAFT_UPDATED", status=task["status"])
@@ -694,6 +698,8 @@ def _initial_messages(
         "the server resolves the destination administrative code. Nearby searches around an Amap ID use Amap. "
         "Use route_public_places for actual walking distance/time between task-owned public research IDs. "
         "For an existing draft, use replace_draft_slots with exactly the requested date/time block. "
+        "If the traveller specifies an earliest start time, send start_not_before as HH:MM on that exact block; do not leave the time rule only in notes. "
+        "If a structured protected activity conflicts with that time, name its time and ask what the traveller wants changed; do not assume consent. "
         "Do not update a different period, meal, or research todo unless asked. All other blocks are retained by the server. "
         "Existing research routes can answer traffic questions without another external request. A verbal suggestion is not a saved edit. "
         "read_guardian_stream reads existing Journey observations, impacts and recovery epochs only; "
@@ -753,9 +759,16 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if name in DOMAIN_TOOLS:
         return domain_args(name, raw, task)
     if name == "replace_draft_slots":
-        if set(raw) != {"date", "time_of_day", "slots"}:
+        required = {"date", "time_of_day", "slots"}
+        allowed = required | {"start_not_before"}
+        if not required.issubset(raw) or set(raw) - allowed:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
-        return {"date": raw["date"], "time_of_day": raw["time_of_day"], "slots": raw["slots"]}
+        arguments = {"date": raw["date"], "time_of_day": raw["time_of_day"], "slots": raw["slots"]}
+        if "start_not_before" in raw:
+            if not isinstance(raw["start_not_before"], str):
+                raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+            arguments["start_not_before"] = raw["start_not_before"]
+        return arguments
     if name == "route_public_places":
         if set(raw) - {"from_place_id", "to_place_id", "public_action"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -939,7 +952,12 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
     if name == "save_draft_variants":
         return {"variant_count": len(args.get("variants") or [])}
     if name == "replace_draft_slots":
-        return {"date": args.get("date"), "time_of_day": args.get("time_of_day"), "slot_count": len(args.get("slots") or [])}
+        return {
+            "date": args.get("date"),
+            "time_of_day": args.get("time_of_day"),
+            "start_not_before": args.get("start_not_before"),
+            "slot_count": len(args.get("slots") or []),
+        }
     if name == "route_public_places":
         return {key: args.get(key) for key in ("from_place_id", "to_place_id", "public_action")}
 
@@ -999,6 +1017,15 @@ def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
                 "http_status": result.get("http_status"),
                 "public_action": result.get("public_action"), "provider": result.get("provider"),
                 "provider_provenance": result.get("provider_provenance") }
+    if name == "replace_draft_slots" and result.get("status") == "NEEDS_USER_CHOICE":
+        return {
+            "status": result.get("status"),
+            "reason_code": result.get("reason_code"),
+            "date": result.get("date"),
+            "time_of_day": result.get("time_of_day"),
+            "start_not_before": result.get("start_not_before"),
+            "conflicts": result.get("conflicts") or [],
+        }
     if name in {"save_draft_itinerary", "replace_draft_slots"}:
         draft = result.get("draft_artifact")
         if not isinstance(draft, dict):
@@ -1707,10 +1734,14 @@ def resume_goal_task(
                             mission.intent_json = _json_dump(intent)
                             session.commit()
                         elif tool_name == "replace_draft_slots":
-                            task["draft_artifact"] = replace_draft_slots(journey, task, **args)
-                            raw_result = {"tool": tool_name, "status": "DRAFT_SAVED", "draft_artifact": task["draft_artifact"]}
-                            mission.intent_json = _json_dump(intent)
-                            session.commit()
+                            patch_result = replace_draft_slots(journey, task, **args)
+                            if patch_result.get("status") == "NEEDS_USER_CHOICE":
+                                raw_result = {"tool": tool_name, **patch_result}
+                            else:
+                                task["draft_artifact"] = patch_result
+                                raw_result = {"tool": tool_name, "status": "DRAFT_SAVED", "draft_artifact": task["draft_artifact"]}
+                                mission.intent_json = _json_dump(intent)
+                                session.commit()
                         elif tool_name == "save_draft_itinerary":
                             task["draft_artifact"] = normalize_draft(journey, task, args["days"], author="MODEL_SUGGESTION")
                             raw_result = {"tool": tool_name, "status": "DRAFT_SAVED", "draft_artifact": task["draft_artifact"]}

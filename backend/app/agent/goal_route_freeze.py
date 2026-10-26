@@ -40,7 +40,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.agent.goal_amap import _client, _receipt
-from app.agent.goal_mobility import StoredAmapWalkingRoutes
+from app.agent.goal_mobility import StoredAmapRoutes, route_geometry_wgs84
 from app.agent.goal_tasks import _require_task
 from app.commerce.idempotency import canonical_request_signature
 from app.concurrency_guards import journey_write_lock
@@ -149,6 +149,73 @@ def _stored_route(task: dict, origin_key: str, destination_key: str) -> dict | N
         if pair == {origin_key, destination_key} and row.get("duration_seconds") is not None:
             return row
     return None
+
+
+def _orient_reused_route(route: dict, origin_key: str, destination_key: str,
+                         origin: Place, destination: Place) -> dict:
+    """Reverse stored geometry for a reverse reuse while retaining the original provider receipt."""
+    measured_from = str(route.get("from_place_id") or "")
+    measured_to = str(route.get("to_place_id") or "")
+    if measured_from != destination_key or measured_to != origin_key:
+        return route
+
+    oriented = dict(route)
+    oriented["measurement_from_place_id"] = route.get("measurement_from_place_id") or measured_from
+    oriented["measurement_to_place_id"] = route.get("measurement_to_place_id") or measured_to
+    oriented["from_place_id"] = origin_key
+    oriented["to_place_id"] = destination_key
+    oriented["from_name"] = origin.name
+    oriented["to_name"] = destination.name
+    oriented["lookup_reused_in_reverse"] = True
+
+    path = route.get("path")
+    if isinstance(path, dict) and path.get("type") == "LineString":
+        coordinates = path.get("coordinates")
+        oriented["path"] = {
+            **path,
+            "coordinates": [list(point) for point in reversed(coordinates)] if isinstance(coordinates, list) else [],
+        }
+
+    geometry = route.get("route_geometry")
+    if isinstance(geometry, dict):
+        raw_geometry = geometry.get("geometry") if geometry.get("type") == "Feature" else geometry
+        if isinstance(raw_geometry, dict) and raw_geometry.get("type") == "LineString":
+            coordinates = raw_geometry.get("coordinates")
+            reversed_geometry = {
+                **raw_geometry,
+                "coordinates": [list(point) for point in reversed(coordinates)] if isinstance(coordinates, list) else [],
+            }
+            if geometry.get("type") == "Feature":
+                properties = dict(geometry.get("properties") or {})
+                properties["lookup_direction"] = "REVERSED_STORED_MEASUREMENT"
+                oriented["route_geometry"] = {**geometry, "properties": properties, "geometry": reversed_geometry}
+            else:
+                oriented["route_geometry"] = reversed_geometry
+
+    segments = route.get("geometry_segments")
+    if isinstance(segments, list):
+        reversed_segments: list[dict] = []
+        for item in reversed(segments):
+            if not isinstance(item, dict):
+                continue
+            segment = dict(item)
+            coordinates = item.get("coordinates")
+            if isinstance(coordinates, list):
+                segment["coordinates"] = [list(point) for point in reversed(coordinates)]
+            reversed_segments.append(segment)
+        oriented["geometry_segments"] = reversed_segments
+
+    provenance = route.get("geometry_provenance")
+    provenance = dict(provenance) if isinstance(provenance, dict) else {}
+    provenance.update(
+        {
+            "lookup_direction": "REVERSED_STORED_MEASUREMENT",
+            "measurement_from_place_id": oriented["measurement_from_place_id"],
+            "measurement_to_place_id": oriented["measurement_to_place_id"],
+        }
+    )
+    oriented["geometry_provenance"] = provenance
+    return oriented
 
 
 # Two refusals look the same on the traveller's screen and are not the same thing at all.
@@ -280,6 +347,44 @@ def _transit_leg(session: Session, task: dict, origin: Place, destination: Place
     return route
 
 
+def _route_geometry_fields(route: dict, *, provider_call_id: str | None = None) -> dict:
+    geometry = route_geometry_wgs84(route, provider_call_id=provider_call_id)
+    provider_status = str(route.get("geometry_status") or "")
+    if geometry is not None:
+        status = provider_status or "AVAILABLE"
+    elif provider_status and provider_status != "AVAILABLE":
+        status = provider_status
+    elif isinstance(route.get("path"), dict) or isinstance(route.get("route_geometry"), dict):
+        status = "BLOCKED_GEOMETRY_CONVERSION_FAILED"
+    else:
+        status = "BLOCKED_GEOMETRY_UNAVAILABLE"
+    provenance = route.get("geometry_provenance")
+    provenance = dict(provenance) if isinstance(provenance, dict) else {}
+    if geometry is not None:
+        provenance.update(geometry["properties"])
+    else:
+        path = route.get("path")
+        source_crs = path.get("coordinate_system") if isinstance(path, dict) else route.get("coordinate_system")
+        provenance.update(
+            {
+                "source_provider": route.get("provider_key") or route.get("provider") or "amap-web-service",
+                "provider_call_id": provider_call_id or route.get("provider_call_id") or route.get("id"),
+                "source_coordinate_system": source_crs or "UNKNOWN",
+                "domain_crs": "WGS84",
+                "conversion": "FAILED" if status == "BLOCKED_GEOMETRY_CONVERSION_FAILED" else None,
+                "geometry_status": status,
+            }
+        )
+    segments = route.get("geometry_segments")
+    return {
+        "path": route.get("path"),
+        "geometry_segments": list(segments) if isinstance(segments, list) else [],
+        "geometry_status": status,
+        "route_geometry": geometry,
+        "geometry_provenance": provenance,
+    }
+
+
 def _measure_now(session: Session, task: dict, origin: Place, destination: Place,
                  arrival: datetime | str | None = None) -> dict | None:
     """Ask the same AMap client the Agent uses, through the same receipt writer.
@@ -347,6 +452,7 @@ def _measure_now(session: Session, task: dict, origin: Place, destination: Place
            "source_url": "https://uri.amap.com/navigation?" + urlencode(
                {"from": f"{start[1]},{start[0]},{origin.name}", "to": f"{end[1]},{end[0]},{destination.name}",
                 "mode": "walk" if mode == "WALK" else "bus", "coordinate": "gaode", "callnative": "0"})}
+    row.update(_route_geometry_fields({**route, **row}, provider_call_id=call_id))
     task.setdefault("research_routes", []).append(row)
     task["research_routes"] = task["research_routes"][-16:]
     return row
@@ -460,17 +566,23 @@ def _replace_long_walk(session: Session, task: dict, origin: Place, destination:
     if transit is None:
         return {**walked, "over_cap_m": int(walked.get("distance_m") or 0)}
     walk_m = int(walked.get("distance_m") or 0)
-    return {"id": transit.get("provider_call_id") or str(uuid4()),
-            "from_place_id": walked.get("from_place_id"), "to_place_id": walked.get("to_place_id"),
-            "from_name": origin.name, "to_name": destination.name, "provider": "amap",
-            "coordinate_system": "GCJ02", "distance_m": transit.get("distance_m"),
-            "duration_seconds": transit.get("duration_seconds"),
-            "captured_at": datetime.now(timezone.utc).isoformat(), "mode": "TRANSIT",
-            "lines": list(transit.get("lines") or []), "replaced_walk_m": walk_m, "walking_cap_m": cap_m,
-            "walking_distance_m": transit.get("walking_distance_m"),
-            "source_url": "https://uri.amap.com/navigation?" + urlencode(
-                {"from": f"{start[1]},{start[0]},{origin.name}", "to": f"{end[1]},{end[0]},{destination.name}",
-                 "mode": "bus", "coordinate": "gaode", "callnative": "0"})}
+    row = {"id": transit.get("provider_call_id") or str(uuid4()),
+           "from_place_id": walked.get("from_place_id"), "to_place_id": walked.get("to_place_id"),
+           "from_name": origin.name, "to_name": destination.name, "provider": "amap",
+           "coordinate_system": "GCJ02", "distance_m": transit.get("distance_m"),
+           "duration_seconds": transit.get("duration_seconds"),
+           "captured_at": datetime.now(timezone.utc).isoformat(), "mode": "TRANSIT",
+           "lines": list(transit.get("lines") or []), "replaced_walk_m": walk_m, "walking_cap_m": cap_m,
+           "walking_distance_m": transit.get("walking_distance_m"),
+           "source_url": "https://uri.amap.com/navigation?" + urlencode(
+               {"from": f"{start[1]},{start[0]},{origin.name}", "to": f"{end[1]},{end[0]},{destination.name}",
+                "mode": "bus", "coordinate": "gaode", "callnative": "0"})}
+    row.update(
+        _route_geometry_fields(
+            {**transit, **row}, provider_call_id=transit.get("provider_call_id")
+        )
+    )
+    return row
 
 
 def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVersion, task_id: str) -> dict:
@@ -490,6 +602,9 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
         if route is None:
             route = _measure_now(session, task, origin, destination, arrival=destination_row.start_at)
             status = MEASURED if route is not None else UNAVAILABLE
+        if route is not None:
+            route = _orient_reused_route(route, origin_key, destination_key, origin, destination)
+            route = {**route, **_route_geometry_fields(route, provider_call_id=route.get("id"))}
         if _over_cap_walk(route, cap_m):
             # Whether the number came from the Agent's own research row or from a call this press made,
             # the traveller's limit is read the same way, so a reused long walk is replaced too.
@@ -517,6 +632,9 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
                       "provider": route.get("provider") if route else None,
                       "source_url": route.get("source_url") if route else None,
                       "captured_at": route.get("captured_at") if route else None,
+                       "geometry_status": route.get("geometry_status") if route else None,
+                       "route_geometry": route.get("route_geometry") if route else None,
+                       "geometry_provenance": route.get("geometry_provenance") if route else None,
                       "reason_code": None if route else (_refusal_reason(task, origin, destination)
                                                          or ("AMAP_NOT_CONFIGURED" if not settings.amap_web_key
                                                              else "PROVIDER_ROUTE_UNAVAILABLE"))})
@@ -542,7 +660,7 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
         try:
             capture = capture_mobility_snapshot(
                 [(row[0], row[1]) for row in facts],
-                primary=StoredAmapWalkingRoutes(facts),
+                primary=StoredAmapRoutes(facts),
                 operation_key=f"goal-freeze:{plan.id}",
                 captured_at=datetime.now(timezone.utc).isoformat(),
             )

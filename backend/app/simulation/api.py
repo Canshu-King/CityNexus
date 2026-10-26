@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.concurrency_guards import journey_write_lock
 from app.core.config import settings
-from app.db.models import Event, GuardianRun, Journey, JourneyMember, ReplanProposal
+from app.db.models import AgentRun, Event, GuardianRun, Journey, JourneyMember, JourneyMission, ReplanProposal
 from app.db.session import get_session
 from app.demo_access import require_demo_database, require_demo_presenter
 from app.simulation import runtime as rt
@@ -183,7 +183,16 @@ def progress(
 
     journey, _ = access(session, journey_id, request)
     response.headers["Cache-Control"] = "private, no-store"
-    return run_progress(session, journey, run_for(session, journey, run_id), settings)
+    run = run_for(session, journey, run_id)
+    result = run_progress(session, journey, run, settings)
+    failed = _terminal_guardian_failure(session, journey, run) if run.status == "GUARDIAN_RUNNING" else None
+    result["recovery"] = {
+        "available": failed is not None,
+        "reason_code": "MODEL_REQUEST_FAILED" if failed else None,
+        "requires_signed_post": True,
+        "operation": "recover",
+    }
+    return result
 
 
 @router.post("/runs", status_code=201)
@@ -333,6 +342,7 @@ def guardian(
         rt.claim_sequence(session, run, body.expected_sequence)
         run.status = "GUARDIAN_RUNNING"
         state = json.loads(run.state_json)
+        state["guardian_attempt_started_at"] = rt.wall_now()
         state["guardian_lease_expires_at"] = (
             datetime.now(timezone.utc) + timedelta(minutes=30)
         ).isoformat()
@@ -392,6 +402,9 @@ def guardian(
                 run, "GUARDIAN_UNAVAILABLE", error_code="GUARDIAN_RUNTIME_UNAVAILABLE"
             )
         run.updated_at = rt.wall_now()
+        state = json.loads(run.state_json)
+        state.pop("guardian_lease_expires_at", None)
+        run.state_json = rt.encode(state)
         result = rt.payload(run)
         receipt = session.scalar(
             select(SimulationCommand).where(
@@ -415,13 +428,70 @@ def recover(
     session: Session = Depends(get_session),
 ):
     def apply(j, r, a):
-        lease = json.loads(r.state_json).get("guardian_lease_expires_at")
+        state = json.loads(r.state_json)
+        lease = state.get("guardian_lease_expires_at")
         if r.status != "GUARDIAN_RUNNING" or not lease:
             raise HTTPException(409, "SIMULATION_NO_INTERRUPTED_RUNTIME")
-        if datetime.fromisoformat(lease) > datetime.now(timezone.utc):
+        failed_agent = _terminal_guardian_failure(session, j, r)
+        if failed_agent is None and datetime.fromisoformat(lease) > datetime.now(timezone.utc):
             raise HTTPException(409, "SIMULATION_RUNTIME_LEASE_ACTIVE")
         r.status = "PAUSED_MODEL_UNAVAILABLE"
         r.updated_at = rt.wall_now()
-        rt.append_history(r, "GUARDIAN_INTERRUPTED", error_code="RUNTIME_LEASE_EXPIRED")
+        state.pop("guardian_lease_expires_at", None)
+        r.state_json = rt.encode(state)
+        rt.append_history(
+            r, "GUARDIAN_INTERRUPTED",
+            error_code="MODEL_REQUEST_FAILED" if failed_agent else "RUNTIME_LEASE_EXPIRED",
+            agent_run_id=failed_agent.id if failed_agent else None,
+        )
+        if failed_agent:
+            for envelope in session.scalars(select(GuardianRun).where(
+                GuardianRun.journey_id == j.id,
+                GuardianRun.trigger_event_id == state.get("pending_event_id"),
+                GuardianRun.created_at >= state.get("guardian_attempt_started_at", failed_agent.created_at),
+                GuardianRun.status == "RUNNING",
+            )):
+                envelope.status = "INTERRUPTED"
+                envelope.action_status = "RETRYABLE_FAILURE"
+                envelope.agent_run_id = failed_agent.id
+                envelope.completed_at = r.updated_at
+                envelope.cooldown_until = None
+                envelope.evidence_fingerprint = f"{envelope.evidence_fingerprint}:interrupted:{envelope.id}"
+        # Replaying the original submission must not resurrect its stale spinner.
+        for receipt in session.scalars(select(SimulationCommand).where(
+            SimulationCommand.run_id == r.id, SimulationCommand.journey_id == j.id,
+        )):
+            previous = json.loads(receipt.result_json)
+            if previous.get("status") == "GUARDIAN_RUNNING" and previous.get("sequence") == r.sequence - 1:
+                receipt.result_json = rt.encode(rt.payload(r))
 
     return command(session, journey_id, run_id, request, idempotency_key, "recover", body, apply)
+
+
+def _terminal_guardian_failure(session, journey, run):
+    """A completed failed Agent for this attempt permits explicit early recovery."""
+    from app.simulation.progress import scene_event
+
+    state = json.loads(run.state_json)
+    event_id = state.get("pending_event_id")
+    if not event_id:
+        return None
+    event = scene_event(session, journey, run, event_id)
+    if event.status not in {"DETECTED", "ACKNOWLEDGED"}:
+        return None
+    started = state.get("guardian_attempt_started_at")
+    if not started:
+        requested = [row for row in json.loads(run.history_json) if row.get("event") == "GUARDIAN_REQUESTED"]
+        started = requested[-1].get("recorded_at") if requested else None
+    if not started:
+        return None
+    agent = session.scalar(select(AgentRun).join(JourneyMission, JourneyMission.id == AgentRun.mission_id).where(
+        AgentRun.journey_id == journey.id,
+        JourneyMission.journey_id == journey.id,
+        JourneyMission.trigger_event_id == event.id,
+        JourneyMission.is_standing.is_(False),
+        AgentRun.created_at >= started,
+    ).order_by(AgentRun.created_at.desc(), AgentRun.id.desc()).limit(1))
+    if agent is None or agent.status not in {"FAILED_EXTERNAL", "FAILED", "INTERRUPTED"} or not agent.completed_at:
+        return None
+    return agent

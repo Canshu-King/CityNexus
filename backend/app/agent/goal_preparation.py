@@ -19,6 +19,10 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.agent.goal_tasks import DRAFT_CHANGED_RELOAD, DRAFT_RESEARCH_RUNNING, _require_task, refuse_draft_edit
+from app.agent.goal_draft_patch import (
+    is_protected_draft_slot,
+    protected_draft_slot_markers,
+)
 from app.agent import goal_opening_date
 from app.agent.goal_artifacts import goal_research_lead
 from app.commerce.idempotency import canonical_request_signature
@@ -62,6 +66,54 @@ def refuse_schedule_row(*, rule: str, sequence_no: int, title: str, date: str, s
         "journey_start_at": journey_start_at, "journey_end_at": journey_end_at,
     }
     return refused
+
+
+def validate_draft_date_constraint(*, draft: dict, date: str, slot: dict, start_time: str) -> None:
+    """Reject an exact prepared time that violates this date/block's optional lower bound."""
+    constraints = draft.get("date_constraints")
+    if constraints is None:
+        return
+    if not isinstance(constraints, dict):
+        raise HTTPException(409, "DRAFT_DATE_CONSTRAINTS_INVALID")
+    date_constraints = constraints.get(date)
+    if date_constraints is None:
+        return
+    if not isinstance(date_constraints, dict):
+        raise HTTPException(409, "DRAFT_DATE_CONSTRAINTS_INVALID")
+    period = slot.get("time_of_day")
+    block_constraints = date_constraints.get(period)
+    if block_constraints is None:
+        return
+    if not isinstance(block_constraints, dict):
+        raise HTTPException(409, "DRAFT_DATE_CONSTRAINTS_INVALID")
+    start_not_before = block_constraints.get("start_not_before")
+    if start_not_before is None:
+        return
+    if not isinstance(start_not_before, str) or not re.fullmatch(
+        r"(?:[01]\d|2[0-3]):[0-5]\d", start_not_before
+    ):
+        raise HTTPException(409, "DRAFT_DATE_CONSTRAINTS_INVALID")
+    if start_time >= start_not_before:
+        return
+
+    protected = is_protected_draft_slot(slot)
+    reason_code = (
+        "DRAFT_DATE_CONSTRAINT_REQUIRES_USER_CHOICE"
+        if protected else "DRAFT_DATE_CONSTRAINT_VIOLATION"
+    )
+    refused = HTTPException(status_code=409 if protected else 422, detail=reason_code)
+    refused.reason_code = reason_code  # type: ignore[attr-defined]
+    refused.error_details = {  # type: ignore[attr-defined]
+        "date": date,
+        "time_of_day": period,
+        "title": str(slot.get("title") or "")[:160],
+        "start_time": start_time,
+        "start_not_before": start_not_before,
+        "protected": protected,
+        "choice_required": protected,
+        "protected_markers": protected_draft_slot_markers(slot) if protected else {},
+    }
+    raise refused
 
 router = APIRouter()
 PATH = "/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan"
@@ -184,6 +236,9 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
             date, slot = slots[(stamp.day_index, stamp.slot_index)]
             start = datetime.fromisoformat(f"{date}T{stamp.start_time}").replace(tzinfo=zone)
             end = datetime.fromisoformat(f"{date}T{stamp.end_time}").replace(tzinfo=zone)
+            validate_draft_date_constraint(
+                draft=draft, date=date, slot=slot, start_time=stamp.start_time
+            )
             if end <= start or (previous_end and start < previous_end) or start < window_start or end > window_end:
                 # The same four conditions as before, in the same order -- only now the answer says which
                 # one and for which row, so a screen can point at the item instead of saying "retry".
@@ -277,6 +332,9 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                         "cost_evidence": {"status": "UNKNOWN", "amount_minor": None}, "cost_status": "UNKNOWN",
                         "price_known": cost is not None, "cost_included_in_total": cost is not None,
                         "draft_notes": str(slot.get("notes") or ""), "preparation_gaps": missing}
+            protected_markers = protected_draft_slot_markers(slot)
+            if protected_markers:
+                metadata["draft_protection_markers"] = protected_markers
             if hop is not None:
                 metadata["transfer_route"] = {key: hop.get(key) for key in
                     ("from_place_id", "to_place_id", "from_name", "to_name", "provider",
@@ -355,10 +413,12 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
         session.add(plan)
         session.flush()
         for number, (slot, place, start, end, cost, metadata) in enumerate(rows, 1):
+            protected_markers = metadata.get("draft_protection_markers") or {}
+            locked = bool(protected_markers)
             session.add(Activity(id=str(uuid4()), plan_version_id=plan.id, sequence_no=number,
                                  activity_type="SIGHTSEE" if place is not None else "FREE_TIME", title=slot["title"], place_id=place.id if place else None,
                                  start_at=start.isoformat(), end_at=end.isoformat(), travel_from_prev_min=0,
-                                 estimated_cost_minor=cost or 0, currency=journey.budget_currency, status="PLANNED", locked=False,
+                                 estimated_cost_minor=cost or 0, currency=journey.budget_currency, status="PLANNED", locked=locked,
                                  metadata_json=json.dumps(metadata, ensure_ascii=False), created_at=now.isoformat(), updated_at=now.isoformat()))
         answer = {"journey_id": journey.id, "task_id": mission.id, "draft_revision": body.expected_revision,
                   "plan_version_id": plan.id, "status": "CANDIDATE", "selected": False, "activated": False,

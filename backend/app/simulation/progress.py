@@ -89,9 +89,30 @@ def known(value, allowed):
     return value if value in allowed else "UNKNOWN"
 
 
+def _step_duration_ms(started_at, completed_at):
+    if not started_at or not completed_at:
+        return None
+    try:
+        duration = datetime.fromisoformat(completed_at) - datetime.fromisoformat(started_at)
+    except (TypeError, ValueError):
+        return None
+    milliseconds = int(duration.total_seconds() * 1000)
+    return milliseconds if milliseconds >= 0 else None
+
+
+def _step_failure_classification(status):
+    if status == "FAILED_EXTERNAL":
+        return "MODEL_REQUEST_FAILED"
+    if status == "TOOL_ERROR":
+        return "TOOL_CALL_FAILED"
+    return None
+
+
 def _guardian_outcome(
     *,
-    pending_event_id,
+    journey_id,
+    current_event_id,
+    current_event_status,
     configured,
     guardians,
     agents,
@@ -99,7 +120,7 @@ def _guardian_outcome(
     steps,
     proposals,
 ):
-    """Classify only the latest persisted Guardian attempt for this run's pending event."""
+    """Classify the latest Guardian attempt for this run's current or last scene event."""
 
     def outcome(code, error_code=None):
         result = {"code": code}
@@ -107,22 +128,34 @@ def _guardian_outcome(
             result["error_code"] = error_code
         return result
 
-    if not pending_event_id:
+    if not current_event_id:
         return outcome("UNKNOWN")
 
     event_guardians = [
-        guardian for guardian in guardians if guardian.trigger_event_id == pending_event_id
+        guardian
+        for guardian in guardians
+        if guardian.journey_id == journey_id
+        and guardian.trigger_event_id == current_event_id
     ]
     current_guardian = event_guardians[-1] if event_guardians else None
     event_agents = [
-        agent for agent in agents if agent_event_ids.get(agent.id) == pending_event_id
+        agent
+        for agent in agents
+        if agent.journey_id == journey_id
+        and agent_event_ids.get(agent.id) == current_event_id
     ]
     current_agent = None
+    current_source_agent = None
     if current_guardian is not None:
-        current_agent = next(
-            (agent for agent in event_agents if agent.id == current_guardian.agent_run_id),
+        current_source_agent = next(
+            (
+                agent
+                for agent in event_agents
+                if agent.id == current_guardian.agent_run_id
+            ),
             None,
         )
+        current_agent = current_source_agent
         if current_agent is None:
             recent_attempts = [
                 agent
@@ -141,22 +174,32 @@ def _guardian_outcome(
                 proposal
                 for proposal in proposals
                 if proposal.id == current_guardian.proposal_id
-                and proposal.journey_id == current_guardian.journey_id
-                and proposal.trigger_event_id == pending_event_id
-                and proposal.status == "PRESENTED"
+                and proposal.journey_id == journey_id
+                and proposal.trigger_event_id == current_event_id
             ),
             None,
         )
-    if current_proposal is not None:
+    if current_proposal is not None and current_proposal.status == "PRESENTED":
         return outcome("PROPOSAL_READY")
 
     current_steps = [
         step for step in steps if current_agent is not None and step.run_id == current_agent.id
     ]
-    if (
-        (current_agent is not None and current_agent.status == "FAILED_EXTERNAL")
-        or any(step.status == "FAILED_EXTERNAL" for step in current_steps)
-    ):
+    if current_agent is not None and current_agent.status == "FAILED_EXTERNAL":
+        return outcome("EXTERNAL_FAILED", "MODEL_REQUEST_FAILED")
+
+    has_bound_accepted_proposal = (
+        current_proposal is not None
+        and current_proposal.status == "ACCEPTED"
+        and current_event_status == "RESOLVED"
+        and current_guardian is not None
+        and current_proposal.source_agent_run_id == current_guardian.agent_run_id
+        and current_source_agent is not None
+    )
+    if has_bound_accepted_proposal:
+        return outcome("PROPOSAL_ACCEPTED")
+
+    if any(step.status == "FAILED_EXTERNAL" for step in current_steps):
         return outcome("EXTERNAL_FAILED", "MODEL_REQUEST_FAILED")
 
     if (
@@ -174,13 +217,24 @@ def _guardian_outcome(
 def run_progress(session, journey, run, config):
     history = json.loads(run.history_json)
     state = json.loads(run.state_json)
-    event_ids = {
-        item["event_id"]
-        for item in history
-        if item.get("event") == "SIM_SCENE_INJECTED" and item.get("event_id")
-    }
+    scene_event_ids = list(
+        dict.fromkeys(
+            item["event_id"]
+            for item in history
+            if item.get("event") == "SIM_SCENE_INJECTED" and item.get("event_id")
+        )
+    )
+    event_ids = set(scene_event_ids)
     events = [scene_event(session, journey, run, eid) for eid in sorted(event_ids)]
-    pending = next((event for event in events if event.id == state.get("pending_event_id")), None)
+    pending_event_id = state.get("pending_event_id")
+    pending = next((event for event in events if event.id == pending_event_id), None)
+    if pending_event_id:
+        current_event_id = pending.id if pending is not None else None
+    else:
+        current_event_id = scene_event_ids[-1] if scene_event_ids else None
+    current_event = next(
+        (event for event in events if event.id == current_event_id), None
+    )
     guardians = (
         list(
             session.scalars(
@@ -274,7 +328,9 @@ def run_progress(session, journey, run, config):
     )
     configured = bool((config.hermes_api_url and config.hermes_api_key) or config.ai_api_key)
     guardian_outcome = _guardian_outcome(
-        pending_event_id=pending.id if pending else None,
+        journey_id=journey.id,
+        current_event_id=current_event.id if current_event else None,
+        current_event_status=current_event.status if current_event else None,
         configured=configured,
         guardians=guardians,
         agents=agents,
@@ -388,18 +444,19 @@ def run_progress(session, journey, run, config):
         "steps": [
             {
                 "id": step.id,
+                "simulation_run_id": run.id,
+                "event_id": agent_event_ids.get(step.run_id),
                 "agent_run_id": step.run_id,
                 "sequence": step.sequence_no,
+                "stage": "TOOL_CALL",
                 "tool_name": step.tool_name
                 if step.tool_name
                 in RUNTIME_MCP_ALLOWLIST_V2 | {"external_model_call", "recovery_epoch_guard"}
                 else "unlisted_tool",
                 "status": known(step.status, STEP_STATUSES),
-                "error_code": "MODEL_REQUEST_FAILED"
-                if step.status == "FAILED_EXTERNAL"
-                else "TOOL_CALL_FAILED"
-                if step.status == "TOOL_ERROR"
-                else None,
+                "failure_classification": _step_failure_classification(step.status),
+                "error_code": _step_failure_classification(step.status),
+                "duration_ms": _step_duration_ms(step.created_at, step.completed_at),
                 "created_at": step.created_at,
                 "completed_at": step.completed_at,
             }

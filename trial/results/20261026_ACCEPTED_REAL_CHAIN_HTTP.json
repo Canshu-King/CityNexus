@@ -1,0 +1,22 @@
+{
+  "product_sha": "26cf9e286986233920304381fdb543701a1fd824",
+  "evidence_kind": "HTTP_GET_ON_RESTARTED_OWNED_SERVER_USING_PRIOR_REAL_ACCEPTED_CHAIN",
+  "anonymous_status": 401,
+  "signed_status": 200,
+  "cache_control": "private, no-store",
+  "run_id": "5625ed72-9aff-4c87-8bb3-68d9291775e1",
+  "sequence": 9,
+  "status": "SIMULATED_COMPLETED",
+  "guardian_outcome": {
+    "code": "PROPOSAL_ACCEPTED"
+  },
+  "safe_step_count": 14,
+  "agent_and_provider_counts_unchanged": true,
+  "new_model_calls": 0,
+  "recovery": {
+    "available": false,
+    "reason_code": null,
+    "requires_signed_post": true,
+    "operation": "recover"
+  }
+}

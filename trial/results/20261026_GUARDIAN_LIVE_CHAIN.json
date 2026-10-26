@@ -1,0 +1,203 @@
+{
+  "backend_product_sha": "29dafc1efde3ad52a256bf4eb5847ec40a70076a",
+  "frontend_head": "f64fd0fb184f44c08a98eb60d3ec9ab79c12ec9a",
+  "frontend_has_qoder_uncommitted_changes": true,
+  "runtime": {
+    "frontend_port": 14522,
+    "backend_port": 60622,
+    "database_kind": "OWNED_CLASSROOM_BACKUP_COPY"
+  },
+  "browser": {
+    "tool": "chrome-use",
+    "css_viewport": [
+      390,
+      844
+    ],
+    "touch_enabled": true,
+    "hardware_phone": false,
+    "native_touch_actions": [
+      "再请一次守护",
+      "接受这次事件的调整",
+      "继续模拟",
+      "到下一站"
+    ],
+    "native_touch_calibration": "Observed trusted input arrives at 0.9 of relay coordinates; input-only inverse correction used. No app handlers or mutation APIs called by test script."
+  },
+  "routing_fix": {
+    "requested_model": "auto:cheapest",
+    "raw_endpoint_port": 7863,
+    "raw_attempt": "HTTP_400_FAILED_EXTERNAL",
+    "correct_router_port": 7865,
+    "verified_model_alias_from_models_get": "auto:cheapest",
+    "resolved_upstream_model": null,
+    "note": "Only owned local launcher environment changed; no gateway-global configuration edited."
+  },
+  "run": {
+    "id": "5625ed72-9aff-4c87-8bb3-68d9291775e1",
+    "journey_id": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+    "status": "SIMULATED_COMPLETED",
+    "sequence": 9,
+    "virtual_now": "2026-12-04T10:00:00+08:00"
+  },
+  "event": {
+    "id": "7cf6f587-cec6-4c30-823a-b7cab6891c6f",
+    "status": "RESOLVED",
+    "event_type": "CLOSURE",
+    "provenance": "SIMULATED",
+    "resolved_at": "2026-10-25T21:55:18.111617+00:00"
+  },
+  "guardian": {
+    "id": "5a31ffd4-c771-4b36-9fbd-b78d540e20a5",
+    "status": "PARTIAL",
+    "action_status": "PROPOSAL_PRESENTED",
+    "trigger_event_id": "7cf6f587-cec6-4c30-823a-b7cab6891c6f",
+    "agent_run_id": "59d8ef94-976b-4ab8-a8c7-bc194c48773b",
+    "proposal_id": "88571de6-d416-43fb-a0d6-a264db797552"
+  },
+  "agent": {
+    "id": "59d8ef94-976b-4ab8-a8c7-bc194c48773b",
+    "provider_key": "hermes",
+    "model_key": "auto:cheapest",
+    "status": "PARTIAL",
+    "created_at": "2026-10-25T21:52:41.284493+00:00",
+    "completed_at": "2026-10-25T21:53:36.217005+00:00"
+  },
+  "tools": [
+    {
+      "sequence_no": 1,
+      "tool_name": "inspect_journey",
+      "status": "COMPLETED",
+      "decision": "ALLOW_AUTO"
+    },
+    {
+      "sequence_no": 2,
+      "tool_name": "inspect_twin",
+      "status": "COMPLETED",
+      "decision": "ALLOW_AUTO"
+    },
+    {
+      "sequence_no": 3,
+      "tool_name": "list_replans",
+      "status": "TOOL_ERROR",
+      "decision": "None"
+    },
+    {
+      "sequence_no": 4,
+      "tool_name": "list_replans",
+      "status": "COMPLETED",
+      "decision": "ALLOW_AUTO"
+    },
+    {
+      "sequence_no": 5,
+      "tool_name": "search_city_services",
+      "status": "COMPLETED",
+      "decision": "ALLOW_AUTO"
+    },
+    {
+      "sequence_no": 6,
+      "tool_name": "request_replan",
+      "status": "COMPLETED",
+      "decision": "ALLOW_AUTO"
+    },
+    {
+      "sequence_no": 7,
+      "tool_name": "research_place_sources",
+      "status": "COMPLETED",
+      "decision": "ALLOW_AUTO"
+    },
+    {
+      "sequence_no": 8,
+      "tool_name": "acquire_place_facts",
+      "status": "COMPLETED",
+      "decision": "ALLOW_AUTO"
+    },
+    {
+      "sequence_no": 9,
+      "tool_name": "estimate_place_facts",
+      "status": "COMPLETED",
+      "decision": "ALLOW_AUTO"
+    },
+    {
+      "sequence_no": 10,
+      "tool_name": "generate_plans",
+      "status": "TOOL_ERROR",
+      "decision": "None"
+    }
+  ],
+  "proposal": {
+    "id": "88571de6-d416-43fb-a0d6-a264db797552",
+    "journey_id": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+    "trigger_event_id": "7cf6f587-cec6-4c30-823a-b7cab6891c6f",
+    "status": "ACCEPTED",
+    "proposed_plan_version_id": "5337ace4-4453-4ab2-ae62-7ba56567a3b3",
+    "source_agent_run_id": "59d8ef94-976b-4ab8-a8c7-bc194c48773b"
+  },
+  "signed_acceptance_audit": [
+    {
+      "action": "replan.accepted",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "actor_id": "9ac3c100-da78-4933-ba1b-cb79991fcb1e"
+    }
+  ],
+  "plan_activities": [
+    {
+      "id": "94731bb5-cad4-40b2-92c8-59ba5e0382fd",
+      "title": "天安门广场",
+      "start_at": "2026-12-03T09:00:00+08:00",
+      "end_at": "2026-12-03T10:00:00+08:00",
+      "status": "COMPLETED",
+      "place_id": "real-place-00d9e27cd4cc6c7b28b6509e"
+    },
+    {
+      "id": "be7e94b3-0260-473a-91f6-0b0ce19c59e7",
+      "title": "天坛公园",
+      "start_at": "2026-12-04T09:00:00+08:00",
+      "end_at": "2026-12-04T10:00:00+08:00",
+      "status": "COMPLETED",
+      "place_id": "real-place-dc53719dde41c9cb48b7b9b6"
+    }
+  ],
+  "completed_activity_ids_in_this_run": [
+    "be7e94b3-0260-473a-91f6-0b0ce19c59e7"
+  ],
+  "completed_activity_names_in_this_run": [
+    "天坛公园"
+  ],
+  "completed_before_run_not_counted": [
+    "天安门广场"
+  ],
+  "history_events": [
+    "SIM_STARTED",
+    "SIM_SCENE_INJECTED",
+    "GUARDIAN_REQUESTED",
+    "GUARDIAN_RESULT",
+    "GUARDIAN_REQUESTED",
+    "GUARDIAN_RESULT",
+    "GUARDIAN_REQUESTED",
+    "GUARDIAN_RESULT",
+    "SIM_RESUMED",
+    "SIM_PLAN_CHANGED",
+    "SIM_DEPARTURE",
+    "SIM_ARRIVAL",
+    "SIM_EXPERIENCE",
+    "SIM_ACTIVITY_COMPLETED",
+    "SIMULATED_COMPLETED"
+  ],
+  "reload_and_normal_service_restart": {
+    "same_run_id": true,
+    "sequence_still_9": true,
+    "same_database_and_auth": true,
+    "model_replayed": false
+  },
+  "ci": {
+    "run_id": 40237035274,
+    "result": "PASS",
+    "fixture_tests_passed": 152
+  },
+  "remaining": [
+    "At least two named activities on each of two days not met",
+    "Human phone/tablet acceptance pending",
+    "Fresh one-sentence-to-ACTIVE flow still pending",
+    "Late-start feature still needs live dialogue/UI acceptance"
+  ]
+}

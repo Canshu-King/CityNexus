@@ -22,6 +22,7 @@ traveller's screen cannot inherit a fact nobody checked.
 """
 from __future__ import annotations
 
+import json
 import math
 import re
 from datetime import datetime, timezone
@@ -29,11 +30,12 @@ from typing import Any
 
 from sqlalchemy import select
 
-from app.db.models import Journey, Place
+from app.db.models import Journey, Place, ProviderCall
 from app.integrations.china.amap import gcj02_to_wgs84
 from app.integrations.discovery.real_city import DiscoveryCandidate, materialize_candidates
 
 _OSM_OBJECT = re.compile(r"openstreetmap\.org/(?P<kind>node|way|relation)/(?P<id>\d+)")
+_AMAP_RECEIPT_OPERATIONS = {"goal_amap_search", "goal_amap_nearby"}
 
 
 def _provider_object_id(lead: dict[str, Any]) -> tuple[str, str] | None:
@@ -53,6 +55,81 @@ def _provider_object_id(lead: dict[str, Any]) -> tuple[str, str] | None:
         elif prefix.strip() and ":" not in str(lead.get("id") or ""):
             return None
     return (provider, object_id[:160]) if object_id else None
+
+
+def _receipt_object_id(place: dict[str, Any]) -> str:
+    value = next((place.get(key) for key in ("provider_object_id", "external_id", "poi_id", "id")
+                  if place.get(key)), "")
+    return str(value).strip().removeprefix("amap:")
+
+
+def _verified_amap_source_receipt(
+    session, journey: Journey, task: dict[str, Any], lead: dict[str, Any], object_id: str
+) -> dict[str, str] | None:
+    """Return receipt fields only for the server-stored AMap lead in this Journey's task.
+
+    The ProviderCall table has no Journey foreign key.  Do not look up a client-supplied receipt
+    id: first require the same object and receipt id to be present in this signed Journey's
+    server-owned GoalTask research list, then verify that receipt's request and public response.
+    """
+    if str(task.get("journey_id") or "") != str(journey.id):
+        return None
+    lead_id = str(lead.get("id") or "")
+    task_places = task.get("research_places")
+    if not lead_id or not isinstance(task_places, list):
+        return None
+    stored_lead = next((item for item in task_places
+                        if isinstance(item, dict)
+                        and str(item.get("id") or "") == lead_id
+                        and str(item.get("provider") or "").strip().lower() == "amap"
+                        and str(item.get("provider_object_id") or "").removeprefix("amap:") == object_id), None)
+    if stored_lead is None:
+        return None
+    receipt_id = str(stored_lead.get("provider_call_id") or "").strip()
+    requested_adcode = str(stored_lead.get("requested_adcode") or "").strip()
+    if not receipt_id or not re.fullmatch(r"\d{6}", requested_adcode):
+        return None
+
+    # This read is reachable only through a receipt already present on this Journey's own task.
+    # _receipt adds the row before _store_places returns; flush it so session.get can validate the
+    # declaration on the ordinary discovery path without issuing a provider request.
+    session.flush()
+    call = session.get(ProviderCall, receipt_id)
+    if (call is None or call.provider_key != "amap-web-service" or call.status != "SUCCESS"
+            or call.operation not in _AMAP_RECEIPT_OPERATIONS):
+        return None
+    try:
+        request = json.loads(call.request_json or "{}")
+        response = json.loads(call.response_json or "{}")
+    except (TypeError, ValueError):
+        return None
+    if not isinstance(request, dict) or not isinstance(response, dict):
+        return None
+    if str(request.get("adcode") or "").strip() != requested_adcode:
+        return None
+    expected_operation = "goal_amap_nearby" if request.get("center_place_id") else "goal_amap_search"
+    if call.operation != expected_operation or str(response.get("status") or "").upper() not in {"RESULTS", "SUCCESS"}:
+        return None
+    response_places = response.get("places")
+    if not isinstance(response_places, list):
+        return None
+    response_place = next((item for item in response_places
+                           if isinstance(item, dict) and _receipt_object_id(item) == object_id), None)
+    if response_place is None:
+        return None
+    actual_adcode = str(response_place.get("adcode") or "").strip()
+    stored_actual_adcode = str(stored_lead.get("adcode") or "").strip()
+    if not re.fullmatch(r"\d{6}", actual_adcode) or actual_adcode != stored_actual_adcode:
+        return None
+    return {
+        "status": "VERIFIED",
+        "provider_call_id": call.id,
+        "provider_key": call.provider_key,
+        "operation": call.operation,
+        "requested_adcode": requested_adcode,
+        "adcode": actual_adcode,
+        "provider_object_id": object_id,
+    }
 
 
 def attach_canonical_places(session, journey: Journey, task: dict, leads: list[dict[str, Any]]) -> dict[str, str]:
@@ -76,6 +153,10 @@ def attach_canonical_places(session, journey: Journey, task: dict, leads: list[d
         if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
             continue
         provider, object_id = identity
+        source_receipt = (
+            _verified_amap_source_receipt(session, journey, task, lead, object_id)
+            if provider == "amap" else None
+        )
         source_system = str(lead.get("coordinate_system") or "").strip().upper() or None
         if source_system == "GCJ02":
             stored_latitude, stored_longitude = gcj02_to_wgs84(latitude, longitude)
@@ -98,6 +179,7 @@ def attach_canonical_places(session, journey: Journey, task: dict, leads: list[d
             metadata={"source_urls": [url] if url.startswith("http") else [],
                       "public_address": str(lead.get("public_address") or "")[:300],
                       "location_type": str(lead.get("location_type") or "")[:80],
+                      **({"source_receipt": source_receipt} if source_receipt else {}),
                       # This row is stamped with the journey's own city_code no matter what the point
                       # says, so the row has to carry whether anybody ever checked the region.  An
                       # unconfirmed identity must not be able to pose as a place verified to be here
