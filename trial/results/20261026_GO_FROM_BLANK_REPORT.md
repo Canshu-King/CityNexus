@@ -421,3 +421,14 @@ run `7044b8b3…` 停在 `PAUSED_FOR_ACCEPTANCE`（已接受、事件已落定�
 | 刷新后 | — | 第一站/现在站**逐字一致** |
 
 说明：控制台接受按钮里那句 `window.dispatchEvent(new CustomEvent("citynexus:plans-updated", …))` 不是装饰——同一 tab 的外层屏在 8 秒内读到新计划，`page.reload()` 后仍一致。
+
+## 29. 工具时间线「不泄漏」的判据（2026-10-26 16:50 本地）
+
+第 2 刀要求「不泄漏模型私有正文 / 凭证 / 敏感参数」。这不是靠肉眼，靠渲染路径上的字段白名单：
+
+- 每一行的组成（`WorkspaceActions.tsx:681`）：序号 → 工具名（中文化）→ 状态徽标 → 一句结果 → 本地时间 → 「下一步」。
+- 那句结果只由 `taskStepText(result)` 生成（`WorkspaceActions.tsx:155`），它只读这些键：`route.mode / route.distance_m / route.duration_seconds`、`status`、`provider`、`reason_code`、`draft_revision`、`candidate_count`、`option_count`、`place_count`、`area_count`、`observation_ids.length`、`cached_references.length`。
+- **不在渲染路径上**：`arguments_json`（工具参数原文）、`query` 原文、模型的 reasoning / 正文、坐标数值、任何 key 或 bearer。
+- `public_action` 是模型自述的一句「这一步做了什么」，属产品要求展示的下一动作，不含参数原文。
+
+屏证：`agent-timeline-390b.txt`（「Agent 工具时间线 · 11 步」，8 个状态「完成」）与 `390-agent-timeline-local.png`（390×844，本地时间列）。
