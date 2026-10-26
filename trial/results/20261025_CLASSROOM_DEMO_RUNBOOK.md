@@ -286,3 +286,10 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 合入后两日主线也复跑：`clock-two-day-merge54-84.txt`，开演 09:00 第 0 步 → 12/03 15:00 第 4 步 → 12/04 10:00 第 8 步完成，三键禁用、完成提示「不是实际到场」、无 console 错误；跑完已重置开场。
 - 接受后模拟真的换计划：活动只剩天安门广场 + 天坛公园，故宫被移除；再点「到下一站」直接到 12/04 10:00 完成（`guardian-plan-applied-92.txt`、`classroom-plan-applied-92.png`）。讲课时要说这是「少去一站」的预期结果。
 - 回执：`20261026_GUARDIAN_LIVE_VERDICT.md`；提交 `419e892a40`、`0aab8594fc`。
+
+
+## 补记：城市池「可用 0 座」的现读（10-26 16:39）
+
+- ：**1 行** —— journey 、、、（16:16 绑定）。
+- ：**0 行**。
+- 因此「可用 0 座，标准要 3 座」的缺口是**没有任何已发布的城市快照**；身份已有。要凑到 3 座必须逐城发布真实 （含 sha256 与 published_by），不能凭空造。
