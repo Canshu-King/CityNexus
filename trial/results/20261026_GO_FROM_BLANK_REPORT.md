@@ -603,3 +603,11 @@ arm B 是同代码、新浏览器 profile 的整趟重走（`trial/results/20261
 - 卡片那一侧不需要新代码：`applyReplan` 就是按 `gaps.rows` 的 `day_index/slot_index` 合并 `proposed_start/proposed_end` 再走同一条保存门（`frontend/src/trial/mobile/DraftDepartureCard.tsx:183-193`），而 `GapRow` 早已带这两枚字段（`frontend/src/trial/mobile/departureGaps.ts:484`）。
 
 为什么本晚不开：它同时改一门的早退语义与"被挡时发不发部分行"的口径（要裁），而这两点只能在真机反复过出发门才验得清；今晚四臂里两臂被拒两次通过，一次重启后端还丢一次身份（`§39` 第 4 条）。留成一条按上去就能做的单，比留半刀安全。
+
+## 42. E 臂读数，以及把走查卡住的那一格从"产品缺陷"改判成"量具时序"
+
+E 臂（`trial/human_walk/_map_walk_r47.mjs` → 收据 `map-planned-390-r47.txt`，journey `90eb846a-1eb0-4ba7-9d21-234987a9516f`、goal-task `72851eac-6a94-4290-99dd-1f1ee841fd0d`）新加的补救腿按得动：`HIT ask-refusal-2 true` / `ASK_REFUSAL_SENT 2 t=601.3`、`HIT ask-refusal-3 true` / `ASK_REFUSAL_SENT 3 t=670.7`，即把屏上那句拒答原样发给 Agent 再要求只改被点名的几处。门仍拒：`departure/commit` `http_status=422`，最后一拍只剩一种因由（「两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早…」），`STATE t=899.4 {"inUse":false}`。地图层与 C/D 同形：`MAP_READS_EVERY` 每一次 `http_status=200, candidates=0, first=null`，屏上「地图地点 0 处 · 高德地点 7 处」、`MAP_PLANNED_TAGS 0`、`MAP_LIST_ITEMS 0` —— 没有 active plan 就是 0 枚，这一条是正确行为。
+
+**更正 §41 的一处猜测。** 我把这一版被拒的计划（plan `23c2803b…` 状态 CANDIDATE、7 条活动、`mobility_evidence_json` 里 `facts` 有货）连同库里真实的 `JourneyMission.intent_json.goal_task.prepared_plan.schedule`（同样 7 枚）在进程内喂给赶路那扇门（`backend/app/agent/goal_travel_gaps.py` 的 `travel_gap_answer`），它**给得出行**：`hops` 里 `天安门广场漫游 → 故宫博物院` 短 18 分钟；`rows[0] = {day_index: 0, slot_index: 1, title: 故宫博物院（午门进·神武门出）, planned 11:00–12:00 → proposed 11:18–12:18, extra_minutes: 18, direct_cause: true}`，`frozen true`、`reason_code null`。我第一次跑出 `rows 0 / SCHEDULE_ALIGNMENT_UNVERIFIED` 是因为我自己传了空 `schedule`，那道对齐闸（`:176-179`）照实拒发——是闸在工作，不是缺陷。所以 §41 里"`rows: [] if blocked` 会把行整批吞掉"这一句对本例不成立（本例 `blocked` 为空），那条语义留作待查，但不再当作走查卡住的原因。
+
+**走查真正卡住的那一格是量具的时序。** 卡片在按下「按讨论的方向重新安排」后要发一次 `travelGaps` GET 才把应用键摆出来（`frontend/src/trial/mobile/DraftDepartureCard.tsx:226` 取数、`:344` 仅 `planShown` 时渲染 `rev-v3-replan-apply`），而探针只等了 2.5 秒就判它不可见——日志上就是每拍 `HIT replan-N true` 之后没有 `REPLAN_APPLIED`，于是同一版被拒计划被一遍遍再选。已改：按下之后最长再等 20 秒（`trial/human_walk/_map_walk_r48.mjs`），F 臂正在跑，判据不变（`REPLAN_APPLIED` 出现 → 出发门 `http_status=200` → 地图层 `MAP_READS_EVERY` 出现 `candidates` 等于活动数且 `first.origin="PLAN_ACTIVITY"`、`MAP_PLANNED_TAGS` 同数）。
