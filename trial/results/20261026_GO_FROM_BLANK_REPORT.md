@@ -619,3 +619,16 @@ F 臂（`trial/human_walk/_map_walk_r48.mjs`，profile `_chrome_gozero_r48`，jo
 于是缺口从"门算不出可挪的行"收窄到一处具体的连接：门本身算得出（§42 用同一版被拒计划 + 库里真实 schedule 进程内跑 `travel_gap_answer` 得到 `rows[0]` 故宫 11:00–12:00 → 11:18–12:18、`reason_code null`），卡片上的应用键要 `planShown` 才渲染（`frontend/src/trial/mobile/DraftDepartureCard.tsx:344`），而 `gaps` 只在冻结那一步顺带取回（同文件 `:226`）、被拒之后没有任何一条路径再取它 —— 旅客看到的正是这句「在出发待办里把后一项的开始时间挪晚」却摸不到那个待办的应用键。下一刀的落点因此是**一行**：出发门拒绝之后，对同一枚 plan 再取一次 `travelGaps` 并把卡片切到 `planShown`（或让 422 的答复里带出可应用的行），而不是再改门的算法。
 
 本晚到此为止的状态：`§31` 那格（接受后地图刷新）服务端与前端两处代码都在尖上（`25d5d418f8` 及前四笔），ACTIVE 那一屏的逐次应答读数仍未取到，因为它先得穿过出发门；`MAP_READS_EVERY` 这个量具已经装好，任何一趟走到 ACTIVE 的走查（或你亲机在任意已 ACTIVE 的行程上点一次「地图」）都能一次收掉。
+
+## 44. 出发门之后走不到应用键的确切链条（收口本晚，交下一刀）
+
+现读把这条链完整摊开，四臂卡的就是它：
+
+1. 出发门拒绝后，工作台上出现的「根据路线重新安排」是 `frontend/src/trial/mobile/MobilePlanWorkbench.tsx:348-349`，它只做一件事：广播 `citynexus:replan-requested`。
+2. 收到这个事件的是草案出发卡：`frontend/src/trial/mobile/DraftDepartureCard.tsx:261-263` —— 若卡上的 `rev-v3-replan` 这枚按钮存在就替旅客点它，**不存在则改去 `verifyRoutes()`**（重新核实并顺带取回赶路答复）。
+3. `rev-v3-replan` 的渲染条件是 `gaps.rows.length > 0 && !planShown`（`frontend/src/trial/mobile/DraftDepartureCard.tsx:342`），应用键 `rev-v3-replan-apply` 只在 `planShown` 之后出现（`:344`）。
+4. `gaps` 只有两个来源：卡自己 `verifyRoutes` 成功后那次取数（`:226`），或挂载时那个"已冻结就补读"的效应（`:80-88`），而后者要求 `result.mobility_frozen` 为真 —— 现读两处相互拉扯：准备那一步存进任务的答复把 `mobility_frozen` 写成 False（`backend/app/agent/goal_preparation.py:426`），卡片挂载时又是从这份存储答复重建 `result`（`DraftDepartureCard.tsx:76`，同一次重建还会 `setPlanShown(false)`、`setGaps(null)`）。
+
+四臂里每被拒一次，探针都按了第 1 步那枚工作台按钮（`HIT replan-N true`），第 2 步因此走的是 `verifyRoutes()` 那一支，可是紧接着卡片又被 `:76` 的效应整块复位（一次 `refresh`/事件都会重跑），所以始终没有一次把 `planShown` 留住到应用键出现 —— 屏上就停在"叫你把开始时间挪晚"而摸不到挪的那枚键。**这是真实旅客会撞到的卡点，不是探针的错**；但两股因由（存 `mobility_frozen:false` 还是复位 `planShown`）到底哪一股先咬，需要一次针对性复现：在同一次拒绝之后连按两次工作台那枚按钮并盯 `rev-v3-replan` 是否出现，就能把两股分开。修法各自都是一行级（要么冻结答复里带上真实 `mobility_frozen`，要么复位时保留 `planShown`），不在本晚开刀。
+
+本晚交付状态：地图读侧与署名/坐标系/重取四处代码改动已在尖上（远端 `06f280b1f6`），§31 那一格的屏证仍按 §37/§43 的判据待收。
