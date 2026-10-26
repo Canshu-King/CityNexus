@@ -64,6 +64,14 @@ function selectionBlocker(plan: PlanVersion): string {
     + priceConsentNote(plan.explanation);
 }
 
+// Which open rows the server's own selection gate reads as "a confirmed stretch of time still has no
+// place".  Same two kinds, same predicate (backend/app/services.py:742), so the hand the screen offers
+// cannot point somewhere the door will not accept.
+export function placeRowsStillOpen(plan: PlanVersion): boolean {
+  const rows = Array.isArray(plan.explanation?.unresolved_facts) ? plan.explanation.unresolved_facts as GapRow[] : [];
+  return rows.some((row) => row.kind === "PLACE_REQUIRED" || row.kind === "SOURCE_IDENTITY");
+}
+
 function dateKey(value: string | undefined, timeZone: string): string | null {  if (!value || !Number.isFinite(Date.parse(value))) return null;
   try {
     const parts = new Intl.DateTimeFormat("en", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(value));
@@ -363,7 +371,10 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     {plans.map((plan) => <article key={plan.id} className="rev-plan-option" data-testid="rev-plan-option" data-current={plan.is_current === true}>
       <div className="rev-plan-option-heading"><h3>方案 {plan.version_no}</h3>{plan.is_current && <span><Check size={15} aria-hidden="true" />{current?.journey.status === "ACTIVE" ? "正在使用" : "已选用"}</span>}</div>
       {current && <PlanSchedule plan={plan} journey={current.journey} />}
-      {plan.stale || plan.selectable === false ? <p className="rev-plan-gap">{selectionBlocker(plan)}</p> : plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
+      {plan.stale || plan.selectable === false ? <>
+        <p className="rev-plan-gap">{selectionBlocker(plan)}</p>
+        {placeRowsStillOpen(plan) && <button type="button" onClick={onExplore} data-testid="rev-plan-open-place-explore">补上没排地点的那段时间 →</button>}
+      </> : plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
     </article>)}
     {canStart && <div className="rev-plan-start"><p>已选好方案。确认后开始正式行程。</p><button type="button" disabled={locked} onClick={() => void write("start")} data-testid="rev-plan-start">{busy === "start" ? "正在启动…" : "确认方案，开始行程"}</button></div>}
   </section>;

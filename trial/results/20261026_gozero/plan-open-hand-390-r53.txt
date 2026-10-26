@@ -1,0 +1,12 @@
+SHOT cold t=6.7
+COLD_HAS_JOURNEY_TAB 1 t=6.7
+HIT journey-tab true t=7.0
+JOURNEY_LIST "C CityNexus 你的智能旅行伙伴 AI 已配置 · 未验证 TRIPS 行程 这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度。 课堂演示：进入示例行程开始探索 → AI 服务 AI 已配置 · 未验证 选好地点并确认行程后，Agent 就会开始工作。 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认"
+MISS open-journey
+OPEN_JOURNEY false t=22.3
+LAYER_PROBE /^日程$/ workbench=0 t=26.3
+LAYER_PROBE /^对话$/ workbench=0 t=26.3
+LAYER_PROBE /^地图$/ workbench=0 t=26.3
+WORKBENCH_COUNT 0 t=26.3
+NO_WORKBENCH_ON_SCREEN "C CityNexus 你的智能旅行伙伴 AI 已配置 · 未验证 TRIPS 行程 这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度。 课堂演示：进入示例行程开始探索 → AI 服务 AI 已配置 · 未验证 选好地点并确认行程后，Agent 就会开始工作。 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认"
+SHOT no-workbench t=26.4

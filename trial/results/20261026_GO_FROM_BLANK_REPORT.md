@@ -660,3 +660,56 @@ G 臂（`trial/human_walk/_map_walk_r49.mjs` → `map-planned-390-r49.txt`，jou
 受影响范围只有这一处坐标；§45 的其余读数（`departure/commit http_status=200`、`MAP_READS_EVERY candidates=6 / origin=PLAN_ACTIVITY / WGS84`、草案槽 `amap:B000A81CB2` 对活动 `real-place-dc53719dde41c9cb48b7b9b6` 交集为 0、屏上「地图地点 0 处 · 高德地点 6 处」）都是同一时代现读取到的，逐字不改。判据本身也不受影响：`:317` 与它下面的 `defaultMapIds`、`photoPriorityIds` 用的都是同一个 `draftPlaceIds`，所以 §45 ②那处桥接改的正是这三处共同的输入。
 
 同时记两条同代新读数，避免下一位再猜：H 臂（`map-planned-390-r50.txt`，journey `6d653155-12e2-4a3a-8e6a-46d7461708c1`）根本没走到出发门——`prepare-plan` 连回 `http_status=422`（round 2 内第 1 到 11 次保存全被拒），这一形态与 §38 那条"保存被拒"属另一族，本晚未展开；I 臂（`_map_walk_r51.mjs`，430×932，profile `_chrome_gozero_r51`）带着 §45 的桥接在跑，判据仍是 §37 那两格。
+## 47. 选用门为什么打不开：现库现算的一格，和我自己仪表的一处截断
+
+J 臂没走到 ACTIVE。这一格不再靠猜——加了一支只读仪表 `trial/human_walk/_read_plan_selectability_r1.py`
+（sqlite URI `mode=ro`，不写一个字节），对 J 臂那趟 `journey_id=1acb10a6-c234-4765-a88a-4bd56f0985f7`
+与候选 `plan_version_id=1da498bd-ff88-48f4-a5c5-ed3c3557beee` 现读现算，读数如下（UTC 17:29）：
+
+| 格 | 现读值 |
+| --- | --- |
+| 旅程状态／活动计划 | `status=DRAFT`、`active_plan_version_id=null` |
+| 候选状态 | `status=CANDIDATE`、`lifecycle=ACTIVE`、`source=MANUAL` |
+| 冻结证据 | `snapshot_id=9229e777-…`、`expires_at=None` ⇒ `stale=False` |
+| 权威门 | `authority_blocker='UNRESOLVED_ACTIVITY_FACTS'` ⇒ `selectable=False` |
+| 未决事实构成 | `{"ADMISSION_PRICE": 6, "PLACE_REQUIRED": 1}`，`authority_state=COST_UNKNOWN_ACCEPTED` |
+| 活动／地点 | 活动 7 项、`place_id` 齐全 6 处 |
+
+于是「选用这份方案」这一按为什么从来不存在，有了确切的落点：`backend/app/services.py:992` 里
+`selectable = lifecycle != STANDBY and not stale and authority_blocker is None`，而
+`backend/app/services.py:742` 那段先返回——`compose_source == SELECTED_GOAL_DRAFT` 且
+`backend/app/services.py:743` 在 `unresolved_facts` 里看见 `PLACE_REQUIRED`。6 行票价没有参与否决
+（`authority_state` 已是 `COST_UNKNOWN_ACCEPTED`），挡住全局的只有那 1 行「确认了时间、还没排地点」。
+
+**我自己的仪表有一处截断，得先勘误。** J 臂（以及它前面几臂）打印的是
+`gaps.slice(0, 2)`，而 `.rev-plan-gap` 在 DOM 里先排 `MobilePlanWorkbench.tsx:134` 的费用带与
+`:149` 的时段带，再排 `:375` 那句真正的 `selectionBlocker(plan)`。所以我从前几臂读到的"卡片只说等待
+正式计划"是**被我自己切掉的**：那句真正的原因一直在屏上，只是没进我的收据。§44 里"被拒后卡片取不到
+可挪行"这个说法，凡是指"卡片没说清原因"的部分，按这条作废。
+
+仍然成立的产品缺口是另一半：**原因说清了，但那句话旁边没有一个可按的动作**。
+`rev-plan-replan`（`:349`）只在 `selectBlocked` 为真时渲染，而这个状态只能由一次失败的 select 写入——
+select 键在 `selectable=false` 时根本不渲染，所以那条路永远点不亮。旅客停在"另有 1 段时间还没有确定
+地点"这一句前面，没有一条从这里出发的路。
+
+本刀按这个缺口落下（未动服务端权威门，也不替它放宽）：
+`frontend/src/trial/mobile/MobilePlanWorkbench.tsx:70` 新增 `placeRowsStillOpen()`，判据与服务端
+`backend/app/services.py:742` 用同样两个 kind（`PLACE_REQUIRED`／`SOURCE_IDENTITY`），不正则屏上文案；
+`:376` 在原因句下面渲染 `data-testid="rev-plan-open-place-explore"`「补上没排地点的那段时间 →」，
+走的是组件已有的 `onExplore`（同文件 `:357`/`:361` 已用同一个动作，不是新造的门）。
+`npx tsc -p tsconfig.check.json --noEmit` 退出码 0。
+
+K 臂（`trial/human_walk/_plan_hand_r53.mjs`，profile `_chrome_gozero_r52`，收据
+`trial/results/20261026_gozero/plan-open-hand-390-r53.txt`）想直接回到 J 臂那趟去量这一按，但没走到：
+屏上 `TRIPS 行程` 那一格给的是「这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到
+进度。」——cookie 还在、bearer 随 sessionStorage 一起没了，且这句话旁边只给了
+「课堂演示：进入示例行程开始探索 →」这一条动作，没有"回到这趟行程"。这是 #332 那一格的又一个现场读数。
+所以 K 臂对本刀的证词是 **NOT-STARTED**，改由 L 臂
+（`trial/human_walk/_plan_hand_r54.mjs`，同一份走查骨架，收据名 `plan-open-hand-390-r54.txt`）从空白整趟
+重走到那一屏来量。L 臂在跑，判据先写死在这里：`PLAN_GAPS_ALL` 要含那句 selectionBlocker 原文、
+`PLAN_SELECT=0`、`PLAN_HAND=1`、`HAND_PRESSED true`（中心命中测试），且 `AFTER_HAND_HAS_EXPLORE true`。
+四条不齐就不写"修好了"。
+
+另记一件现场事实，与代码无关但会影响今晚后面所有臂：`df` 现读 D 卷可用
+**354 MB／100% 满**（17:32）。我不动任何人的树，只把这一格挂着——新 profile 一枚约 39 MB，还能起两臂，
+再起就要先腾。
