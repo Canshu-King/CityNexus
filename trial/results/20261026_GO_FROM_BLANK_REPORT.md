@@ -1150,3 +1150,30 @@ task `96db3947-d574-4f6d-90d9-03b2951cc849`）把两处仪表修好之后的第�
 **每一种都是我的臂动了时间或状态之后门按规则拒绝**，没有一种是在未改动的流程上出现的。
 #47 的 `rev-plan-open-place-explore` 与 #336 新加的「重新核实这几段」在这一屏仍未遇到
 （这趟的 gaps 形状不是那两种），两条屏证继续标 NOT-STARTED。
+## 62. #338 当场证伪：那句「再按一次选用这份方案」指的键就在同一屏上、而且是亮的
+
+S 臂（`trial/human_walk/_s_arm_r66.mjs`，390×844，profile `_chrome_gozero_r66`，journey
+`6f225106-1096-4f03-9d0f-b038b7f85d41`、plan `04491055-175d-458f-8ebb-9b0e45977ecb`，收据
+`trial/results/20261026_gozero/drift-check-390-r66.txt`）正好撞在 #338 要分辨的那一屏上，三条现读把话说死了：
+
+    t=556.2  SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"}
+    t=556.5  HIT select-3 true
+    t≈557    HTTP POST 422 …/departure/commit BODY {"error":{"code":"VALIDATION_ERROR",
+             "message":"PlanVersion 04491055-… is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27c…|real-place-62c2e606…"}}
+    屏上     这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，
+             或把前一项的结束时间挪早，再按一次「选用这份方案」。
+
+`SELECT_STATE` 在 t=300.6、430.9、556.2 三拍都是 `count=1 enabled=true`，第三拍就是按下被拒**之后**那一拍。
+所以「再按一次『选用这份方案』」指回的是同一张卡片上那颗仍然按得到的键——旅客被拒之后不需要跳转、不需要换页，
+照句子挪完时间再按同一颗即可。句子的三个要素（哪一段、挪哪一边、按哪颗）在同一屏上互相指得通。
+
+**因此 §57 里我留下的那条怀疑，在这里证伪并撤回**：#338 原先写的是"SELECTED 之后 select 键退场，
+所以那句可能指向按不到的键"。真实时序是——按下 select 走的就是选择加出发门的同一次提交，
+被 `PLAN_INFEASIBLE` 拒掉时候选**仍是 CANDIDATE**，键没有退场；我先前是从"出发之后 select 计数为 0"
+（§50/§52 那个已经成功的形态）倒推过来的，把两个形态混成了一个。结案：该屏无缺陷，#338 关闭。
+
+同臂另两条如实记下：
+- `REPAIR` 这一趟触发 0 次、`HIT save-` 2 次。修复腿（越界时间收回 21:00）没被用到，因为这趟保存没报越界；
+  它不是没生效，是**这一趟不需要**——不能把"没触发"读成"没实现"。
+- 出发门这趟最终仍拒（同一条 `INSUFFICIENT_TRAVEL_GAP`，1 段），所以 S 臂没有走到 ACTIVE；
+  ACTIVE 与地图那两格的证据仍只由 §50（390，5 处）与 §52（430，8 处）撑着，未被这趟推翻也未被加固。
