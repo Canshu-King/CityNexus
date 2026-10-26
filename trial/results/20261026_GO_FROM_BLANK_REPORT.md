@@ -584,3 +584,10 @@ arm B 是同代码、新浏览器 profile 的整趟重走（`trial/results/20261
 5. **两条 e2e spec 未执行**（要 `npm run dev` 那档带后端的栈）：`frontend/e2e/revolution-amap-research-ui.spec.ts`（本刀改了它 `:128` 钉的那句文案）与 `revolution-sim-traveller.spec.ts`、`revolution-workspace-actions.spec.ts`（各自读 `加载地图`、`rev-workspace-place-list`，`revolution-workspace-actions.spec.ts:266`）。我只逐条读了它们对哪些字符串有断言并据此改文案，**没有跑过它们**。
 6. **选中面 49 条红 + 9 errors 属预先存在**：具名对拍见 §35（现尖独有新红 零枚）；其中 `test_in_transit_reroute` 那条已定位到 simulation 合并带来的 `settings` 桩缺 `simulation_enabled`（§34），归那条线修。
 
+## 40. 臂 D 的读数（2026-10-27 00:01 本地，补 §38 表里那一行）
+
+`trial/results/20261026_gozero/map-planned-390-r46.txt`（profile `_chrome_gozero_map51`，journey `142b19e1-b037-476d-a31d-6246deeaf9e7`，带 §37 的重取线）。这臂仍没穿过出发门：`departure/commit` `http_status=422`，屏上拒答现读为两种因由并列 —— 「两段安排之间留的赶路时间不够（1 段）」与「前门大街 + 全聚德(前门店)晚餐在你排的这段时间不开放」，并各自给了动作（前者指「在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早」，这句是 `departureGaps.ts` 里 `INSUFFICIENT_TRAVEL_GAP` 那一支给的可按动作）；journey 未 ACTIVE。
+
+逐次读数器给的是：`MAP_READS_EVERY` 每一次 `GET …/map-places` 均 `http_status=200, candidates=0, first=null`；地图层 `MAP_COUNT_LINE` 「地图地点 0 处 · 高德地点 7 处」、`MAP_PLANNED_TAGS 0`、`MAP_LIST_ITEMS 0`。与臂 C 同形，且都是**正确**行为：没有 active plan 就没有 `PLAN_ACTIVITY` 点，七枚「高德地点」来自研究线索。
+
+所以 §38 那一格照旧开着，且现在有了明确的收法（不是再赌一趟模型）：拿 §33 那条新回归已经证明的服务端投影，在浏览器里补一次 ACTIVE journey 的 `map-places` 应答读数 —— 判据仍是 §37 末段那两格（`candidates` 等于活动数、`first.origin="PLAN_ACTIVITY"`、`MAP_PLANNED_TAGS` 与活动数相等）。下一次后端重启、或主人亲机走一遍任意一趟已 ACTIVE 的行程（390 或 430），这两格就能一次收掉。
