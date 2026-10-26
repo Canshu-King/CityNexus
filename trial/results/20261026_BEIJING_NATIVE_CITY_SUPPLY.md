@@ -53,6 +53,9 @@ Root-only serial pytest, isolated temporary SQLite: city/publication suite 16/16
 - `20261026_BEIJING_NATIVE_CITY_SUPPLY_HTTP.json`: signed HTTP states, exact identities, provider receipts, both seeds and preserved old run.
 - `20261026_BEIJING_NATIVE_ROUTE_SNAPSHOT.json`: native PlanVersion frozen evidence with the three WGS84 shapes.
 - `20261026_BEIJING_PUBLISHED_CITY_SNAPSHOT.json`: actual published public city payload.
+- `20261026_BEIJING_CITY_RESTART_HTTP.json`: after a second normal owned restart, signed HTTP still reads the same public hash and three shapes (139/33/58 points); the old run remains completed sequence 9 / PROPOSAL_ACCEPTED. ProviderCall 88 and AgentRun 39 are unchanged by this reload, with zero new map/model requests. Restart loaded document head `f2a5b60e52`, whose product code is unchanged from `8c18dcd2b9`.
 - Owned prewrite consistent backup: `C:/Users/仓鼠王/cn51/classroom-20261026-qa/supply-native-20261026/before-four-stop-native.db`.
 
 Remaining: two more genuinely different eligible cities; classroom same-run two-day/four-stop execution and event chain; Qoder UI integration; physical-device USER_VERIFIED. Beijing eligibility alone does not satisfy those gates.
+
+PR56 document head `f2a5b60e52` checks 40284723978 and 40284714148 both completed SUCCESS. Later document-only heads must be checked independently.

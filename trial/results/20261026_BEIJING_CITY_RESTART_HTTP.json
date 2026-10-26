@@ -1,0 +1,20 @@
+{
+  "evidence_kind": "SIGNED_HTTP_AFTER_NORMAL_OWNED_SERVICE_RESTART_SAME_DB_AUTH",
+  "eligible_city_count": 1,
+  "three_city_status": "BLOCKED",
+  "public_route_points": [
+    139,
+    33,
+    58
+  ],
+  "published_sha256": "94b6c37704228505d941cf0c866199d69614a000e28bc786340a8404bdf4f9a3",
+  "old_run_status": "SIMULATED_COMPLETED",
+  "old_run_sequence": 9,
+  "old_guardian_outcome": "PROPOSAL_ACCEPTED",
+  "agent_provider_counts_unchanged": {
+    "agent_runs": 39,
+    "provider_calls": 88
+  },
+  "new_provider_calls": 0,
+  "new_model_calls": 0
+}
