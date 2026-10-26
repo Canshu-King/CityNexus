@@ -1177,3 +1177,38 @@ S 臂（`trial/human_walk/_s_arm_r66.mjs`，390×844，profile `_chrome_gozero_r
   它不是没生效，是**这一趟不需要**——不能把"没触发"读成"没实现"。
 - 出发门这趟最终仍拒（同一条 `INSUFFICIENT_TRAVEL_GAP`，1 段），所以 S 臂没有走到 ACTIVE；
   ACTIVE 与地图那两格的证据仍只由 §50（390，5 处）与 §52（430，8 处）撑着，未被这趟推翻也未被加固。
+## 63. 卡片给的第二条出路真走得通；而"按不动"又是我的量具造的假读数
+
+T 臂（`trial/human_walk/_t_arm_r67.mjs`，由 `_derive_r67_r1.py` 从 S 臂派生，390×844，
+profile `_chrome_gozero_r67`，journey `4d1e7907-f6d8-46fa-ae9d-7a683366668e`，收据
+`trial/results/20261026_gozero/drift-check-390-r67.txt`）照着 §61 那句卡片指令走了第二条出路
+（「把前一项的结束时间挪早」），把它变成动作：
+
+    TIME_EDITED "天坛·雨花村餐厅（晚餐）结束时间" 20:00 -> 20:30          # 我先把间隔挤没
+    422 INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27c…|real-place-62c2e606… # 门如实拒
+    GAP_REPAIR 1 ["天安门广场结束时间 10:00->09:45","故宫博物院（午门进·神武门出）结束时间 12:00->11:45",
+                  "景山公园结束时间 15:00->14:45","前门·京晟小馆烤鸭（晚餐）结束时间 20:00->19:45",
+                  "颐和园结束时间 10:00->09:45","天坛公园结束时间 15:…"]   # 照句子挪早
+    → prepare-plan 201（新计划 14fba4d4-42b3-48a9-822e-1d3940f9bd66）
+    → accept-unknown-price 200 → freeze-routes 200 → refresh 200
+
+**这一格结的是派单第 1 刀里"每次阻塞→现场修复→再次真实点击"的实质**：卡片不是只解释一次拒绝，
+按它给的出路做，同一扇门下一拍就真的放行到下一步（`prepare-plan` 从 422 变 201，并生成可冻结的新候选）。
+
+同屏也暴露我的量具又造了一次假读数，必须自己拆掉。收据 `:150`/`:152`：
+
+    SELECT_STATE count=2 visible=true enabled=false {"disabled":false, …}
+
+`enabled=false` 与 `disabled:false` 互相打脸。原因是探针写的是 `select.isEnabled()`，而这一屏有**两份候选**
+（`count=2`），Playwright 的 strict mode 对多元素 locator 直接抛错，被我的 `.catch(() => false)` 吞成
+"禁用"。所以「select 按不动」从头到尾不存在——DOM 上两颗键都没 disabled，是臂读错了并因此连刷了
+`refresh-for-disabled-2-3…2-6`。已改成 `select.first().isEnabled()`（同步改在
+`trial/human_walk/_go_active_r57.mjs` 与 `_drift_check_r61.mjs`，下一支臂从修好的这份再派生）。
+本夜这类"吞掉判语/自造判语"的仪表缺陷累计四处：`gaps.slice(0,2)` 截断、非 2xx 不取 body、
+句子容器少 `[role=status]`、以及这条 strict-mode 假禁用——四处全都是我这一侧的问题，
+没有一处最后被证实是产品不说实话。
+
+T 臂终态如实记：出发门这一趟**没有**过（无 `departure/commit 200`，无 `start 200`），
+地图仍是未出发形态 `地图地点 0 处 · 高德地点 7 处`、`MAP_PINS 0`、`MAP_PLANNED_TAGS 0`、
+`RELOAD_MAP_COUNT_LINE` 同值 ⇒ §47 的服务端第二臂又一次在"没出发"时正确地不发射手。
+ACTIVE 那两格仍由 §50（390，5 处）与 §52（430，8 处）撑着。

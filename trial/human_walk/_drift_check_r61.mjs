@@ -280,7 +280,7 @@ for (let round = 1; round <= 3 && !startedJourney; round += 1) {
     if (await visible(refreshPlan) && i === 0) { await press(refreshPlan, `refresh-start-${round}`, 10000); await page.waitForTimeout(3500); }
     const selCount = await select.count();
     const selVisible = await visible(select);
-    const selEnabled = selVisible ? await select.isEnabled().catch(() => false) : false;
+    const selEnabled = selVisible ? await select.first().isEnabled().catch(() => false) : false;
     if (selCount > 0) {
       const html = await select.first().evaluate((node) => ({ disabled: node.disabled, cls: node.className, parent: node.parentElement?.className || "" })).catch(() => null);
       note(`SELECT_STATE count=${selCount} visible=${selVisible} enabled=${selEnabled} ${JSON.stringify(html)} t=${elapsed()}`);
