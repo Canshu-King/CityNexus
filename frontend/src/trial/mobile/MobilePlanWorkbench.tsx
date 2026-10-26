@@ -111,6 +111,10 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
   const scheduledDays = [...days.keys()].filter((day) => day !== "日期待确认").length;
   const missingDays = requestedDays && requestedDays > scheduledDays ? requestedDays - scheduledDays : 0;
   const unknownCosts = plan.activities.filter((item) => !["KNOWN_FREE", "KNOWN_PAID"].includes(item.cost_status ?? "")).length;
+  // The server records the traveller's "unknown price, not in budget" decision on the plan itself.
+  // Saying "7 项费用待确认" after that press read as an unmet gate on the 430 walk, right next to the
+  // card that already said the prices were confirmed; the remaining truth is that the total excludes them.
+  const costAccepted = String((plan.explanation as Record<string, unknown> | null)?.authority_state ?? "") === "COST_UNKNOWN_ACCEPTED";
   // Times the traveller confirmed that have no venue yet.  The row stays on the plan -- it is part of
   // the day they agreed to -- and declares itself unroutable (metadata.routing = NOT_ROUTED, written at
   // backend/app/agent/goal_preparation.py), so the platform neither invents a route to it nor blames
@@ -127,7 +131,9 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
       <span><CalendarDays size={16} aria-hidden="true" />{scheduledDays} 天 · {plan.activities.length} 项安排</span>
       <strong>{unknownCosts > 0 && unknownCosts === plan.activities.length ? "费用待确认" : total ? `${knownTotal ? "计划费用" : "已知费用"} ${total}` : "费用汇总待确认"}</strong>
     </div>
-    {unknownCosts > 0 && <p className="rev-plan-gap">{unknownCosts} 项费用待确认，尚未计入完整预算。</p>}
+    {unknownCosts > 0 && <p className="rev-plan-gap" data-testid="rev-plan-unknown-costs">{costAccepted
+      ? `这 ${unknownCosts} 项费用你已经确认先不计入预算（总价不含这些项）。`
+      : `${unknownCosts} 项费用待确认，尚未计入完整预算。`}</p>}
     {missingDays > 0 && <p className="rev-plan-gap" data-testid="rev-plan-day-gap">还有 {missingDays} 天未安排，可返回探索补充地点。</p>}
     {[...days].map(([day, activities]) => <section className="rev-plan-day" key={day}>
       <h4>{day === "日期待确认" ? day : `${day.slice(5).replace("-", "月")}日`}</h4>

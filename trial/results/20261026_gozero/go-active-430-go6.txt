@@ -1,0 +1,16 @@
+SHOT 430-g6-cold t=27.8
+HIT continue true t=28.7
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=32.3
+HIT open-settings true t=34.5
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=36.4
+HIT send true t=37.8
+HTTP POST 201 /api/v1/journeys/3efeb2dd-98fd-4640-991a-8d114860882c/agent/goal-tasks
+SENT
+HIT recover-ask true t=220.3
+RECOVERY 1
+SKIPPED false
+HIT recover-research true t=407.6
+RECOVERY 2
