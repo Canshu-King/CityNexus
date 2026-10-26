@@ -430,7 +430,12 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
           这次事件已经落定，可以继续模拟。
         </p>
       )}
-      {run?.status === "PAUSED_FOR_ACCEPTANCE" && acceptanceHasProposal && !simulationProposal && (
+      {/* After a successful accept the run still remembers the proposal id while the proposal itself is
+          no longer returned (status ACCEPTED), so both this note and the "already settled" one rendered
+          on the same screen -- measured on the 390 run: accept returned 200, the settled note was on
+          screen, and this line told the presenter to restart the demo. Only a proposal id with no
+          content AND no settled event is the mismatch it describes. */}
+      {run?.status === "PAUSED_FOR_ACCEPTANCE" && acceptanceHasProposal && !simulationProposal && !pendingResolved && (
         <p className="rev-presenter-note" data-testid="rev-presenter-proposal-mismatch">
           进度里记着提案编号，但看不到可接受的内容；请重启课堂演示（双击启动器）。
         </p>
