@@ -1,0 +1,10 @@
+D 盘腾挪回执 2026-10-27 01:37 (本地 +08)
+工具 trial/human_walk/_free_d_cold_profiles_r1.py（先复制到 E、逐枚字节全等、才删源）
+副本位置 E:/_cmdr_cold_1027/<同名>
+_chrome_gozero_map46 MOVED bytes=28246921 src_gone=True
+_chrome_gozero_map47 MOVED bytes=32599647 src_gone=True
+_chrome_gozero_map48 MOVED bytes=39789895 src_gone=True
+_chrome_gozero_map49 MOVED bytes=40094257 src_gone=True
+_chrome_gozero_r47  MOVED bytes=40060974 src_gone=True
+逐项总和 180791694 B = 172 MiB；现读 D 可用 314 MB -> 489 MB（增 175 MB，与逐项对账一致）
+E 可用 47210 MB；未删任何收据、截图、库、键
