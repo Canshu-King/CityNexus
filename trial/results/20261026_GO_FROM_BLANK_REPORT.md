@@ -409,3 +409,15 @@ run `7044b8b3…` 停在 `PAUSED_FOR_ACCEPTANCE`（已接受、事件已落定�
 ### 28.7 补：ACTIVE 后的「下一站」读数（同一 journey）
 
 `go-live-430.txt` 的出发后首屏原文含：「第一站：故宫博物院（午门入，中轴线慢走） · 12月3日 09:00」「现在：故宫博物院（午门入，中轴线慢走）」「**接下来：景山公园（万春亭看中轴线）**」；`my-trips-430.txt` 记录 `page.reload()` 前后这三处逐字一致，截图 `my-trips-430-plan.png` / `my-trips-430-reloaded.png`。
+
+### 27.2 run 级接受之后，外层旅程确实换了计划
+
+同一条课堂 journey（`2e9cd67d…`），在 §27 那次 run 级接受（`/replans/e7912b9c…/accept` 200）之后重新打开外层屏：
+
+| 读数 | 接受前（§23 的旅程级那次之后） | run 级接受后（`outer-after-runaccept-390-a/b.png`） |
+|---|---|---|
+| 第一站 | 天坛公园 · 12月4日 09:00 | **天坛公园 · 12月4日 09:00**（故宫已被移除，直接从天坛起） |
+| 现在 | 天坛公园 | 天坛公园 |
+| 刷新后 | — | 第一站/现在站**逐字一致** |
+
+说明：控制台接受按钮里那句 `window.dispatchEvent(new CustomEvent("citynexus:plans-updated", …))` 不是装饰——同一 tab 的外层屏在 8 秒内读到新计划，`page.reload()` 后仍一致。
