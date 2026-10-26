@@ -1,0 +1,175 @@
+SHOT 430-g7-cold t=5.3
+HIT continue true t=6.2
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.8
+HIT open-settings true t=12.0
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.9
+HIT send true t=15.3
+HTTP POST 201 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/run
+HIT skip-questions true t=31.5
+SKIP t=32.2
+SKIPPED true
+DRAFT t=110.3
+DRAFT_SEEN true
+SHOT 430-g7-after-research t=110.4
+HIT tab-chat true t=110.8
+HTTP POST 200 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/resume
+COMPOSER_ENABLED true t=144.8
+HIT send-fix true t=145.2
+FIX_SENT t=145.9
+HTTP POST 200 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/resume
+FIX_IDLE true t=286.2
+SHOT 430-g7-after-fix t=286.3
+HIT journey-tab true t=286.6
+DRAFT_SLOTS 7
+NO_OPTIONAL_SLOT
+HIT save-1-0 true t=291.6
+HTTP POST 201 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/prepare-plan
+HIT price-1-1 true t=298.6
+HTTP POST 200 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/plans/8e93130e-a0cf-4e31-84db-8394d14d47fb/accept-unknown-price
+HIT refresh-after-price-1 true t=303.7
+HIT freeze-1-2 true t=308.8
+HTTP POST 200 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/plans/8e93130e-a0cf-4e31-84db-8394d14d47fb/freeze-routes
+HIT refresh-after-freeze-1 true t=315.8
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=320.6
+SHOT 430-g7-plans-1 t=320.7
+HIT select-1 true t=321.1
+HTTP POST 422 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/departure/commit
+SELECT_REFUSAL ["这次有一部分还没完成，你可以继续告诉我想怎么调整。","这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+SHOT 430-g7-selected-1 t=326.9
+HIT refresh-after-select-1 true t=327.2
+HIT replan-1 true t=332.3
+HIT replan-apply-1 true t=335.8
+HTTP POST 201 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/prepare-plan
+REPLAN_APPLIED 1
+HIT journey-tab true t=370.0
+HIT price-2-0 true t=373.3
+HTTP POST 200 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/plans/daa75bea-abee-4d98-8c8f-7733da628d7e/accept-unknown-price
+HIT refresh-after-price-2 true t=378.3
+HIT freeze-2-1 true t=383.4
+HTTP POST 200 /api/v1/journeys/f49a9114-2a3d-4eda-977f-59b41d72ba46/agent/goal-tasks/74502216-383b-4861-868a-4a02af76fe29/plans/daa75bea-abee-4d98-8c8f-7733da628d7e/freeze-routes
+HIT refresh-after-freeze-2 true t=390.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=395.3
+HIT refresh-for-disabled-2-2 true t=395.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=398.9
+HIT refresh-for-disabled-2-3 true t=399.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=402.6
+HIT refresh-for-disabled-2-4 true t=402.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=406.2
+HIT refresh-for-disabled-2-5 true t=406.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=409.8
+HIT refresh-for-disabled-2-6 true t=410.2
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=413.5
+HIT refresh-for-disabled-2-7 true t=413.8
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=417.1
+HIT refresh-for-disabled-2-8 true t=417.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=420.7
+HIT refresh-for-disabled-2-9 true t=421.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=424.4
+HIT refresh-for-disabled-2-10 true t=424.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=428.0
+HIT refresh-for-disabled-2-11 true t=428.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=431.6
+HIT refresh-for-disabled-2-12 true t=431.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=435.3
+HIT refresh-for-disabled-2-13 true t=435.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=438.9
+HIT refresh-for-disabled-2-14 true t=439.2
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=442.5
+HIT refresh-for-disabled-2-15 true t=442.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=446.1
+HIT refresh-for-disabled-2-16 true t=446.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=449.8
+HIT refresh-for-disabled-2-17 true t=450.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=453.4
+HIT refresh-for-disabled-2-18 true t=453.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=457.0
+HIT refresh-for-disabled-2-19 true t=457.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=460.6
+HIT refresh-for-disabled-2-20 true t=460.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=464.3
+HIT refresh-for-disabled-2-21 true t=464.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=467.9
+HIT refresh-for-disabled-2-22 true t=468.2
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=471.5
+HIT refresh-for-disabled-2-23 true t=471.9
+HIT refresh-start-3 true t=475.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=479.7
+HIT refresh-for-disabled-3-0 true t=480.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=483.4
+HIT refresh-for-disabled-3-1 true t=483.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=487.0
+HIT refresh-for-disabled-3-2 true t=487.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=490.6
+HIT refresh-for-disabled-3-3 true t=491.0
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=494.3
+HIT refresh-for-disabled-3-4 true t=494.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=497.9
+HIT refresh-for-disabled-3-5 true t=498.2
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=501.5
+HIT refresh-for-disabled-3-6 true t=501.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=505.2
+HIT refresh-for-disabled-3-7 true t=505.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=508.8
+HIT refresh-for-disabled-3-8 true t=509.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=512.4
+HIT refresh-for-disabled-3-9 true t=512.8
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=516.1
+HIT refresh-for-disabled-3-10 true t=516.4
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=519.7
+HIT refresh-for-disabled-3-11 true t=520.0
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=523.3
+HIT refresh-for-disabled-3-12 true t=523.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=526.9
+HIT refresh-for-disabled-3-13 true t=527.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=530.6
+HIT refresh-for-disabled-3-14 true t=530.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=534.2
+HIT refresh-for-disabled-3-15 true t=534.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=537.8
+HIT refresh-for-disabled-3-16 true t=538.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=541.4
+HIT refresh-for-disabled-3-17 true t=541.8
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=545.0
+HIT refresh-for-disabled-3-18 true t=545.4
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=548.7
+HIT refresh-for-disabled-3-19 true t=549.0
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=552.3
+HIT refresh-for-disabled-3-20 true t=552.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=556.0
+HIT refresh-for-disabled-3-21 true t=556.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=559.6
+HIT refresh-for-disabled-3-22 true t=559.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=563.2
+HIT refresh-for-disabled-3-23 true t=563.5
+STATE t=566.8 {"inUse":false,"next":null}
+SHOT 430-g7-final t=657.1
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0\n已有阶段性成果\n地图\n日程\n对话\n按天调整行程\n\n7 项安排 · 2 天\n\n你的旅行草案\n\n草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。\n\nDay 1\n12-03\nDay 2\n12-04\n2026-12-03 · 4 项安排\n天安门广场（看升旗/广场漫步）\nN509FZ · CC BY-SA 4.0\n故宫博物院（午门进、中轴线游览）\nuser:kallgan · CC BY-SA 3.0\n上午\n· 天安门广场（看升旗/广场漫步）\n点击编辑\n上午\n· 故宫博物院（午门进、中轴线游览）\n点击编辑\n下午\n· 景山公园（神武门外俯瞰故宫全景）\n点击编辑\n晚上\n· 前门大街晚餐（四季民福烤鸭/老字号）\n点击编辑\n＋ 添加安排\n检查草案保存状态\n\n当前展示的是已保存版本。\n\n准备出发 · 正式计划与待办\n从这份安排继续\n\n7 项安排已保存，刷新也能找回。\n\n已确认时间 · 查看或调整\n按以上时间准备方案\n安排已保存\n生成正式候选方案\n\n转场已核实 5/5（其中 1 段是跨夜衔接，4 段按公共交通核实，其中 4 段超过1 公里，已换成公共交通核实，另有 1 段公共交通没有答案，仍按步行核实，超过1 公里） · 已冻结进这版方案\n重新核实转场\n\n天安门广场（看升旗/广场漫步）\n来源写这天开放（来源写的时段 05:00—20:30）\n故宫博物院（午门进、中轴线游览）\n来源写这天开放（来源写的时段 08:30—16:30）；来源另写「以官方通知为准」\n景山公园（神武门外俯瞰故宫全景）\n来源写这天开放（来源写的时段 06:30—20:00）\n前门大街晚餐（四季民福烤鸭/老字号）\n来源写这天开放（来源写的时段 10:30—21:30）\n颐和园（地铁直达，园内轻松游）\n来源写这天开放（来源写的时段 06:30—19:00）\n颐和园续游（昆明湖、佛香阁一带）\n来源写这天开放（来源写的时段 06:30—19:00）\n颐和园附近晚餐（德昌园京味餐厅/阳坊涮肉）\n来源写这天开放（来源写的时段 10:00—22:00）\n\n按你的确认保存：这 6 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。这一版还需要把待办逐项补完才能选用。\n\n出发待办\n天安门广场（看升旗/广场漫步）\n票价：没有来源给出这一项的价格\n故宫博物院（午门进、中轴线游览）\n票价：没有来源给出这一项的价格\n景山公园（神武门外俯瞰故宫全景）\n票价：没有来源给出这一项的价格\n前门大街晚餐（四季民福烤鸭/老字号）\n票价：没有来源给出这一项的价格\n颐和园（地铁直达，园内轻松游）\n票价：没有来源给出这一项的价格\n颐和园续游（昆明湖、佛香阁一带）\n票价：没有来源给出这一项的价格\n颐和园附近晚餐（德昌园京味餐厅/阳坊涮肉）\n票价：没有来源给出这一项的价格\n\n屏上的出发待办都问过了；能不能选用，以方案卡上的按钮为准。\n\nTRAVEL PLAN\n你的行程方案\n刷新方案\n等待正式计划\n\n2 份正式候选方案\n\n根据路线重新安排\n方案 1\n2 天 · 7 项安排\n费用待确认\n\n这 7 项费用你已经确认先不计入预算（总价不含这些项）。\n\n12月03日\n09:00—10:00\n天安门广场（看升旗/广场漫步）\n费用待确认\n查看地点来源 ↗\n11:00—12:00\n故宫博物院（午门进、中轴线游览）\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n景山公园（神武门外俯瞰故宫全景）\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n前门大街晚餐（四季民福烤鸭/老字号）\n费用待确认\n查看地点来源 ↗\n12月04日\n09:00—10:00\n颐和园（地铁直达，园内轻松游）\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n颐和园续游（昆明湖、佛香阁一带）\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n颐和园附近晚餐（德昌园京味餐厅/阳坊涮肉）\n费用待确认\n查看地点来源 ↗\n选用这份方案\n方案 2\n2 天 · 7 项安排\n费用待确认\n\n这 7 项费用你已经确认先不计入预算（总价不含这些项）。\n\n12月03日\n09:00—10:00\n天安门广场（看升旗/广场漫步）\n费用待确认\n查看地点来源 ↗\n11:18—12:18\n故宫博物院（午门进、中轴线游览）\n费用待确认\n查看地点来源 ↗\n14:18—15:18\n景山公园（神武门外俯瞰故宫全景）\n费用待确认\n查看地点来源 ↗\n19:18—20:18\n前门大街晚餐（四季民福烤鸭/老字号）\n费用待确认\n查看地点来源 ↗\n12月04日\n09:00—10:00\n颐和园（地铁直达，园内轻松游）\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n颐和园续游（昆明湖、佛香阁一带）\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n颐和园附近晚餐（德昌园京味餐厅/阳坊涮肉）\n费用待确认\n查看地点来源 ↗\n选用这份方案\n准备出发\n行程守护\n同行决策\nYOUR TRIP\n我的行程\n\n还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。"
+ERRORS []
+HIT map-layer true t=657.4
+MAP_PANE 1
+MAP_CALLS []
+MAP_READS_EVERY ["{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}"]
+MAP_HEAD "地图"
+MAP_PLANNED_TAGS 0
+MAP_LIST_ITEMS 0
+MAP_COUNT_LINE "地图地点 0 处 · 高德地点 6 处"
+MAP_AMAP_LINKS 70
+SHOT 430-g8-map-preview t=661.3
+MISS load-map
+MAP_CANVAS 0
+MAP_PINS 0
+MAP_AFTER_CONSENT "地图"
+SHOT 430-g8-map-loaded t=680.4
+MAP_CALLS_AFTER []
+ERRORS_MAP []
+HIT map-layer-after-reload true t=693.0
+RELOAD_MAP_COUNT_LINE "地图地点 0 处 · 高德地点 6 处"
+RELOAD_PLANNED_TAGS 0
+RELOAD_LIST_ITEMS 0
+RELOAD_MAP_READS ["{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}"]
+SHOT 430-g8-map-reloaded t=696.9

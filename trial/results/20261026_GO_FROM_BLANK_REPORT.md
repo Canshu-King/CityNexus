@@ -549,3 +549,16 @@ arm B 是同代码、新浏览器 profile 的整趟重走（`trial/results/20261
 
 §35 那道守卫不撤：同 id 上「行自己声明 WGS84」优先于「按供应商猜 GCJ02」这件事按现读仍成立，`backend` 里也确有 WGS84 的计划行；但它治的是"顶掉"，不治"没送到"，所以本节不把它记成已生效的修复，只记成一条仍然正确的判据。
 
+## 37. 430 那一趟把最后一格定性了，并补上「接受后重取」这根线
+
+`trial/results/20261026_gozero/map-planned-430-r46.txt`（profile `_chrome_gozero_map49`，journey `f49a9114-2a3d-4eda-977f-59b41d72ba46`、goal-task `74502216-383b-4861-868a-4a02af76fe29`，模型 `cn:hy3`）。这趟 `departure/commit` 回的是 `http_status=422`（营业时间冲突那一类：这一版把两处用餐排在来源答案之外），所以 journey **没有** ACTIVE、`active_plan_version_id` 为空。§36 装的逐次读数器在这种情况下给出：
+
+- 每一次 `GET …/map-places` 都是 `http_status=200, candidates=0, first=null`（`MAP_READS_EVERY` 十四条同形；整页 reload 之后的最后三次 `RELOAD_MAP_READS` 也同形）。
+- 屏上仍是「地图地点 0 处 · 高德地点 6 处」，`MAP_PLANNED_TAGS 0`、`MAP_LIST_ITEMS 0`，reload 后同形。
+
+**这两行定的是 §36 留的那格**：没有 active plan 时服务端返回 0 枚是正确的，屏上那 6 枚「高德地点」全部来自研究线索（`task.research_places`，其 `coordinate_system` 由供应商名推成 GCJ02），与计划无关。⇒ §33/§35 改的读侧投影是必要的一半，但不是这一屏的全部；还缺一根线 —— 旅客按下「选用这份方案」之后，谁去重取地图。
+
+现读那根线确实断着：提交走 `frontend/src/trial/mobile/MobilePlanWorkbench.tsx:249` 的 `commitJourneyDeparture(journeyId, plan.id, key)`，成功之后该组件只 `await refresh()`（重取的是这张工作台自己的快照）；而 `citynexus:plans-updated` 的发布者只有控制台接受那一支（`frontend/src/trial/mobile/ClassroomPresenterPanel.tsx:350`）与草案出发卡的五次（`frontend/src/trial/mobile/DraftDepartureCard.tsx:132`、`:155`、`:201`、`:248`、`:287`），旅客那条提交路径不在名单里。`MissionCockpit` 的地图读只在 `[journeyId, refresh, identityTick]` 变化时发生（`frontend/src/trial/mobile/MissionCockpit.tsx:250`），`refresh` 又只由该事件加一（同文件 `:261`），所以接受成功后地图拿着出发前的空答不动。
+
+**已补**：在 `MobilePlanWorkbench.tsx` 的 `commitJourneyDeparture` 返回校验之后发出 `window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: journeyId }))` —— 现读落点 `frontend/src/trial/mobile/MobilePlanWorkbench.tsx:258`（提交调用在同文件 `:249`），注释写的是为什么：地图的点是挂载时读一次，390 实测 ACTIVE 的 journey 地图仍写 0 处，而同一版计划的六站就在 `places` 里；上面那句 `refresh()` 只重取本工作台。同代 `npx tsc -p tsconfig.check.json --noEmit` RC=0。这一格还没算闭上 —— 补完之后那一趟真机走查的读数写在下一节，绿了才撤 §31 的「未满足」，不绿就继续照 §31 的写法记。
+

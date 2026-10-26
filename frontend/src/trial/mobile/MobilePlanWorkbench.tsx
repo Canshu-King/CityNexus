@@ -251,6 +251,11 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
         if (committed.journey_id !== journeyId || committed.plan_version_id !== plan.id) {
           throw new Error("Departure commit response mismatch");
         }
+        // The map reads the journey's places once per mount, so a commit that lands a new active plan
+        // leaves the journey screen drawing the pre-commit map -- measured on the 390 walk, where the
+        // ACTIVE journey's map still said 「0 处地点」 while the same plan's six stops sat in `places`.
+        // `refresh()` above only re-reads this workbench's own snapshot.
+        window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: journeyId }));
       } else if (action === "start") {
         const started = await cityNexusApi.startJourney(journeyId);
         if (!stillCurrent()) return;
