@@ -48,7 +48,8 @@ async function openDraft() {
   await press(page.getByRole("button", { name: /我的旅程/ }), "journey-tab", 12000);
   await page.waitForTimeout(2200);
   await press(page.getByRole("button", { name: /继续这趟/ }), "continue-trip", 12000);
-  await page.waitForTimeout(2200);
+  await page.waitForTimeout(6000);
+  await page.locator('section[aria-label="可编辑旅行草案"]').waitFor({ state: "visible", timeout: 15000 }).catch(() => {});
   await press(page.getByRole("button", { name: /按天调整行程/ }), "day-tab", 12000);
   await page.waitForTimeout(1500);
 }
@@ -68,14 +69,15 @@ async function daySlots(dayIndex) {
 
 const bearer = JSON.parse(fs.readFileSync("D:/moodle/_cmdr_v3_live_1022/.gozero_bearer.json", "utf8"));
 await page.goto("http://127.0.0.1:14461/revolution", { waitUntil: "domcontentloaded", timeout: 60000 });
-await page.evaluate(([token, traveler, journey]) => {
+await page.evaluate(([token, traveler, journey, taskId]) => {
   sessionStorage.setItem("citynexus.traveler.bearer", token);
   sessionStorage.setItem("citynexus.traveler.session-id", traveler);
   localStorage.setItem("citynexus.v8.journey_id", journey);
-}, [bearer.access_token, bearer.traveler_id, bearer.journey_id]);
+  if (taskId) localStorage.setItem("citynexus.revolution.goal-task." + traveler + "." + journey, taskId);
+}, [bearer.access_token, bearer.traveler_id, bearer.journey_id, bearer.task_id]);
 await page.reload({ waitUntil: "domcontentloaded" });
 await page.waitForTimeout(8000);
-note(`SESSION_SET traveler=${String(bearer.traveler_id).slice(0, 8)}`);
+note("SESSION_SET task=" + String(bearer.task_id).slice(0, 8));
 note(`ENTER ${JSON.stringify((await bodyText()).slice(0, 120))}`);
 await openDraft();
 const editor = page.locator('section[aria-label="可编辑旅行草案"]');

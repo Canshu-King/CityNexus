@@ -281,3 +281,24 @@ DB 回执：`r12-receipt.txt`（journey `e8f81207…`、mission `e99b4180…`、
 **gozero 栈开票的办法（已验）**：`redeem` 要求 `CITYNEXUS_DEMO_DATABASE_PATH` 指向实际库（否则 503 `DEMO_DATABASE_NOT_ISOLATED`）。`_restart_gozero_backend_r1.py` 已加这一项；往 `demo_pairing_tickets` 插一行后 `POST /api/v1/demo/pairing/redeem` 回 **200**，票绑定 `a22411b7`（未出发、CANDIDATE、DB 里草案 7 个 slot）。
 
 **进去之后的新读数（未定性，待查）**：屏上「按天调整行程」写 **0 项安排 · 0 天**、「1 份正式候选方案」，而同一 journey 的 `goal_task.draft_artifact.days[].slots` 合计 **7**。前端读 `task.draft_artifact`（`MissionCockpit.tsx:392`），DB 读 `intent_json.goal_task.draft_artifact`——两处对不上。还差一次逐字段对拍（GET 返回体的 `draft_artifact` vs DB），确认是读取清洗还是取了另一个 mission；在没对拍前不改代码。
+
+## 25. 只改一个下午，其他时段不漂移（430×932 真屏 + 真保存，2026-10-26 15:25 本地）
+
+**装置（明确披露）**：`journey a22411b7`（未出发，DRAFT，草案 7 项）在隔离的 gozero 试玩栈上；一次性票由 `demo_pairing_tickets` 注入、`redeem` 换 15 分钟 bearer；前端会话与本地任务指针在页面加载前写入（`sessionStorage` 的 bearer/session-id、`localStorage` 的 `citynexus.v8.journey_id` 与 `citynexus.revolution.goal-task.<traveler>.<journey>`）。这些是**环境准备**；下面每一步都是屏上真按钮：点「我的旅程」→ 点「按天调整行程」→ 切 Day 2 → 展开第 2 个时段 → 改「安排」→「保存草案」。
+
+**改前**（`half-day-430-before.png`）：
+
+- Day 1：上午 故宫博物院（午门进·神武门出）｜下午 景山公园（登万春亭看全景）｜晚上 王府井步行街（晚餐+逛街）
+- Day 2：上午 天坛公园（祈年殿·回音壁·圜丘）｜**下午 天坛园内慢走/园中园细看·休息**｜晚上 前门大街（老字号晚餐+逛街）｜时间灵活 南锣鼓巷（可选·胡同漫步）
+
+**动作**：只把 Day 2 下午那一项的标题改成「天坛园内慢走/园中园细看·休息（只改这一段）」，时段仍是「下午」，然后「保存草案」。
+
+**保存回执（屏上原文）**：「草案已保存到这趟旅行」（`SAVE_RESULT`）。
+
+**改后回读**（`half-day-430-after.png`）：
+
+- `DAY1_UNCHANGED true` —— Day 1 三项逐字未变。
+- Day 2 只有那一段变了；上午的天坛、晚上的前门大街、时间灵活的南锣鼓巷都在原位，时段标签一个没动。
+- 截图与逐字清单：`trial/results/20261026_gozero/half-day-390.txt`（日志名沿用 r32 的 390 前缀，实际视口 430×932）。
+
+**更正 §24**：§24 末尾写「屏上 0 项 vs DB 7 slots，待查」——**不是产品缺陷**。`MissionCockpit.tsx:234` 用本地指针 `citynexus.revolution.goal-task.<owner>.<journeyId>` 定位任务，没有指针就不发那一次 GET（这是「本机指针只定位任务，读取仍由服务端授权」的设计）。补上指针后 7 项立刻显示；GET 返回体与 DB 逐字段一致（2 天 / 7 slots）。§24 那句「两处对不上」作废。
