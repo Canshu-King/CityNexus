@@ -128,6 +128,8 @@ def _store_places(task: dict, result: dict, region: dict) -> list[dict]:
             "id": "amap:" + external_id, "name": name, "category": str(item.get("category") or "attraction")[:80],
             "provider": "amap", "provider_object_id": external_id, "provider_provenance": "LIVE_PROVIDER",
             "latitude": latitude, "longitude": longitude, "coordinate_system": "GCJ02", "adcode": adcode,
+            "requested_adcode": str(region.get("adcode") or "") or None,
+            "provider_call_id": str(result.get("provider_call_id") or "") or None,
             "public_address": address, "region_status": status, "location_kind": "POI",
             "source_url": "https://uri.amap.com/marker?" + urlencode({"position": f"{longitude},{latitude}", "name": name, "coordinate": "gaode", "callnative": "0"}),
             "captured_at": item.get("captured_at") or _now(),
