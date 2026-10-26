@@ -957,3 +957,35 @@ NOT-STARTED，不写成本刀已验。
 
 同场挂着的两格照实写：平板 `USER_VERIFIED=PENDING`（要主人真机走一遍，我不代按）；
 课堂随机城市池仍是 0/3，未变。
+## 55. 我改出来的那枚 422：屏上给了具体出路，而我的臂没照着走（反向对照同时中了一次）
+
+Q 臂（`trial/human_walk/_drift_check_r62.mjs`，390×844，journey `0ff63e58-53d5-41a7-812c-5920c16d031a`、
+plan `ccd05664-e21a-483d-b4f7-226094e9424f`）在出发门上被拒三次，body 全文（收据 `:48`/`:58`，
+非 2xx 取 body 这条仪表修复第一次真用上）：
+
+    VALIDATION_ERROR — PlanVersion ccd05664-… is infeasible:
+    INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c
+
+成因就是我这一改：把「前门大街（轻松收尾/晚餐）」的结束时间从 20:00 挪到 20:30 之后，它与后一段的
+衔接余量不够了。门按真衔接拒绝，说的是实话。
+
+先排除两件我以前会误判成缺陷的事，都带现读依据：
+1. **没有把内部 id 端给旅客。** 这枚码在 `frontend/src/trial/mobile/departureGaps.ts:297` 被译成
+   「两段安排之间留的赶路时间不够」，`:346` 再按 counts 组句；服务端侧也自知要拆
+   （`backend/app/departure_commit.py:119` 的注释就写着这条串需要分解）。屏上读到的是中文句，不是 `real-place-…`。
+2. **不是死胡同句。** `departureGaps.ts:346-348` 直接点名去哪儿挪、挪哪一边：
+   「在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。」
+
+真正没做到的是**我这支臂**：它按 `ASK_REFUSAL_SENT 2`（t=719.4）把拒绝原句发回给 Agent，而这条码的成因
+是旅客自己挪晚了晚餐，不是开放时间问题，Agent 那边 `resume 200` 之后出发门当然还是同一句拒绝。
+臂里少一条"照屏上那句把时间挪回去"的腿——记在这儿，不记成产品的。
+
+一句要**留给下一趟分辨**的：这枚 422 来自出发提交门 `departure/commit`，而句子指的可按的键是
+「选用这份方案」。§50/§52 的读数里，候选一旦 SELECTED、出发之后，那颗键就退场了（`PLAN_SELECT 0`）。
+所以"候选已 SELECTED 而 commit 被拒"这一屏上，这句话是否指向一颗按不到的键，我现在**没有对应屏读**，
+标 UNREAD，不写成缺陷也不写成无事。分辨法写在派单里：造一次 SELECTED＋commit 被拒的屏，读那颗键计数。
+
+反向对照这一趟顺手又中一次：出发门没过的屏上，地图是 `地图地点 0 处 · 高德地点 7 处`、
+`MAP_PINS 0`、`MAP_PLANNED_TAGS 0`、`RELOAD_MAP_COUNT_LINE` 同值——正是 §47 服务端第二臂应有的行为
+（`journey.active_plan_version_id` 为空就不发射手），七处高德只是研究候选。它证明我这刀**不会**在
+"还没出发"的屏上凭空画出计划点。
