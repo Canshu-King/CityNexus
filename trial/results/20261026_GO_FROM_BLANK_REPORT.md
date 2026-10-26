@@ -781,3 +781,45 @@ profile `_chrome_gozero_r58`，收据 `go-active-390-r57.txt`）先把仪表的�
 （`selCount === 0` 时单独找 start 并按中心命中测试点它）。旅客那一侧要等真机读数才谈得上结论。
 
 现读磁盘：D 卷可用 458 MB（17:45），N 臂还要吃一枚约 39 MB 的 profile；E 卷 47 GiB 未动。
+## 50. 闭环了：390 冷首屏一路走到 ACTIVE，地图上给出 5 处已排入方案的地点
+
+N 臂（`trial/human_walk/_go_active_r57.mjs`，390×844，profile `_chrome_gozero_r58`，收据
+`trial/results/20261026_gozero/go-active-390-r57.txt`）从冷首屏起，按的是屏上自己的键，
+同号收据如下（UTC 18:03 现读）：
+
+| 格 | 现读值 |
+| --- | --- |
+| 旅程 | `5180b857-e1d2-47fb-b31c-f5b86023247a` |
+| 目标任务 | `214f5e61-8f82-4c4d-bd8d-ef503d125ee6` |
+| 候选方案 | `10cf2ebb-8837-456e-8e42-e3acf259a426` |
+| 门序列 | `prepare-plan 201` → `accept-unknown-price 200` → `freeze-routes 200` → `departure/commit 200` → `start 200` |
+| 出发那一按 | `HIT start-fallback-2-0 true t=321.2`（中心命中测试通过才算按到） |
+| 屏上状态 | `旅途正在继续。`、`行程执行中` |
+| 地图计数行 | `地图地点 5 处 · 高德地点 0 处` |
+| 画布／图钉 | `MAP_CANVAS 1`、`MAP_PINS 5` |
+| 计划标／列表 | `MAP_PLANNED_TAGS 5`、`MAP_LIST_ITEMS 5` |
+| 刷新之后 | `RELOAD_MAP_COUNT_LINE` 同值、`RELOAD_PLANNED_TAGS 5`、`RELOAD_LIST_ITEMS 5` |
+| 响应形状 | `RELOAD_MAP_READS` 两条 `"candidates":5,"first":{"origin":"PLAN_ACTIVITY","coordinate_system":"WGS84","region_status":"MATCHED","selection_state":"READY_FOR_NATIVE_PLAN"}` |
+| 坐标系 | 收据内 `WGS84` 命中 3 次、`GCJ02` 命中 0 次 ⇒ 没有一枚高德原始坐标被画上 OSM 瓦片 |
+| 控制台 | `ERRORS []`、`ERRORS_MAP []` |
+| 屏证 | `390-g7-started-fallback.png`、`390-g8-map-preview.png`、`390-g8-map-loaded.png`、`390-g8-map-reloaded.png` |
+
+这同时结掉了两桩挂着的事：
+**§31 那句「接受之后地图仍不满足」现在撤下**——出发之后地图给的是 `5 处`，与屏上日程的活动数一致，
+每枚都带「已排入当前方案」，刷新回来还是 5 处。§45 里那枚"两套 id 对不上"的桥
+（`frontend/src/trial/mobile/MissionCockpit.tsx:317` 的行程判子）在同一次读数里被证明是必要的：
+`candidate_id` 用的是 `real-place-…` 而草案槽用的是 `amap:B000…`，不桥接就还是 0 处。
+
+另外，仪表第一次把非 2xx 的响应体带回来了：出发之后再按研究口，
+`resume` 给 `409 {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY",
+"message_key":"request.conflict","trace_id":"96db7d34…"}}`。这是设计行为（旅程已离开 DRAFT），
+**不是缺陷**，§49 里我标的 UNREAD 只针对 M 臂那枚 `prepare-plan 422`，两者不要混起来读。
+
+本刀那一按（`rev-plan-open-place-explore`）在这一趟仍然没有出现：`PLAN_HAND 0`、`PLAN_SELECT 0`、
+`PLAN_START 0`，因为这趟的草案没有"确认了时间、还没排地点"的 band，选用门本来就是开的。
+所以 §47 那枚键的产品代码已在权威线上（`0188ebd5f4`），但**它自己的屏证仍是 NOT-STARTED**，
+我不会因为没有对应的屏就读成它已验通。
+
+还差三格，如实挂着：① 430×932 的 ACTIVE 同判据——O 臂（同一支 `_go_active_r57.mjs`，
+`RW=430 RH=932`，profile `_chrome_gozero_r59`，收据 `go-active-430-r57.txt`）在跑；
+② 「只改指定半天／晚餐、未动时段不漂移」这一格今晚还没走到；③ §47 那一按的正证。
