@@ -19,3 +19,7 @@
 ![Day2原预约条目保留](20261026_COUPLE_LATE_START_UI/couple-selected-b-day2-390.png)
 
 下一步交Qoder修入口预算否定/明确总额优先级，并保留真正人均预算的正例；不抢其热文件。继续更刁钻场景时保留本任务与已完成模型结果，不重放请求来凑绿。
+
+原生刷新增量：同页面reload后仍显示苏州Day1休息+B、Day2页签及联网未勾选；当前具名task草稿JSON逐值不变，Agent43/Provider117未增。但刷新前空输入框/禁用发送，刷新后回填已经发送过的最初整段目标＋节奏且发送可点，见[刷新收据](20261026_COUPLE_LATE_START_UI/reload-receipt.json)与[原生AX](20261026_COUPLE_LATE_START_UI/reload-ax.txt)。未点发送，不能声称已实际重复请求；这是待Qoder处理的陈旧输入恢复风险，不是草稿丢失。
+
+![刷新恢复B草稿，但底部回填已发送的初始目标](20261026_COUPLE_LATE_START_UI/couple-reloaded-390.png)

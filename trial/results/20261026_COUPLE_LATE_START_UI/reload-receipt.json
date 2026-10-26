@@ -1,0 +1,22 @@
+{
+  "captured_at": "2026-10-26T15:54:44.914193+00:00",
+  "journey_id": "dd5f4651-e5f7-424b-b0de-d20adeb26c96",
+  "task_id": "9d3beff5-3c34-422d-ab6c-c23f5f78e229",
+  "action": "Native Chrome page reload, no send click",
+  "draft_unchanged": true,
+  "consent_unchanged": true,
+  "counts": {
+    "agent_runs": 43,
+    "provider_calls": 117
+  },
+  "input_before_reload": "empty, send disabled (native AX read before reload)",
+  "input_after_reload": "initial already-sent goal + pace restored, send enabled (native AX)",
+  "duplicate_execution_observed": false,
+  "limitation": "Input resurrection is observed; possible duplicate-send risk was not exercised",
+  "image": {
+    "file": "couple-reloaded-390.png",
+    "width": 390,
+    "height": 844,
+    "sha256": "cf65733d0b3e8a76b32cd16601c912d64963560d8377ed5b4c9e91345c362680"
+  }
+}
