@@ -1,0 +1,50 @@
+{
+ "vsdx": "Teacher_02_Agent_User_Flow.vsdx",
+ "shots": [
+  {
+   "path": "E:\\r42_review\\01_Teacher_02_window.png",
+   "printwindow": 1,
+   "px": [
+    1920,
+    1128
+   ],
+   "bytes": 203226
+  },
+  {
+   "path": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow_window.png",
+   "printwindow": 1,
+   "px": [
+    1920,
+    1128
+   ],
+   "bytes": 203226
+  }
+ ],
+ "notes": [],
+ "documentName": "Teacher_02_Agent_User_Flow.vsdx",
+ "windowRectBefore": [
+  377,
+  1,
+  1525,
+  787
+ ],
+ "zoomSteps": [
+  "WindowState=max",
+  "ViewFit=page",
+  "Zoom=0.62"
+ ],
+ "taskPanesClosed": [],
+ "window": {
+  "hwnd": 662890,
+  "title": "Teacher_02_Agent_User_Flow.vsdx  [只读] - Visio Professional",
+  "rect": [
+   77,
+   82,
+   1613,
+   984
+  ]
+ },
+ "digestBefore": "f78dc06dd2a4c6d8",
+ "digestAfter": "f78dc06dd2a4c6d8",
+ "unchanged": true
+}

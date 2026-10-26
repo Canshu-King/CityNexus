@@ -1,0 +1,19 @@
+[
+ {
+  "file": "Teacher_02_Agent_User_Flow.vsdx",
+  "crossings": [],
+  "throughShapes": [],
+  "offPage": [],
+  "readFailures": [],
+  "connectors": 9,
+  "notes": [],
+  "pageInk": {
+   "shapesOnPage": 31,
+   "shapes": 22,
+   "connectors": 9,
+   "connects": 18
+  },
+  "unchanged": true,
+  "sha256_16": "f78dc06dd2a4c6d8"
+ }
+]

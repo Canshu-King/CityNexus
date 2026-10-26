@@ -56,9 +56,10 @@ def box(nid, x, y, w, h, text, state, size=BODY, kind="rect", role="node", src=N
     return n
 
 
-def edge(a, b, label=None, state="verified", route="orthogonal"):
+def edge(a, b, label=None, state="verified", route="orthogonal", **extra):
     e = {"from": a, "to": b, "state": state, "route": route, "labelSize": 14.0,
          "arrowSize": "2"}
+    e.update(extra)
     if label:
         e["label"] = label
     return e
@@ -132,6 +133,14 @@ spec01 = {
 # 中间隔着整整一列空格。上一版把「是」「否」都从判定框引出且先画「是」，
 # Visio 让「是」占了底顶点、「否」占了左顶点，两条线在 (10.47, 3.39) 打了个叉
 # ——这个坐标是 `se_visio_cross_check_r1.py` 读回连线端点算出来的，不是猜的。
+# R4.2: the loop back to step 3 is now a real connector, not a promise inside the
+# box. It is a short vertical in the 调用地点 column, and that column is the only
+# one that keeps the arrow honest: with 继续调整方案 in the Agent column instead,
+# `se_visio_cross_check_r1.py` read the ends back as (5.20,3.90)->(6.62,5.13) -
+# Visio left through the RIGHT edge, so the return leg ran on exactly the same
+# y as the 是 branch and read as that branch passing through the box and carrying
+# on. Levelled in the same column, the connector has one candidate exit (top) and
+# one candidate entry (bottom), so the arrow can only point back up into step 3.
 AW = 2.25
 AX = [0.40, 2.95, 5.50, 8.05, 10.60]
 AH = 0.92
@@ -147,14 +156,25 @@ ROW_TOP, ROW_MID, ROW_C, ROW_D = 1.45, 3.05, 4.75, 6.05
 # right edge, and the 是 label parks on that segment. `RoutingStyle` and
 # connection-point glue are both unwritable on this install (see
 # Classroom/TEACHER_READABILITY_VERIFICATION.md), so geometry is the only lever.
+# R4.2: 继续调整方案 moved off the 调用地点 column onto the Agent column, so the
+# loop back to step 3 is a two-segment elbow through empty space instead of a
+# 0.77in stub that reads as nothing but inter-row padding. Elbow geometry is
+# forced by the boxes: t2n7 (2.95..5.20, 3.14..4.06) and t2n3 (5.50..7.75,
+# 1.45..2.37) overlap in neither axis, so an orthogonal connector has to turn
+# inside the 0.68in corridor under the top row, where no shape lives.
 n02 = [
     box("t2n1", AX[0], ROW_TOP, AW, AH, "用户提出需求", "user", role="start"),
     box("t2n2", AX[1], ROW_TOP, AW, AH, "Agent 理解需求", "agent"),
     box("t2n3", AX[2], ROW_TOP, AW, AH, "调用地点\n与路线工具", "agent"),
     box("t2n4", AX[3], ROW_TOP, AW, AH, "生成行程方案", "built"),
     box("t2n5", AX[4], ROW_TOP, AW, AH, "地图展示方案", "verified"),
+    # 继续调整方案 is not a plan: request_replan is a registered gateway tool
+    # (gateway.py:545), it is scheduled inside the mission plan
+    # (mission_plan.py:118) and the guardian calls it deterministically
+    # (guardian.py:418). Drawing it in the grey dashed "not built yet" style would
+    # understate the code just as much as the missing arrow overstated it.
     box("t2n7", AX[2], ROW_MID + (DH - AH) / 2.0, AW, AH,
-        "继续调整方案\n（回到第 3 步）", "planned"),
+        "继续调整方案\n（回到第 3 步）", "agent"),
     box("t2n6", 10.425, ROW_MID, 2.60, DH, "需要修改吗？", "agent",
         kind="decision"),
     box("t2n8", AX[4], ROW_C, AW, AH, "用户确认方案", "verified"),
@@ -167,16 +187,23 @@ e02 = [
     edge("t2n6", "t2n8", "否", route="straight"),
     edge("t2n8", "t2n9", route="straight"),
     edge("t2n6", "t2n7", "是", route="straight"),
+    # the return leg the teacher could only read as a promise before: a real,
+    # arrow-headed connector from 继续调整方案 back into 调用地点与路线工具. No
+    # label - the 0.77in gutter between the two boxes is the whole line, and a
+    # white-backed caption there would cover the arrow it is meant to explain.
+    edge("t2n7", "t2n3", arrowSize="3"),
 ]
 SRC02 = {
     "t2n1": "前端对话入口与向导；journey 会话",
     "t2n2": "backend/app/agent mission 循环，最多 12 步",
-    "t2n3": "gateway.py 白名单 11 个工具；未知工具在写审计之前 404",
+    "t2n3": "gateway.py:365 白名单注册（含 request_replan），runtime.py:486 派发；"
+            "未知工具在写审计之前 404",
     "t2n4": "plan 生成；供应商默认 mock，Photon/Nominatim/Open-Meteo 需显式开启",
     "t2n5": "MapLibre 地图与方案对比面板",
     "t2n6": "replan 判定：是否改动行程",
-    "t2n7": "replan 提案，等待下一次确认；提案不写库，回到工具那一格重跑",
-    "t2n8": "确认门：Idempotency-Key + 授权；未确认只留提案",
+    "t2n7": "mission_plan.py:118 request_replan → 回到 runtime.py:405 的循环重新派发"
+            "工具；main.py:12460 落 PlanVersion(CANDIDATE, source=REPLAN)，不切活动计划",
+    "t2n8": "确认门：main.py:13098 accept_replan 要求 Idempotency-Key；未确认只留提案",
     "t2n9": "域服务写入 + audit + receipt；SQLite 60 张表",
 }
 for n in n02:
@@ -199,7 +226,10 @@ spec02 = {
     "nodes": n02, "edges": e02, "bands": [], "legend": [],
     "notes": ["走到底只有两条出口。",
               "「否」才会写入并留下审计。",
-              "「是」只产生新提案，回到第 3 步，库里一行都不动。",
+              "「是」只出新提案：那条回环箭头把流程送回「调用地点与路线工具」，"
+              "行程表一行都不动。",
+              "回环依据真实代码：request_replan 是网关白名单里的工具，提案落成 "
+              "CANDIDATE 版本，切换活动计划必须走带 Idempotency-Key 的 accept。",
               "带文件与行号的取证版见 Visio/03_CityNexus_Agent_Workflow.vsdx。"],
     "notesOrigin": (AX[0], 4.85), "notesWidth": 7.0, "notesSize": 12.5,
 }
@@ -228,7 +258,12 @@ def writable(path):
 
 
 results = []
-for spec in (spec01, spec02):
+specs = (spec01, spec02)
+only = [a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--only=")]
+if only:
+    specs = tuple(s for s in specs if any(k in s["file"] for k in only[0].split(",")))
+    log("building only: %s" % ", ".join(s["file"] for s in specs))
+for spec in specs:
     stem = spec["file"].replace(".vsdx", "")
     paths = {"vsdx": os.path.join(CLS, spec["file"]),
              "png": os.path.join(CLS, "previews", stem + ".png"),
@@ -259,8 +294,12 @@ for spec in (spec01, spec02):
                     if os.path.exists(paths["png"]) else 0,
                     "sha256_16": hashlib.sha256(open(paths["vsdx"], "rb").read())
                     .hexdigest()[:16] if os.path.exists(paths["vsdx"]) else ""})
-json.dump(results, open(os.path.join(HERE, "se_teacher_diagrams_result.json"), "w",
-                        encoding="utf-8"), indent=1, ensure_ascii=False, default=str)
+result_path = os.path.join(HERE, "se_teacher_diagrams_result.json")
+if only:
+    result_path = os.path.join(HERE, "se_teacher_diagrams_result_%s.json"
+                               % only[0].replace(",", "-"))
+json.dump(results, open(result_path, "w", encoding="utf-8"), indent=1,
+          ensure_ascii=False, default=str)
 bad = [r for r in results if r.get("failures")]
 log("TEACHER DIAGRAMS %s (%d built, %d refused)"
     % ("OK" if not bad else "REFUSED", len(results) - len(bad), len(bad)))

@@ -9,6 +9,9 @@
   "paragraph alignment skipped",
   "paragraph alignment skipped",
   "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
   "paragraph alignment skipped"
  ],
  "styleIssues": [
@@ -31,11 +34,11 @@
   {
    "name": "用户流程",
    "nodes": 9,
-   "edges": 8,
-   "connects": 16,
-   "expectedConnects": 16,
-   "propsWritten": 35,
-   "propsExpected": 35
+   "edges": 9,
+   "connects": 18,
+   "expectedConnects": 18,
+   "propsWritten": 36,
+   "propsExpected": 36
   }
  ],
  "propFailures": [],
@@ -143,12 +146,18 @@
     1,
     21
    ]
+  ],
+  "t2n7->t2n3": [
+   [
+    1,
+    23
+   ]
   ]
  },
  "nodes": 9,
- "edges": 8,
- "connects": 16,
- "expectedConnects": 16,
- "propsWritten": 35,
- "propsExpected": 35
+ "edges": 9,
+ "connects": 18,
+ "expectedConnects": 18,
+ "propsWritten": 36,
+ "propsExpected": 36
 }
