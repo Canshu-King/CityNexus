@@ -1120,3 +1120,33 @@ provenance（照口径写全，便于别人复算）：
 `frontend/e2e/revolution-draft-preparation.spec.ts` **3 passed (13.9s)**（vite dev `:4173`，跑的是改后源码）。
 屏证状态：**NOT-STARTED**——这一形态要求 `gaps` 里有 `reason_code` 却没有可挪的行，
 今晚 N/O′/Q 三趟都没再出现该形状，不能预置，也不写成已验。
+## 61. 真机读到了产品点名的那一句：#315 那一族第一次有了屏上证词
+
+R 臂（`trial/human_walk/_r_arm_r65.mjs`，由 `_drift_check_r61.mjs` 只改收据名派生，390×844，
+profile `_chrome_gozero_r65`，journey `d749dddd-3569-4874-b630-bd852a7c8f36`、
+task `96db3947-d574-4f6d-90d9-03b2951cc849`）把两处仪表修好之后的第一次真读数拿到了：
+
+`SAVE_ALERT 1/0` 从 `[role=status]` 读到屏上原文三条，其中第二条是产品自己点名的拒绝——
+
+    第 7 项「午餐：颐和源聚面馆（颐和园内东侧）」 20:00–21:30：结束时间超出了这趟旅行的结束。
+    改这一项的时间再保存，其余不用动。
+
+同一拍的服务端信封（`prepare-plan`，非 2xx 带 body 那次改动之后才看得见）：
+
+    422 {"error":{"code":"VALIDATION_ERROR","message":"SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY",
+                  "message_key":"request.invalid","trace_id":"5b95ad3a-…"}}
+
+两句话指的是同一件事，而且**说的就是我这一改**：漂移腿把第 7 项的结束时间从 21:00 填成 21:30
+（`TIME_EDITED "午餐：颐和源聚面馆（颐和园内东侧）结束时间" 21:00 -> 21:30 t=210.5`），
+而这趟的 `end_at` 是 21:00。门拒得对，卡片报得准：第几项、哪一段、怎么改、其余要不要动，四样齐。
+
+这结掉的是 #315／#292 那一族一直缺的一环：先前我只在源码里证明分支会具名，
+没有真机读数。现在有了（`drift-check-390-r65.txt` 的 `SAVE_ALERT 1/0`–`2/2`，同一句在四拍里稳定复现）。
+同屏第一条「草案已保存到这趟旅行，刷新页面也可以找回。」说明草案本身没丢——被拒的只是这一版时间。
+
+顺带把这一趟的形态说清，避免读成回归：这是本夜第 5 种拒绝码（前有 `prepare-plan 409`、
+`prepare-plan 422 PLACE_NOT_IN_GOAL_TASK_SCOPE`、`departure/commit 422 INSUFFICIENT_TRAVEL_GAP`、
+`departure/commit 422`、以及 `resume 409 GOAL_TASK_REQUIRES_DRAFT_JOURNEY`），
+**每一种都是我的臂动了时间或状态之后门按规则拒绝**，没有一种是在未改动的流程上出现的。
+#47 的 `rev-plan-open-place-explore` 与 #336 新加的「重新核实这几段」在这一屏仍未遇到
+（这趟的 gaps 形状不是那两种），两条屏证继续标 NOT-STARTED。
