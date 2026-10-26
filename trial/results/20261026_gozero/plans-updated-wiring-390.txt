@@ -1,0 +1,8 @@
+MAP_PLACES GET 200 #1
+LS_KEYS ["citynexus.v8.journey_id","citynexus.revolution.firstlook.journey","citynexus.revolution.firstlook.recent-journeys"]
+BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京 · 2日行程\n旅途正在继续。\n换地区 ›\n旅行插画\n行程执行中\n地图\n执行与待办\n课堂演示 · 模拟时间与推进都在课堂控制台里\n去课堂控制台 ↓\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：故宫博物院 · 12月3日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在"
+JOURNEY 2e9cd67d-10ca-4ecd-920b-76c81a350c71
+BASELINE 1
+MAP_PLACES GET 200 #2
+AFTER_DISPATCH 2
+DELTA 1
