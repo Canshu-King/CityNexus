@@ -1,0 +1,81 @@
+{
+  "frontend_sha": "2176c811a81428f07e0ef50eb3079e6d9f284cef",
+  "backend_product_sha": "e2c893a0115d381abe83e781c448766a1c148b78",
+  "environment": "root owned 14522/60622 mixed frontend source with foreign dirty; not Qoder classroom deployment",
+  "evidence_kind": "REAL_CHROME_VISIBLE_READ_AND_NATIVE_PAIRING_NOT_PHYSICAL_DEVICE",
+  "expected_journey": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+  "observed_heading": "北京 · 2日行程",
+  "observed_hero": "旅途正在继续。",
+  "pairing": {
+    "issued_status": 200,
+    "ticket_bound_to_requested_journey": true,
+    "consumed": true,
+    "pairing_record": {
+      "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+      "traveler_id": "9ac3c100-da78-4933-ba1b-cb79991fcb1e",
+      "consumed_at": 1793026905,
+      "expires_at": 1793027024
+    },
+    "post_redemption_reload": false
+  },
+  "server_journeys": [
+    {
+      "id": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+      "title": "北京 · 2日行程",
+      "status": "COMPLETED",
+      "active_plan_version_id": "5337ace4-4453-4ab2-ae62-7ba56567a3b3"
+    },
+    {
+      "id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+      "title": "苏州真实城市供给·两日四站",
+      "status": "COMPLETED",
+      "active_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269"
+    }
+  ],
+  "counts": {
+    "agent_runs": 40,
+    "provider_calls": 117
+  },
+  "images": [
+    {
+      "file": "suzhou-ticket-stale-beijing-before-refresh.png",
+      "pixels": [
+        1949,
+        1237
+      ],
+      "sha256": "38c6fcfb2fdba76bc7e67df770d4e9f64eea3d916a739215667b6040bd959854"
+    },
+    {
+      "file": "suzhou-ticket-stale-beijing-after-refresh.png",
+      "pixels": [
+        1949,
+        1237
+      ],
+      "sha256": "3938250f634e9568285ca20e251434b8eb3ed568e46e8fbd9b72035424849c9d"
+    },
+    {
+      "file": "completed-trip-stale-390.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "sha256": "d42dab555dba4a773976e266427a832e6bab49b1eccddc96cb840e64fa688afb"
+    }
+  ],
+  "browser_actions": [
+    "open owned revolution",
+    "click 我的旅程",
+    "native one-time pairing to expected Suzhou Journey",
+    "observe completed/sealed error plus old Beijing workspace",
+    "reload",
+    "observe sealed alert removed but old Beijing ongoing hero retained",
+    "set 390x844 and inspect screenshot"
+  ],
+  "limits": [
+    "No source/model retry",
+    "No new SimulationRun/event/accept/advance",
+    "Same actor owns both Journeys; no cross-user disclosure claim",
+    "Desktop initial/refreshed screenshots and a separate 390x844 screenshot; not a completed 390 four-stop flow",
+    "Completed Suzhou run could not be reached through this entry"
+  ]
+}

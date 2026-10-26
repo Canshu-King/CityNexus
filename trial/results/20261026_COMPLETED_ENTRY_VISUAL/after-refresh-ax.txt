@@ -1,0 +1,11 @@
+- generic "CCityNexus你的智能旅行伙伴AI 已配置 · 未验证在底部告诉 Agent 你想怎么玩。 YOUR NEXT JOURNEY北京 · 2日行程旅途正在继续。下一站、行程变化和同行决定，都在这里" [ref=e1] clickable [onclick, id=root]
+  - region "CityNexus Mission 工作台" [ref=e3]
+    - heading "北京 · 2日行程" [level=2, ref=e14]
+    - button "换地区 ›" [ref=e15, context="北京 · 2日行程"]
+    - button "去课堂控制台 ↓" [ref=e8]
+    - region "真正的 Journey Operator" [ref=e17]
+      - status: "AI 当前没有执行中的任务"
+    - region "课堂时空模拟" [ref=e21]
+    - region "演示者控制台" [ref=e22]
+      - button "刷新读数" [ref=e29]
+- alert "行程执行中"
