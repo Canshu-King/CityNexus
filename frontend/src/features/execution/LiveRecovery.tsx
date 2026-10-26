@@ -633,9 +633,17 @@ export function LiveRecovery({
     .filter((moment) => Number.isFinite(moment))
     .sort((left, right) => left - right)[0] ?? null;
   const journeyNotStarted = firstStartMs !== null && firstStartMs > Date.now();
-  const firstStartLabel = firstStartMs === null ? "" : new Intl.DateTimeFormat(locale, {
+  // The label under 第一站 belongs to the stop named beside it, not to whatever slot happens to be
+  // earliest in the plan.  Measured after a classroom replan: the header read 第一站：天坛公园 · 12月3日
+  // 09:00 while the library has 天坛 on 12-04 and the completed 天安门 on 12-03.
+  const liveNowStartMs = liveNow
+    ? Date.parse(String((liveNow as { start_at?: string; starts_at?: string }).start_at
+      ?? (liveNow as { starts_at?: string }).starts_at ?? ""))
+    : Number.NaN;
+  const startLabel = (moment: number | null): string => moment === null ? "" : new Intl.DateTimeFormat(locale, {
     month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false,
-  }).format(new Date(firstStartMs));
+  }).format(new Date(moment));
+  const firstStartLabel = startLabel(Number.isFinite(liveNowStartMs) ? liveNowStartMs : firstStartMs);
   // Recent events that were already handled still deserve an explanation.
   const handled = proposals.filter((p) => p.status === "ACCEPTED").slice(0, 1);
 

@@ -166,3 +166,22 @@ DB 回执：`r12-receipt.txt`（journey `e8f81207…`、mission `e99b4180…`、
 - **打印的 Tablet 地址这次兑不上**：连续三趟（390，新 profile）打开 `…/revolution#pair=<印刷票>` 都停在冷首屏、「从一句话开始」，hash 未被清、`POST /demo/pairing/redeem` 无记录——不是加载慢。改从票文件 `D:/moodle/_cmdr_v3_live_1022/.demo_pairing_ticket` 取 `tickets[]` 逐张尝试（不打印票值），第一张即 `redeem=[200]`，页面进到「北京 · 2日行程 / 行程执行中 / 第一站：故宫博物院 · 12月3日 09:00」。结论：**印刷票可能已被启动器自己的截图腿消耗；下一班一律用票文件里的票**（脚本 `_classroom_accept_tickets_r23.mjs`）。
 - **接受按钮没出现**：进入后点「行程守护」（命中），等 30 秒仍无「接受这份调整」；同屏能力卡写「行程守护 / 添加同行者后使用」。也就是说这个单人 ACTIVE 旅程上没有可点的守护接受卡（与 RUNBOOK 写的「点行程守护看卡片」不一致——要么这条路在单人场景被门控，要么预置提案只挂在控制台侧）。**没有拍到接受、没有改库**，如实记。
 - **屏证缺口**：本探针的三张截图（before / guardian / after）文件未落盘（`SHOT` 已记、PNG 不存在），原因是多次静默失败的 `page.screenshot`；不拿不存在的图当证据。文字读数在 `classroom-accept-tickets-390.txt`。
+
+## 18. 勘误与真闭环：课堂守护接受 + 第一站日期（2026-10-26 14:12 本地）
+
+**勘误（§17 的两句作废）**：
+- 「接受按钮没出现」——**探针定位错**，不是产品缺陷。用 `button[aria-expanded]` 精确定位「行程守护」开关后：`aria-expanded false → true`，面板 `.rev-guardian-panel` 渲染，`[data-testid="rev-guardian-proposal"]` 与 `[data-testid="rev-guardian-accept-replan"]` 都在且可点。§17 里「同屏写『添加同行者后使用』」是**另一个能力卡**，不是守护开关。
+- 判据是否受影响：课堂接受路径从「缺证据」改为**已有真闭环证据**；控制台 run 级差异块（`rev-presenter-diff`）仍缺屏证，不受此勘误影响。
+
+**真闭环读数（390×844，票文件第 0 张，`redeem=200`）**：
+| 步 | 读数 |
+|---|---|
+| 提案卡 | 「找到一份可行的调整」「移除故宫博物院；路上少 66 分钟」「规则引擎生成 · 不是大模型现场推理」 |
+| 接受 | `POST /replans/{id}/accept → 200`；`replan_proposals.status=ACCEPTED`，`proposed_plan_version_id=f64b81ae…` |
+| 换代 | journey `active_plan_version_id` `e74a5edb`(v2 SUPERSEDED) → `f64b81ae`(v3 ACTIVE)，**MATCH True** |
+| 计划 | v3 两项：天安门 12-03 09:00 `COMPLETED`、天坛 12-04 09:00 `ACTIVE`（当前站） |
+| 屏上 | 重载后「第一站：天坛公园 · 12月4日 09:00」，`现在：天坛公园`（`guardian-accept-390-after.png`、`guardian-accept-390-panel.png`） |
+
+**同一屏暴露并已修的缺陷（第三个）**：调整前标题写「第一站：天坛公园 · **12月3日 09:00**」——标题取当前站、日期却取**全行程最早 slot**（已完成的 12-03 天安门）。已改为日期跟随被命名的那一站（`LiveRecovery.tsx`：`liveNow.start_at` 优先，取不到才回退最早 slot）。屏证：`first-stop-date-390.png`（修复后「第一站：故宫博物院 · 12月3日 14:00」，旧实现会写 09:00）、`guardian-accept-390-after.png`（接受后「天坛 · 12月4日 09:00」）。`tsc` RC=0。
+
+**取证腿修复**：课堂页面 `page.screenshot` 一直超时（30s/12s 都卡，等字体/动画）；改走 CDP `Page.captureScreenshot` 后稳定落盘（321 KB / 155 KB）。以后所有课堂屏证一律走 CDP，不再用 `page.screenshot`。
