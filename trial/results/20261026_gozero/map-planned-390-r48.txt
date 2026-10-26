@@ -1,0 +1,66 @@
+SHOT 390-g7-cold t=5.1
+HIT continue true t=6.0
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.6
+HIT open-settings true t=11.8
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.7
+HIT send true t=15.1
+HTTP POST 201 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks/3740f8b3-052a-4350-bbc0-ba4c1d8558ef/run
+HIT skip-questions true t=52.3
+SKIP t=53.0
+SKIPPED true
+DRAFT t=179.2
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=179.3
+HIT tab-chat true t=179.6
+COMPOSER_ENABLED true t=233.7
+HIT send-fix false t=234.0
+FIX_SENT t=234.0
+FIX_IDLE true t=269.1
+SHOT 390-g7-after-fix t=269.1
+HIT journey-tab true t=269.5
+DRAFT_SLOTS 8
+REMOVED "上午\n· 南锣鼓巷 胡同慢逛\n点击编辑"
+HTTP PUT 200 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks/3740f8b3-052a-4350-bbc0-ba4c1d8558ef/draft
+DRAFT_SAVE "草案已保存到这趟旅行"
+HIT save-1-0 true t=277.2
+HTTP POST 201 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks/3740f8b3-052a-4350-bbc0-ba4c1d8558ef/prepare-plan
+HIT price-1-1 true t=284.3
+HTTP POST 200 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks/3740f8b3-052a-4350-bbc0-ba4c1d8558ef/plans/945a659c-8028-403c-b213-cf0ed8f84fb5/accept-unknown-price
+HIT refresh-after-price-1 true t=289.3
+HIT freeze-1-2 true t=294.4
+HTTP POST 200 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks/3740f8b3-052a-4350-bbc0-ba4c1d8558ef/plans/945a659c-8028-403c-b213-cf0ed8f84fb5/freeze-routes
+HIT refresh-after-freeze-1 true t=301.4
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=306.2
+SHOT 390-g7-plans-1 t=306.3
+HIT select-1 true t=306.6
+HTTP POST 422 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/departure/commit
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：鼓楼 + 钟鼓楼广场 + 什刹海夜景在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+HIT ask-refusal-1 true t=312.7
+ASK_REFUSAL_SENT 1 t=313.4
+SHOT 390-g7-selected-1 t=503.9
+HIT journey-tab true t=504.3
+HIT save-2-0 true t=507.6
+HTTP POST 201 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks/3740f8b3-052a-4350-bbc0-ba4c1d8558ef/prepare-plan
+HIT price-2-1 true t=514.7
+HTTP POST 200 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks/3740f8b3-052a-4350-bbc0-ba4c1d8558ef/plans/3742a0bd-d38d-492f-b933-8b4b27e4c873/accept-unknown-price
+HIT refresh-after-price-2 true t=519.8
+HIT freeze-2-2 true t=524.8
+HTTP POST 200 /api/v1/journeys/1ab22a90-54b9-441e-a067-b5fd350bbb2b/agent/goal-tasks/3740f8b3-052a-4350-bbc0-ba4c1d8558ef/plans/3742a0bd-d38d-492f-b933-8b4b27e4c873/freeze-routes
+HIT refresh-after-freeze-2 true t=531.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=536.7
+HIT refresh-for-disabled-2-3 true t=537.0
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=540.3
+HIT refresh-for-disabled-2-4 true t=540.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=543.9
+HIT refresh-for-disabled-2-5 true t=544.2
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=547.5
+HIT refresh-for-disabled-2-6 true t=547.8
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=551.1
+HIT refresh-for-disabled-2-7 true t=551.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=554.7
+HIT refresh-for-disabled-2-8 true t=555.1

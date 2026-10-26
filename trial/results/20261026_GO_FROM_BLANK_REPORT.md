@@ -611,3 +611,11 @@ E 臂（`trial/human_walk/_map_walk_r47.mjs` → 收据 `map-planned-390-r47.txt
 **更正 §41 的一处猜测。** 我把这一版被拒的计划（plan `23c2803b…` 状态 CANDIDATE、7 条活动、`mobility_evidence_json` 里 `facts` 有货）连同库里真实的 `JourneyMission.intent_json.goal_task.prepared_plan.schedule`（同样 7 枚）在进程内喂给赶路那扇门（`backend/app/agent/goal_travel_gaps.py` 的 `travel_gap_answer`），它**给得出行**：`hops` 里 `天安门广场漫游 → 故宫博物院` 短 18 分钟；`rows[0] = {day_index: 0, slot_index: 1, title: 故宫博物院（午门进·神武门出）, planned 11:00–12:00 → proposed 11:18–12:18, extra_minutes: 18, direct_cause: true}`，`frozen true`、`reason_code null`。我第一次跑出 `rows 0 / SCHEDULE_ALIGNMENT_UNVERIFIED` 是因为我自己传了空 `schedule`，那道对齐闸（`:176-179`）照实拒发——是闸在工作，不是缺陷。所以 §41 里"`rows: [] if blocked` 会把行整批吞掉"这一句对本例不成立（本例 `blocked` 为空），那条语义留作待查，但不再当作走查卡住的原因。
 
 **走查真正卡住的那一格是量具的时序。** 卡片在按下「按讨论的方向重新安排」后要发一次 `travelGaps` GET 才把应用键摆出来（`frontend/src/trial/mobile/DraftDepartureCard.tsx:226` 取数、`:344` 仅 `planShown` 时渲染 `rev-v3-replan-apply`），而探针只等了 2.5 秒就判它不可见——日志上就是每拍 `HIT replan-N true` 之后没有 `REPLAN_APPLIED`，于是同一版被拒计划被一遍遍再选。已改：按下之后最长再等 20 秒（`trial/human_walk/_map_walk_r48.mjs`），F 臂正在跑，判据不变（`REPLAN_APPLIED` 出现 → 出发门 `http_status=200` → 地图层 `MAP_READS_EVERY` 出现 `candidates` 等于活动数且 `first.origin="PLAN_ACTIVITY"`、`MAP_PLANNED_TAGS` 同数）。
+
+## 43. F 臂：等满 20 秒仍没等到应用键，缺口位置因此收窄
+
+F 臂（`trial/human_walk/_map_walk_r48.mjs`，profile `_chrome_gozero_r48`，journey `1ab22a90-54b9-441e-a067-b5fd350bbb2b`）把 §42 那处时序改掉：按下「按讨论的方向重新安排」之后最长再等 20 秒才判应用键是否可见。读数：**仍然没有** `REPLAN_APPLIED`，`departure/commit` 依旧 `http_status=422`，journey 未 ACTIVE。
+
+于是缺口从"门算不出可挪的行"收窄到一处具体的连接：门本身算得出（§42 用同一版被拒计划 + 库里真实 schedule 进程内跑 `travel_gap_answer` 得到 `rows[0]` 故宫 11:00–12:00 → 11:18–12:18、`reason_code null`），卡片上的应用键要 `planShown` 才渲染（`frontend/src/trial/mobile/DraftDepartureCard.tsx:344`），而 `gaps` 只在冻结那一步顺带取回（同文件 `:226`）、被拒之后没有任何一条路径再取它 —— 旅客看到的正是这句「在出发待办里把后一项的开始时间挪晚」却摸不到那个待办的应用键。下一刀的落点因此是**一行**：出发门拒绝之后，对同一枚 plan 再取一次 `travelGaps` 并把卡片切到 `planShown`（或让 422 的答复里带出可应用的行），而不是再改门的算法。
+
+本晚到此为止的状态：`§31` 那格（接受后地图刷新）服务端与前端两处代码都在尖上（`25d5d418f8` 及前四笔），ACTIVE 那一屏的逐次应答读数仍未取到，因为它先得穿过出发门；`MAP_READS_EVERY` 这个量具已经装好，任何一趟走到 ACTIVE 的走查（或你亲机在任意已 ACTIVE 的行程上点一次「地图」）都能一次收掉。
