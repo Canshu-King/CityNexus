@@ -632,3 +632,23 @@ F 臂（`trial/human_walk/_map_walk_r48.mjs`，profile `_chrome_gozero_r48`，jo
 四臂里每被拒一次，探针都按了第 1 步那枚工作台按钮（`HIT replan-N true`），第 2 步因此走的是 `verifyRoutes()` 那一支，可是紧接着卡片又被 `:76` 的效应整块复位（一次 `refresh`/事件都会重跑），所以始终没有一次把 `planShown` 留住到应用键出现 —— 屏上就停在"叫你把开始时间挪晚"而摸不到挪的那枚键。**这是真实旅客会撞到的卡点，不是探针的错**；但两股因由（存 `mobility_frozen:false` 还是复位 `planShown`）到底哪一股先咬，需要一次针对性复现：在同一次拒绝之后连按两次工作台那枚按钮并盯 `rev-v3-replan` 是否出现，就能把两股分开。修法各自都是一行级（要么冻结答复里带上真实 `mobility_frozen`，要么复位时保留 `planShown`），不在本晚开刀。
 
 本晚交付状态：地图读侧与署名/坐标系/重取四处代码改动已在尖上（远端 `06f280b1f6`），§31 那一格的屏证仍按 §37/§43 的判据待收。
+
+## 45. 出发门过了：浏览器确实收到 6 枚计划点，缺口换到"两套 id 对不上"这一格
+
+G 臂（`trial/human_walk/_map_walk_r49.mjs` → `map-planned-390-r49.txt`，journey `9b997fbd-e81b-480e-b2c2-2e332fa44bc5`、goal-task `c7eb2996-9aa6-436d-b10f-3d016ccf880a`）第一次同时满足两件事：`departure/commit` `http_status=200`，且**逐次读数器亲眼看到浏览器拿到计划点**：
+
+- `MAP_READS_EVERY` 末段：`{"http_status":200,"candidates":6,"first":{"candidate_id":"real-place-dc53719dde4…","origin":"PLAN_ACTIVITY","coordinate_system":"WGS84","region_status":"MATCHED","selection_state":"READY_FOR_NATIVE_PLAN"}}`，reload 之后的 `RELOAD_MAP_READS` 三次同形。
+- 库里同代现读：`journeys.status=PLANNED`、`active_plan_version_id=6a606ab3-9fe8-4122-b93a-aa4eb4e09796`、该版 6 条活动全部带 `place_id`；`JourneyMission…prepared_plan.result.mobility_frozen = true`（§44 猜的"存成 false 所以不补读"在这一版不成立）。
+- 屏上仍旧：`MAP_COUNT_LINE 「地图地点 0 处 · 高德地点 6 处」`、`MAP_PLANNED_TAGS 0`、`MAP_LIST_ITEMS 0`，reload 后同形。
+
+**所以 §36 的撤回只撤对了一半，真正的因由现在有据可查——是两套 id 命名空间：**
+
+| 处 | 现读值 |
+| --- | --- |
+| 草案槽位 `draft_artifact.days[].slots[].place_id` | `amap:B000A81CB2`、`amap:B000A8UIN8` … 形如 `amap:<poi>` |
+| 计划活动 `activities.place_id` | `real-place-dc53719dde41c9cb48b7b9b6` … |
+| 两者交集 | 0 |
+
+前端"已排入日程"的判子只按 id 相等（`MissionCockpit.tsx` 里 `draftPlaceIds.has(point.candidate_id)`，`:297-304`），而计划点的 `candidate_id` 是 `real-place-…`，草案给的是 `amap:…` ⇒ 永远不匹配，于是可见集只剩 55 枚研究线索里那 6 枚同名站（`id` 就是 `amap:…`、CRS 按供应商推成 GCJ02），落到「高德地点」列表、既不上图也没有「已排入当前方案」。**这正是本项目早已记过的老坑（同一物理地点两套 id，只按 id 比会静默匹配不到），本晚它换了个位置复现。**
+
+**改法（已落尖 `f2f65020b9`）**：① `MissionCockpit.tsx` 的 `allMapPoints` 里，凡研究线索的 `id`/`provider_object_id` 等于某枚 `PLAN_ACTIVITY` 点的 `external_id`（库里现读 `places.external_id` 正是 `amap:B000A8UIN8` 这种形制，逐字可用），就不再列它——同一处站点不画两遍；② 行程判子改为跨命名空间桥接：先收草案槽的 id，再把"外部 id 已被排进草案"的那枚计划点自己的 id 也放进去；`WorkspaceMapPoint` 补 `external_id?: string`。`npx tsc -p tsconfig.check.json --noEmit` RC=0。屏证：H 臂（`_map_walk_r50.mjs`，profile `_chrome_gozero_r50`）在跑，判据沿用 §37 那两格（`MAP_PLANNED_TAGS` 与 `MAP_LIST_ITEMS` 应等于活动数、计数行应变成「地图地点 N 处」），不绿就照实继续挂 §31。
