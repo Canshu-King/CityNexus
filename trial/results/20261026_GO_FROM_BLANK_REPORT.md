@@ -591,3 +591,15 @@ arm B 是同代码、新浏览器 profile 的整趟重走（`trial/results/20261
 逐次读数器给的是：`MAP_READS_EVERY` 每一次 `GET …/map-places` 均 `http_status=200, candidates=0, first=null`；地图层 `MAP_COUNT_LINE` 「地图地点 0 处 · 高德地点 7 处」、`MAP_PLANNED_TAGS 0`、`MAP_LIST_ITEMS 0`。与臂 C 同形，且都是**正确**行为：没有 active plan 就没有 `PLAN_ACTIVITY` 点，七枚「高德地点」来自研究线索。
 
 所以 §38 那一格照旧开着，且现在有了明确的收法（不是再赌一趟模型）：拿 §33 那条新回归已经证明的服务端投影，在浏览器里补一次 ACTIVE journey 的 `map-places` 应答读数 —— 判据仍是 §37 末段那两格（`candidates` 等于活动数、`first.origin="PLAN_ACTIVITY"`、`MAP_PLANNED_TAGS` 与活动数相等）。下一次后端重启、或主人亲机走一遍任意一趟已 ACTIVE 的行程（390 或 430），这两格就能一次收掉。
+
+## 41. 下一条阻塞的可执行配方（本晚没开这一刀，坐标已查全）
+
+`§38` 第 1 条缺的不是判据而是"能把被点名的那一行挪好"。现读已确认材料都在行自己身上，所以不需要再问任何 provider：
+
+- 每站当天开放与否的判定随身带在活动行上：`Activity.metadata_json` 里的 `opening_on_date` 是 `{"verdict", "reason_code", "window", "weekday", "defers_to_notice", "source_text"}`（写入点 `backend/app/agent/goal_preparation.py:343-346`）。
+- 到达时间落在来源给的窗口之外时，判定就是 `TIME_OUTSIDE_WINDOW` 且 `window=[开门分, 关门分]`（两条臂都有：带星期规则那支 `backend/app/agent/goal_opening_date.py:264-266`，只报小时不报星期那支 `:284-287`）。
+- 出"可挪的行"这一步照抄赶路那一支已有的形制即可：`day_index/slot_index` 取自 `task["prepared_plan"]["schedule"][sequence_no-1]`，并且先核对行上的钟点与卡片送来的钟点一致才发（`backend/app/agent/goal_travel_gaps.py:167-191`，其中 `:176-179` 就是那道 `SCHEDULE_ALIGNMENT_UNVERIFIED` 对齐闸）。位移量 `wanted = timedelta(minutes=window[0] - 到达分钟)`（允许为负＝挪早），时长不变；两条上界沿用同文件的 `LAST_PRACTICAL_HOUR = 22`（`:44`）与 `window[1]`（越窗即不发，宁缺勿造）。
+- **必须一并改的一处**：`travel_gap_answer` 在 `not facts` 时就 `return {..., "rows": [], "reason_code": "MOBILITY_NOT_FROZEN"}`（`backend/app/agent/goal_travel_gaps.py:105-110`）——营业窗口的行与路线证据无关，这条早退会把新行整批吞掉；要么把窗口行在早退之前算好并带进那个 return，要么把早退改成只压制 hop 行。`rows: [] if blocked else out_rows`（`:196`）同理：跨夜的 hop 被挡时不该抹掉"晚餐挪早"这一行，这一处属于同一条要改的语义，改前先定口径。
+- 卡片那一侧不需要新代码：`applyReplan` 就是按 `gaps.rows` 的 `day_index/slot_index` 合并 `proposed_start/proposed_end` 再走同一条保存门（`frontend/src/trial/mobile/DraftDepartureCard.tsx:183-193`），而 `GapRow` 早已带这两枚字段（`frontend/src/trial/mobile/departureGaps.ts:484`）。
+
+为什么本晚不开：它同时改一门的早退语义与"被挡时发不发部分行"的口径（要裁），而这两点只能在真机反复过出发门才验得清；今晚四臂里两臂被拒两次通过，一次重启后端还丢一次身份（`§39` 第 4 条）。留成一条按上去就能做的单，比留半刀安全。
