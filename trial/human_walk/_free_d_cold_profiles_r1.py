@@ -5,11 +5,11 @@ import sys
 SRC_ROOT = pathlib.Path(r"D:/moodle/_cmdr_v3_live_1022")
 DST_ROOT = pathlib.Path(r"E:/_cmdr_cold_1027")
 NAMES = [
-    "_chrome_gozero_map46",
-    "_chrome_gozero_map47",
-    "_chrome_gozero_map48",
     "_chrome_gozero_map49",
-    "_chrome_gozero_r47",
+    "_chrome_gozero_map51",
+    "_chrome_gozero_r48",
+    "_chrome_gozero_r49",
+    "_chrome_gozero_r50",
 ]
 
 

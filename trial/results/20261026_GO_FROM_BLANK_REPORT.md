@@ -902,3 +902,41 @@ journey `a87c821b-8eec-418b-8ccf-0888d5581cdd`、goal task `8ac475d1-d48f-4fa0-9
 仪表这一轮只改了一处就拿到了过去三趟都没记下的东西：`SAVE_ALERT` 的选择器补上 `[role=status]`
 （`trial/human_walk/_derive_r57_r1.py:25`）。这把 §49 里我标的 UNREAD 收窄了——**「屏上没有句子」这个读法
 本身没被证实过**，是我读错容器；O′ 臂的 `SAVE_ALERT 1/0` 证明卡片一直在说话。
+## 53. 「只改一处时段、其余不漂」这一格过了：14 格只动了点名的那一格
+
+Q 臂（`trial/human_walk/_drift_check_r62.mjs`，390×844，profile `_chrome_gozero_r63`，收据
+`trial/results/20261026_gozero/drift-check-390-r62.txt`，UTC 18:50 现读）在草案卡上：
+
+| 步 | 读数 |
+| --- | --- |
+| 折叠层 | `DRIFT_FOLD true`，`TIME_COUNT 14`（七项安排 × 开始/结束） |
+| 改哪一格 | `TIME_EDITED "前门大街（轻松收尾/晚餐）结束时间" 20:00 -> 20:30`（t=413.3） |
+| 保存键状态 | `CONFIRMED true SAVE_ENABLED true`（t=414.8） |
+| 屏上回执 | `DRIFT_SAVE_ALERT` 含「已保存 7 项正式安排。下方可以查看日程和出发待办。」 |
+| 改后对账 | `TIME_AFTER` 14 格逐格读回 |
+| 只动了谁 | `DRIFT_CHANGED_ONLY ["前门大街（轻松收尾/晚餐）结束时间"]`、`COUNT 14->14`、`LOST []` |
+| 判据 | **`DRIFT_COUNT 0 TARGET_ONLY yes`**（t=422.9） |
+
+也就是说：旅客按真实键改一个晚餐时段并保存之后，其余 13 格的时间一格没漂，也没有格消失——派单第 1 刀
+里「至少一次只改指定半天／晚餐，且未动时段不漂移」这格至此有屏读。
+
+这一格在 P 臂上先失败了一次，成因归在我自己这边，得写清楚：P 臂（`_drift_check_r61.mjs`，同法但漏一步）
+读到 `HIT save-drift false t=544.7`，因为 `DraftDepartureCard.tsx:313` 那颗键的 disabled 条件是
+`!confirmed || busy || Boolean(result)`，而我把漂移腿放在勾选「按以上时间准备方案」**之前**——按钮按规矩
+是灰的。这不是可达性缺陷（旅客在同一屏先勾后按就能按动，Q 臂的 `CONFIRMED true SAVE_ENABLED true`
+就是那一步的读数），是我这支臂的步骤顺序错了。Q 臂补的就是这个顺序。
+
+同屏并存的一句要如实记下：`DRIFT_SAVE_ALERT` 的第一条是「消息还在确认中，刷新任务查看最新进度。」
+（`frontend/src/trial/mobile/WorkspaceActions.tsx:537` 的 180 秒 AbortError 分支，来自上一轮 followup），
+它与「已保存 7 项正式安排」同时挂在屏上。保存这一按的结果是成功，但旅客在同一刻会看到一条"还在确认中"
+的话——这条并存是否要处理属于产品口径，我只把读数放在这里，不替它定。
+
+到这一节为止，派单第 1 刀的六格状态：
+① 390 冷首屏输入那句话走到研究：已过（§50）；② 同一 journey/task 走到 CANDIDATE→SELECTED→ACTIVE：已过
+（§50）；③「我的旅程」里看到当前计划与下一站：已过（§50 的 ACTIVE 首屏与 `FINAL_BODY`）；
+④ 430×932 同判据：已过（§52）；⑤ 只改一处时段不漂移：**已过（本节）**；⑥ 失败／刷新路径下的找回：
+部分——刷新保留已过（§50/§52 的 `RELOAD_*`），重启后的身份找回仍卡在 #332（K 臂屏读，§47）。
+
+仍未闭合的两条不变：`rev-plan-open-place-explore`（§47 那枚键）与范围拒绝新句（§51）的屏证，都要等
+各自那个阻塞形状在真机出现的那一趟；O′ 臂这一趟没有出现（`prepare-plan 201`），所以两条继续标
+NOT-STARTED，不写成本刀已验。

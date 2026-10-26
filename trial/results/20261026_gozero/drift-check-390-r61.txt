@@ -1,0 +1,222 @@
+SHOT 390-g7-cold t=5.6
+HIT continue true t=6.5
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=10.1
+HIT open-settings true t=12.4
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=14.2
+HIT send true t=15.7
+HTTP POST 201 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/run
+HIT skip-questions true t=34.8
+SKIP t=35.5
+SKIPPED true
+DRAFT t=239.9
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=240.0
+HIT tab-chat true t=240.4
+COMPOSER_ENABLED true t=242.3
+HIT send-fix true t=242.7
+FIX_SENT t=243.4
+FIX_IDLE true t=529.1
+SHOT 390-g7-after-fix t=529.1
+HIT journey-tab true t=529.5
+DRAFT_SLOTS 8
+NO_REMOVE_BUTTON
+DRIFT_FOLD true TIME_COUNT 16 BEFORE [{"label":"天安门广场开始时间","value":"09:00"},{"label":"天安门广场结束时间","value":"10:00"},{"label":"故宫博物院（午门进·神武门出）开始时间","value":"11:00"},{"label":"故宫博物院（午门进·神武门出）结束时间","value":"12:00"},{"label":"景山公园开始时间","value":"14:00"},{"label":"景山公园结束时间","value":"15:00"},{"label":"王府井晚餐·北京小王府开始时间","value":"19:00"},{"label":"王府井晚餐·北京小王府结束时间","value":"20:00"},{"label":"颐和园开始时间","value":"09:00"},{"label":"颐和园结束时间","value":"10:00"},{"label":"北海公园开始时间","value":"14:00"},{"label":"北海公园结束时间","value":"15:00"},{"label":"什刹海（后海）开始时间","value":"19:00"},{"label":"什刹海（后海）结束时间","value":"20:00"},{"label":"南锣/什刹海晚餐·京誉南门涮肉开始时间","value":"21:00"},{"label":"南锣/什刹海晚餐·京誉南门涮肉结束时间","value":"22:00"}] t=544.4
+TIME_EDITED "南锣/什刹海晚餐·京誉南门涮肉结束时间" 22:00 -> 22:30 t=544.4
+HIT save-drift false t=544.7
+DRIFT_SAVE_NOT_PRESSED
+HIT save-1-0 true t=545.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"827bcfb2-36ed-4f65-b80b-0e4bd5618a2b","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/0 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-1 true t=552.1
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"36b46993-1daf-45e3-8dda-66432b47ac99","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/1 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-2 true t=559.2
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"82235cc0-46ab-4c17-8326-3ba27110edb0","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/2 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-3 true t=566.3
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"cf87848e-8858-4412-82b8-9e8be7fabf28","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/3 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-4 true t=573.4
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"9a5bdc91-460f-4911-a7ba-7a436a96fc08","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/4 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-5 true t=580.5
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"e2bd24a8-3d6b-40ba-86dc-666bd90694a7","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/5 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-6 true t=587.6
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"5a76f1aa-0139-4bb3-b85e-72f5aa40a0cb","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/6 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-7 true t=594.7
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"83fddb3a-5dc8-44ea-aca7-9d1e140282ea","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/7 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-8 true t=601.8
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"ad8049e6-6bf4-450d-a11c-d6c54171c958","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/8 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-9 true t=608.9
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"b4a0a81b-31a1-4067-9b40-1c2b96e279f1","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/9 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-10 true t=616.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"31689c16-ed75-4557-a466-f3536698a3ab","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/10 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-11 true t=623.1
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"165c58b5-ae3c-44c7-b9bd-e0693076f905","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/11 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-12 true t=630.1
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"ba65ea6c-51f8-494b-9622-2d6923b70ec2","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/12 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-13 true t=637.2
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"7b74fd73-47c7-413a-9a95-a22fbae64256","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/13 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-14 true t=644.3
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"ece6e286-a2db-4001-98f8-372aab1994c6","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/14 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-15 true t=651.4
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"0849a955-7764-48b7-b3fd-de9d9d10a45d","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/15 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-16 true t=658.5
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"0bbc488f-9c92-4c9c-9e86-793f8a8f27e2","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/16 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-17 true t=665.6
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"c5ef2158-fbd1-4aad-acce-80eba98a60b2","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/17 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-18 true t=672.7
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"7b404d82-4746-4221-be93-2ec0b50d09f9","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/18 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-19 true t=679.8
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"3d34b198-3ac1-4491-a724-a5e03fb8113f","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/19 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-20 true t=686.9
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"e0fcb600-9dd6-4916-af97-33b317af3e60","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/20 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-21 true t=693.9
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"19479883-8cf9-4422-9924-c1f89c9d84ea","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/21 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-22 true t=701.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"822bdb47-b8d2-4ebd-9904-15fe9014fd11","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/22 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-1-23 true t=708.1
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"32dbf4c1-f2e3-421d-85c4-13a4a5e70326","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 1/23 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-0 true t=715.2
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"83350a3b-0116-4721-bdf4-f0db06d8cd6f","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/0 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-1 true t=722.3
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"6ecb5015-7bdd-428d-9b3c-be9ab9462955","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/1 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-2 true t=729.4
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"478648c5-4c19-4e4a-8868-5d34a84d321f","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/2 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-3 true t=736.5
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"4661c535-b843-4851-944e-1bf72be42d99","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/3 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-4 true t=743.6
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"db601fd2-720b-4fa4-aa19-e2f5edc82778","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/4 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-5 true t=750.6
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"bb180eb9-6b6e-4b56-ba06-33741f6e0aa7","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/5 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-6 true t=757.7
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"21509e83-f5e3-40b8-af5b-1b44d2d0fda6","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/6 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-7 true t=764.8
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"8528bd98-2a03-4db1-a801-3e1a58fce6ec","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/7 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-8 true t=772.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"5ccc597d-7d2c-4aba-a8a5-22954e35a03a","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/8 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-9 true t=779.1
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"a3e40ba3-2f31-469a-97f4-e8a049912f64","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/9 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-10 true t=786.1
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"9f32749e-1d2a-4529-8ca2-fbfe6515d244","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/10 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-11 true t=793.2
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"ef1963fd-54d2-429f-9734-87064b57beb6","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/11 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-12 true t=800.4
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"500530e7-5eaa-4a8c-99a2-ba65eb9d5178","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/12 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-13 true t=807.5
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"36de2cbe-476c-45c3-ad02-984d3227dfca","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/13 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-14 true t=814.7
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"ba4b871a-91c5-4281-a851-d70c9487083e","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/14 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-15 true t=821.8
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"f15a5b16-e4af-4b83-8498-48b5ce3f78b5","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/15 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-16 true t=828.9
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"30340770-12c5-45d9-a4c9-0774b35232f6","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/16 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-17 true t=836.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"583e8f00-42eb-4ad9-bd88-783741800667","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/17 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-18 true t=843.2
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"520a15d4-0ddf-4948-88e1-4e08de901842","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/18 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-19 true t=850.3
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"600cd874-037e-4596-b918-4da09606a100","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/19 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-20 true t=857.4
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"7eb02500-66ff-47d9-bf13-84df161ee9ad","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/20 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-21 true t=864.6
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"ae658ce4-d22d-4701-9be7-332feebeff2d","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/21 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-22 true t=871.7
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"62ebbd20-be96-49f8-bbac-d5331896fef6","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/22 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-2-23 true t=878.8
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"7d963471-8d48-4797-a00e-7e8cd361a853","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 2/23 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-0 true t=885.9
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"7168235a-926f-423d-949e-8cd9e4a4910c","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/0 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-1 true t=893.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"70eecd30-8caf-4138-b9d4-65a3d69e00f2","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/1 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-2 true t=900.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"8fc91c53-f75f-4185-b53e-f96df71a4b2b","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/2 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-3 true t=907.1
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"f83215e7-9687-4ac3-8fc2-e62ac91c4950","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/3 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-4 true t=914.3
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"f28b00d5-6b39-417e-a6dc-dc9e893087f8","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/4 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-5 true t=921.4
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"dde023d7-23d5-4f87-8b4b-f99185195e1e","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/5 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-6 true t=928.5
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"ec6e71fa-81da-46d9-80b3-3e86e9f1dead","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/6 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-7 true t=935.6
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"258b7a87-0f75-4081-8c31-431b4948f871","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/7 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-8 true t=942.6
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"265aa7ae-85c9-4b57-b567-65371fe5b2d0","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/8 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-9 true t=949.7
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"c822775d-4e8f-4380-b1ec-db7161015f6f","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/9 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-10 true t=956.7
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"d1f11e4e-6a0d-436a-9a0c-3a6bfd892bbc","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/10 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-11 true t=963.8
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"09143e1a-0cea-4986-9030-af3c45395f4d","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/11 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-12 true t=970.9
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"3426e2ac-1477-4bb9-97d3-c414b6e8c11c","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/12 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-13 true t=978.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"261ed2c6-5789-4f40-9163-782dd49c8700","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/13 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-14 true t=985.0
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"ea48a228-fd17-4e2a-a36e-cd753f1ec194","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
+SAVE_ALERT 3/14 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"]
+HIT save-3-15 true t=992.1
+HTTP POST 422 /api/v1/journeys/8476e389-30d2-43b9-97a0-5c472870bf7b/agent/goal-tasks/26651165-2b31-41b7-85fa-1ba4f05e95b2/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"PLACE_NOT_IN_GOAL_TASK_SCOPE","message_key":"request.invalid","trace_id":"305330e9-d399-4166-99bb-a78c0ca714ae","details":null,"error_receipt_id":"CNX-FVBNVJ38"}}
