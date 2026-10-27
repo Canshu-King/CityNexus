@@ -109,13 +109,30 @@ def test_public_catalog_is_explicit_deduplicated_and_has_no_private_ids(sim):
     s = next(db)
     # Controlled public-snapshot fixtures exercise selection, not real provider acquisition.
     for code in ["320100", "330100", "350200"]:
+        stamp = datetime.now(timezone.utc).isoformat()
+        poi = [
+            {"place_id": f"fixture-{code}-poi-{n}", "name": f"TEST_FIXTURE public place {n}",
+             "latitude": 32 + n * 0.001, "longitude": 118 + n * 0.001,
+             "coordinate_system": "WGS84"}
+            for n in range(5)
+        ]
+        routes = [
+            {"origin_place_id": poi[n]["place_id"], "destination_place_id": poi[n + 1]["place_id"],
+             "minutes": 3, "provider": "amap-web-service", "captured_at": stamp,
+             "provenance": "CAPTURED_PROVIDER_SNAPSHOT", "fact_quality": "LIVE_PROVIDER_CAPTURE",
+             "route_provenance": "LIVE_PROVIDER_CAPTURE", "geometry_provider": "amap-web-service",
+             "geometry_crs": "WGS84", "snapshot_sha256": "1" * 64,
+             "route_geometry": [[poi[n]["longitude"], poi[n]["latitude"]],
+                                [poi[n + 1]["longitude"], poi[n + 1]["latitude"]]]}
+            for n in range(3)
+        ]
         raw = json.dumps(
             {
                 "provider_city_adcode": code,
                 "public_name": code,
                 "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
-                "poi": [],
-                "routes": [],
+                "poi": poi,
+                "routes": routes,
             }
         )
         s.add(

@@ -1,0 +1,1079 @@
+{
+  "product_sha": "724f44a084da738657603be402260c0f999412b9",
+  "evidence_kind": "SIGNED_NATIVE_PREPARE_AND_REFREEZE_EXISTING_PROVIDER_RECEIPTS_NO_NEW_PROVIDER_MODEL",
+  "baseline": {
+    "place_id": "real-place-85ef252bd901280d54c899bd",
+    "name": "苏州博物馆(本馆)",
+    "source_envelope": {
+      "close": "20:00",
+      "closure_notes": [
+        "01/01-09/24 周一 全天不开放",
+        "09/28-09/29 周一 全天不开放",
+        "10/07-12/31 周一 全天不开放"
+      ],
+      "intervals": [
+        {
+          "close": "20:00",
+          "days": [
+            "*"
+          ],
+          "open": "10:00"
+        },
+        {
+          "close": "20:00",
+          "days": [
+            "*"
+          ],
+          "open": "10:00"
+        },
+        {
+          "close": "09:00",
+          "days": [
+            "*"
+          ],
+          "open": "01:00"
+        },
+        {
+          "close": "17:00",
+          "days": [
+            "*"
+          ],
+          "open": "09:00"
+        },
+        {
+          "close": "17:00",
+          "days": [
+            "*"
+          ],
+          "open": "09:00"
+        },
+        {
+          "close": "12:00",
+          "days": [
+            "*"
+          ],
+          "open": "07:00"
+        },
+        {
+          "close": "17:00",
+          "days": [
+            "*"
+          ],
+          "open": "09:00"
+        },
+        {
+          "close": "09:00",
+          "days": [
+            "*"
+          ],
+          "open": "01:00"
+        },
+        {
+          "close": "12:00",
+          "days": [
+            "*"
+          ],
+          "open": "07:00"
+        },
+        {
+          "close": "17:00",
+          "days": [
+            "*"
+          ],
+          "open": "09:00"
+        }
+      ],
+      "open": "10:00",
+      "raw": "09/25-09/27 10:00–20:00开放 最晚进入19:00；09/30-10/06 10:00–20:00开放 最晚进入19:00；01/01-09/24 周二–周日 09:00–17:00开放 最晚进入16:00；09/28-09/29 周二–周日 09:00–17:00开放 最晚进入16:00；10/07-12/31 周二–周日 09:00–17:00开放 最晚进入16:00；01/01-09/24 周一 全天不开放；09/28-09/29 周一 全天不开放；10/07-12/31 周一 全天不开放；春节,劳动节,端午节 09:00–17:00开放；夜间开放时间另行公布。如本馆遇有重大活动或重要设备设施维修保养时，可根据需要临时闭馆，届时将告示公众。",
+      "source": "amap_business_opentime",
+      "source_url": "https://uri.amap.com/marker?position=120.627856%2C31.322948&name=%E8%8B%8F%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86%28%E6%9C%AC%E9%A6%86%29&coordinate=gaode&callnative=0",
+      "status": "VERIFIED_PROVIDER",
+      "weekday_coverage": "UNRESOLVED",
+      "weekday_intervals": [
+        {
+          "days": [
+            "*"
+          ],
+          "intervals": [
+            {
+              "close": "20:00",
+              "open": "10:00"
+            },
+            {
+              "close": "20:00",
+              "open": "10:00"
+            },
+            {
+              "close": "09:00",
+              "open": "01:00"
+            },
+            {
+              "close": "17:00",
+              "open": "09:00"
+            },
+            {
+              "close": "17:00",
+              "open": "09:00"
+            },
+            {
+              "close": "12:00",
+              "open": "07:00"
+            },
+            {
+              "close": "17:00",
+              "open": "09:00"
+            },
+            {
+              "close": "09:00",
+              "open": "01:00"
+            },
+            {
+              "close": "12:00",
+              "open": "07:00"
+            },
+            {
+              "close": "17:00",
+              "open": "09:00"
+            }
+          ]
+        }
+      ]
+    },
+    "baseline_date": "2026-12-05",
+    "baseline_arrival": "14:00",
+    "verdict": {
+      "verdict": "CLOSED_ON_DATE",
+      "reason_code": "SOURCE_SERVES_OTHER_DAYS_ONLY",
+      "source_text": "09/25-09/27 10:00–20:00开放 最晚进入19:00；09/30-10/06 10:00–20:00开放 最晚进入19:00；01/01-09/24 周二–周日 09:00–17:00开放 最晚进入16:00；09/28-09/29 周二–周日 09:00–17:00开放 最晚进入16:00；10/07-12/31 周二–周日 09:00–17:00开放 最晚进入16:00；01/01-09/24 周一 全天不开放；09/28-09/29 周一 全天不开放；10/07-12/31 周一 全天不开放；春节,劳动节,端午节 09:00–17:00开放；夜间开放时间另行公布。如本馆遇有重大活动或重要设备设施维修保养时，可根据需要临时闭馆，届时将告示公众。",
+      "window": null,
+      "weekday": 5,
+      "defers_to_notice": false
+    }
+  },
+  "source_envelope_unchanged": true,
+  "native_http": {
+    "before_counts": {
+      "agent_runs": 39,
+      "provider_calls": 115
+    },
+    "original_plan_id": "07a894f2-1e00-41bd-95da-70c6118b89ca",
+    "write_requested": true,
+    "preparation": {
+      "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+      "task_id": "ad695293-72e5-4482-9659-0784b98e829f",
+      "draft_revision": 2,
+      "plan_version_id": "6ae4591b-8b5a-4d46-b30b-a8fb77d2f45a",
+      "status": "CANDIDATE",
+      "selected": false,
+      "activated": false,
+      "slots_count": 4,
+      "gaps": [
+        {
+          "sequence_no": 1,
+          "title": "拙政园",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-2a2391b79f3642a7aff4173f",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 2,
+          "title": "苏州博物馆（本馆）",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 2,
+          "title": "苏州博物馆（本馆）",
+          "kind": "TRANSFER_ROUTE",
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "status": "UNKNOWN",
+          "resolution": "ASK_AGENT_TO_MEASURE_HOP",
+          "detail": null
+        },
+        {
+          "sequence_no": 3,
+          "title": "狮子林",
+          "kind": "OPENING_HOURS",
+          "place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "status": "UNKNOWN",
+          "resolution": "ASK_AGENT_FOR_PLACE_FACT",
+          "detail": null
+        },
+        {
+          "sequence_no": 3,
+          "title": "狮子林",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 3,
+          "title": "狮子林",
+          "kind": "TRANSFER_ROUTE",
+          "place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "status": "UNKNOWN",
+          "resolution": "ASK_AGENT_TO_MEASURE_HOP",
+          "detail": null
+        },
+        {
+          "sequence_no": 4,
+          "title": "平江路",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-9ecb93fe30d678917285fe79",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 4,
+          "title": "平江路",
+          "kind": "TRANSFER_ROUTE",
+          "place_id": "real-place-9ecb93fe30d678917285fe79",
+          "status": "UNKNOWN",
+          "resolution": "ASK_AGENT_TO_MEASURE_HOP",
+          "detail": null
+        }
+      ],
+      "mobility_frozen": false,
+      "unrouted_count": 0,
+      "known_subtotal_minor": 0,
+      "opening_checks": [
+        {
+          "sequence_no": 1,
+          "title": "拙政园",
+          "verdict": "OPEN_ON_DATE",
+          "reason_code": null,
+          "window": [
+            450,
+            1020
+          ],
+          "defers_to_notice": true,
+          "source_text": "1月至2月,11月至12月 周一至周日 07:30-17:00 最晚进入16:30；3月至10月 周一至周日 07:30-17:30 最晚进入17:00；周二-周日开放夜游:18:30-21:00（法定节假日21:30），日场和夜游之间将清场。暮游体验以项目购买入场时间为准。"
+        },
+        {
+          "sequence_no": 2,
+          "title": "苏州博物馆（本馆）",
+          "verdict": "OPEN_ON_DATE",
+          "reason_code": null,
+          "window": [
+            540,
+            1020
+          ],
+          "defers_to_notice": false,
+          "source_text": "09/25-09/27 10:00–20:00开放 最晚进入19:00；09/30-10/06 10:00–20:00开放 最晚进入19:00；01/01-09/24 周二–周日 09:00–17:00开放 最晚进入16:00；09/28-09/29 周二–周日 09:00–17:00开放 最晚进入16:00；10/07-12/31 周二–周日 09:00–17:00开放 最晚进入16:00；01"
+        },
+        {
+          "sequence_no": 4,
+          "title": "平江路",
+          "verdict": "OPEN_ON_DATE",
+          "reason_code": null,
+          "window": [
+            0,
+            1440
+          ],
+          "defers_to_notice": false,
+          "source_text": "周一至周日 00:00-24:00；游船每天两班，上午10:00和下午14:00各一班（开船前半小时停止换票）"
+        }
+      ],
+      "idempotency_replay": false
+    },
+    "freeze_requested": true,
+    "freeze": {
+      "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+      "task_id": "ad695293-72e5-4482-9659-0784b98e829f",
+      "plan_version_id": "6ae4591b-8b5a-4d46-b30b-a8fb77d2f45a",
+      "edges": [
+        {
+          "from_place_id": "real-place-2a2391b79f3642a7aff4173f",
+          "to_place_id": "real-place-85ef252bd901280d54c899bd",
+          "from_name": "拙政园",
+          "to_name": "苏州博物馆(本馆)",
+          "status": "REUSED_PROVIDER_RECEIPT",
+          "minutes": 5,
+          "distance_m": 346,
+          "spans_night": false,
+          "mode": "WALK",
+          "lines": [],
+          "replaced_walk_m": null,
+          "walking_cap_m": null,
+          "over_cap_m": null,
+          "provider": "amap",
+          "source_url": "https://uri.amap.com/navigation?from=120.629211%2C31.324194%2C%E6%8B%99%E6%94%BF%E5%9B%AD&to=120.627856%2C31.322948%2C%E8%8B%8F%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86%28%E6%9C%AC%E9%A6%86%29&mode=walk&coordinate=gaode&callnative=0",
+          "captured_at": "2026-10-26T11:49:43.787446+00:00",
+          "reason_code": null
+        },
+        {
+          "from_place_id": "real-place-85ef252bd901280d54c899bd",
+          "to_place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "from_name": "苏州博物馆(本馆)",
+          "to_name": "狮子林",
+          "status": "REUSED_PROVIDER_RECEIPT",
+          "minutes": 8,
+          "distance_m": 586,
+          "spans_night": true,
+          "mode": "WALK",
+          "lines": [],
+          "replaced_walk_m": null,
+          "walking_cap_m": null,
+          "over_cap_m": null,
+          "provider": "amap",
+          "source_url": "https://uri.amap.com/navigation?from=120.627856%2C31.322948%2C%E8%8B%8F%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86%28%E6%9C%AC%E9%A6%86%29&to=120.629095%2C31.321068%2C%E7%8B%AE%E5%AD%90%E6%9E%97&mode=walk&coordinate=gaode&callnative=0",
+          "captured_at": "2026-10-26T11:49:43.871227+00:00",
+          "reason_code": null
+        },
+        {
+          "from_place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "to_place_id": "real-place-9ecb93fe30d678917285fe79",
+          "from_name": "狮子林",
+          "to_name": "平江路",
+          "status": "REUSED_PROVIDER_RECEIPT",
+          "minutes": 16,
+          "distance_m": 1236,
+          "spans_night": false,
+          "mode": "WALK",
+          "lines": [],
+          "replaced_walk_m": null,
+          "walking_cap_m": null,
+          "over_cap_m": null,
+          "provider": "amap",
+          "source_url": "https://uri.amap.com/navigation?from=120.629095%2C31.321068%2C%E7%8B%AE%E5%AD%90%E6%9E%97&to=120.634556%2C31.313969%2C%E5%B9%B3%E6%B1%9F%E8%B7%AF&mode=walk&coordinate=gaode&callnative=0",
+          "captured_at": "2026-10-26T11:49:43.979902+00:00",
+          "reason_code": null
+        }
+      ],
+      "verified": 3,
+      "total": 3,
+      "overnight": 1,
+      "transit": 0,
+      "replaced_long_walks": 0,
+      "over_cap_walks": 0,
+      "walking_cap_m": null,
+      "frozen": true,
+      "mobility_snapshot_id": "1feed552-f6c2-4b85-825a-0d7b47e523de",
+      "reason_code": null,
+      "idempotency_replay": false
+    },
+    "departure": {
+      "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+      "journey_status": "DRAFT",
+      "active_plan_version_id": null,
+      "current_activity_id": null,
+      "seat": {
+        "traveler_id": "9ac3c100-da78-4933-ba1b-cb79991fcb1e",
+        "seat_kind": "OWNER",
+        "role": "OWNER",
+        "member_id": "edfcd222-71e6-42ab-a017-4914c9037064",
+        "member_state": "MEMBER_IN_FORCE",
+        "expires_at": null,
+        "in_force": true
+      },
+      "gate": "NO_PLAN_SELECTED",
+      "reason_detail": "CANDIDATES_ONLY",
+      "selected_plan": null,
+      "candidates": [
+        {
+          "plan_version_id": "6ae4591b-8b5a-4d46-b30b-a8fb77d2f45a",
+          "version_no": 2,
+          "planning_mode": "balanced",
+          "status": "CANDIDATE",
+          "source": "MANUAL",
+          "currency": "CNY",
+          "total_cost_minor": 0,
+          "estimated_duration_min": 720,
+          "activities_count": 4,
+          "evidence": {
+            "frozen": true,
+            "snapshot_id": "1feed552-f6c2-4b85-825a-0d7b47e523de",
+            "expires_at": null,
+            "expired": null,
+            "reference_consistent": true,
+            "detail": null
+          },
+          "feasibility": {
+            "feasible": true,
+            "failures": []
+          }
+        },
+        {
+          "plan_version_id": "07a894f2-1e00-41bd-95da-70c6118b89ca",
+          "version_no": 1,
+          "planning_mode": "balanced",
+          "status": "CANDIDATE",
+          "source": "MANUAL",
+          "currency": "CNY",
+          "total_cost_minor": 0,
+          "estimated_duration_min": 720,
+          "activities_count": 4,
+          "evidence": {
+            "frozen": true,
+            "snapshot_id": "06978c12-364f-4e1e-b027-ac988bbb253e",
+            "expires_at": null,
+            "expired": null,
+            "reference_consistent": true,
+            "detail": null
+          },
+          "feasibility": {
+            "feasible": true,
+            "failures": []
+          }
+        }
+      ],
+      "next_action": {
+        "kind": "generate_plans",
+        "door": "/api/v1/journeys/e7f868e4-2d03-4d3c-b563-962e47b185f4/plans/generate"
+      },
+      "observed_at": "2026-10-26T12:18:14.893030+00:00"
+    },
+    "after_counts": {
+      "agent_runs": 39,
+      "provider_calls": 115
+    },
+    "new_unresolved_facts": [
+      {
+        "sequence_no": 1,
+        "title": "拙政园",
+        "kind": "ADMISSION_PRICE",
+        "place_id": "real-place-2a2391b79f3642a7aff4173f",
+        "status": "UNKNOWN",
+        "resolution": "PRICE_HELD_BY_TRAVELLER",
+        "detail": null
+      },
+      {
+        "sequence_no": 2,
+        "title": "苏州博物馆（本馆）",
+        "kind": "ADMISSION_PRICE",
+        "place_id": "real-place-85ef252bd901280d54c899bd",
+        "status": "UNKNOWN",
+        "resolution": "PRICE_HELD_BY_TRAVELLER",
+        "detail": null
+      },
+      {
+        "sequence_no": 3,
+        "title": "狮子林",
+        "kind": "OPENING_HOURS",
+        "place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+        "status": "UNKNOWN",
+        "resolution": "ASK_AGENT_FOR_PLACE_FACT",
+        "detail": null
+      },
+      {
+        "sequence_no": 3,
+        "title": "狮子林",
+        "kind": "ADMISSION_PRICE",
+        "place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+        "status": "UNKNOWN",
+        "resolution": "PRICE_HELD_BY_TRAVELLER",
+        "detail": null
+      },
+      {
+        "sequence_no": 4,
+        "title": "平江路",
+        "kind": "ADMISSION_PRICE",
+        "place_id": "real-place-9ecb93fe30d678917285fe79",
+        "status": "UNKNOWN",
+        "resolution": "PRICE_HELD_BY_TRAVELLER",
+        "detail": null
+      }
+    ]
+  },
+  "old_plan": {
+    "id": "07a894f2-1e00-41bd-95da-70c6118b89ca",
+    "status": "CANDIDATE"
+  },
+  "new_plan": {
+    "id": "6ae4591b-8b5a-4d46-b30b-a8fb77d2f45a",
+    "status": "CANDIDATE",
+    "explanation": {
+      "compose_source": "SELECTED_GOAL_DRAFT",
+      "goal_task_id": "ad695293-72e5-4482-9659-0784b98e829f",
+      "draft_revision": 2,
+      "authority_state": "PROVISIONAL_UNRESOLVED_FACTS",
+      "unresolved_facts": [
+        {
+          "sequence_no": 1,
+          "title": "拙政园",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-2a2391b79f3642a7aff4173f",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 2,
+          "title": "苏州博物馆（本馆）",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 3,
+          "title": "狮子林",
+          "kind": "OPENING_HOURS",
+          "place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "status": "UNKNOWN",
+          "resolution": "ASK_AGENT_FOR_PLACE_FACT",
+          "detail": null
+        },
+        {
+          "sequence_no": 3,
+          "title": "狮子林",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 4,
+          "title": "平江路",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-9ecb93fe30d678917285fe79",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        }
+      ]
+    },
+    "mobility_snapshot": {
+      "captured_at": "2026-10-26T12:18:14.848628+00:00",
+      "degraded": false,
+      "facts": [
+        {
+          "captured_at": "2026-10-26T12:18:14.848628+00:00",
+          "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+          "degraded": false,
+          "destination_key": "real-place-85ef252bd901280d54c899bd",
+          "distance_m": 346,
+          "fact_quality": "LIVE_PROVIDER_CAPTURE",
+          "fallback_reason": null,
+          "geometry_provider": "amap-web-service",
+          "minutes": 5,
+          "mode": "WALK",
+          "origin_key": "real-place-2a2391b79f3642a7aff4173f",
+          "provider": "amap-web-service",
+          "route_geometry": [
+            [
+              120.62510892029327,
+              31.3263590775642
+            ],
+            [
+              120.62511292278484,
+              31.326277103001445
+            ],
+            [
+              120.62510393760445,
+              31.32621113674654
+            ],
+            [
+              120.62500404608069,
+              31.32616426220017
+            ],
+            [
+              120.62493511804892,
+              31.32616433678588
+            ],
+            [
+              120.62483521776814,
+              31.32621642570584
+            ],
+            [
+              120.62494413770119,
+              31.325808456487266
+            ],
+            [
+              120.62499610083148,
+              31.32559547777903
+            ],
+            [
+              120.62503906894479,
+              31.325435489479958
+            ],
+            [
+              120.62504306516887,
+              31.325430486967385
+            ],
+            [
+              120.62509103823535,
+              31.32514453912156
+            ],
+            [
+              120.62510003622246,
+              31.32505356252763
+            ],
+            [
+              120.62510003663016,
+              31.325048564350567
+            ],
+            [
+              120.62500413952559,
+              31.32501867932509
+            ],
+            [
+              120.62466150173087,
+              31.324941076961125
+            ],
+            [
+              120.62385133779175,
+              31.32477299576635
+            ],
+            [
+              120.62375143910619,
+              31.32475110793933
+            ],
+            [
+              120.6237474434861,
+              31.324746113922675
+            ],
+            [
+              120.62370847117484,
+              31.324881105185963
+            ],
+            [
+              120.62367349060202,
+              31.325068073310398
+            ],
+            [
+              120.62369047099534,
+              31.325102043280324
+            ]
+          ],
+          "route_provenance": "LIVE_PROVIDER_CAPTURE",
+          "time_basis": "PROVIDER_CAPTURED_AT",
+          "walking_distance_m": null,
+          "walking_min": null
+        },
+        {
+          "captured_at": "2026-10-26T12:18:14.848628+00:00",
+          "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+          "degraded": false,
+          "destination_key": "real-place-9ecb93fe30d678917285fe79",
+          "distance_m": 1236,
+          "fact_quality": "LIVE_PROVIDER_CAPTURE",
+          "fallback_reason": null,
+          "geometry_provider": "amap-web-service",
+          "minutes": 17,
+          "mode": "WALK",
+          "origin_key": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "provider": "amap-web-service",
+          "route_geometry": [
+            [
+              120.62491837783243,
+              31.323196438824937
+            ],
+            [
+              120.62500029128205,
+              31.323209345449033
+            ],
+            [
+              120.62506921774803,
+              31.32322626448043
+            ],
+            [
+              120.62511716638464,
+              31.32323920763046
+            ],
+            [
+              120.6251001745901,
+              31.323357182833657
+            ],
+            [
+              120.62510016929039,
+              31.323422159015028
+            ],
+            [
+              120.62513912666478,
+              31.323443108968057
+            ],
+            [
+              120.62520006287502,
+              31.323439044087827
+            ],
+            [
+              120.62520006320116,
+              31.323435045553378
+            ],
+            [
+              120.62521704709982,
+              31.323413035102313
+            ],
+            [
+              120.6252999920948,
+              31.3230140908703
+            ],
+            [
+              120.62532097732246,
+              31.322923101320036
+            ],
+            [
+              120.6253469583832,
+              31.322818111435957
+            ],
+            [
+              120.62536494356834,
+              31.32276611083621
+            ],
+            [
+              120.62538193012625,
+              31.322710112792205
+            ],
+            [
+              120.62541690785359,
+              31.32252814130519
+            ],
+            [
+              120.62542989870408,
+              31.322471147999586
+            ],
+            [
+              120.62545088276201,
+              31.322393153635307
+            ],
+            [
+              120.62545088308815,
+              31.322389155105515
+            ],
+            [
+              120.625693620558,
+              31.322427873221503
+            ],
+            [
+              120.625767540049,
+              31.32244078657964
+            ],
+            [
+              120.6262230379037,
+              31.322535243230146
+            ],
+            [
+              120.62661360381703,
+              31.322578785672
+            ],
+            [
+              120.62705111058209,
+              31.322625268050324
+            ],
+            [
+              120.62744166343727,
+              31.322672798520287
+            ],
+            [
+              120.62783620466367,
+              31.32273331461863
+            ],
+            [
+              120.62800900189158,
+              31.322759101379848
+            ],
+            [
+              120.6281179202252,
+              31.32220317685363
+            ],
+            [
+              120.62819086214695,
+              31.321869213257227
+            ],
+            [
+              120.62839069104835,
+              31.32108826328439
+            ],
+            [
+              120.62845564629988,
+              31.320697330083007
+            ],
+            [
+              120.6285385836013,
+              31.320263391283948
+            ],
+            [
+              120.62862050975633,
+              31.319977398871124
+            ],
+            [
+              120.62875939086291,
+              31.319408442677577
+            ],
+            [
+              120.62877637622354,
+              31.31933944779943
+            ],
+            [
+              120.62883331601957,
+              31.31924341471404
+            ],
+            [
+              120.62890227060716,
+              31.318788500351598
+            ],
+            [
+              120.6289632071276,
+              31.318670470436235
+            ],
+            [
+              120.62897619577099,
+              31.318618474029236
+            ],
+            [
+              120.62900617386158,
+              31.31844550202225
+            ],
+            [
+              120.62912406056624,
+              31.318093489826524
+            ],
+            [
+              120.62914504339511,
+              31.317993501536314
+            ],
+            [
+              120.62918900903362,
+              31.317763533693146
+            ],
+            [
+              120.62931490390011,
+              31.317182596783113
+            ],
+            [
+              120.62951871589183,
+              31.31644462283001
+            ],
+            [
+              120.62951871621806,
+              31.31644062432652
+            ],
+            [
+              120.63022882949713,
+              31.316556700077278
+            ],
+            [
+              120.63032474363524,
+              31.31613973606448
+            ]
+          ],
+          "route_provenance": "LIVE_PROVIDER_CAPTURE",
+          "time_basis": "PROVIDER_CAPTURED_AT",
+          "walking_distance_m": null,
+          "walking_min": null
+        },
+        {
+          "captured_at": "2026-10-26T12:18:14.848628+00:00",
+          "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+          "degraded": false,
+          "destination_key": "real-place-6acc2bd9ec4fdbceeef0124f",
+          "distance_m": 586,
+          "fact_quality": "LIVE_PROVIDER_CAPTURE",
+          "fallback_reason": null,
+          "geometry_provider": "amap-web-service",
+          "minutes": 8,
+          "mode": "WALK",
+          "origin_key": "real-place-85ef252bd901280d54c899bd",
+          "provider": "amap-web-service",
+          "route_geometry": [
+            [
+              120.62369047099534,
+              31.325102043280324
+            ],
+            [
+              120.6236734902759,
+              31.325072071852123
+            ],
+            [
+              120.62370347580507,
+              31.324885108917805
+            ],
+            [
+              120.62374744307846,
+              31.324751112098035
+            ],
+            [
+              120.6237474434861,
+              31.324746113922675
+            ],
+            [
+              120.62384734218814,
+              31.324768001763204
+            ],
+            [
+              120.62465750585248,
+              31.324941081243278
+            ],
+            [
+              120.62500014402903,
+              31.325014685111753
+            ],
+            [
+              120.62510003663016,
+              31.325048564350567
+            ],
+            [
+              120.62510005889025,
+              31.324775663925223
+            ],
+            [
+              120.62518699199819,
+              31.3244756788951
+            ],
+            [
+              120.62527791976395,
+              31.324185685692676
+            ],
+            [
+              120.6253518628309,
+              31.32392470029629
+            ],
+            [
+              120.62545578294927,
+              31.3235517229077
+            ],
+            [
+              120.625555706574,
+              31.32318274825055
+            ],
+            [
+              120.6256246509008,
+              31.322961753299566
+            ],
+            [
+              120.62565962372113,
+              31.322835760922626
+            ],
+            [
+              120.62565962412882,
+              31.322830762757924
+            ],
+            [
+              120.62558970037259,
+              31.32281384619198
+            ],
+            [
+              120.62550379386536,
+              31.322791948884014
+            ],
+            [
+              120.62550779384675,
+              31.322739963579686
+            ],
+            [
+              120.62550779417289,
+              31.32273596504835
+            ],
+            [
+              120.62538592588739,
+              31.322710108413098
+            ],
+            [
+              120.62538193045239,
+              31.322706114261
+            ],
+            [
+              120.62536893965834,
+              31.32276210792791
+            ],
+            [
+              120.62535195341769,
+              31.322814107436123
+            ],
+            [
+              120.6253259724437,
+              31.32291809769102
+            ],
+            [
+              120.62530398827678,
+              31.323009088336406
+            ],
+            [
+              120.62522104321366,
+              31.323409032210837
+            ],
+            [
+              120.6252040589916,
+              31.3234350411985
+            ],
+            [
+              120.62520006320116,
+              31.323435045553378
+            ],
+            [
+              120.62514312246506,
+              31.32344310462132
+            ],
+            [
+              120.62510416477083,
+              31.323426153207883
+            ],
+            [
+              120.62510017426396,
+              31.323361181367762
+            ],
+            [
+              120.62511716597697,
+              31.32324420579743
+            ],
+            [
+              120.62507421210475,
+              31.32323125722551
+            ],
+            [
+              120.62506921774803,
+              31.32322626448043
+            ],
+            [
+              120.62500428677869,
+              31.32321333965431
+            ],
+            [
+              120.62492237334234,
+              31.32320043304113
+            ]
+          ],
+          "route_provenance": "LIVE_PROVIDER_CAPTURE",
+          "time_basis": "PROVIDER_CAPTURED_AT",
+          "walking_distance_m": null,
+          "walking_min": null
+        }
+      ],
+      "operation_key": "goal-freeze:6ae4591b-8b5a-4d46-b30b-a8fb77d2f45a",
+      "provider_capabilities": {},
+      "snapshot_id": "1feed552-f6c2-4b85-825a-0d7b47e523de",
+      "source_provider": "amap-web-service"
+    },
+    "activities": [
+      {
+        "title": "拙政园",
+        "place_id": "real-place-2a2391b79f3642a7aff4173f",
+        "start_at": "2026-12-05T09:00:00+08:00",
+        "end_at": "2026-12-05T12:00:00+08:00",
+        "status": "PLANNED"
+      },
+      {
+        "title": "苏州博物馆（本馆）",
+        "place_id": "real-place-85ef252bd901280d54c899bd",
+        "start_at": "2026-12-05T14:00:00+08:00",
+        "end_at": "2026-12-05T17:00:00+08:00",
+        "status": "PLANNED"
+      },
+      {
+        "title": "狮子林",
+        "place_id": "real-place-6acc2bd9ec4fdbceeef0124f",
+        "start_at": "2026-12-06T09:00:00+08:00",
+        "end_at": "2026-12-06T12:00:00+08:00",
+        "status": "PLANNED"
+      },
+      {
+        "title": "平江路",
+        "place_id": "real-place-9ecb93fe30d678917285fe79",
+        "start_at": "2026-12-06T14:00:00+08:00",
+        "end_at": "2026-12-06T17:00:00+08:00",
+        "status": "PLANNED"
+      }
+    ]
+  }
+}
