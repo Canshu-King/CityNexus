@@ -1,0 +1,72 @@
+name: V3 rescue integrated release gate
+
+on:
+  push:
+    branches:
+      - rescue/v3-final-departure-20261022
+    paths:
+      - backend/**
+      - frontend/**
+      - contracts/**
+      - .github/workflows/v3-rescue-release-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v3-rescue-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-signed-smoke:
+    name: Backend signed journey and classroom integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: |
+          python -m pip install uv
+          uv sync --extra dev --no-install-project
+      - name: Run focused signed and source regressions without live provider
+        run: >-
+          uv run --no-sync python -m pytest -q
+          tests/test_issue49_*.py
+          tests/test_qoder_map_active_plan_stops_r1.py
+          tests/test_wp01_wp03.py
+          tests/test_goal_route_freeze.py
+          --junitxml=v3-release-backend.xml
+      - name: Upload backend results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v3-rescue-backend-results
+          path: backend/v3-release-backend.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
+  frontend-build:
+    name: Frontend typecheck and Vite build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Typecheck current V3 product
+        run: npx tsc -p tsconfig.check.json --noEmit
+      - name: Vite production build
+        run: npm run build
