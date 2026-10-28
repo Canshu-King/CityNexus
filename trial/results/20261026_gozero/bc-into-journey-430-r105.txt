@@ -1,0 +1,31 @@
+HTTP POST 201 /api/v1/journeys
+SENT t=14.0
+HTTP POST 201 /api/v1/journeys/39adc872-2cc6-4ba1-a3bb-b27114a0bb15/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/39adc872-2cc6-4ba1-a3bb-b27114a0bb15/agent/goal-tasks/0a018dc1-9807-4626-b55b-4f4f751e3011/run
+SKIP t=29.1
+DRAFT t=155.3 {"url":"/revolution","key_label":null,"key_present":false,"key_visible":false,"key_disabled":null,"fieldset_disabled":null,"key_box":null,"stateLine":"已整理 2 天 · 8 项安排"}
+HIT trips-tab true t=155.7
+ON_TRIPS {"url":"/revolution","key_label":"保存为正式候选方案","key_present":true,"key_visible":true,"key_disabled":true,"fieldset_disabled":true,"key_box":"292x44@1613","stateLine":"Agent 正在研究，等这一轮结束即可编辑保存。"} t=157.0
+CARDS 8
+HTTP POST 200 /api/v1/journeys/39adc872-2cc6-4ba1-a3bb-b27114a0bb15/agent/goal-tasks/0a018dc1-9807-4626-b55b-4f4f751e3011/resume
+MISS card-0
+MISS card-1
+MISS card-2
+MISS card-3
+MISS card-4
+MISS card-5
+HIT press-1 false t=199.6
+PRESSED_1 false t=199.6
+R1 TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+R1 LEAK api_in_body=false api_in_band=false uuid_in_band=false
+R1 MAPPED null
+AFTER_P1 {"url":"/revolution","key_label":"保存为正式候选方案","key_present":true,"key_visible":true,"key_disabled":true,"fieldset_disabled":false,"key_box":"292x44@434","stateLine":"当前展示的是已保存版本。"} t=215.7
+HIT press-2 false t=216.1
+PRESSED_2 false t=216.1
+R2 TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+R2 LEAK api_in_body=false api_in_band=false uuid_in_band=false
+R2 MAPPED null
+AFTER_P2 {"url":"/revolution","key_label":"保存为正式候选方案","key_present":true,"key_visible":true,"key_disabled":true,"fieldset_disabled":false,"key_box":"292x44@434","stateLine":"当前展示的是已保存版本。"} t=225.1
+FINAL_HAS_SAVED false
+FINAL_CLEAN true
+DONE t=225.1

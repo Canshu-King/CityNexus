@@ -2442,3 +2442,42 @@ SEQ 41 t=160.5 cockpit="explore/agent"  key_label=null  key_present=false  state
 下一手已经在跑（trial/human_walk/_bc_arm_into_journey_430_r105.mjs → bc-into-journey-430-r105.txt）：同一条链，草案出现后**先按 `rev-mobile-tab-trips` 进入那趟行程**，必要时再切 `rev-mission-layer-timeline`，然后按三态标签找键、连按两次，读消息带是否含映射句且不含 `CityNexus API` 与 36 位 id。它带一个 `fieldset_disabled` 字段，因为 §103 的源码显示真正的门是 `<fieldset disabled={busy || task.status === "WORKING"}>`——如果键在树里但 fieldset 禁用，那才是"轮次门"，与"没进门"是两件事。
 
 **仍未证**：409 那一屏的句子。本节只把"为什么找不到键"从我的三层猜测换成一个可复现的入口缺失。
+## 105. 键的门槛是一枚复选框；而"再按一次"在这一代已经是受支持的动作（两次 201，零 4xx）
+
+bd106（trial/human_walk/_bd_arm_confirm_then_press_430_r106.mjs → trial/results/20261026_gozero/bd-confirm-then-press-430-r106.txt）把 §104 留下的最后一层揭开了。完整读数，全部来自真实 Chrome 430×932 的按键：
+
+```
+CONFIRM_KEY found=1  t=158.7
+CONFIRMED true was=false  t=161.2
+BEFORE_PRESS {"key_label":"保存为正式候选方案","key_present":true,"key_visible":true,
+              "key_disabled":false,"fieldset_disabled":false,"key_box":"292x44@626"}  t=161.2
+PRESSED_1 true  t=162.8
+R1 TEXTS ["当前展示的是已保存版本。","已保存 6 项正式安排。下方可以查看日程和出发待办。", …]
+R1 LEAK api_in_body=false api_in_band=false uuid_in_band=false
+AFTER_P1 {"key_label":"按以上时间重新准备方案","key_disabled":false,"key_box":"292x44@434"}  t=179.1
+PRESSED_2 true  t=180.6
+R2 LEAK api_in_body=false api_in_band=false uuid_in_band=false
+FINAL_HAS_SAVED true   FINAL_CLEAN true   DONE t=189.7
+```
+
+**第一件，九支臂"找不到键"的最后一环不是找不到，是门在别处。** bc105 已经证明键 present + visible 但 `key_disabled=true` 而 `fieldset_disabled=false`；源码 `DraftDepartureCard.tsx:324` 写的是 `disabled={!confirmed || busy}`。bd106 先勾上「按以上时间准备方案」这枚复选框（`was=false → true`），`key_disabled` 立刻从 true 翻成 false，两次按下都 `true`。所以门槛是**一枚旅客必须先勾的确认框**，不是层、不是标签、不是轮次——我的 `tap()` 因为命中测试要求 `!disabled` 而一直把"按不动"报成找不到可点的键。
+
+**第二件，也是更要紧的：这条路径在这一代不再产生 409。** 服务端回执逐条在案：
+
+```
+POST /journeys                                        201
+POST …/agent/goal-tasks                               201
+POST …/agent/goal-tasks/{id}/run                      200
+POST …/agent/goal-tasks/{id}/resume                   200
+POST …/agent/goal-tasks/{id}/prepare-plan             201   ← 第一次按
+POST …/agent/goal-tasks/{id}/prepare-plan             201   ← 第二次按
+```
+
+4xx 计数为 **0**。也就是说"已存过版本之后再按一次"现在是**受支持的重复动作**（每按一次生成一版，屏上回「已保存 6 项正式安排」，按钮换成「按以上时间重新准备方案」），而不是当年那个 `GOAL_TASK_REQUIRES_DRAFT_JOURNEY` 拒绝。这正是 #292 与 §84 那一刀的后果在屏上被反向确认：**泄漏的入口不是被文案遮住的，是被产品行为变更消掉的**。
+
+因此 #341 与 #340 剩下的那一半要按事实改写口径：
+
+- 我要的"屏上不得出现路由与 36 位 id"这一格，**已经证到了**——两轮的 `api_in_body / api_in_band / uuid_in_band` 三档全 false，`FINAL_CLEAN true`，且这是真按成两次之后读到的，不是"没触发所以没泄漏"。
+- 而"旅客在真 409 上看到哪一句"这一格，**在这条路径上无法再取**：不产生 409 就没有那一屏。要再取它只能造别的 409（例如轮次 WORKING 时按 `resume`），但客户端在 `WorkspaceActions.tsx:512` 与 `<fieldset disabled>` 两处就把它挡住了——所以映射表里 `GOAL_TASK_ALREADY_RUNNING` 那条**注定是状态滞后时的兜底，旅客在正常路径上按不到**，这一点我在 §92 就写过，现在有了第二次独立确认。
+
+**仍未证**：旅客在真 409 上看到哪一句（原因如上：这条路径不再 409，而客户端挡住了另一条）。我不把它算作完成，也不把它算作缺陷——它现在是一条有依据的"取不到"。

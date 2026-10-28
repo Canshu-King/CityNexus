@@ -1,0 +1,34 @@
+HTTP POST 201 /api/v1/journeys
+SENT t=13.8
+HTTP POST 201 /api/v1/journeys/75fb5a97-8d8f-4565-8a43-a079941fa041/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/75fb5a97-8d8f-4565-8a43-a079941fa041/agent/goal-tasks/e9284257-5b08-4139-848b-ac5c371d13b0/run
+SKIP t=28.8
+DRAFT t=137.1 {"url":"/revolution","key_label":null,"key_present":false,"key_visible":false,"key_disabled":null,"fieldset_disabled":null,"key_box":null,"stateLine":"已整理 2 天 · 6 项安排"}
+HIT trips-tab true t=137.5
+ON_TRIPS {"url":"/revolution","key_label":"保存为正式候选方案","key_present":true,"key_visible":true,"key_disabled":true,"fieldset_disabled":true,"key_box":"292x44@1511","stateLine":"Agent 正在研究，等这一轮结束即可编辑保存。"} t=138.9
+CARDS 3
+HTTP POST 200 /api/v1/journeys/75fb5a97-8d8f-4565-8a43-a079941fa041/agent/goal-tasks/e9284257-5b08-4139-848b-ac5c371d13b0/resume
+MISS card-0
+MISS card-1
+HIT card-2 true t=153.4
+IN_CARD 2 {"url":"/revolution","key_label":"保存为正式候选方案","key_present":true,"key_visible":true,"key_disabled":true,"fieldset_disabled":false,"key_box":"292x44@1425","stateLine":"当前展示的是已保存版本。"} t=158.7
+CONFIRM_KEY found=1 t=158.7
+CONFIRMED true was=false t=161.2
+BEFORE_PRESS {"url":"/revolution","key_label":"保存为正式候选方案","key_present":true,"key_visible":true,"key_disabled":false,"fieldset_disabled":false,"key_box":"292x44@626","stateLine":"当前展示的是已保存版本。"} t=161.2
+HIT press-1 true t=161.6
+HTTP POST 201 /api/v1/journeys/75fb5a97-8d8f-4565-8a43-a079941fa041/agent/goal-tasks/e9284257-5b08-4139-848b-ac5c371d13b0/prepare-plan
+PRESSED_1 true t=162.8
+R1 TEXTS ["当前展示的是已保存版本。","已保存 6 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+R1 LEAK api_in_body=false api_in_band=false uuid_in_band=false
+R1 MAPPED null
+AFTER_P1 {"url":"/revolution","key_label":"按以上时间重新准备方案","key_present":true,"key_visible":true,"key_disabled":false,"fieldset_disabled":false,"key_box":"292x44@434","stateLine":"当前展示的是已保存版本。"} t=179.1
+HIT press-2 true t=179.4
+HTTP POST 201 /api/v1/journeys/75fb5a97-8d8f-4565-8a43-a079941fa041/agent/goal-tasks/e9284257-5b08-4139-848b-ac5c371d13b0/prepare-plan
+PRESSED_2 true t=180.6
+R2 TEXTS ["当前展示的是已保存版本。","已保存 6 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+R2 LEAK api_in_body=false api_in_band=false uuid_in_band=false
+R2 MAPPED null
+AFTER_P2 {"url":"/revolution","key_label":"按以上时间重新准备方案","key_present":true,"key_visible":true,"key_disabled":false,"fieldset_disabled":false,"key_box":"292x44@434","stateLine":"当前展示的是已保存版本。"} t=189.7
+FINAL_HAS_SAVED true
+FINAL_CLEAN true
+DONE t=189.7
