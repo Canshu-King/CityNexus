@@ -1,0 +1,3748 @@
+{
+  "product_sha": "724f44a084da738657603be402260c0f999412b9",
+  "evidence_kind": "SIGNED_NATIVE_HTTP_WITH_REAL_EXTERNAL_AGENT_AND_SIMULATED_EXECUTION_NOT_BROWSER_DEVICE",
+  "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+  "task_id": "ad695293-72e5-4482-9659-0784b98e829f",
+  "run": {
+    "id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+    "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+    "actor_id": "9ac3c100-da78-4933-ba1b-cb79991fcb1e",
+    "city_code": "CN-苏州",
+    "seed": 17,
+    "timezone": "Asia/Shanghai",
+    "virtual_now": "2026-12-06T17:00:00+08:00",
+    "sequence": 12,
+    "status": "SIMULATED_COMPLETED",
+    "created_at": "2026-10-26T12:33:39.922642+00:00",
+    "updated_at": "2026-10-26T12:36:58.201410+00:00"
+  },
+  "run_state": {
+    "completed_activity_ids": [
+      "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+      "0632c894-f07c-47b7-a8fa-d6f1d93eab12",
+      "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+      "99ec38d5-797c-4e64-9814-10e01a657dec"
+    ],
+    "guardian_attempt_started_at": "2026-10-26T12:34:13.145435+00:00",
+    "location": {
+      "captured_virtual_at": "2026-12-06T14:00:00+08:00",
+      "classification": "SCENARIO_SIMULATED_LOCATION",
+      "coordinate_system": "WGS84",
+      "latitude": 31.316128687566195,
+      "longitude": 120.63036669198068,
+      "place_id": "real-place-9ecb93fe30d678917285fe79",
+      "recorded_at": "2026-10-26T12:36:58.200410+00:00",
+      "source": "SIMULATED_GPS"
+    },
+    "pending_event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+    "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+    "provider_observation_ids": [
+      "d03b1f45-0034-4561-874e-0e7e3f3159e2"
+    ],
+    "provider_snapshot_refs": [
+      {
+        "captured_at": "2026-10-26T12:28:27.824072+00:00",
+        "fact_qualities": [
+          "LIVE_PROVIDER_CAPTURE"
+        ],
+        "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+        "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
+        "sha256": "74ac189cce926f8ab3f41002f5b70b30547af4e49df08b2826a3cc4317a28a93",
+        "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699"
+      },
+      {
+        "captured_at": "2026-12-05T17:00:00+08:00",
+        "fact_qualities": [
+          "LIVE_PROVIDER_CAPTURE"
+        ],
+        "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+        "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
+        "sha256": "1622cb5ba6a0f6b6e6b84f5a814c0c247ec0e2dd3c5cc7fecdd2c0cc2b0cbf81",
+        "snapshot_id": "694fa644-446d-40b5-a051-8d0db64f77d7"
+      }
+    ],
+    "scene_ids": [
+      "suzhou-pingjiang-delay-15-20261026"
+    ],
+    "suggested_scene": "SCHEDULE_DELAY"
+  },
+  "history": [
+    {
+      "event": "SIM_STARTED",
+      "recorded_at": "2026-10-26T12:33:39.922642+00:00",
+      "sequence": 0,
+      "virtual_now": "2026-12-05T08:00:00+08:00"
+    },
+    {
+      "activity_id": "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+      "event": "SIM_DEPARTURE",
+      "recorded_at": "2026-10-26T12:33:40.011568+00:00",
+      "sequence": 1,
+      "virtual_now": "2026-12-05T09:00:00+08:00"
+    },
+    {
+      "activity_id": "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+      "event": "SIM_ARRIVAL",
+      "recorded_at": "2026-10-26T12:33:40.062175+00:00",
+      "sequence": 2,
+      "virtual_now": "2026-12-05T09:00:00+08:00"
+    },
+    {
+      "activity_id": "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+      "event": "SIM_EXPERIENCE",
+      "recorded_at": "2026-10-26T12:33:40.108807+00:00",
+      "sequence": 3,
+      "virtual_now": "2026-12-05T09:00:00+08:00"
+    },
+    {
+      "activity_id": "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+      "event": "SIM_ACTIVITY_COMPLETED",
+      "recorded_at": "2026-10-26T12:33:40.155780+00:00",
+      "sequence": 4,
+      "virtual_now": "2026-12-05T12:00:00+08:00"
+    },
+    {
+      "activity_id": "0632c894-f07c-47b7-a8fa-d6f1d93eab12",
+      "event": "SIM_DEPARTURE",
+      "recorded_at": "2026-10-26T12:33:40.200147+00:00",
+      "sequence": 5,
+      "virtual_now": "2026-12-05T14:00:00+08:00"
+    },
+    {
+      "activity_id": "0632c894-f07c-47b7-a8fa-d6f1d93eab12",
+      "event": "SIM_ARRIVAL",
+      "recorded_at": "2026-10-26T12:33:40.247369+00:00",
+      "sequence": 6,
+      "virtual_now": "2026-12-05T14:00:00+08:00"
+    },
+    {
+      "activity_id": "0632c894-f07c-47b7-a8fa-d6f1d93eab12",
+      "event": "SIM_EXPERIENCE",
+      "recorded_at": "2026-10-26T12:33:40.291692+00:00",
+      "sequence": 7,
+      "virtual_now": "2026-12-05T14:00:00+08:00"
+    },
+    {
+      "activity_id": "0632c894-f07c-47b7-a8fa-d6f1d93eab12",
+      "event": "SIM_ACTIVITY_COMPLETED",
+      "recorded_at": "2026-10-26T12:33:40.343251+00:00",
+      "sequence": 8,
+      "virtual_now": "2026-12-05T17:00:00+08:00"
+    },
+    {
+      "environment_provenance": "SIMULATED",
+      "event": "SIM_SCENE_INJECTED",
+      "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+      "recorded_at": "2026-10-26T12:33:40.389681+00:00",
+      "scene_id": "suzhou-pingjiang-delay-15-20261026",
+      "sequence": 9,
+      "virtual_now": "2026-12-05T17:00:00+08:00"
+    },
+    {
+      "event": "GUARDIAN_REQUESTED",
+      "model_consent": true,
+      "recorded_at": "2026-10-26T12:34:13.145435+00:00",
+      "sequence": 10,
+      "virtual_now": "2026-12-05T17:00:00+08:00"
+    },
+    {
+      "event": "GUARDIAN_RESULT",
+      "execution_mode": "SERVER_GUARDIAN_EXECUTED",
+      "guardian": {
+        "action_status": "PROPOSAL_PRESENTED",
+        "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+        "id": "fdd867ed-97be-4b2a-89df-a0651b9d1385",
+        "proposal_id": "7626e38a-1b70-4754-bd6e-deb2f197f93c",
+        "status": "PARTIAL"
+      },
+      "model_execution": "RUN_REFERENCE",
+      "recorded_at": "2026-10-26T12:35:53.795816+00:00",
+      "sequence": 10,
+      "virtual_now": "2026-12-05T17:00:00+08:00"
+    },
+    {
+      "event": "SIM_RESUMED",
+      "recorded_at": "2026-10-26T12:36:58.104520+00:00",
+      "sequence": 11,
+      "virtual_now": "2026-12-05T17:00:00+08:00"
+    },
+    {
+      "after_plan_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+      "before_plan_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+      "event": "SIM_PLAN_CHANGED",
+      "recorded_at": "2026-10-26T12:36:58.195411+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-05T17:00:00+08:00"
+    },
+    {
+      "activity_id": "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+      "event": "SIM_DEPARTURE",
+      "recorded_at": "2026-10-26T12:36:58.196411+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T08:52:00+08:00"
+    },
+    {
+      "activity_id": "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+      "event": "SIM_ARRIVAL",
+      "recorded_at": "2026-10-26T12:36:58.197410+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T09:00:00+08:00"
+    },
+    {
+      "activity_id": "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+      "event": "SIM_EXPERIENCE",
+      "recorded_at": "2026-10-26T12:36:58.197410+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T09:00:00+08:00"
+    },
+    {
+      "activity_id": "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+      "event": "SIM_ACTIVITY_COMPLETED",
+      "recorded_at": "2026-10-26T12:36:58.198410+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T12:00:00+08:00"
+    },
+    {
+      "activity_id": "99ec38d5-797c-4e64-9814-10e01a657dec",
+      "event": "SIM_DEPARTURE",
+      "recorded_at": "2026-10-26T12:36:58.199410+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T13:42:00+08:00"
+    },
+    {
+      "activity_id": "99ec38d5-797c-4e64-9814-10e01a657dec",
+      "event": "SIM_ARRIVAL",
+      "recorded_at": "2026-10-26T12:36:58.199410+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T14:00:00+08:00"
+    },
+    {
+      "activity_id": "99ec38d5-797c-4e64-9814-10e01a657dec",
+      "event": "SIM_EXPERIENCE",
+      "recorded_at": "2026-10-26T12:36:58.200410+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T14:00:00+08:00"
+    },
+    {
+      "activity_id": "99ec38d5-797c-4e64-9814-10e01a657dec",
+      "event": "SIM_ACTIVITY_COMPLETED",
+      "recorded_at": "2026-10-26T12:36:58.201410+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T17:00:00+08:00"
+    },
+    {
+      "event": "SIMULATED_COMPLETED",
+      "recorded_at": "2026-10-26T12:36:58.201410+00:00",
+      "sequence": 12,
+      "virtual_now": "2026-12-06T17:00:00+08:00"
+    }
+  ],
+  "completed_activities": [
+    {
+      "id": "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+      "title": "拙政园",
+      "place_id": "real-place-2a2391b79f3642a7aff4173f",
+      "start_at": "2026-12-05T09:00:00+08:00",
+      "end_at": "2026-12-05T12:00:00+08:00",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "0632c894-f07c-47b7-a8fa-d6f1d93eab12",
+      "title": "苏州博物馆（本馆）",
+      "place_id": "real-place-85ef252bd901280d54c899bd",
+      "start_at": "2026-12-05T14:00:00+08:00",
+      "end_at": "2026-12-05T17:00:00+08:00",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+      "title": "苏州园林博物馆",
+      "place_id": "real-place-7169e1bb4fcfafa220d5d6b4",
+      "start_at": "2026-12-06T09:00:00+08:00",
+      "end_at": "2026-12-06T12:00:00+08:00",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "99ec38d5-797c-4e64-9814-10e01a657dec",
+      "title": "平江路",
+      "place_id": "real-place-9ecb93fe30d678917285fe79",
+      "start_at": "2026-12-06T14:00:00+08:00",
+      "end_at": "2026-12-06T17:00:00+08:00",
+      "status": "COMPLETED"
+    }
+  ],
+  "completed_by_date": {
+    "2026-12-05": 2,
+    "2026-12-06": 2
+  },
+  "distinct_completed_place_count": 4,
+  "event": {
+    "id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+    "event_type": "SCHEDULE_DELAY",
+    "status": "RESOLVED"
+  },
+  "proposal": {
+    "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+    "trigger_event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+    "source_agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+    "status": "ACCEPTED",
+    "proposed_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269"
+  },
+  "proposal_diff": {
+    "candidate_family": "F2_SUFFIX_DELAY",
+    "kept": [
+      "real-place-2a2391b79f3642a7aff4173f",
+      "real-place-7169e1bb4fcfafa220d5d6b4",
+      "real-place-85ef252bd901280d54c899bd",
+      "real-place-9ecb93fe30d678917285fe79"
+    ],
+    "moved": [],
+    "removed": [],
+    "added": [],
+    "cost_delta_minor": 0,
+    "travel_delta_min": 0,
+    "end_time_delta_min": 0,
+    "preserved_protected": [],
+    "before_feasibility_envelope": {
+      "next_commitment_buffer_min": null,
+      "journey_end_slack_min": 180,
+      "budget_remaining_minor": 100000,
+      "preserved_commitment_count": 0,
+      "degraded_providers": [],
+      "risk_reason_codes": [],
+      "robust": true
+    },
+    "after_feasibility_envelope": {
+      "next_commitment_buffer_min": null,
+      "journey_end_slack_min": 180,
+      "budget_remaining_minor": 100000,
+      "preserved_commitment_count": 0,
+      "degraded_providers": [],
+      "risk_reason_codes": [],
+      "robust": true
+    },
+    "opportunity_window_evidence": null,
+    "verified_evidence": {
+      "family": "F2_SUFFIX_DELAY",
+      "baseline_plan_evidence": {
+        "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+        "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699",
+        "captured_at": "2026-10-26T12:28:27.824072+00:00",
+        "source_provider": "amap-web-service",
+        "runtime_label": null,
+        "immutable": true
+      },
+      "incident_recovery_evidence": {
+        "evidence_id": "incident:605f34ef-d199-4ec1-9abf-bf0d471ee4f5:694fa644-446d-40b5-a051-8d0db64f77d7",
+        "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+        "event_type": "SCHEDULE_DELAY",
+        "event_occurred_at": "2026-12-05T17:00:00+08:00",
+        "captured_at": "2026-12-05T17:00:00+08:00",
+        "route_provenance": "RUNTIME_CAPTURE",
+        "source_provider": "amap_walking",
+        "degraded": false,
+        "baseline_snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699",
+        "mobility_reused_from_baseline": false,
+        "routing_conditions_assumption": "CAPTURED_AT_INCIDENT",
+        "mobility_snapshot": {
+          "snapshot_id": "694fa644-446d-40b5-a051-8d0db64f77d7",
+          "operation_key": "replan:605f34ef-d199-4ec1-9abf-bf0d471ee4f5:incident",
+          "captured_at": "2026-12-05T17:00:00+08:00",
+          "source_provider": "amap_walking",
+          "degraded": false,
+          "provider_capabilities": {},
+          "facts": [
+            {
+              "origin_key": "real-place-2a2391b79f3642a7aff4173f",
+              "destination_key": "real-place-85ef252bd901280d54c899bd",
+              "minutes": 5,
+              "provider": "amap_walking",
+              "captured_at": "2026-12-05T17:00:00+08:00",
+              "degraded": false,
+              "fallback_reason": null,
+              "route_geometry": [],
+              "geometry_provider": null,
+              "route_provenance": "LIVE_PROVIDER_CAPTURE",
+              "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+              "time_basis": "PROVIDER_CAPTURED_AT",
+              "distance_m": 346,
+              "walking_distance_m": 346,
+              "walking_min": 5,
+              "mode": "WALK",
+              "fact_quality": "LIVE_PROVIDER_CAPTURE"
+            },
+            {
+              "origin_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+              "destination_key": "real-place-9ecb93fe30d678917285fe79",
+              "minutes": 18,
+              "provider": "amap_walking",
+              "captured_at": "2026-12-05T17:00:00+08:00",
+              "degraded": false,
+              "fallback_reason": null,
+              "route_geometry": [],
+              "geometry_provider": null,
+              "route_provenance": "LIVE_PROVIDER_CAPTURE",
+              "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+              "time_basis": "PROVIDER_CAPTURED_AT",
+              "distance_m": 1350,
+              "walking_distance_m": 1350,
+              "walking_min": 18,
+              "mode": "WALK",
+              "fact_quality": "LIVE_PROVIDER_CAPTURE"
+            },
+            {
+              "origin_key": "real-place-85ef252bd901280d54c899bd",
+              "destination_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+              "minutes": 8,
+              "provider": "amap_walking",
+              "captured_at": "2026-12-05T17:00:00+08:00",
+              "degraded": false,
+              "fallback_reason": null,
+              "route_geometry": [],
+              "geometry_provider": null,
+              "route_provenance": "LIVE_PROVIDER_CAPTURE",
+              "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+              "time_basis": "PROVIDER_CAPTURED_AT",
+              "distance_m": 529,
+              "walking_distance_m": 529,
+              "walking_min": 8,
+              "mode": "WALK",
+              "fact_quality": "LIVE_PROVIDER_CAPTURE"
+            }
+          ]
+        },
+        "weather": null,
+        "provider_capabilities": {},
+        "provider_observation_id": "8d763fa7-dbb3-426a-8230-709fb4f354fb"
+      },
+      "impact_resolution": {
+        "status": "VALIDATED",
+        "maturity_stage": "VALIDATED_IMPACT",
+        "provider_key": "deterministic",
+        "model_key": "server-rules",
+        "selected_activity_id": "17b82371-1479-442e-9e78-03d05e4acd40",
+        "primary_recovery_target_id": "17b82371-1479-442e-9e78-03d05e4acd40",
+        "secondary_risk_activity_ids": [],
+        "selected_corroboration_refs": [
+          "event.affected_activity_id",
+          "event.payload.place_id"
+        ],
+        "independent_evidence_count": 2,
+        "uncertain": false,
+        "reason_codes": [
+          "DETERMINISTIC_IMPACT_VALIDATION_PASSED",
+          "VALIDATED_IMPACT_EVIDENCE"
+        ],
+        "rejected_activity_ids": [],
+        "failure_code": null,
+        "response_hash": null,
+        "semantic_reason": "Structured event mapping was sufficient.",
+        "semantic_explanation": "The event contains a server-validated Activity reference."
+      },
+      "generation_rank": 0,
+      "generator": {
+        "kind": "DETERMINISTIC_HEURISTIC",
+        "solver_status": "DISABLED",
+        "fallback_reason": "SOLVER_DISABLED",
+        "problem_fingerprint": null,
+        "mobility_snapshot_id": "694fa644-446d-40b5-a051-8d0db64f77d7",
+        "rank": 0
+      },
+      "feasibility_authority": "CITYNEXUS_DETERMINISTIC_GATE",
+      "feasible": true,
+      "hard_constraint_result": {
+        "passed": true,
+        "failures": []
+      },
+      "commitment_preservation": {
+        "preserved": true,
+        "protected_count": 0
+      },
+      "stability": {
+        "score": 1.0,
+        "moved_count": 0,
+        "removed_count": 0,
+        "added_count": 0
+      },
+      "budget": {
+        "remaining_minor": 100000,
+        "currency": "CNY"
+      },
+      "mobility": {
+        "travel_delta_min": 0,
+        "provider": "amap_walking",
+        "degraded": false,
+        "snapshot": {
+          "snapshot_id": "694fa644-446d-40b5-a051-8d0db64f77d7",
+          "operation_key": "replan:605f34ef-d199-4ec1-9abf-bf0d471ee4f5:incident",
+          "captured_at": "2026-12-05T17:00:00+08:00",
+          "source_provider": "amap_walking",
+          "degraded": false,
+          "provider_capabilities": {},
+          "facts": [
+            {
+              "origin_key": "real-place-2a2391b79f3642a7aff4173f",
+              "destination_key": "real-place-85ef252bd901280d54c899bd",
+              "minutes": 5,
+              "provider": "amap_walking",
+              "captured_at": "2026-12-05T17:00:00+08:00",
+              "degraded": false,
+              "fallback_reason": null,
+              "route_geometry": [],
+              "geometry_provider": null,
+              "route_provenance": "LIVE_PROVIDER_CAPTURE",
+              "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+              "time_basis": "PROVIDER_CAPTURED_AT",
+              "distance_m": 346,
+              "walking_distance_m": 346,
+              "walking_min": 5,
+              "mode": "WALK",
+              "fact_quality": "LIVE_PROVIDER_CAPTURE"
+            },
+            {
+              "origin_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+              "destination_key": "real-place-9ecb93fe30d678917285fe79",
+              "minutes": 18,
+              "provider": "amap_walking",
+              "captured_at": "2026-12-05T17:00:00+08:00",
+              "degraded": false,
+              "fallback_reason": null,
+              "route_geometry": [],
+              "geometry_provider": null,
+              "route_provenance": "LIVE_PROVIDER_CAPTURE",
+              "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+              "time_basis": "PROVIDER_CAPTURED_AT",
+              "distance_m": 1350,
+              "walking_distance_m": 1350,
+              "walking_min": 18,
+              "mode": "WALK",
+              "fact_quality": "LIVE_PROVIDER_CAPTURE"
+            },
+            {
+              "origin_key": "real-place-85ef252bd901280d54c899bd",
+              "destination_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+              "minutes": 8,
+              "provider": "amap_walking",
+              "captured_at": "2026-12-05T17:00:00+08:00",
+              "degraded": false,
+              "fallback_reason": null,
+              "route_geometry": [],
+              "geometry_provider": null,
+              "route_provenance": "LIVE_PROVIDER_CAPTURE",
+              "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+              "time_basis": "PROVIDER_CAPTURED_AT",
+              "distance_m": 529,
+              "walking_distance_m": 529,
+              "walking_min": 8,
+              "mode": "WALK",
+              "fact_quality": "LIVE_PROVIDER_CAPTURE"
+            }
+          ]
+        },
+        "failed_primary_pairs": [],
+        "fallback_pairs": []
+      },
+      "time": {
+        "journey_end_slack_min": 180,
+        "end_time_delta_min": 0
+      },
+      "preference": {
+        "fit": 1.0
+      },
+      "opportunity": {
+        "value": null,
+        "evidence": null
+      },
+      "reason_codes": [
+        "COMMITMENT_PRESERVED",
+        "MINIMAL_DISRUPTION",
+        "SCHEDULE_DELAY_ABSORBED"
+      ]
+    },
+    "reason_codes": [
+      "COMMITMENT_PRESERVED",
+      "MINIMAL_DISRUPTION",
+      "SCHEDULE_DELAY_ABSORBED"
+    ],
+    "execution_partition": {
+      "terminal_prefix_ids": [
+        "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+        "0632c894-f07c-47b7-a8fa-d6f1d93eab12"
+      ],
+      "current_activity_id": "ba0e853d-d311-4c76-8606-d109ac1812b5",
+      "c4_anchor_ids": [],
+      "mutable_suffix_ids": [
+        "17b82371-1479-442e-9e78-03d05e4acd40"
+      ]
+    }
+  },
+  "acceptance_audits": [
+    {
+      "id": "6ff47d34-3b67-4f49-b464-b691539b5599",
+      "action": "replan.accepted",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "actor_id": "9ac3c100-da78-4933-ba1b-cb79991fcb1e"
+    }
+  ],
+  "agent": {
+    "id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+    "status": "PARTIAL",
+    "provider_key": "hermes",
+    "model_key": "auto:cheapest",
+    "created_at": "2026-10-26T12:34:13.175591+00:00",
+    "completed_at": "2026-10-26T12:35:53.792820+00:00"
+  },
+  "plans": [
+    {
+      "id": "44326a11-7ca7-454a-88c1-19426a40b102",
+      "status": "SUPERSEDED",
+      "mobility_snapshot": {
+        "captured_at": "2026-10-26T12:28:27.824072+00:00",
+        "degraded": false,
+        "facts": [
+          {
+            "captured_at": "2026-10-26T12:28:27.824072+00:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-85ef252bd901280d54c899bd",
+            "distance_m": 346,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": "amap-web-service",
+            "minutes": 5,
+            "mode": "WALK",
+            "origin_key": "real-place-2a2391b79f3642a7aff4173f",
+            "provider": "amap-web-service",
+            "route_geometry": [
+              [
+                120.62510892029327,
+                31.3263590775642
+              ],
+              [
+                120.62511292278484,
+                31.326277103001445
+              ],
+              [
+                120.62510393760445,
+                31.32621113674654
+              ],
+              [
+                120.62500404608069,
+                31.32616426220017
+              ],
+              [
+                120.62493511804892,
+                31.32616433678588
+              ],
+              [
+                120.62483521776814,
+                31.32621642570584
+              ],
+              [
+                120.62494413770119,
+                31.325808456487266
+              ],
+              [
+                120.62499610083148,
+                31.32559547777903
+              ],
+              [
+                120.62503906894479,
+                31.325435489479958
+              ],
+              [
+                120.62504306516887,
+                31.325430486967385
+              ],
+              [
+                120.62509103823535,
+                31.32514453912156
+              ],
+              [
+                120.62510003622246,
+                31.32505356252763
+              ],
+              [
+                120.62510003663016,
+                31.325048564350567
+              ],
+              [
+                120.62500413952559,
+                31.32501867932509
+              ],
+              [
+                120.62466150173087,
+                31.324941076961125
+              ],
+              [
+                120.62385133779175,
+                31.32477299576635
+              ],
+              [
+                120.62375143910619,
+                31.32475110793933
+              ],
+              [
+                120.6237474434861,
+                31.324746113922675
+              ],
+              [
+                120.62370847117484,
+                31.324881105185963
+              ],
+              [
+                120.62367349060202,
+                31.325068073310398
+              ],
+              [
+                120.62369047099534,
+                31.325102043280324
+              ]
+            ],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": null,
+            "walking_min": null
+          },
+          {
+            "captured_at": "2026-10-26T12:28:27.824072+00:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-9ecb93fe30d678917285fe79",
+            "distance_m": 1350,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": "amap-web-service",
+            "minutes": 18,
+            "mode": "WALK",
+            "origin_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+            "provider": "amap-web-service",
+            "route_geometry": [
+              [
+                120.6250690517398,
+                31.32526152034696
+              ],
+              [
+                120.62509103823535,
+                31.32514453912156
+              ],
+              [
+                120.62510003622246,
+                31.32505356252763
+              ],
+              [
+                120.62510005889025,
+                31.324775663925223
+              ],
+              [
+                120.62518699199819,
+                31.3244756788951
+              ],
+              [
+                120.62527791976395,
+                31.324185685692676
+              ],
+              [
+                120.6253518628309,
+                31.32392470029629
+              ],
+              [
+                120.62545578294927,
+                31.3235517229077
+              ],
+              [
+                120.625555706574,
+                31.32318274825055
+              ],
+              [
+                120.6256246509008,
+                31.322961753299566
+              ],
+              [
+                120.62565962372113,
+                31.322835760922626
+              ],
+              [
+                120.62569359862458,
+                31.32269677440154
+              ],
+              [
+                120.625767540049,
+                31.32244078657964
+              ],
+              [
+                120.62586346388733,
+                31.322106802913382
+              ],
+              [
+                120.62597637432656,
+                31.321706824433573
+              ],
+              [
+                120.626010350186,
+                31.32155084399548
+              ],
+              [
+                120.62623616735956,
+                31.320773877700123
+              ],
+              [
+                120.62623616768572,
+                31.32076987917752
+              ],
+              [
+                120.6266477041496,
+                31.320886370554
+              ],
+              [
+                120.62695135989735,
+                31.320947001077457
+              ],
+              [
+                120.62715513092549,
+                31.320937769896872
+              ],
+              [
+                120.62728098611572,
+                31.32096361478851
+              ],
+              [
+                120.6276235888433,
+                31.321033190256507
+              ],
+              [
+                120.62822188775638,
+                31.321110456205943
+              ],
+              [
+                120.62839069104835,
+                31.32108826328439
+              ],
+              [
+                120.62839069137459,
+                31.321084264760373
+              ],
+              [
+                120.62845564629988,
+                31.320697330083007
+              ],
+              [
+                120.6285385836013,
+                31.320263391283948
+              ],
+              [
+                120.62862050975633,
+                31.319977398871124
+              ],
+              [
+                120.62875939086291,
+                31.319408442677577
+              ],
+              [
+                120.62877637622354,
+                31.31933944779943
+              ],
+              [
+                120.62883331601957,
+                31.31924341471404
+              ],
+              [
+                120.62890227060716,
+                31.318788500351598
+              ],
+              [
+                120.6289632071276,
+                31.318670470436235
+              ],
+              [
+                120.62897619577099,
+                31.318618474029236
+              ],
+              [
+                120.62900617386158,
+                31.31844550202225
+              ],
+              [
+                120.62912406056624,
+                31.318093489826524
+              ],
+              [
+                120.62914504339511,
+                31.317993501536314
+              ],
+              [
+                120.62918900903362,
+                31.317763533693146
+              ],
+              [
+                120.62931490390011,
+                31.317182596783113
+              ],
+              [
+                120.62951871589183,
+                31.31644462283001
+              ],
+              [
+                120.62951871621806,
+                31.31644062432652
+              ],
+              [
+                120.63022882949713,
+                31.316556700077278
+              ],
+              [
+                120.63032474363524,
+                31.31613973606448
+              ]
+            ],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": null,
+            "walking_min": null
+          },
+          {
+            "captured_at": "2026-10-26T12:28:27.824072+00:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+            "distance_m": 529,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": "amap-web-service",
+            "minutes": 8,
+            "mode": "WALK",
+            "origin_key": "real-place-85ef252bd901280d54c899bd",
+            "provider": "amap-web-service",
+            "route_geometry": [
+              [
+                120.62369047099534,
+                31.325102043280324
+              ],
+              [
+                120.6236734902759,
+                31.325072071852123
+              ],
+              [
+                120.62370347580507,
+                31.324885108917805
+              ],
+              [
+                120.62374744307846,
+                31.324751112098035
+              ],
+              [
+                120.6237474434861,
+                31.324746113922675
+              ],
+              [
+                120.62384734218814,
+                31.324768001763204
+              ],
+              [
+                120.62465750585248,
+                31.324941081243278
+              ],
+              [
+                120.62500014402903,
+                31.325014685111753
+              ],
+              [
+                120.62510003663016,
+                31.325048564350567
+              ],
+              [
+                120.62569339297775,
+                31.325217851838367
+              ],
+              [
+                120.62629173053577,
+                31.32537712571312
+              ],
+              [
+                120.62626175238981,
+                31.32551211028136
+              ],
+              [
+                120.6262317742897,
+                31.325646095204416
+              ],
+              [
+                120.62619680789527,
+                31.325703113740275
+              ],
+              [
+                120.62614086337348,
+                31.325772151397295
+              ],
+              [
+                120.62600599777267,
+                31.325924246990088
+              ],
+              [
+                120.62595804734512,
+                31.32595428958215
+              ],
+              [
+                120.62581919673116,
+                31.325963440808692
+              ],
+              [
+                120.62578523439386,
+                31.325950483229224
+              ],
+              [
+                120.62569832816915,
+                31.32594658096227
+              ],
+              [
+                120.6254985418452,
+                31.325946801343335
+              ],
+              [
+                120.62539864596104,
+                31.325972901583793
+              ],
+              [
+                120.6253556883387,
+                31.32601193447196
+              ],
+              [
+                120.62535169298057,
+                31.326006940664644
+              ],
+              [
+                120.62500007684048,
+                31.32583838503751
+              ],
+              [
+                120.62494813353294,
+                31.3258084521666
+              ],
+              [
+                120.62494413810889,
+                31.32580345830598
+              ],
+              [
+                120.62499610083148,
+                31.32559547777903
+              ],
+              [
+                120.62503906894479,
+                31.325435489479958
+              ],
+              [
+                120.62504306516887,
+                31.325430486967385
+              ],
+              [
+                120.62506905141363,
+                31.325265518889562
+              ]
+            ],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": null,
+            "walking_min": null
+          }
+        ],
+        "operation_key": "goal-freeze:44326a11-7ca7-454a-88c1-19426a40b102",
+        "provider_capabilities": {},
+        "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699",
+        "source_provider": "amap-web-service"
+      },
+      "activities": [
+        {
+          "id": "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+          "title": "拙政园",
+          "place_id": "real-place-2a2391b79f3642a7aff4173f",
+          "start_at": "2026-12-05T09:00:00+08:00",
+          "end_at": "2026-12-05T12:00:00+08:00",
+          "status": "COMPLETED"
+        },
+        {
+          "id": "0632c894-f07c-47b7-a8fa-d6f1d93eab12",
+          "title": "苏州博物馆（本馆）",
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "start_at": "2026-12-05T14:00:00+08:00",
+          "end_at": "2026-12-05T17:00:00+08:00",
+          "status": "COMPLETED"
+        },
+        {
+          "id": "ba0e853d-d311-4c76-8606-d109ac1812b5",
+          "title": "苏州园林博物馆",
+          "place_id": "real-place-7169e1bb4fcfafa220d5d6b4",
+          "start_at": "2026-12-06T09:00:00+08:00",
+          "end_at": "2026-12-06T12:00:00+08:00",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "17b82371-1479-442e-9e78-03d05e4acd40",
+          "title": "平江路",
+          "place_id": "real-place-9ecb93fe30d678917285fe79",
+          "start_at": "2026-12-06T14:00:00+08:00",
+          "end_at": "2026-12-06T17:00:00+08:00",
+          "status": "PLANNED"
+        }
+      ]
+    },
+    {
+      "id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+      "status": "ACTIVE",
+      "mobility_snapshot": {
+        "aggregate_provenance": "RUNTIME_CAPTURE",
+        "baseline_plan_evidence": {
+          "captured_at": "2026-10-26T12:28:27.824072+00:00",
+          "immutable": true,
+          "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+          "runtime_label": null,
+          "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699",
+          "source_provider": "amap-web-service"
+        },
+        "captured_at": "2026-12-05T17:00:00+08:00",
+        "degraded": false,
+        "facts": [
+          {
+            "captured_at": "2026-12-05T17:00:00+08:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-85ef252bd901280d54c899bd",
+            "distance_m": 346,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": null,
+            "minutes": 5,
+            "mode": "WALK",
+            "origin_key": "real-place-2a2391b79f3642a7aff4173f",
+            "provider": "amap_walking",
+            "route_geometry": [],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": 346,
+            "walking_min": 5
+          },
+          {
+            "captured_at": "2026-12-05T17:00:00+08:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-9ecb93fe30d678917285fe79",
+            "distance_m": 1350,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": null,
+            "minutes": 18,
+            "mode": "WALK",
+            "origin_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+            "provider": "amap_walking",
+            "route_geometry": [],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": 1350,
+            "walking_min": 18
+          },
+          {
+            "captured_at": "2026-12-05T17:00:00+08:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+            "distance_m": 529,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": null,
+            "minutes": 8,
+            "mode": "WALK",
+            "origin_key": "real-place-85ef252bd901280d54c899bd",
+            "provider": "amap_walking",
+            "route_geometry": [],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": 529,
+            "walking_min": 8
+          }
+        ],
+        "incident_recovery_evidence": {
+          "baseline_snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699",
+          "captured_at": "2026-12-05T17:00:00+08:00",
+          "degraded": false,
+          "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+          "event_occurred_at": "2026-12-05T17:00:00+08:00",
+          "event_type": "SCHEDULE_DELAY",
+          "evidence_id": "incident:605f34ef-d199-4ec1-9abf-bf0d471ee4f5:694fa644-446d-40b5-a051-8d0db64f77d7",
+          "mobility_reused_from_baseline": false,
+          "mobility_snapshot": {
+            "captured_at": "2026-12-05T17:00:00+08:00",
+            "degraded": false,
+            "facts": [
+              {
+                "captured_at": "2026-12-05T17:00:00+08:00",
+                "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+                "degraded": false,
+                "destination_key": "real-place-85ef252bd901280d54c899bd",
+                "distance_m": 346,
+                "fact_quality": "LIVE_PROVIDER_CAPTURE",
+                "fallback_reason": null,
+                "geometry_provider": null,
+                "minutes": 5,
+                "mode": "WALK",
+                "origin_key": "real-place-2a2391b79f3642a7aff4173f",
+                "provider": "amap_walking",
+                "route_geometry": [],
+                "route_provenance": "LIVE_PROVIDER_CAPTURE",
+                "time_basis": "PROVIDER_CAPTURED_AT",
+                "walking_distance_m": 346,
+                "walking_min": 5
+              },
+              {
+                "captured_at": "2026-12-05T17:00:00+08:00",
+                "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+                "degraded": false,
+                "destination_key": "real-place-9ecb93fe30d678917285fe79",
+                "distance_m": 1350,
+                "fact_quality": "LIVE_PROVIDER_CAPTURE",
+                "fallback_reason": null,
+                "geometry_provider": null,
+                "minutes": 18,
+                "mode": "WALK",
+                "origin_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+                "provider": "amap_walking",
+                "route_geometry": [],
+                "route_provenance": "LIVE_PROVIDER_CAPTURE",
+                "time_basis": "PROVIDER_CAPTURED_AT",
+                "walking_distance_m": 1350,
+                "walking_min": 18
+              },
+              {
+                "captured_at": "2026-12-05T17:00:00+08:00",
+                "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+                "degraded": false,
+                "destination_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+                "distance_m": 529,
+                "fact_quality": "LIVE_PROVIDER_CAPTURE",
+                "fallback_reason": null,
+                "geometry_provider": null,
+                "minutes": 8,
+                "mode": "WALK",
+                "origin_key": "real-place-85ef252bd901280d54c899bd",
+                "provider": "amap_walking",
+                "route_geometry": [],
+                "route_provenance": "LIVE_PROVIDER_CAPTURE",
+                "time_basis": "PROVIDER_CAPTURED_AT",
+                "walking_distance_m": 529,
+                "walking_min": 8
+              }
+            ],
+            "operation_key": "replan:605f34ef-d199-4ec1-9abf-bf0d471ee4f5:incident",
+            "provider_capabilities": {},
+            "snapshot_id": "694fa644-446d-40b5-a051-8d0db64f77d7",
+            "source_provider": "amap_walking"
+          },
+          "provider_capabilities": {},
+          "provider_observation_id": "8d763fa7-dbb3-426a-8230-709fb4f354fb",
+          "route_provenance": "RUNTIME_CAPTURE",
+          "routing_conditions_assumption": "CAPTURED_AT_INCIDENT",
+          "source_provider": "amap_walking",
+          "weather": null
+        },
+        "integrity_hash": "38de4e0fb8c4177bed4fd7dd087d13c79aedff872302098adc39e3530c0e2c6b",
+        "normalizer_version": "citynexus-v14-recovery-evidence-1",
+        "operation_key": "replan:605f34ef-d199-4ec1-9abf-bf0d471ee4f5:incident",
+        "provider_capabilities": {},
+        "provider_evidence": {
+          "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+          "route_provenance": "RUNTIME_CAPTURE",
+          "selected_path": "RUNTIME_CAPTURE",
+          "selected_synthetic_fact_count": 0,
+          "synthetic_fact_count": 0
+        },
+        "selected_facts": [
+          {
+            "captured_at": "2026-12-05T17:00:00+08:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-85ef252bd901280d54c899bd",
+            "distance_m": 346,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": null,
+            "minutes": 5,
+            "mode": "WALK",
+            "origin_key": "real-place-2a2391b79f3642a7aff4173f",
+            "provider": "amap_walking",
+            "route_geometry": [],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": 346,
+            "walking_min": 5
+          },
+          {
+            "captured_at": "2026-12-05T17:00:00+08:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-9ecb93fe30d678917285fe79",
+            "distance_m": 1350,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": null,
+            "minutes": 18,
+            "mode": "WALK",
+            "origin_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+            "provider": "amap_walking",
+            "route_geometry": [],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": 1350,
+            "walking_min": 18
+          },
+          {
+            "captured_at": "2026-12-05T17:00:00+08:00",
+            "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+            "degraded": false,
+            "destination_key": "real-place-7169e1bb4fcfafa220d5d6b4",
+            "distance_m": 529,
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "fallback_reason": null,
+            "geometry_provider": null,
+            "minutes": 8,
+            "mode": "WALK",
+            "origin_key": "real-place-85ef252bd901280d54c899bd",
+            "provider": "amap_walking",
+            "route_geometry": [],
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "time_basis": "PROVIDER_CAPTURED_AT",
+            "walking_distance_m": 529,
+            "walking_min": 8
+          }
+        ],
+        "snapshot_id": "694fa644-446d-40b5-a051-8d0db64f77d7",
+        "source_provider": "amap_walking"
+      },
+      "activities": [
+        {
+          "id": "67454848-b16c-40e5-908d-864768d221d1",
+          "title": "拙政园",
+          "place_id": "real-place-2a2391b79f3642a7aff4173f",
+          "start_at": "2026-12-05T09:00:00+08:00",
+          "end_at": "2026-12-05T12:00:00+08:00",
+          "status": "COMPLETED"
+        },
+        {
+          "id": "b7d4170f-0b23-4dd1-8b43-99bab5009fea",
+          "title": "苏州博物馆（本馆）",
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "start_at": "2026-12-05T14:00:00+08:00",
+          "end_at": "2026-12-05T17:00:00+08:00",
+          "status": "COMPLETED"
+        },
+        {
+          "id": "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+          "title": "苏州园林博物馆",
+          "place_id": "real-place-7169e1bb4fcfafa220d5d6b4",
+          "start_at": "2026-12-06T09:00:00+08:00",
+          "end_at": "2026-12-06T12:00:00+08:00",
+          "status": "COMPLETED"
+        },
+        {
+          "id": "99ec38d5-797c-4e64-9814-10e01a657dec",
+          "title": "平江路",
+          "place_id": "real-place-9ecb93fe30d678917285fe79",
+          "start_at": "2026-12-06T14:00:00+08:00",
+          "end_at": "2026-12-06T17:00:00+08:00",
+          "status": "COMPLETED"
+        }
+      ]
+    }
+  ],
+  "new_routes": [
+    {
+      "id": "c0e8548e-b6de-43f9-9ae0-785b195ee2bb",
+      "from_place_id": "amap:B020001285",
+      "to_place_id": "amap:B02000IQUB",
+      "from_name": "苏州博物馆(本馆)",
+      "to_name": "苏州园林博物馆",
+      "provider": "amap",
+      "coordinate_system": "GCJ02",
+      "distance_m": 529,
+      "duration_seconds": 423,
+      "captured_at": "2026-10-26T12:28:27.697915+00:00",
+      "mode": "WALK",
+      "lines": [],
+      "walking_distance_m": null,
+      "source_url": "https://uri.amap.com/navigation?from=120.627856%2C31.322948%2C%E8%8B%8F%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86%28%E6%9C%AC%E9%A6%86%29&to=120.62933%2C31.323109%2C%E8%8B%8F%E5%B7%9E%E5%9B%AD%E6%9E%97%E5%8D%9A%E7%89%A9%E9%A6%86&mode=walk&coordinate=gaode&callnative=0",
+      "path": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            120.627873,
+            31.322938
+          ],
+          [
+            120.627856,
+            31.322908
+          ],
+          [
+            120.627886,
+            31.322721
+          ],
+          [
+            120.62793,
+            31.322587
+          ],
+          [
+            120.62793,
+            31.322582
+          ],
+          [
+            120.62803,
+            31.322604
+          ],
+          [
+            120.628841,
+            31.322778
+          ],
+          [
+            120.629184,
+            31.322852
+          ],
+          [
+            120.629284,
+            31.322886
+          ],
+          [
+            120.629878,
+            31.323056
+          ],
+          [
+            120.630477,
+            31.323216
+          ],
+          [
+            120.630447,
+            31.323351
+          ],
+          [
+            120.630417,
+            31.323485
+          ],
+          [
+            120.630382,
+            31.323542
+          ],
+          [
+            120.630326,
+            31.323611
+          ],
+          [
+            120.630191,
+            31.323763
+          ],
+          [
+            120.630143,
+            31.323793
+          ],
+          [
+            120.630004,
+            31.323802
+          ],
+          [
+            120.62997,
+            31.323789
+          ],
+          [
+            120.629883,
+            31.323785
+          ],
+          [
+            120.629683,
+            31.323785
+          ],
+          [
+            120.629583,
+            31.323811
+          ],
+          [
+            120.62954,
+            31.32385
+          ],
+          [
+            120.629536,
+            31.323845
+          ],
+          [
+            120.629184,
+            31.323676
+          ],
+          [
+            120.629132,
+            31.323646
+          ],
+          [
+            120.629128,
+            31.323641
+          ],
+          [
+            120.62918,
+            31.323433
+          ],
+          [
+            120.629223,
+            31.323273
+          ],
+          [
+            120.629227,
+            31.323268
+          ],
+          [
+            120.629253,
+            31.323103
+          ]
+        ],
+        "coordinate_system": "GCJ02"
+      },
+      "geometry_segments": [
+        {
+          "segment_index": 0,
+          "subsegment_index": 0,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[0].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.627873,
+              31.322938
+            ],
+            [
+              120.627856,
+              31.322908
+            ],
+            [
+              120.627886,
+              31.322721
+            ],
+            [
+              120.62793,
+              31.322587
+            ]
+          ]
+        },
+        {
+          "segment_index": 0,
+          "subsegment_index": 1,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[1].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.62793,
+              31.322582
+            ],
+            [
+              120.62803,
+              31.322604
+            ],
+            [
+              120.628841,
+              31.322778
+            ],
+            [
+              120.629184,
+              31.322852
+            ],
+            [
+              120.629284,
+              31.322886
+            ],
+            [
+              120.629878,
+              31.323056
+            ],
+            [
+              120.630477,
+              31.323216
+            ]
+          ]
+        },
+        {
+          "segment_index": 0,
+          "subsegment_index": 2,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[2].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.630477,
+              31.323216
+            ],
+            [
+              120.630447,
+              31.323351
+            ],
+            [
+              120.630417,
+              31.323485
+            ],
+            [
+              120.630382,
+              31.323542
+            ],
+            [
+              120.630326,
+              31.323611
+            ],
+            [
+              120.630191,
+              31.323763
+            ],
+            [
+              120.630143,
+              31.323793
+            ],
+            [
+              120.630004,
+              31.323802
+            ],
+            [
+              120.62997,
+              31.323789
+            ],
+            [
+              120.629883,
+              31.323785
+            ],
+            [
+              120.629683,
+              31.323785
+            ],
+            [
+              120.629583,
+              31.323811
+            ],
+            [
+              120.62954,
+              31.32385
+            ]
+          ]
+        },
+        {
+          "segment_index": 0,
+          "subsegment_index": 3,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[3].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.629536,
+              31.323845
+            ],
+            [
+              120.629184,
+              31.323676
+            ],
+            [
+              120.629132,
+              31.323646
+            ]
+          ]
+        },
+        {
+          "segment_index": 0,
+          "subsegment_index": 4,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[4].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.629128,
+              31.323641
+            ],
+            [
+              120.62918,
+              31.323433
+            ],
+            [
+              120.629223,
+              31.323273
+            ],
+            [
+              120.629227,
+              31.323268
+            ],
+            [
+              120.629253,
+              31.323103
+            ]
+          ]
+        }
+      ],
+      "geometry_status": "AVAILABLE",
+      "route_geometry": {
+        "type": "Feature",
+        "properties": {
+          "source_provider": "amap-web-service",
+          "provider_call_id": "c0e8548e-b6de-43f9-9ae0-785b195ee2bb",
+          "measurement_captured_at": "2026-10-26T12:28:27.697915+00:00",
+          "measurement_from_place_id": "amap:B020001285",
+          "measurement_to_place_id": "amap:B02000IQUB",
+          "source_crs": "GCJ02",
+          "domain_crs": "WGS84",
+          "conversion": "ITERATIVE_GCJ02_TO_WGS84",
+          "source_geometry_field": "path",
+          "geometry_status": "AVAILABLE",
+          "source_fields": [
+            "paths[0].steps[0].polyline",
+            "paths[0].steps[1].polyline",
+            "paths[0].steps[2].polyline",
+            "paths[0].steps[3].polyline",
+            "paths[0].steps[4].polyline"
+          ],
+          "provider_geometry_provenance": {
+            "source_provider": "amap-web-service",
+            "endpoint": "/v5/direction/walking",
+            "source_coordinate_system": "GCJ02",
+            "source_fields": [
+              "paths[0].steps[0].polyline",
+              "paths[0].steps[1].polyline",
+              "paths[0].steps[2].polyline",
+              "paths[0].steps[3].polyline",
+              "paths[0].steps[4].polyline"
+            ],
+            "junction_policy": "PROVIDER_SEGMENT_JUNCTION_WITHIN_1M",
+            "max_junction_gap_m": 0.6734,
+            "inserted_coordinate_count": 0,
+            "conversion": null
+          }
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              120.62369047099534,
+              31.325102043280324
+            ],
+            [
+              120.6236734902759,
+              31.325072071852123
+            ],
+            [
+              120.62370347580507,
+              31.324885108917805
+            ],
+            [
+              120.62374744307846,
+              31.324751112098035
+            ],
+            [
+              120.6237474434861,
+              31.324746113922675
+            ],
+            [
+              120.62384734218814,
+              31.324768001763204
+            ],
+            [
+              120.62465750585248,
+              31.324941081243278
+            ],
+            [
+              120.62500014402903,
+              31.325014685111753
+            ],
+            [
+              120.62510003663016,
+              31.325048564350567
+            ],
+            [
+              120.62569339297775,
+              31.325217851838367
+            ],
+            [
+              120.62629173053577,
+              31.32537712571312
+            ],
+            [
+              120.62626175238981,
+              31.32551211028136
+            ],
+            [
+              120.6262317742897,
+              31.325646095204416
+            ],
+            [
+              120.62619680789527,
+              31.325703113740275
+            ],
+            [
+              120.62614086337348,
+              31.325772151397295
+            ],
+            [
+              120.62600599777267,
+              31.325924246990088
+            ],
+            [
+              120.62595804734512,
+              31.32595428958215
+            ],
+            [
+              120.62581919673116,
+              31.325963440808692
+            ],
+            [
+              120.62578523439386,
+              31.325950483229224
+            ],
+            [
+              120.62569832816915,
+              31.32594658096227
+            ],
+            [
+              120.6254985418452,
+              31.325946801343335
+            ],
+            [
+              120.62539864596104,
+              31.325972901583793
+            ],
+            [
+              120.6253556883387,
+              31.32601193447196
+            ],
+            [
+              120.62535169298057,
+              31.326006940664644
+            ],
+            [
+              120.62500007684048,
+              31.32583838503751
+            ],
+            [
+              120.62494813353294,
+              31.3258084521666
+            ],
+            [
+              120.62494413810889,
+              31.32580345830598
+            ],
+            [
+              120.62499610083148,
+              31.32559547777903
+            ],
+            [
+              120.62503906894479,
+              31.325435489479958
+            ],
+            [
+              120.62504306516887,
+              31.325430486967385
+            ],
+            [
+              120.62506905141363,
+              31.325265518889562
+            ]
+          ]
+        }
+      },
+      "geometry_provenance": {
+        "source_provider": "amap-web-service",
+        "endpoint": "/v5/direction/walking",
+        "source_coordinate_system": "GCJ02",
+        "source_fields": [
+          "paths[0].steps[0].polyline",
+          "paths[0].steps[1].polyline",
+          "paths[0].steps[2].polyline",
+          "paths[0].steps[3].polyline",
+          "paths[0].steps[4].polyline"
+        ],
+        "junction_policy": "PROVIDER_SEGMENT_JUNCTION_WITHIN_1M",
+        "max_junction_gap_m": 0.6734,
+        "inserted_coordinate_count": 0,
+        "conversion": "ITERATIVE_GCJ02_TO_WGS84",
+        "provider_call_id": "c0e8548e-b6de-43f9-9ae0-785b195ee2bb",
+        "measurement_captured_at": "2026-10-26T12:28:27.697915+00:00",
+        "measurement_from_place_id": "amap:B020001285",
+        "measurement_to_place_id": "amap:B02000IQUB",
+        "source_crs": "GCJ02",
+        "domain_crs": "WGS84",
+        "source_geometry_field": "path",
+        "geometry_status": "AVAILABLE",
+        "provider_geometry_provenance": {
+          "source_provider": "amap-web-service",
+          "endpoint": "/v5/direction/walking",
+          "source_coordinate_system": "GCJ02",
+          "source_fields": [
+            "paths[0].steps[0].polyline",
+            "paths[0].steps[1].polyline",
+            "paths[0].steps[2].polyline",
+            "paths[0].steps[3].polyline",
+            "paths[0].steps[4].polyline"
+          ],
+          "junction_policy": "PROVIDER_SEGMENT_JUNCTION_WITHIN_1M",
+          "max_junction_gap_m": 0.6734,
+          "inserted_coordinate_count": 0,
+          "conversion": null
+        }
+      }
+    },
+    {
+      "id": "e6e3e648-872c-4728-a505-99cf25399df2",
+      "from_place_id": "amap:B02000IQUB",
+      "to_place_id": "amap:B0FFG6OTD5",
+      "from_name": "苏州园林博物馆",
+      "to_name": "平江路",
+      "provider": "amap",
+      "coordinate_system": "GCJ02",
+      "distance_m": 1350,
+      "duration_seconds": 1080,
+      "captured_at": "2026-10-26T12:28:27.823073+00:00",
+      "mode": "WALK",
+      "lines": [],
+      "walking_distance_m": null,
+      "source_url": "https://uri.amap.com/navigation?from=120.62933%2C31.323109%2C%E8%8B%8F%E5%B7%9E%E5%9B%AD%E6%9E%97%E5%8D%9A%E7%89%A9%E9%A6%86&to=120.634556%2C31.313969%2C%E5%B9%B3%E6%B1%9F%E8%B7%AF&mode=walk&coordinate=gaode&callnative=0",
+      "path": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            120.629253,
+            31.323099
+          ],
+          [
+            120.629275,
+            31.322982
+          ],
+          [
+            120.629284,
+            31.322891
+          ],
+          [
+            120.629284,
+            31.322613
+          ],
+          [
+            120.629371,
+            31.322313
+          ],
+          [
+            120.629462,
+            31.322023
+          ],
+          [
+            120.629536,
+            31.321762
+          ],
+          [
+            120.62964,
+            31.321389
+          ],
+          [
+            120.62974,
+            31.32102
+          ],
+          [
+            120.629809,
+            31.320799
+          ],
+          [
+            120.629844,
+            31.320673
+          ],
+          [
+            120.629878,
+            31.320534
+          ],
+          [
+            120.629952,
+            31.320278
+          ],
+          [
+            120.630048,
+            31.319944
+          ],
+          [
+            120.630161,
+            31.319544
+          ],
+          [
+            120.630195,
+            31.319388
+          ],
+          [
+            120.630421,
+            31.318611
+          ],
+          [
+            120.630421,
+            31.318607
+          ],
+          [
+            120.630833,
+            31.318724
+          ],
+          [
+            120.631137,
+            31.318785
+          ],
+          [
+            120.631341,
+            31.318776
+          ],
+          [
+            120.631467,
+            31.318802
+          ],
+          [
+            120.63181,
+            31.318872
+          ],
+          [
+            120.632409,
+            31.31895
+          ],
+          [
+            120.632578,
+            31.318928
+          ],
+          [
+            120.632578,
+            31.318924
+          ],
+          [
+            120.632643,
+            31.318537
+          ],
+          [
+            120.632726,
+            31.318103
+          ],
+          [
+            120.632808,
+            31.317817
+          ],
+          [
+            120.632947,
+            31.317248
+          ],
+          [
+            120.632964,
+            31.317179
+          ],
+          [
+            120.633021,
+            31.317083
+          ],
+          [
+            120.63309,
+            31.316628
+          ],
+          [
+            120.633151,
+            31.31651
+          ],
+          [
+            120.633164,
+            31.316458
+          ],
+          [
+            120.633194,
+            31.316285
+          ],
+          [
+            120.633312,
+            31.315933
+          ],
+          [
+            120.633333,
+            31.315833
+          ],
+          [
+            120.633377,
+            31.315603
+          ],
+          [
+            120.633503,
+            31.315022
+          ],
+          [
+            120.633707,
+            31.314284
+          ],
+          [
+            120.633707,
+            31.31428
+          ],
+          [
+            120.634418,
+            31.314397
+          ],
+          [
+            120.634514,
+            31.31398
+          ]
+        ],
+        "coordinate_system": "GCJ02"
+      },
+      "geometry_segments": [
+        {
+          "segment_index": 0,
+          "subsegment_index": 0,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[0].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.629253,
+              31.323099
+            ],
+            [
+              120.629275,
+              31.322982
+            ],
+            [
+              120.629284,
+              31.322891
+            ],
+            [
+              120.629284,
+              31.322613
+            ],
+            [
+              120.629371,
+              31.322313
+            ],
+            [
+              120.629462,
+              31.322023
+            ],
+            [
+              120.629536,
+              31.321762
+            ],
+            [
+              120.62964,
+              31.321389
+            ],
+            [
+              120.62974,
+              31.32102
+            ],
+            [
+              120.629809,
+              31.320799
+            ],
+            [
+              120.629844,
+              31.320673
+            ],
+            [
+              120.629878,
+              31.320534
+            ],
+            [
+              120.629952,
+              31.320278
+            ],
+            [
+              120.630048,
+              31.319944
+            ],
+            [
+              120.630161,
+              31.319544
+            ],
+            [
+              120.630195,
+              31.319388
+            ],
+            [
+              120.630421,
+              31.318611
+            ]
+          ]
+        },
+        {
+          "segment_index": 0,
+          "subsegment_index": 1,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[1].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.630421,
+              31.318607
+            ],
+            [
+              120.630833,
+              31.318724
+            ],
+            [
+              120.631137,
+              31.318785
+            ],
+            [
+              120.631341,
+              31.318776
+            ],
+            [
+              120.631467,
+              31.318802
+            ],
+            [
+              120.63181,
+              31.318872
+            ],
+            [
+              120.632409,
+              31.31895
+            ],
+            [
+              120.632578,
+              31.318928
+            ]
+          ]
+        },
+        {
+          "segment_index": 0,
+          "subsegment_index": 2,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[2].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.632578,
+              31.318924
+            ],
+            [
+              120.632643,
+              31.318537
+            ],
+            [
+              120.632726,
+              31.318103
+            ],
+            [
+              120.632808,
+              31.317817
+            ],
+            [
+              120.632947,
+              31.317248
+            ],
+            [
+              120.632964,
+              31.317179
+            ],
+            [
+              120.633021,
+              31.317083
+            ],
+            [
+              120.63309,
+              31.316628
+            ],
+            [
+              120.633151,
+              31.31651
+            ],
+            [
+              120.633164,
+              31.316458
+            ],
+            [
+              120.633194,
+              31.316285
+            ],
+            [
+              120.633312,
+              31.315933
+            ],
+            [
+              120.633333,
+              31.315833
+            ],
+            [
+              120.633377,
+              31.315603
+            ],
+            [
+              120.633503,
+              31.315022
+            ],
+            [
+              120.633707,
+              31.314284
+            ]
+          ]
+        },
+        {
+          "segment_index": 0,
+          "subsegment_index": 3,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[3].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.633707,
+              31.31428
+            ],
+            [
+              120.634418,
+              31.314397
+            ]
+          ]
+        },
+        {
+          "segment_index": 0,
+          "subsegment_index": 4,
+          "mode": "WALK",
+          "source_field": "paths[0].steps[4].polyline",
+          "coordinate_system": "GCJ02",
+          "coordinates": [
+            [
+              120.634418,
+              31.314397
+            ],
+            [
+              120.634514,
+              31.31398
+            ]
+          ]
+        }
+      ],
+      "geometry_status": "AVAILABLE",
+      "route_geometry": {
+        "type": "Feature",
+        "properties": {
+          "source_provider": "amap-web-service",
+          "provider_call_id": "e6e3e648-872c-4728-a505-99cf25399df2",
+          "measurement_captured_at": "2026-10-26T12:28:27.823073+00:00",
+          "measurement_from_place_id": "amap:B02000IQUB",
+          "measurement_to_place_id": "amap:B0FFG6OTD5",
+          "source_crs": "GCJ02",
+          "domain_crs": "WGS84",
+          "conversion": "ITERATIVE_GCJ02_TO_WGS84",
+          "source_geometry_field": "path",
+          "geometry_status": "AVAILABLE",
+          "source_fields": [
+            "paths[0].steps[0].polyline",
+            "paths[0].steps[1].polyline",
+            "paths[0].steps[2].polyline",
+            "paths[0].steps[3].polyline",
+            "paths[0].steps[4].polyline"
+          ],
+          "provider_geometry_provenance": {
+            "source_provider": "amap-web-service",
+            "endpoint": "/v5/direction/walking",
+            "source_coordinate_system": "GCJ02",
+            "source_fields": [
+              "paths[0].steps[0].polyline",
+              "paths[0].steps[1].polyline",
+              "paths[0].steps[2].polyline",
+              "paths[0].steps[3].polyline",
+              "paths[0].steps[4].polyline"
+            ],
+            "junction_policy": "PROVIDER_SEGMENT_JUNCTION_WITHIN_1M",
+            "max_junction_gap_m": 0.4448,
+            "inserted_coordinate_count": 0,
+            "conversion": null
+          }
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              120.6250690517398,
+              31.32526152034696
+            ],
+            [
+              120.62509103823535,
+              31.32514453912156
+            ],
+            [
+              120.62510003622246,
+              31.32505356252763
+            ],
+            [
+              120.62510005889025,
+              31.324775663925223
+            ],
+            [
+              120.62518699199819,
+              31.3244756788951
+            ],
+            [
+              120.62527791976395,
+              31.324185685692676
+            ],
+            [
+              120.6253518628309,
+              31.32392470029629
+            ],
+            [
+              120.62545578294927,
+              31.3235517229077
+            ],
+            [
+              120.625555706574,
+              31.32318274825055
+            ],
+            [
+              120.6256246509008,
+              31.322961753299566
+            ],
+            [
+              120.62565962372113,
+              31.322835760922626
+            ],
+            [
+              120.62569359862458,
+              31.32269677440154
+            ],
+            [
+              120.625767540049,
+              31.32244078657964
+            ],
+            [
+              120.62586346388733,
+              31.322106802913382
+            ],
+            [
+              120.62597637432656,
+              31.321706824433573
+            ],
+            [
+              120.626010350186,
+              31.32155084399548
+            ],
+            [
+              120.62623616735956,
+              31.320773877700123
+            ],
+            [
+              120.62623616768572,
+              31.32076987917752
+            ],
+            [
+              120.6266477041496,
+              31.320886370554
+            ],
+            [
+              120.62695135989735,
+              31.320947001077457
+            ],
+            [
+              120.62715513092549,
+              31.320937769896872
+            ],
+            [
+              120.62728098611572,
+              31.32096361478851
+            ],
+            [
+              120.6276235888433,
+              31.321033190256507
+            ],
+            [
+              120.62822188775638,
+              31.321110456205943
+            ],
+            [
+              120.62839069104835,
+              31.32108826328439
+            ],
+            [
+              120.62839069137459,
+              31.321084264760373
+            ],
+            [
+              120.62845564629988,
+              31.320697330083007
+            ],
+            [
+              120.6285385836013,
+              31.320263391283948
+            ],
+            [
+              120.62862050975633,
+              31.319977398871124
+            ],
+            [
+              120.62875939086291,
+              31.319408442677577
+            ],
+            [
+              120.62877637622354,
+              31.31933944779943
+            ],
+            [
+              120.62883331601957,
+              31.31924341471404
+            ],
+            [
+              120.62890227060716,
+              31.318788500351598
+            ],
+            [
+              120.6289632071276,
+              31.318670470436235
+            ],
+            [
+              120.62897619577099,
+              31.318618474029236
+            ],
+            [
+              120.62900617386158,
+              31.31844550202225
+            ],
+            [
+              120.62912406056624,
+              31.318093489826524
+            ],
+            [
+              120.62914504339511,
+              31.317993501536314
+            ],
+            [
+              120.62918900903362,
+              31.317763533693146
+            ],
+            [
+              120.62931490390011,
+              31.317182596783113
+            ],
+            [
+              120.62951871589183,
+              31.31644462283001
+            ],
+            [
+              120.62951871621806,
+              31.31644062432652
+            ],
+            [
+              120.63022882949713,
+              31.316556700077278
+            ],
+            [
+              120.63032474363524,
+              31.31613973606448
+            ]
+          ]
+        }
+      },
+      "geometry_provenance": {
+        "source_provider": "amap-web-service",
+        "endpoint": "/v5/direction/walking",
+        "source_coordinate_system": "GCJ02",
+        "source_fields": [
+          "paths[0].steps[0].polyline",
+          "paths[0].steps[1].polyline",
+          "paths[0].steps[2].polyline",
+          "paths[0].steps[3].polyline",
+          "paths[0].steps[4].polyline"
+        ],
+        "junction_policy": "PROVIDER_SEGMENT_JUNCTION_WITHIN_1M",
+        "max_junction_gap_m": 0.4448,
+        "inserted_coordinate_count": 0,
+        "conversion": "ITERATIVE_GCJ02_TO_WGS84",
+        "provider_call_id": "e6e3e648-872c-4728-a505-99cf25399df2",
+        "measurement_captured_at": "2026-10-26T12:28:27.823073+00:00",
+        "measurement_from_place_id": "amap:B02000IQUB",
+        "measurement_to_place_id": "amap:B0FFG6OTD5",
+        "source_crs": "GCJ02",
+        "domain_crs": "WGS84",
+        "source_geometry_field": "path",
+        "geometry_status": "AVAILABLE",
+        "provider_geometry_provenance": {
+          "source_provider": "amap-web-service",
+          "endpoint": "/v5/direction/walking",
+          "source_coordinate_system": "GCJ02",
+          "source_fields": [
+            "paths[0].steps[0].polyline",
+            "paths[0].steps[1].polyline",
+            "paths[0].steps[2].polyline",
+            "paths[0].steps[3].polyline",
+            "paths[0].steps[4].polyline"
+          ],
+          "junction_policy": "PROVIDER_SEGMENT_JUNCTION_WITHIN_1M",
+          "max_junction_gap_m": 0.4448,
+          "inserted_coordinate_count": 0,
+          "conversion": null
+        }
+      }
+    }
+  ],
+  "counts": {
+    "agent_runs": 40,
+    "provider_calls": 117
+  },
+  "operator_selection": {
+    "retained_candidates": [
+      "07a894f2-1e00-41bd-95da-70c6118b89ca",
+      "6ae4591b-8b5a-4d46-b30b-a8fb77d2f45a"
+    ],
+    "manual_selection_reason": "Replace opening-unknown Lion Grove with the same task already researched Suzhou Garden Museum; do not borrow facts between venues.",
+    "operator_policy_acknowledgement": "ISOLATED_DEMO_OPERATOR_ACCEPTS_UNKNOWN_PRICES_NOT_INCLUDED_IN_BUDGET; NO_PURCHASE_OR_BOOKING; NOT_HUMAN_DEVICE_VERIFICATION",
+    "before_counts": {
+      "agent_runs": 39,
+      "provider_calls": 115
+    },
+    "after_freeze_counts": {
+      "agent_runs": 39,
+      "provider_calls": 117
+    },
+    "after_activation_counts": {
+      "agent_runs": 39,
+      "provider_calls": 117
+    },
+    "prepare": {
+      "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+      "task_id": "ad695293-72e5-4482-9659-0784b98e829f",
+      "draft_revision": 3,
+      "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+      "status": "CANDIDATE",
+      "selected": false,
+      "activated": false,
+      "slots_count": 4,
+      "gaps": [
+        {
+          "sequence_no": 1,
+          "title": "拙政园",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-2a2391b79f3642a7aff4173f",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 2,
+          "title": "苏州博物馆（本馆）",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 2,
+          "title": "苏州博物馆（本馆）",
+          "kind": "TRANSFER_ROUTE",
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "status": "UNKNOWN",
+          "resolution": "ASK_AGENT_TO_MEASURE_HOP",
+          "detail": null
+        },
+        {
+          "sequence_no": 3,
+          "title": "苏州园林博物馆",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-7169e1bb4fcfafa220d5d6b4",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 3,
+          "title": "苏州园林博物馆",
+          "kind": "TRANSFER_ROUTE",
+          "place_id": "real-place-7169e1bb4fcfafa220d5d6b4",
+          "status": "UNKNOWN",
+          "resolution": "ASK_AGENT_TO_MEASURE_HOP",
+          "detail": null
+        },
+        {
+          "sequence_no": 4,
+          "title": "平江路",
+          "kind": "ADMISSION_PRICE",
+          "place_id": "real-place-9ecb93fe30d678917285fe79",
+          "status": "UNKNOWN",
+          "resolution": "PRICE_HELD_BY_TRAVELLER",
+          "detail": null
+        },
+        {
+          "sequence_no": 4,
+          "title": "平江路",
+          "kind": "TRANSFER_ROUTE",
+          "place_id": "real-place-9ecb93fe30d678917285fe79",
+          "status": "UNKNOWN",
+          "resolution": "ASK_AGENT_TO_MEASURE_HOP",
+          "detail": null
+        }
+      ],
+      "mobility_frozen": false,
+      "unrouted_count": 0,
+      "known_subtotal_minor": 0,
+      "opening_checks": [
+        {
+          "sequence_no": 1,
+          "title": "拙政园",
+          "verdict": "OPEN_ON_DATE",
+          "reason_code": null,
+          "window": [
+            450,
+            1020
+          ],
+          "defers_to_notice": true,
+          "source_text": "1月至2月,11月至12月 周一至周日 07:30-17:00 最晚进入16:30；3月至10月 周一至周日 07:30-17:30 最晚进入17:00；周二-周日开放夜游:18:30-21:00（法定节假日21:30），日场和夜游之间将清场。暮游体验以项目购买入场时间为准。"
+        },
+        {
+          "sequence_no": 2,
+          "title": "苏州博物馆（本馆）",
+          "verdict": "OPEN_ON_DATE",
+          "reason_code": null,
+          "window": [
+            540,
+            1020
+          ],
+          "defers_to_notice": false,
+          "source_text": "09/25-09/27 10:00–20:00开放 最晚进入19:00；09/30-10/06 10:00–20:00开放 最晚进入19:00；01/01-09/24 周二–周日 09:00–17:00开放 最晚进入16:00；09/28-09/29 周二–周日 09:00–17:00开放 最晚进入16:00；10/07-12/31 周二–周日 09:00–17:00开放 最晚进入16:00；01"
+        },
+        {
+          "sequence_no": 3,
+          "title": "苏州园林博物馆",
+          "verdict": "OPEN_ON_DATE",
+          "reason_code": null,
+          "window": [
+            540,
+            990
+          ],
+          "defers_to_notice": false,
+          "source_text": "周二至周日:09:00-16:30,每周一闭馆(如遇国家法定节假日顺延)"
+        },
+        {
+          "sequence_no": 4,
+          "title": "平江路",
+          "verdict": "OPEN_ON_DATE",
+          "reason_code": null,
+          "window": [
+            0,
+            1440
+          ],
+          "defers_to_notice": false,
+          "source_text": "周一至周日 00:00-24:00；游船每天两班，上午10:00和下午14:00各一班（开船前半小时停止换票）"
+        }
+      ],
+      "idempotency_replay": false
+    },
+    "freeze": {
+      "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+      "task_id": "ad695293-72e5-4482-9659-0784b98e829f",
+      "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+      "edges": [
+        {
+          "from_place_id": "real-place-2a2391b79f3642a7aff4173f",
+          "to_place_id": "real-place-85ef252bd901280d54c899bd",
+          "from_name": "拙政园",
+          "to_name": "苏州博物馆(本馆)",
+          "status": "REUSED_PROVIDER_RECEIPT",
+          "minutes": 5,
+          "distance_m": 346,
+          "spans_night": false,
+          "mode": "WALK",
+          "lines": [],
+          "replaced_walk_m": null,
+          "walking_cap_m": null,
+          "over_cap_m": null,
+          "provider": "amap",
+          "source_url": "https://uri.amap.com/navigation?from=120.629211%2C31.324194%2C%E6%8B%99%E6%94%BF%E5%9B%AD&to=120.627856%2C31.322948%2C%E8%8B%8F%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86%28%E6%9C%AC%E9%A6%86%29&mode=walk&coordinate=gaode&callnative=0",
+          "captured_at": "2026-10-26T11:49:43.787446+00:00",
+          "reason_code": null
+        },
+        {
+          "from_place_id": "real-place-85ef252bd901280d54c899bd",
+          "to_place_id": "real-place-7169e1bb4fcfafa220d5d6b4",
+          "from_name": "苏州博物馆(本馆)",
+          "to_name": "苏州园林博物馆",
+          "status": "MEASURED_NOW",
+          "minutes": 7,
+          "distance_m": 529,
+          "spans_night": true,
+          "mode": "WALK",
+          "lines": [],
+          "replaced_walk_m": null,
+          "walking_cap_m": null,
+          "over_cap_m": null,
+          "provider": "amap",
+          "source_url": "https://uri.amap.com/navigation?from=120.627856%2C31.322948%2C%E8%8B%8F%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86%28%E6%9C%AC%E9%A6%86%29&to=120.62933%2C31.323109%2C%E8%8B%8F%E5%B7%9E%E5%9B%AD%E6%9E%97%E5%8D%9A%E7%89%A9%E9%A6%86&mode=walk&coordinate=gaode&callnative=0",
+          "captured_at": "2026-10-26T12:28:27.697915+00:00",
+          "reason_code": null
+        },
+        {
+          "from_place_id": "real-place-7169e1bb4fcfafa220d5d6b4",
+          "to_place_id": "real-place-9ecb93fe30d678917285fe79",
+          "from_name": "苏州园林博物馆",
+          "to_name": "平江路",
+          "status": "MEASURED_NOW",
+          "minutes": 18,
+          "distance_m": 1350,
+          "spans_night": false,
+          "mode": "WALK",
+          "lines": [],
+          "replaced_walk_m": null,
+          "walking_cap_m": null,
+          "over_cap_m": null,
+          "provider": "amap",
+          "source_url": "https://uri.amap.com/navigation?from=120.62933%2C31.323109%2C%E8%8B%8F%E5%B7%9E%E5%9B%AD%E6%9E%97%E5%8D%9A%E7%89%A9%E9%A6%86&to=120.634556%2C31.313969%2C%E5%B9%B3%E6%B1%9F%E8%B7%AF&mode=walk&coordinate=gaode&callnative=0",
+          "captured_at": "2026-10-26T12:28:27.823073+00:00",
+          "reason_code": null
+        }
+      ],
+      "verified": 3,
+      "total": 3,
+      "overnight": 1,
+      "transit": 0,
+      "replaced_long_walks": 0,
+      "over_cap_walks": 0,
+      "walking_cap_m": null,
+      "frozen": true,
+      "mobility_snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699",
+      "reason_code": null,
+      "idempotency_replay": false
+    },
+    "unknown_price_acceptance": {
+      "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+      "task_id": "ad695293-72e5-4482-9659-0784b98e829f",
+      "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+      "accepted": true,
+      "unknown_place_ids": [
+        "real-place-2a2391b79f3642a7aff4173f",
+        "real-place-85ef252bd901280d54c899bd",
+        "real-place-7169e1bb4fcfafa220d5d6b4",
+        "real-place-9ecb93fe30d678917285fe79"
+      ],
+      "unknown_count": 4,
+      "known_subtotal_minor": 0,
+      "currency": "CNY",
+      "unknown_cost_included": false,
+      "authority_state": "COST_UNKNOWN_ACCEPTED",
+      "mobility_snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699",
+      "selectable_after": true,
+      "blocker_after": null,
+      "confirmed_at": "2026-10-26T12:28:43.133778+00:00",
+      "idempotency_replay": false
+    }
+  },
+  "native_http_stages": [
+    {
+      "stage": "draft",
+      "status": 200
+    },
+    {
+      "stage": "prepare",
+      "status": 201
+    },
+    {
+      "stage": "freeze",
+      "status": 200
+    },
+    {
+      "stage": "accept_unknown_price",
+      "status": 200
+    },
+    {
+      "stage": "departure_commit",
+      "status": 200
+    },
+    {
+      "stage": "journey_start",
+      "status": 200
+    },
+    {
+      "stage": "simulation_start",
+      "status": 201
+    },
+    {
+      "stage": "scene",
+      "status": 200
+    },
+    {
+      "stage": "guardian_once",
+      "status": 200
+    },
+    {
+      "stage": "accept",
+      "status": 200
+    },
+    {
+      "stage": "resume",
+      "status": 200
+    },
+    {
+      "stage": "finish",
+      "status": 200
+    }
+  ],
+  "simulation_stages": {
+    "start-run": {
+      "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+      "sequence": 0,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-05T08:00:00+08:00",
+      "state": {
+        "completed_activity_ids": [],
+        "location": null,
+        "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+        "provider_snapshot_refs": [
+          {
+            "captured_at": "2026-10-26T12:28:27.824072+00:00",
+            "fact_qualities": [
+              "LIVE_PROVIDER_CAPTURE"
+            ],
+            "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+            "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
+            "sha256": "74ac189cce926f8ab3f41002f5b70b30547af4e49df08b2826a3cc4317a28a93",
+            "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699"
+          }
+        ],
+        "suggested_scene": "SCHEDULE_DELAY"
+      }
+    },
+    "scene": {
+      "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+      "sequence": 9,
+      "status": "PAUSED_FOR_GUARDIAN",
+      "virtual_now": "2026-12-05T17:00:00+08:00",
+      "state": {
+        "completed_activity_ids": [
+          "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+          "0632c894-f07c-47b7-a8fa-d6f1d93eab12"
+        ],
+        "location": {
+          "captured_virtual_at": "2026-12-05T14:00:00+08:00",
+          "classification": "SCENARIO_SIMULATED_LOCATION",
+          "coordinate_system": "WGS84",
+          "latitude": 31.325112057270353,
+          "longitude": 120.62367348701481,
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "recorded_at": "2026-10-26T12:33:40.247369+00:00",
+          "source": "SIMULATED_GPS"
+        },
+        "pending_event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+        "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+        "provider_observation_ids": [
+          "d03b1f45-0034-4561-874e-0e7e3f3159e2"
+        ],
+        "provider_snapshot_refs": [
+          {
+            "captured_at": "2026-10-26T12:28:27.824072+00:00",
+            "fact_qualities": [
+              "LIVE_PROVIDER_CAPTURE"
+            ],
+            "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+            "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
+            "sha256": "74ac189cce926f8ab3f41002f5b70b30547af4e49df08b2826a3cc4317a28a93",
+            "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699"
+          }
+        ],
+        "scene_ids": [
+          "suzhou-pingjiang-delay-15-20261026"
+        ],
+        "suggested_scene": "SCHEDULE_DELAY"
+      }
+    },
+    "guardian": {
+      "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+      "sequence": 10,
+      "status": "PAUSED_FOR_ACCEPTANCE",
+      "virtual_now": "2026-12-05T17:00:00+08:00",
+      "state": {
+        "completed_activity_ids": [
+          "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+          "0632c894-f07c-47b7-a8fa-d6f1d93eab12"
+        ],
+        "guardian_attempt_started_at": "2026-10-26T12:34:13.145435+00:00",
+        "location": {
+          "captured_virtual_at": "2026-12-05T14:00:00+08:00",
+          "classification": "SCENARIO_SIMULATED_LOCATION",
+          "coordinate_system": "WGS84",
+          "latitude": 31.325112057270353,
+          "longitude": 120.62367348701481,
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "recorded_at": "2026-10-26T12:33:40.247369+00:00",
+          "source": "SIMULATED_GPS"
+        },
+        "pending_event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+        "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+        "provider_observation_ids": [
+          "d03b1f45-0034-4561-874e-0e7e3f3159e2"
+        ],
+        "provider_snapshot_refs": [
+          {
+            "captured_at": "2026-10-26T12:28:27.824072+00:00",
+            "fact_qualities": [
+              "LIVE_PROVIDER_CAPTURE"
+            ],
+            "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+            "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
+            "sha256": "74ac189cce926f8ab3f41002f5b70b30547af4e49df08b2826a3cc4317a28a93",
+            "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699"
+          }
+        ],
+        "scene_ids": [
+          "suzhou-pingjiang-delay-15-20261026"
+        ],
+        "suggested_scene": "SCHEDULE_DELAY"
+      }
+    },
+    "resume": {
+      "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+      "sequence": 11,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-05T17:00:00+08:00",
+      "state": {
+        "completed_activity_ids": [
+          "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+          "0632c894-f07c-47b7-a8fa-d6f1d93eab12"
+        ],
+        "guardian_attempt_started_at": "2026-10-26T12:34:13.145435+00:00",
+        "location": {
+          "captured_virtual_at": "2026-12-05T14:00:00+08:00",
+          "classification": "SCENARIO_SIMULATED_LOCATION",
+          "coordinate_system": "WGS84",
+          "latitude": 31.325112057270353,
+          "longitude": 120.62367348701481,
+          "place_id": "real-place-85ef252bd901280d54c899bd",
+          "recorded_at": "2026-10-26T12:33:40.247369+00:00",
+          "source": "SIMULATED_GPS"
+        },
+        "pending_event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+        "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+        "provider_observation_ids": [
+          "d03b1f45-0034-4561-874e-0e7e3f3159e2"
+        ],
+        "provider_snapshot_refs": [
+          {
+            "captured_at": "2026-10-26T12:28:27.824072+00:00",
+            "fact_qualities": [
+              "LIVE_PROVIDER_CAPTURE"
+            ],
+            "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+            "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
+            "sha256": "74ac189cce926f8ab3f41002f5b70b30547af4e49df08b2826a3cc4317a28a93",
+            "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699"
+          }
+        ],
+        "scene_ids": [
+          "suzhou-pingjiang-delay-15-20261026"
+        ],
+        "suggested_scene": "SCHEDULE_DELAY"
+      }
+    },
+    "finish": {
+      "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+      "sequence": 12,
+      "status": "SIMULATED_COMPLETED",
+      "virtual_now": "2026-12-06T17:00:00+08:00",
+      "state": {
+        "completed_activity_ids": [
+          "7bc7c208-4d3e-4bb5-ac33-f07dc0e431d1",
+          "0632c894-f07c-47b7-a8fa-d6f1d93eab12",
+          "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+          "99ec38d5-797c-4e64-9814-10e01a657dec"
+        ],
+        "guardian_attempt_started_at": "2026-10-26T12:34:13.145435+00:00",
+        "location": {
+          "captured_virtual_at": "2026-12-06T14:00:00+08:00",
+          "classification": "SCENARIO_SIMULATED_LOCATION",
+          "coordinate_system": "WGS84",
+          "latitude": 31.316128687566195,
+          "longitude": 120.63036669198068,
+          "place_id": "real-place-9ecb93fe30d678917285fe79",
+          "recorded_at": "2026-10-26T12:36:58.200410+00:00",
+          "source": "SIMULATED_GPS"
+        },
+        "pending_event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+        "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+        "provider_observation_ids": [
+          "d03b1f45-0034-4561-874e-0e7e3f3159e2"
+        ],
+        "provider_snapshot_refs": [
+          {
+            "captured_at": "2026-10-26T12:28:27.824072+00:00",
+            "fact_qualities": [
+              "LIVE_PROVIDER_CAPTURE"
+            ],
+            "plan_version_id": "44326a11-7ca7-454a-88c1-19426a40b102",
+            "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
+            "sha256": "74ac189cce926f8ab3f41002f5b70b30547af4e49df08b2826a3cc4317a28a93",
+            "snapshot_id": "13775171-1d7e-45b2-b540-fb69e16b0699"
+          },
+          {
+            "captured_at": "2026-12-05T17:00:00+08:00",
+            "fact_qualities": [
+              "LIVE_PROVIDER_CAPTURE"
+            ],
+            "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+            "provenance": "CAPTURED_PROVIDER_SNAPSHOT",
+            "sha256": "1622cb5ba6a0f6b6e6b84f5a814c0c247ec0e2dd3c5cc7fecdd2c0cc2b0cbf81",
+            "snapshot_id": "694fa644-446d-40b5-a051-8d0db64f77d7"
+          }
+        ],
+        "scene_ids": [
+          "suzhou-pingjiang-delay-15-20261026"
+        ],
+        "suggested_scene": "SCHEDULE_DELAY"
+      }
+    }
+  },
+  "model_counts": {
+    "before_guardian_counts": {
+      "agent_runs": 39,
+      "provider_calls": 117
+    },
+    "after_guardian_counts": {
+      "agent_runs": 40,
+      "provider_calls": 117
+    },
+    "final_counts": {
+      "agent_runs": 40,
+      "provider_calls": 117
+    }
+  },
+  "restart_readback": {
+    "before": {
+      "status": 200,
+      "cache_control": "private, no-store",
+      "progress": {
+        "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+        "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+        "sequence": 12,
+        "status": "SIMULATED_COMPLETED",
+        "virtual_now": "2026-12-06T17:00:00+08:00",
+        "current_active_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+        "current_activity_id": null,
+        "clock_policy": {
+          "business": "PERSISTED_VIRTUAL",
+          "security_and_audit": "WALL"
+        },
+        "readiness": {
+          "ai_enabled": true,
+          "model_credentials_configured": true,
+          "standing_mission_id": "cfc5736d-b0e8-4c62-acf4-47275f5e0f54",
+          "pending_event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+          "missing": [
+            "OPEN_SCENE_EVENT_REQUIRED",
+            "RUN_NOT_AWAITING_GUARDIAN"
+          ],
+          "model_consent_required": true,
+          "network_checked": false
+        },
+        "guardian_outcome": {
+          "code": "PROPOSAL_ACCEPTED"
+        },
+        "activity_coverage": {
+          "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+          "target_places_per_day": 2,
+          "target_kind": "CLASSROOM_DISPLAY_ONLY",
+          "days": [
+            {
+              "date": "2026-12-05",
+              "distinct_place_count": 2,
+              "distinct_place_ids": [
+                "real-place-2a2391b79f3642a7aff4173f",
+                "real-place-85ef252bd901280d54c899bd"
+              ],
+              "named_activity_ids": [
+                "67454848-b16c-40e5-908d-864768d221d1",
+                "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+              ],
+              "run_completed_place_count": 0,
+              "run_completed_activity_ids": [],
+              "inherited_completed_place_count": 2,
+              "inherited_completed_activity_ids": [
+                "67454848-b16c-40e5-908d-864768d221d1",
+                "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+              ],
+              "placeholder_count": 0,
+              "placeholder_activity_ids": [],
+              "missing_for_target": 0
+            },
+            {
+              "date": "2026-12-06",
+              "distinct_place_count": 2,
+              "distinct_place_ids": [
+                "real-place-7169e1bb4fcfafa220d5d6b4",
+                "real-place-9ecb93fe30d678917285fe79"
+              ],
+              "named_activity_ids": [
+                "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+                "99ec38d5-797c-4e64-9814-10e01a657dec"
+              ],
+              "run_completed_place_count": 2,
+              "run_completed_activity_ids": [
+                "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+                "99ec38d5-797c-4e64-9814-10e01a657dec"
+              ],
+              "inherited_completed_place_count": 0,
+              "inherited_completed_activity_ids": [],
+              "placeholder_count": 0,
+              "placeholder_activity_ids": [],
+              "missing_for_target": 0
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "event_type": "SCHEDULE_DELAY",
+            "status": "RESOLVED",
+            "provenance": "SIMULATED",
+            "occurred_at": "2026-12-05T17:00:00+08:00"
+          }
+        ],
+        "guardian_runs": [
+          {
+            "id": "fdd867ed-97be-4b2a-89df-a0651b9d1385",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "status": "PARTIAL",
+            "action_status": "PROPOSAL_PRESENTED",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "proposal_id": "7626e38a-1b70-4754-bd6e-deb2f197f93c",
+            "created_at": "2026-10-26T12:34:13.156589+00:00",
+            "completed_at": "2026-10-26T12:35:53.792820+00:00"
+          }
+        ],
+        "agent_runs": [
+          {
+            "id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "status": "PARTIAL",
+            "created_at": "2026-10-26T12:34:13.175591+00:00",
+            "completed_at": "2026-10-26T12:35:53.792820+00:00"
+          }
+        ],
+        "steps": [
+          {
+            "id": "ffb143fc-c7b3-4428-a9ee-6b9300ac4afb",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 1,
+            "stage": "TOOL_CALL",
+            "tool_name": "inspect_journey",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:29.778284+00:00",
+            "completed_at": "2026-10-26T12:34:29.778284+00:00"
+          },
+          {
+            "id": "5d7bbfcd-5922-4a16-9041-231061856d49",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 2,
+            "stage": "TOOL_CALL",
+            "tool_name": "inspect_twin",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:32.250245+00:00",
+            "completed_at": "2026-10-26T12:34:32.250245+00:00"
+          },
+          {
+            "id": "2d19759c-9682-4699-b83b-67e0bb6a33fb",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 3,
+            "stage": "TOOL_CALL",
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:43.979756+00:00",
+            "completed_at": "2026-10-26T12:34:43.979756+00:00"
+          },
+          {
+            "id": "492a8961-c0e5-4503-8de1-4ee0acfa5940",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 4,
+            "stage": "TOOL_CALL",
+            "tool_name": "list_replans",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:47.767041+00:00",
+            "completed_at": "2026-10-26T12:34:47.767041+00:00"
+          },
+          {
+            "id": "dfa4af17-6d1a-424f-9670-db79ddd84c0c",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 5,
+            "stage": "TOOL_CALL",
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:01.543388+00:00",
+            "completed_at": "2026-10-26T12:35:01.543388+00:00"
+          },
+          {
+            "id": "cda84c62-7ac6-488b-a7d5-96c85699531b",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 6,
+            "stage": "TOOL_CALL",
+            "tool_name": "list_replans",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:05.295186+00:00",
+            "completed_at": "2026-10-26T12:35:05.295186+00:00"
+          },
+          {
+            "id": "b2c9830a-cd15-4e31-b7ad-e24ef3afbf98",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 7,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "TOOL_ERROR",
+            "failure_classification": "TOOL_CALL_FAILED",
+            "error_code": "TOOL_CALL_FAILED",
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:21.328841+00:00",
+            "completed_at": "2026-10-26T12:35:21.328841+00:00"
+          },
+          {
+            "id": "0835c692-f2bc-4084-b9df-532ecfe1b306",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 8,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:28.864366+00:00",
+            "completed_at": "2026-10-26T12:35:28.864366+00:00"
+          },
+          {
+            "id": "c626fc63-1cbc-4db9-82e6-ed9a070abc2a",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 9,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "TOOL_ERROR",
+            "failure_classification": "TOOL_CALL_FAILED",
+            "error_code": "TOOL_CALL_FAILED",
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:53.786350+00:00",
+            "completed_at": "2026-10-26T12:35:53.786350+00:00"
+          }
+        ],
+        "proposals": [
+          {
+            "id": "7626e38a-1b70-4754-bd6e-deb2f197f93c",
+            "status": "ACCEPTED",
+            "proposed_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+            "acceptance_audit_ids": [
+              "6ff47d34-3b67-4f49-b464-b691539b5599"
+            ]
+          }
+        ],
+        "recovery": {
+          "available": false,
+          "reason_code": null,
+          "requires_signed_post": true,
+          "operation": "recover"
+        }
+      },
+      "counts": {
+        "agent_runs": 40,
+        "provider_calls": 117
+      }
+    },
+    "after": {
+      "status": 200,
+      "cache_control": "private, no-store",
+      "progress": {
+        "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+        "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+        "sequence": 12,
+        "status": "SIMULATED_COMPLETED",
+        "virtual_now": "2026-12-06T17:00:00+08:00",
+        "current_active_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+        "current_activity_id": null,
+        "clock_policy": {
+          "business": "PERSISTED_VIRTUAL",
+          "security_and_audit": "WALL"
+        },
+        "readiness": {
+          "ai_enabled": true,
+          "model_credentials_configured": true,
+          "standing_mission_id": "cfc5736d-b0e8-4c62-acf4-47275f5e0f54",
+          "pending_event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+          "missing": [
+            "OPEN_SCENE_EVENT_REQUIRED",
+            "RUN_NOT_AWAITING_GUARDIAN"
+          ],
+          "model_consent_required": true,
+          "network_checked": false
+        },
+        "guardian_outcome": {
+          "code": "PROPOSAL_ACCEPTED"
+        },
+        "activity_coverage": {
+          "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+          "target_places_per_day": 2,
+          "target_kind": "CLASSROOM_DISPLAY_ONLY",
+          "days": [
+            {
+              "date": "2026-12-05",
+              "distinct_place_count": 2,
+              "distinct_place_ids": [
+                "real-place-2a2391b79f3642a7aff4173f",
+                "real-place-85ef252bd901280d54c899bd"
+              ],
+              "named_activity_ids": [
+                "67454848-b16c-40e5-908d-864768d221d1",
+                "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+              ],
+              "run_completed_place_count": 0,
+              "run_completed_activity_ids": [],
+              "inherited_completed_place_count": 2,
+              "inherited_completed_activity_ids": [
+                "67454848-b16c-40e5-908d-864768d221d1",
+                "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+              ],
+              "placeholder_count": 0,
+              "placeholder_activity_ids": [],
+              "missing_for_target": 0
+            },
+            {
+              "date": "2026-12-06",
+              "distinct_place_count": 2,
+              "distinct_place_ids": [
+                "real-place-7169e1bb4fcfafa220d5d6b4",
+                "real-place-9ecb93fe30d678917285fe79"
+              ],
+              "named_activity_ids": [
+                "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+                "99ec38d5-797c-4e64-9814-10e01a657dec"
+              ],
+              "run_completed_place_count": 2,
+              "run_completed_activity_ids": [
+                "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+                "99ec38d5-797c-4e64-9814-10e01a657dec"
+              ],
+              "inherited_completed_place_count": 0,
+              "inherited_completed_activity_ids": [],
+              "placeholder_count": 0,
+              "placeholder_activity_ids": [],
+              "missing_for_target": 0
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "event_type": "SCHEDULE_DELAY",
+            "status": "RESOLVED",
+            "provenance": "SIMULATED",
+            "occurred_at": "2026-12-05T17:00:00+08:00"
+          }
+        ],
+        "guardian_runs": [
+          {
+            "id": "fdd867ed-97be-4b2a-89df-a0651b9d1385",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "status": "PARTIAL",
+            "action_status": "PROPOSAL_PRESENTED",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "proposal_id": "7626e38a-1b70-4754-bd6e-deb2f197f93c",
+            "created_at": "2026-10-26T12:34:13.156589+00:00",
+            "completed_at": "2026-10-26T12:35:53.792820+00:00"
+          }
+        ],
+        "agent_runs": [
+          {
+            "id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "status": "PARTIAL",
+            "created_at": "2026-10-26T12:34:13.175591+00:00",
+            "completed_at": "2026-10-26T12:35:53.792820+00:00"
+          }
+        ],
+        "steps": [
+          {
+            "id": "ffb143fc-c7b3-4428-a9ee-6b9300ac4afb",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 1,
+            "stage": "TOOL_CALL",
+            "tool_name": "inspect_journey",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:29.778284+00:00",
+            "completed_at": "2026-10-26T12:34:29.778284+00:00"
+          },
+          {
+            "id": "5d7bbfcd-5922-4a16-9041-231061856d49",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 2,
+            "stage": "TOOL_CALL",
+            "tool_name": "inspect_twin",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:32.250245+00:00",
+            "completed_at": "2026-10-26T12:34:32.250245+00:00"
+          },
+          {
+            "id": "2d19759c-9682-4699-b83b-67e0bb6a33fb",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 3,
+            "stage": "TOOL_CALL",
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:43.979756+00:00",
+            "completed_at": "2026-10-26T12:34:43.979756+00:00"
+          },
+          {
+            "id": "492a8961-c0e5-4503-8de1-4ee0acfa5940",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 4,
+            "stage": "TOOL_CALL",
+            "tool_name": "list_replans",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:47.767041+00:00",
+            "completed_at": "2026-10-26T12:34:47.767041+00:00"
+          },
+          {
+            "id": "dfa4af17-6d1a-424f-9670-db79ddd84c0c",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 5,
+            "stage": "TOOL_CALL",
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:01.543388+00:00",
+            "completed_at": "2026-10-26T12:35:01.543388+00:00"
+          },
+          {
+            "id": "cda84c62-7ac6-488b-a7d5-96c85699531b",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 6,
+            "stage": "TOOL_CALL",
+            "tool_name": "list_replans",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:05.295186+00:00",
+            "completed_at": "2026-10-26T12:35:05.295186+00:00"
+          },
+          {
+            "id": "b2c9830a-cd15-4e31-b7ad-e24ef3afbf98",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 7,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "TOOL_ERROR",
+            "failure_classification": "TOOL_CALL_FAILED",
+            "error_code": "TOOL_CALL_FAILED",
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:21.328841+00:00",
+            "completed_at": "2026-10-26T12:35:21.328841+00:00"
+          },
+          {
+            "id": "0835c692-f2bc-4084-b9df-532ecfe1b306",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 8,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:28.864366+00:00",
+            "completed_at": "2026-10-26T12:35:28.864366+00:00"
+          },
+          {
+            "id": "c626fc63-1cbc-4db9-82e6-ed9a070abc2a",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 9,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "TOOL_ERROR",
+            "failure_classification": "TOOL_CALL_FAILED",
+            "error_code": "TOOL_CALL_FAILED",
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:53.786350+00:00",
+            "completed_at": "2026-10-26T12:35:53.786350+00:00"
+          }
+        ],
+        "proposals": [
+          {
+            "id": "7626e38a-1b70-4754-bd6e-deb2f197f93c",
+            "status": "ACCEPTED",
+            "proposed_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+            "acceptance_audit_ids": [
+              "6ff47d34-3b67-4f49-b464-b691539b5599"
+            ]
+          }
+        ],
+        "recovery": {
+          "available": false,
+          "reason_code": null,
+          "requires_signed_post": true,
+          "operation": "recover"
+        }
+      },
+      "counts": {
+        "agent_runs": 40,
+        "provider_calls": 117
+      }
+    },
+    "same_counts": true,
+    "same_terminal_state": true
+  },
+  "unresolved_coverage_projection": {
+    "status": "CONFIRMED_NOT_FIXED",
+    "description": "Accepted-plan Day1 cloned terminal activities have this run execution truth, but coverage checks only original completed IDs and labels them inherited. Raw same-run history proves two distinct places on each date. Do not report the coverage UI as passing.",
+    "accepted_plan_day1_clones": [
+      {
+        "id": "67454848-b16c-40e5-908d-864768d221d1",
+        "place_id": "real-place-2a2391b79f3642a7aff4173f",
+        "start_at": "2026-12-05T09:00:00+08:00",
+        "status": "COMPLETED",
+        "execution_truth": {
+          "actor_id": "9ac3c100-da78-4933-ba1b-cb79991fcb1e",
+          "actor_type": "TRAVELER",
+          "captured_at": "2026-12-05T12:00:00+08:00",
+          "evidence": {
+            "location_source": "SIMULATED_GPS",
+            "recorded_at": "2026-10-26T12:33:40.154781+00:00",
+            "sequence": 4,
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83"
+          },
+          "kind": "SIMULATED_STATE_TRANSITION",
+          "transition": "COMPLETED"
+        }
+      },
+      {
+        "id": "b7d4170f-0b23-4dd1-8b43-99bab5009fea",
+        "place_id": "real-place-85ef252bd901280d54c899bd",
+        "start_at": "2026-12-05T14:00:00+08:00",
+        "status": "COMPLETED",
+        "execution_truth": {
+          "actor_id": "9ac3c100-da78-4933-ba1b-cb79991fcb1e",
+          "actor_type": "TRAVELER",
+          "captured_at": "2026-12-05T17:00:00+08:00",
+          "evidence": {
+            "location_source": "SIMULATED_GPS",
+            "recorded_at": "2026-10-26T12:33:40.343251+00:00",
+            "sequence": 8,
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83"
+          },
+          "kind": "SIMULATED_STATE_TRANSITION",
+          "transition": "COMPLETED"
+        }
+      }
+    ],
+    "expected_same_run_counts_by_date": {
+      "2026-12-05": 2,
+      "2026-12-06": 2
+    },
+    "actual_projection": {
+      "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+      "target_places_per_day": 2,
+      "target_kind": "CLASSROOM_DISPLAY_ONLY",
+      "days": [
+        {
+          "date": "2026-12-05",
+          "distinct_place_count": 2,
+          "distinct_place_ids": [
+            "real-place-2a2391b79f3642a7aff4173f",
+            "real-place-85ef252bd901280d54c899bd"
+          ],
+          "named_activity_ids": [
+            "67454848-b16c-40e5-908d-864768d221d1",
+            "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+          ],
+          "run_completed_place_count": 0,
+          "run_completed_activity_ids": [],
+          "inherited_completed_place_count": 2,
+          "inherited_completed_activity_ids": [
+            "67454848-b16c-40e5-908d-864768d221d1",
+            "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+          ],
+          "placeholder_count": 0,
+          "placeholder_activity_ids": [],
+          "missing_for_target": 0
+        },
+        {
+          "date": "2026-12-06",
+          "distinct_place_count": 2,
+          "distinct_place_ids": [
+            "real-place-7169e1bb4fcfafa220d5d6b4",
+            "real-place-9ecb93fe30d678917285fe79"
+          ],
+          "named_activity_ids": [
+            "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+            "99ec38d5-797c-4e64-9814-10e01a657dec"
+          ],
+          "run_completed_place_count": 2,
+          "run_completed_activity_ids": [
+            "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+            "99ec38d5-797c-4e64-9814-10e01a657dec"
+          ],
+          "inherited_completed_place_count": 0,
+          "inherited_completed_activity_ids": [],
+          "placeholder_count": 0,
+          "placeholder_activity_ids": [],
+          "missing_for_target": 0
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "SIGNED_NATIVE_HTTP_NOT_BROWSER_OR_DEVICE",
+    "SIMULATED_STATE_AND_GPS_NOT_PHYSICAL_TRAVEL",
+    "AGENT_PARTIAL_WITH_TWO_TOOL_ERRORS",
+    "AUTO_CHEAPEST_PHYSICAL_UPSTREAM_MODEL_NOT_RETURNED",
+    "F2_SUFFIX_DELAY_RETAINED_TIMES_NO_CLAIM_OF_ACTUAL_15_MINUTE_SHIFT",
+    "UNKNOWN_PRICES_EXPLICITLY_ACKNOWLEDGED_BY_ISOLATED_OPERATOR_NOT_VERIFIED",
+    "QODER_CLASSROOM_INTEGRATION_PENDING",
+    "COVERAGE_CLONED_PREFIX_MISCLASSIFICATION_NOT_FIXED"
+  ]
+}

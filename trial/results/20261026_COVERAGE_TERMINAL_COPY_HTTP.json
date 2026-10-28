@@ -1,0 +1,464 @@
+{
+  "product_sha": "e2c893a0115d381abe83e781c448766a1c148b78",
+  "evidence_kind": "SIGNED_NATIVE_READ_PROJECTION_NOT_BROWSER_OR_PHYSICAL_DEVICE",
+  "before": {
+    "stage": "before",
+    "progress_receipt": "suzhou-guardian-progress-1793023655648566000.json",
+    "native_run_activity_sha256": "e289e912ad3b355415fea7d156c428e47ac2d092bf4790bc4e83a8cc28d10391",
+    "counts": {
+      "agent_runs": 40,
+      "provider_calls": 117
+    },
+    "http": {
+      "status": 200,
+      "cache_control": "private, no-store",
+      "progress": {
+        "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+        "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+        "sequence": 12,
+        "status": "SIMULATED_COMPLETED",
+        "virtual_now": "2026-12-06T17:00:00+08:00",
+        "current_active_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+        "guardian_outcome": {
+          "code": "PROPOSAL_ACCEPTED"
+        },
+        "activity_coverage": {
+          "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+          "target_places_per_day": 2,
+          "target_kind": "CLASSROOM_DISPLAY_ONLY",
+          "days": [
+            {
+              "date": "2026-12-05",
+              "distinct_place_count": 2,
+              "distinct_place_ids": [
+                "real-place-2a2391b79f3642a7aff4173f",
+                "real-place-85ef252bd901280d54c899bd"
+              ],
+              "named_activity_ids": [
+                "67454848-b16c-40e5-908d-864768d221d1",
+                "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+              ],
+              "run_completed_place_count": 0,
+              "run_completed_activity_ids": [],
+              "inherited_completed_place_count": 2,
+              "inherited_completed_activity_ids": [
+                "67454848-b16c-40e5-908d-864768d221d1",
+                "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+              ],
+              "placeholder_count": 0,
+              "placeholder_activity_ids": [],
+              "missing_for_target": 0
+            },
+            {
+              "date": "2026-12-06",
+              "distinct_place_count": 2,
+              "distinct_place_ids": [
+                "real-place-7169e1bb4fcfafa220d5d6b4",
+                "real-place-9ecb93fe30d678917285fe79"
+              ],
+              "named_activity_ids": [
+                "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+                "99ec38d5-797c-4e64-9814-10e01a657dec"
+              ],
+              "run_completed_place_count": 2,
+              "run_completed_activity_ids": [
+                "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+                "99ec38d5-797c-4e64-9814-10e01a657dec"
+              ],
+              "inherited_completed_place_count": 0,
+              "inherited_completed_activity_ids": [],
+              "placeholder_count": 0,
+              "placeholder_activity_ids": [],
+              "missing_for_target": 0
+            }
+          ]
+        },
+        "agent_runs": [
+          {
+            "id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "status": "PARTIAL",
+            "created_at": "2026-10-26T12:34:13.175591+00:00",
+            "completed_at": "2026-10-26T12:35:53.792820+00:00"
+          }
+        ],
+        "steps": [
+          {
+            "id": "ffb143fc-c7b3-4428-a9ee-6b9300ac4afb",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 1,
+            "stage": "TOOL_CALL",
+            "tool_name": "inspect_journey",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:29.778284+00:00",
+            "completed_at": "2026-10-26T12:34:29.778284+00:00"
+          },
+          {
+            "id": "5d7bbfcd-5922-4a16-9041-231061856d49",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 2,
+            "stage": "TOOL_CALL",
+            "tool_name": "inspect_twin",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:32.250245+00:00",
+            "completed_at": "2026-10-26T12:34:32.250245+00:00"
+          },
+          {
+            "id": "2d19759c-9682-4699-b83b-67e0bb6a33fb",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 3,
+            "stage": "TOOL_CALL",
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:43.979756+00:00",
+            "completed_at": "2026-10-26T12:34:43.979756+00:00"
+          },
+          {
+            "id": "492a8961-c0e5-4503-8de1-4ee0acfa5940",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 4,
+            "stage": "TOOL_CALL",
+            "tool_name": "list_replans",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:47.767041+00:00",
+            "completed_at": "2026-10-26T12:34:47.767041+00:00"
+          },
+          {
+            "id": "dfa4af17-6d1a-424f-9670-db79ddd84c0c",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 5,
+            "stage": "TOOL_CALL",
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:01.543388+00:00",
+            "completed_at": "2026-10-26T12:35:01.543388+00:00"
+          },
+          {
+            "id": "cda84c62-7ac6-488b-a7d5-96c85699531b",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 6,
+            "stage": "TOOL_CALL",
+            "tool_name": "list_replans",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:05.295186+00:00",
+            "completed_at": "2026-10-26T12:35:05.295186+00:00"
+          },
+          {
+            "id": "b2c9830a-cd15-4e31-b7ad-e24ef3afbf98",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 7,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "TOOL_ERROR",
+            "failure_classification": "TOOL_CALL_FAILED",
+            "error_code": "TOOL_CALL_FAILED",
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:21.328841+00:00",
+            "completed_at": "2026-10-26T12:35:21.328841+00:00"
+          },
+          {
+            "id": "0835c692-f2bc-4084-b9df-532ecfe1b306",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 8,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:28.864366+00:00",
+            "completed_at": "2026-10-26T12:35:28.864366+00:00"
+          },
+          {
+            "id": "c626fc63-1cbc-4db9-82e6-ed9a070abc2a",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 9,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "TOOL_ERROR",
+            "failure_classification": "TOOL_CALL_FAILED",
+            "error_code": "TOOL_CALL_FAILED",
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:53.786350+00:00",
+            "completed_at": "2026-10-26T12:35:53.786350+00:00"
+          }
+        ],
+        "proposals": [
+          {
+            "id": "7626e38a-1b70-4754-bd6e-deb2f197f93c",
+            "status": "ACCEPTED",
+            "proposed_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+            "acceptance_audit_ids": [
+              "6ff47d34-3b67-4f49-b464-b691539b5599"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "stage": "after",
+    "progress_receipt": "suzhou-guardian-progress-1793024441532739000.json",
+    "native_run_activity_sha256": "e289e912ad3b355415fea7d156c428e47ac2d092bf4790bc4e83a8cc28d10391",
+    "counts": {
+      "agent_runs": 40,
+      "provider_calls": 117
+    },
+    "http": {
+      "status": 200,
+      "cache_control": "private, no-store",
+      "progress": {
+        "run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+        "journey_id": "e7f868e4-2d03-4d3c-b563-962e47b185f4",
+        "sequence": 12,
+        "status": "SIMULATED_COMPLETED",
+        "virtual_now": "2026-12-06T17:00:00+08:00",
+        "current_active_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+        "guardian_outcome": {
+          "code": "PROPOSAL_ACCEPTED"
+        },
+        "activity_coverage": {
+          "plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+          "target_places_per_day": 2,
+          "target_kind": "CLASSROOM_DISPLAY_ONLY",
+          "days": [
+            {
+              "date": "2026-12-05",
+              "distinct_place_count": 2,
+              "distinct_place_ids": [
+                "real-place-2a2391b79f3642a7aff4173f",
+                "real-place-85ef252bd901280d54c899bd"
+              ],
+              "named_activity_ids": [
+                "67454848-b16c-40e5-908d-864768d221d1",
+                "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+              ],
+              "run_completed_place_count": 2,
+              "run_completed_activity_ids": [
+                "67454848-b16c-40e5-908d-864768d221d1",
+                "b7d4170f-0b23-4dd1-8b43-99bab5009fea"
+              ],
+              "inherited_completed_place_count": 0,
+              "inherited_completed_activity_ids": [],
+              "placeholder_count": 0,
+              "placeholder_activity_ids": [],
+              "missing_for_target": 0
+            },
+            {
+              "date": "2026-12-06",
+              "distinct_place_count": 2,
+              "distinct_place_ids": [
+                "real-place-7169e1bb4fcfafa220d5d6b4",
+                "real-place-9ecb93fe30d678917285fe79"
+              ],
+              "named_activity_ids": [
+                "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+                "99ec38d5-797c-4e64-9814-10e01a657dec"
+              ],
+              "run_completed_place_count": 2,
+              "run_completed_activity_ids": [
+                "3b6b27c4-19b9-4516-895c-45f9cfdc815a",
+                "99ec38d5-797c-4e64-9814-10e01a657dec"
+              ],
+              "inherited_completed_place_count": 0,
+              "inherited_completed_activity_ids": [],
+              "placeholder_count": 0,
+              "placeholder_activity_ids": [],
+              "missing_for_target": 0
+            }
+          ]
+        },
+        "agent_runs": [
+          {
+            "id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "status": "PARTIAL",
+            "created_at": "2026-10-26T12:34:13.175591+00:00",
+            "completed_at": "2026-10-26T12:35:53.792820+00:00"
+          }
+        ],
+        "steps": [
+          {
+            "id": "ffb143fc-c7b3-4428-a9ee-6b9300ac4afb",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 1,
+            "stage": "TOOL_CALL",
+            "tool_name": "inspect_journey",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:29.778284+00:00",
+            "completed_at": "2026-10-26T12:34:29.778284+00:00"
+          },
+          {
+            "id": "5d7bbfcd-5922-4a16-9041-231061856d49",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 2,
+            "stage": "TOOL_CALL",
+            "tool_name": "inspect_twin",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:32.250245+00:00",
+            "completed_at": "2026-10-26T12:34:32.250245+00:00"
+          },
+          {
+            "id": "2d19759c-9682-4699-b83b-67e0bb6a33fb",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 3,
+            "stage": "TOOL_CALL",
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:43.979756+00:00",
+            "completed_at": "2026-10-26T12:34:43.979756+00:00"
+          },
+          {
+            "id": "492a8961-c0e5-4503-8de1-4ee0acfa5940",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 4,
+            "stage": "TOOL_CALL",
+            "tool_name": "list_replans",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:34:47.767041+00:00",
+            "completed_at": "2026-10-26T12:34:47.767041+00:00"
+          },
+          {
+            "id": "dfa4af17-6d1a-424f-9670-db79ddd84c0c",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 5,
+            "stage": "TOOL_CALL",
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:01.543388+00:00",
+            "completed_at": "2026-10-26T12:35:01.543388+00:00"
+          },
+          {
+            "id": "cda84c62-7ac6-488b-a7d5-96c85699531b",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 6,
+            "stage": "TOOL_CALL",
+            "tool_name": "list_replans",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:05.295186+00:00",
+            "completed_at": "2026-10-26T12:35:05.295186+00:00"
+          },
+          {
+            "id": "b2c9830a-cd15-4e31-b7ad-e24ef3afbf98",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 7,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "TOOL_ERROR",
+            "failure_classification": "TOOL_CALL_FAILED",
+            "error_code": "TOOL_CALL_FAILED",
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:21.328841+00:00",
+            "completed_at": "2026-10-26T12:35:21.328841+00:00"
+          },
+          {
+            "id": "0835c692-f2bc-4084-b9df-532ecfe1b306",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 8,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "COMPLETED",
+            "failure_classification": null,
+            "error_code": null,
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:28.864366+00:00",
+            "completed_at": "2026-10-26T12:35:28.864366+00:00"
+          },
+          {
+            "id": "c626fc63-1cbc-4db9-82e6-ed9a070abc2a",
+            "simulation_run_id": "7188e2e7-b216-47e0-b446-ebf747abdb83",
+            "event_id": "605f34ef-d199-4ec1-9abf-bf0d471ee4f5",
+            "agent_run_id": "616a13de-4789-40c8-8ab1-2d7e727ccbf5",
+            "sequence": 9,
+            "stage": "TOOL_CALL",
+            "tool_name": "conclude_recovery",
+            "status": "TOOL_ERROR",
+            "failure_classification": "TOOL_CALL_FAILED",
+            "error_code": "TOOL_CALL_FAILED",
+            "duration_ms": 0,
+            "created_at": "2026-10-26T12:35:53.786350+00:00",
+            "completed_at": "2026-10-26T12:35:53.786350+00:00"
+          }
+        ],
+        "proposals": [
+          {
+            "id": "7626e38a-1b70-4754-bd6e-deb2f197f93c",
+            "status": "ACCEPTED",
+            "proposed_plan_version_id": "06a7766a-96b5-493d-b6e4-6cfd20216269",
+            "acceptance_audit_ids": [
+              "6ff47d34-3b67-4f49-b464-b691539b5599"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

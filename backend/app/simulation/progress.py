@@ -22,8 +22,12 @@ from app.db.models import (
     JourneyMission,
     ReplanProposal,
     PlanVersion,
+    Place,
 )
-from app.simulation.coverage import summarize_activity_coverage
+from app.simulation.coverage import (
+    resolve_run_completed_activity_ids,
+    summarize_activity_coverage,
+)
 
 STEP_STATUSES = frozenset(
     {
@@ -364,6 +368,43 @@ def run_progress(session, journey, run, config):
         if active_plan is not None
         else []
     )
+    state_completed_ids = {
+        str(activity_id).strip()
+        for activity_id in state.get("completed_activity_ids", [])
+        if activity_id is not None and str(activity_id).strip()
+    }
+    history_completed_ids = {
+        str(item.get("activity_id")).strip()
+        for item in history
+        if isinstance(item, dict)
+        and item.get("event") == "SIM_ACTIVITY_COMPLETED"
+        and item.get("activity_id") is not None
+        and str(item.get("activity_id")).strip()
+    }
+    source_activity_ids = state_completed_ids & history_completed_ids
+    source_activities = (
+        list(
+            session.scalars(
+                select(Activity)
+                .join(PlanVersion, Activity.plan_version_id == PlanVersion.id)
+                .join(Place, Activity.place_id == Place.id)
+                .where(
+                    PlanVersion.journey_id == journey.id,
+                    Activity.id.in_(source_activity_ids),
+                )
+            )
+        )
+        if source_activity_ids
+        else []
+    )
+    completed_activity_ids = resolve_run_completed_activity_ids(
+        run_id=run.id,
+        run_sequence=run.sequence,
+        run_actor_id=run.actor_id,
+        history=history,
+        source_activities=source_activities,
+        active_activities=activities,
+    )
     zone = ZoneInfo(journey.timezone)
     def local_date(value):
         stamp = datetime.fromisoformat(value)
@@ -379,7 +420,7 @@ def run_progress(session, journey, run, config):
         "target_kind": "CLASSROOM_DISPLAY_ONLY",
         "days": summarize_activity_coverage(
             activities,
-            state.get("completed_activity_ids", []),
+            completed_activity_ids,
             journey_timezone=journey.timezone,
             required_dates=required_dates,
         ),

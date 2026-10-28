@@ -1,0 +1,327 @@
+{
+  "captured_at": "2026-10-26T15:50:27.999623+00:00",
+  "evidence_grade": "Actual isolated Chrome interaction + own persisted server records; no physical-device verification",
+  "runtime": {
+    "backend_product_sha": "e2c893a0115d381abe83e781c448766a1c148b78",
+    "backend_receipt_head": "a40d5f9c492496800cb4874d16dbc70b802f79fb",
+    "frontend_case_start_head": "ab2ca5913aca875daf3358edb877ef4131225fd7",
+    "frontend_export_head": "84e273feda4c17452c5be0676783c8c457abf969",
+    "frontend_entry_working_file_sha256": "853eb12bd10927d8705417cbecd823f86cf378d399589d10ad084927e3787c32",
+    "frontend_scope": "Qoder checkout changed during the case; entry file dirty at export. Mixed stack, not one frozen frontend acceptance."
+  },
+  "journey": {
+    "id": "dd5f4651-e5f7-424b-b0de-d20adeb26c96",
+    "title": "苏州 · 2日行程",
+    "city_code": "CN-RV-251145A3DB3B",
+    "start_at": "2026-12-05T09:00:00+08:00",
+    "end_at": "2026-12-06T21:00:00+08:00",
+    "budget_amount_minor": 80000,
+    "status": "DRAFT",
+    "active_plan_version_id": null
+  },
+  "goal_task_id": "9d3beff5-3c34-422d-ab6c-c23f5f78e229",
+  "entry": {
+    "initial_session": "GET travelers/session 401 in visible browser",
+    "recovery": "Clicked visible new-trip/new-session entry; separate new signed guest identity, not restoration of old identity",
+    "old_server_records_preserved": true
+  },
+  "budget_defect": {
+    "input": "两人总共800元，不是每人800元",
+    "observed_autofill_yuan": 1600,
+    "party_size": 2,
+    "manual_correction_before_create_yuan": 800,
+    "source_hint": "RevolutionFirstLook.tsx readPerPersonBudgetFromGoal matches negated 每人800; applyNumbersFromGoal multiplies by party size",
+    "status": "Observed; no Codex UI patch"
+  },
+  "task_status": "PARTIAL_READY",
+  "consent": {
+    "model": true,
+    "online_research": false
+  },
+  "usage": {
+    "model_turns": 10,
+    "tool_calls": 8
+  },
+  "conversation": [
+    {
+      "role": "user",
+      "text": "我们是情侣两人，去苏州两天。前一晚亲密到凌晨3点，第一天11:30以后才出门，不能安排早起；第二天09:00已有博物馆预约不能改，只能调整第一天下午。预算两人总共800元，不是每人800元，不要替我们买票。 节奏：轻松少走",
+      "at": "2026-10-26T15:22:22.765704+00:00"
+    },
+    {
+      "role": "assistant",
+      "text": "第一天下午（12:30 左右出发、傍晚回住处）你们更想要哪种玩法？考虑你们前夜睡到很晚、想轻松少走，两人预算共 800 元且不代买票。",
+      "at": "2026-10-26T15:23:01.916863+00:00"
+    },
+    {
+      "role": "user",
+      "text": "你刚才说园林改到第二天，这不行。我说只能调整第一天下午，第二天09:00的博物馆预约原样保留。别再问一堆喜好。请先给第一天下午12:30以后、轻松少走的三个候选方向；不要联网，不要编造具体票价或营业时间，未核实的请明确写未知，等我授权再查。两人总预算仍是800元，也不要替我们购票。",
+      "at": "2026-10-26T15:26:35.914714+00:00"
+    },
+    {
+      "role": "assistant",
+      "text": "已按你的要求保存草稿，没有联网、没有编造任何票价或营业时间，也没有替你买票。\n\n**第一天下午（12:30 之后出发）的三个候选方向**（草稿中均标为待核实＝UNKNOWN，等你授权后才去查）：\n\n- **A｜园林慢游**：走一段看景、坐下喝茶，节奏慢。注意园林内是连续步行，实际步数对\"轻松少走\"的体感需核实在园内动线后才能定。\n- **B｜室内场馆＋附近咖啡＋傍晚短距离散步**：以室内为主，步行量最小，适合把体力留给第二天 09:00 的预约。开放时间、票价、是否需要预约全部未核实。\n- **C｜水乡古镇慢逛＋小吃解决晚饭**：最松散，晚饭顺路解决；交通时间与门票未核实，800 元两人总预算的占比也待核实。\n\n**已固定的部分：**\n- 第一天：上午为晚起休息段，不安排早起；11:30 后出门，12:30 后才进入下午安排。\n- 第二天：**09:00 博物馆预约原样保留在第二天上午，没有把任何园林内容挪到第二天**；第二天下午和晚间暂时空着，等你授权后再补。\n\n**预算口径已记下：**两人合计 800 元（非每人 800），全程不代购票；目前所有票价、开放时间、步行距离均为\"未知\"，没有任何一项是估算值。\n\n你授权后，我再去核实三个方向各自的开放时间、票价、步行距离，并按实际步行量做取舍。",
+      "at": "2026-10-26T15:27:20.945978+00:00"
+    },
+    {
+      "role": "user",
+      "text": "选B。请只把第一天下午的候选A、B、C整理成一个B：室内场馆加附近咖啡、傍晚短距离散步，12:30后才出发。第一天上午的晚起休息保留。第二天所有条目、顺序、时间和备注一字都不要改，尤其09:00的预约。不要联网、不买票，未知继续标未知，不要再问喜好。",
+      "at": "2026-10-26T15:35:01.304788+00:00"
+    },
+    {
+      "role": "assistant",
+      "text": "已按你的指示整理完成：\n\n**第一天 2026-12-05**\n- 上午：晚起自由休息（原样保留，不安排早起）\n- 下午：**候选B — 室内场馆＋附近咖啡＋傍晚短距离散步**，并已写入该时段「不早于 12:30」的时间约束\n\n**第二天 2026-12-06**\n- 09:00 博物馆预约：条目、顺序、时间、备注一字未改，仍是「已预订，不可改」\n- 第二天下午/晚间仍空着，等你授权后再补\n\n**说明**\n- 本次未联网、未代购票、未代订餐\n- 场馆名称、开放时间、票价、是否需预约、咖啡与散步的实际距离和步行时间、票价在 800 元两人总预算中的占比：全部仍标为**未知**\n- 预算口径已写进备注：两人合计 800 元（非每人 800）\n\n你授权联网后，我再去核实候选B的可用场馆、开放时间与票价，再按实际步行量确认这天的走法。",
+      "at": "2026-10-26T15:35:37.456118+00:00"
+    }
+  ],
+  "assistant_summary": "已按你的指示整理完成：\n\n**第一天 2026-12-05**\n- 上午：晚起自由休息（原样保留，不安排早起）\n- 下午：**候选B — 室内场馆＋附近咖啡＋傍晚短距离散步**，并已写入该时段「不早于 12:30」的时间约束\n\n**第二天 2026-12-06**\n- 09:00 博物馆预约：条目、顺序、时间、备注一字未改，仍是「已预订，不可改」\n- 第二天下午/晚间仍空着，等你授权后再补\n\n**说明**\n- 本次未联网、未代购票、未代订餐\n- 场馆名称、开放时间、票价、是否需预约、咖啡与散步的实际距离和步行时间、票价在 800 元两人总预算中的占比：全部仍标为**未知**\n- 预算口径已写进备注：两人合计 800 元（非每人 800）\n\n你授权联网后，我再去核实候选B的可用场馆、开放时间与票价，再按实际步行量确认这天的走法。",
+  "pending_question": null,
+  "agent_runs": [
+    {
+      "id": "3dd9b720-bacb-4027-9187-ba3ec8149ca2",
+      "provider_key": "hermes",
+      "model_key": "auto:cheapest",
+      "status": "PARTIAL",
+      "started_at": "2026-10-26T15:22:22.859805+00:00",
+      "completed_at": "2026-10-26T15:23:01.921372+00:00",
+      "steps": [
+        {
+          "sequence_no": 1,
+          "tool_name": "inspect_journey",
+          "status": "COMPLETED"
+        },
+        {
+          "sequence_no": 2,
+          "tool_name": "ask_traveler",
+          "status": "COMPLETED"
+        }
+      ]
+    },
+    {
+      "id": "2f6b9c84-2da5-4378-86bd-f5956c18e377",
+      "provider_key": "hermes",
+      "model_key": "auto:cheapest",
+      "status": "COMPLETED",
+      "started_at": "2026-10-26T15:26:35.935233+00:00",
+      "completed_at": "2026-10-26T15:27:20.945978+00:00",
+      "steps": [
+        {
+          "sequence_no": 1,
+          "tool_name": "inspect_journey",
+          "status": "COMPLETED"
+        },
+        {
+          "sequence_no": 2,
+          "tool_name": "read_guardian_stream",
+          "status": "COMPLETED"
+        },
+        {
+          "sequence_no": 3,
+          "tool_name": "save_draft_itinerary",
+          "status": "COMPLETED"
+        }
+      ]
+    },
+    {
+      "id": "2a40069d-1ecc-4686-a0c1-91eca11e7445",
+      "provider_key": "hermes",
+      "model_key": "auto:cheapest",
+      "status": "COMPLETED",
+      "started_at": "2026-10-26T15:35:01.324662+00:00",
+      "completed_at": "2026-10-26T15:35:37.456118+00:00",
+      "steps": [
+        {
+          "sequence_no": 1,
+          "tool_name": "inspect_journey",
+          "status": "COMPLETED"
+        },
+        {
+          "sequence_no": 2,
+          "tool_name": "read_guardian_stream",
+          "status": "COMPLETED"
+        },
+        {
+          "sequence_no": 3,
+          "tool_name": "replace_draft_slots",
+          "status": "COMPLETED"
+        }
+      ]
+    }
+  ],
+  "before_counts": {
+    "journeys": 13,
+    "journey_missions": 16,
+    "agent_runs": 40,
+    "provider_calls": 117
+  },
+  "after_counts": {
+    "journeys": 14,
+    "journey_missions": 17,
+    "agent_runs": 43,
+    "provider_calls": 117
+  },
+  "before_choose_b_draft": {
+    "days": [
+      {
+        "date": "2026-12-05",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "前一晚至凌晨3点，睡到自然醒，不安排早起。11:30 之后才出门，午餐自理（不代订餐、不代购票）。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "flexible",
+            "title": "上午自由休息（晚起，不出门）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "候选方向 A｜12:30 后出发，园林 + 周边慢走：走一段看景、坐下喝茶，整体节奏慢。票价、开放时间、园区步行距离均未核实＝未知（等你授权后再查）。因园林内步行为连续行走，实际步行量待核实后再定。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "候选A：园林慢游（12:30后出发）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "候选方向 B｜12:30 后出发，室内场馆 + 附近咖啡 + 傍晚短距离散步：室内为主、少走路，适合体力一般的日子。开放时间、票价、是否需预约均未核实＝未知。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "候选B：室内场馆＋咖啡（12:30后出发）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "候选方向 C｜12:30 后出发，水乡古镇慢逛 + 小吃解决晚饭：整体最松散，适合把体力留给第二天。门票、开放时间、交通时间均未核实＝未知；预算两人共 800 元的实际占比待核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "候选C：水乡古镇慢逛（12:30后出发）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      },
+      {
+        "date": "2026-12-06",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "已预订，不可改。博物馆名称、开放时间、票价、是否可带包/寄存均未核实＝未知；不代为购票。第二天下午与晚间暂不安排，等你授权后再补。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "morning",
+            "title": "09:00 博物馆预约（原样保留）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "revision": 1,
+    "status": "DRAFT"
+  },
+  "after_choose_b_draft": {
+    "date_constraints": {
+      "2026-12-05": {
+        "afternoon": {
+          "start_not_before": "12:30"
+        }
+      }
+    },
+    "days": [
+      {
+        "date": "2026-12-05",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "前一晚至凌晨3点，睡到自然醒，不安排早起。11:30 之后才出门，午餐自理（不代订餐、不代购票）。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "flexible",
+            "title": "上午自由休息（晚起，不出门）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "12:30 后出发，室内为主：室内场馆参观 → 附近咖啡（坐着休息）→ 傍晚短距离散步。步行量小，适合轻松少走。场馆名称、开放时间、票价、是否需预约、咖啡店与散步距离、实际步行时间与票价占比均未核实＝未知（本次未联网、未代购票，等授权后再查）。预算口径：两人合计 800 元（不是每人 800 元），不代订餐、不代购票。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "候选B：室内场馆＋附近咖啡＋傍晚短距离散步（12:30后出发）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      },
+      {
+        "date": "2026-12-06",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "已预订，不可改。博物馆名称、开放时间、票价、是否可带包/寄存均未核实＝未知；不代为购票。第二天下午与晚间暂不安排，等你授权后再补。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "morning",
+            "title": "09:00 博物馆预约（原样保留）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "revision": 2,
+    "status": "DRAFT"
+  },
+  "proof": {
+    "day2_deep_equal": true,
+    "day2_before_sha256": "9fbd27f73ce171389e9fa94c3c3f76218920994f7200f82adf5650c8b96eb5e8",
+    "day2_after_sha256": "9fbd27f73ce171389e9fa94c3c3f76218920994f7200f82adf5650c8b96eb5e8",
+    "day1_rest_deep_equal": true,
+    "day1_slot_count": 2,
+    "day1_afternoon_start_not_before": "12:30",
+    "research_places_count": 0,
+    "formal_plan_count": 0,
+    "simulation_run_count": 0,
+    "provider_call_delta": 0
+  },
+  "limitations": [
+    "Three AgentRuns and task-reported 10 model turns/8 tools; physical upstream model/request count not returned",
+    "First Agent asked a question and suggested moving a garden to Day2; later user pushback constrained the saved draft",
+    "09:00 museum reservation is user-stated placeholder, not verified booking; no canonical Place",
+    "No formal plan, ACTIVE departure, purchase, four-stop simulation or device USER_VERIFIED in this case",
+    "Screenshots from isolated own stack; Qoder runtime/database not modified"
+  ],
+  "images": [
+    {
+      "file": "couple-budget-scrolled-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "df3c1b16fdd83e393abc0ca5d59bb42cb107e5165b758ae3d22bdb6822720b52"
+    },
+    {
+      "file": "couple-total-budget-expanded.png",
+      "width": 447,
+      "height": 1998,
+      "sha256": "db5492f1bcc0434a7cb5a9bb0c09c31bb5502ed909b3d035e6d24791f5ed7a70"
+    },
+    {
+      "file": "couple-selected-b-day1-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "e1d486b278268cb50f35d7f5b1fbe8833d60f9450d6a6d75184547594df7d61e"
+    },
+    {
+      "file": "couple-selected-b-day2-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "1b002d6bcecfa4a5b280fdba475ee4586c134ed434ca077d9b64081e9c4b6775"
+    }
+  ]
+}

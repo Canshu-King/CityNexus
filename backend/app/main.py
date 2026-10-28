@@ -7590,7 +7590,9 @@ def update_signed_goal_draft(journey_id: UUID, task_id: UUID, payload: GoalDraft
         raise HTTPException(403, "Journey owner update required")
     response.headers["Cache-Control"] = "private, no-store, max-age=0"
     response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
-    return update_goal_draft(session, journey, member, task_id, days=payload.days, expected_revision=payload.expected_revision)
+    return update_goal_draft(session, journey, member, task_id, days=payload.days,
+                             expected_revision=payload.expected_revision,
+                             reuse_source_task_id=payload.reuse_source_task_id)
 
 
 @app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/cancel")
