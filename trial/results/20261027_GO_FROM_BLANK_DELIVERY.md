@@ -93,7 +93,7 @@
 | --- | --- | --- |
 | #339 同代性 | **闭** | 390 走到「行程执行中」：地图 6 处＝计划点标签 6 枚＝地图列表 6 条＝库 `activities` 6 条；journey 状态 `ACTIVE`（§74） |
 | #340 重存链 | **屏证到位** | AM/AN/AO 三臂同拍 `*_RESIVE_KEY 1 enabled=true`，按下去服务端真重生成候选，并把「赶路时间不够」从 2 段报成 1 段（§80–§82） |
-| #337 430 尾格 | **未闭** | AO 停在「这版方案排不下：…（1 段）」且 `SELECT_LIVE_INDEX -1`；固定 15 分钟步长不收敛，服务端 `details` 已给精确相邻对（`sequence_no`／`title`／`previous_end_time`），下一臂按缺口本身大小挪 |
+| #337 430 尾格 | **闭**（§83，`27675e27d3`） | AP 臂在零 dirty 树上走到「行程执行中」：库现读 journey `4c6ff80b…` 状态 `ACTIVE`、`active_plan_version_id=d8f29fe8…`、`activities` 6 条＝屏上「地图地点 6 处」＝计划点标签 6 枚＝地图列表 6 条。同一趟 `AP_REFUSAL_SEEN false`，故本节不抵消 AO 那 1 段（下表裁语事实仍挂着） |
 | #283／#330 裁语 | 事实已交 | 选用门查营业时间缺口（`services.py:776-782` → `UNRESOLVED_ACTIVITY_FACTS`）而出发门不查；430 这一趟另有可行性拒绝（赶路 1 段）。两方向（放宽选用门／出发门补校验）不代裁（§75、§82） |
 | 十五枚后端红 | 具名清单已交 | 现尖重跑宽面 129 条：`test_sol_concurrency_and_remap.py` 9、`test_qoder_live_replans_endpoint.py` 5、`test_dsh_list_replans_bound.py` 1，与 §58 同名同数 ⇒ 本夜刀零新增红（§76） |
 | 平板 | 仍 `USER_VERIFIED=PENDING` | 需主人亲自走一遍真机，未做任何模拟替代 |
