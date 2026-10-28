@@ -83,3 +83,17 @@
 5. 「和 Agent 补齐出发资料」之后，被拒的方案没有"应用这一版"的可达键（#336 的分辨仍未跑成）。
 6. 15 枚后端红（`test_sol_concurrency_and_remap` 9／`test_qoder_live_replans_endpoint` 5／
    `test_dsh_list_replans_bound` 1）经同代对照臂证明早于本刀存在（§58），归属待裁。
+
+## 8. 纯净树上的账（截至 2026-10-28 晚 · 报告 §74–§82）
+
+核对时代码尖为 `bbfb03f6dd037138c087d945d18352b87a952162`；屏证全部来自零 dirty 的第二棵树 `E:/_cmdr_clean_1028`
+（`git status --porcelain=v1` 现读 0 行，与现尖之间 `backend/frontend/contracts` 差异为空）。
+
+| 单 | 结论 | 凭据（现读） |
+| --- | --- | --- |
+| #339 同代性 | **闭** | 390 走到「行程执行中」：地图 6 处＝计划点标签 6 枚＝地图列表 6 条＝库 `activities` 6 条；journey 状态 `ACTIVE`（§74） |
+| #340 重存链 | **屏证到位** | AM/AN/AO 三臂同拍 `*_RESIVE_KEY 1 enabled=true`，按下去服务端真重生成候选，并把「赶路时间不够」从 2 段报成 1 段（§80–§82） |
+| #337 430 尾格 | **未闭** | AO 停在「这版方案排不下：…（1 段）」且 `SELECT_LIVE_INDEX -1`；固定 15 分钟步长不收敛，服务端 `details` 已给精确相邻对（`sequence_no`／`title`／`previous_end_time`），下一臂按缺口本身大小挪 |
+| #283／#330 裁语 | 事实已交 | 选用门查营业时间缺口（`services.py:776-782` → `UNRESOLVED_ACTIVITY_FACTS`）而出发门不查；430 这一趟另有可行性拒绝（赶路 1 段）。两方向（放宽选用门／出发门补校验）不代裁（§75、§82） |
+| 十五枚后端红 | 具名清单已交 | 现尖重跑宽面 129 条：`test_sol_concurrency_and_remap.py` 9、`test_qoder_live_replans_endpoint.py` 5、`test_dsh_list_replans_bound.py` 1，与 §58 同名同数 ⇒ 本夜刀零新增红（§76） |
+| 平板 | 仍 `USER_VERIFIED=PENDING` | 需主人亲自走一遍真机，未做任何模拟替代 |
