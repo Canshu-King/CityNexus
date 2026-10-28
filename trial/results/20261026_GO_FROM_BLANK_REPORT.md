@@ -1290,3 +1290,80 @@ W 臂（`trial/human_walk/_w_arm_r70.mjs`，390×844，profile `_chrome_gozero_r
 环境注记：这台机器在 10-27 之后重启过（gozero `:60361`/`:14461` 与课堂 `:60391`/`:14492` 现读均无监听），
 D 卷可用量现在现读到 19 GiB／95%（不再是今晚一直卡的 100%）。上面第二条的库读走的是同一份 canary 库文件，
 只读模式，不需要后端在世。
+## 66. 尖被远端抢在前头：只读预测零冲突之后 merge，并在合并代上把聚焦两批重跑一遍
+
+### 一、被拒与被合（全程没有 force-push）
+
+10-28 上午我把 §65 那一代往上推时拿到的是：
+
+    ! [rejected]   HEAD -> rescue/v3-final-departure-20261022 (fetch first)
+
+fetch 之后现读：远端在我那一侧的尖 `d1b016040e` 之后独有的是 **19 笔**（其中非 merge 18 笔），
+包含 PR #56 的合入 `4dfeac260b`（native three-city facts + same-run simulation coverage）与一枚新的 CI 门禁
+`575318cbf1`（新增 `.github/workflows/v3-rescue-release-gate.yml`，+七十二行）。
+
+> 勘误：交付件表头先前那句写的是「远端新增 12 笔」。那个数我没有现读过就写下去了，
+> 现在按上面这枚 `git rev-list --count d1b016040e..575318cbf1` 的结果改为 19 笔，表头同步改掉。
+
+我没有 force-push，也没有 rebase 一条已发布的枝。走的是先只读预测、后真合：
+
+    git merge-tree --write-tree HEAD origin/rescue/v3-final-departure-20261022
+    MERGE_TREE_RC=0
+    输出中无 CONFLICT 行（空 = 预测零冲突）
+
+预测零冲突之后才落合并代，两枚父逐字可取回：
+
+    3ad2f482ff5868c396371ed6d1fa8e5d83c059bb   parents: d1b016040e + 575318cbf1
+
+合完之后有两件事同时成立（都是现读，不是推断）：
+
+| 我要排除的风险 | 命令 | 读数 |
+| --- | --- | --- |
+| 对面那 19 笔会不会改到我这三刀面的文件 | `git diff --stat d1b016040e 3ad2f482ff -- frontend/src/trial/mobile/DraftDepartureCard.tsx frontend/src/trial/mobile/MobilePlanWorkbench.tsx frontend/src/trial/mobile/WorkspaceMap.tsx frontend/src/trial/mobile/MissionCockpit.tsx backend/app/planning/travel_brief.py backend/app/departure_commit.py` | 空输出 ⇒ 我这一刀链的六枚文件在合并代上与我交出去的那一代逐字节相同 |
+| 我的重存那一刀是不是已被对方吸收 | `git merge-base --is-ancestor e5fdc2734e 575318cbf1` | RC=0 ⇒ 是。他们是在我 `e5fdc2734e` 之上继续写的，不是绕开它另起一套 |
+
+这两条是"零冲突"这个判据的两面：merge-tree 说形状上不撞，上面这两条说内容与谱系上也不撞。
+
+### 二、合并代上的门禁重跑（不复用 merge 前的读数）
+
+provenance：
+
+    尖       3ad2f482ff5868c396371ed6d1fa8e5d83c059bb
+             （`git ls-remote origin refs/heads/rescue/v3-final-departure-20261022` 逐字相同）
+    解释器   D:/moodle/CityNexus/.venv/Scripts/python.exe（CPython 3.12.14，唯一能跑这套件的那枚）
+    cwd      D:/moodle/_cmdr_rescue_v3_1022/backend
+    收据     trial/results/20261026_gozero/merged-gate-r71.txt
+
+| 批 | 选择 | 现读（合并代） | §58 时（merge 前） |
+| --- | --- | --- | --- |
+| 一 | `test_qoder_map_active_plan_stops_r1.py`、`test_goal_preparation.py`、`test_qoder_draft_revision_receipt_r1.py`、`test_departure_activation.py`、`test_departure_readiness.py` | **47 passed**，4.91 秒 | 47 passed，5.24 秒 |
+| 二 | `test_qoder_departure_commit_r1.py`、`test_qoder_departure_read_r1.py`、`test_r42_departure_activation_integration.py` | **39 passed**，6.75 秒 | 39 passed，6.48 秒 |
+
+同分母、同结果 ⇒ 合进来的那 19 笔（含 city-supply / routes / opening / simulation 四族产品改动）
+没有把我的三刀面弄红，我的三刀也没有弄红它们的面。
+
+**新门禁的三条腿我在同一代本地重放了一遍**（收据 `trial/results/20261026_gozero/ci-gate-merged-r72.txt`）：
+
+| 腿 | workflow 里的命令 | 合并代现读 |
+| --- | --- | --- |
+| 一 后端 | `python -m pytest -q tests/test_issue49_*.py tests/test_qoder_map_active_plan_stops_r1.py tests/test_wp01_wp03.py tests/test_goal_route_freeze.py` | **213 passed**，53.59 秒，RC=0 |
+| 二 类型 | `npx tsc -p tsconfig.check.json --noEmit` | 无输出，RC=0 |
+| 三 构建 | `npm run build` | `✓ built in 6.31s`，RC=0（只有 chunk >500 kB 的既有告警） |
+
+一条要说清的保留：GitHub Actions 上**没有**这枚合并代的运行。`gh run list --branch rescue/v3-final-departure-20261022 --limit 5`
+现读最新一条是 `40551475380`（2026-10-27T17:31:57Z，success，一分廿一秒），它对应的是门禁自己那笔 `575318cbf1`。
+原因从 workflow 原文读出来，不是猜：`on.push.paths` 只监听 `backend/** / frontend/** / contracts/** / 该 yml 自身`，
+而我这次进线的差异只有 `trial/**`（两枚文档＋探针）——上面表格里那条 `git diff --stat` 空输出就是同一件事的另一面。
+所以本节的"门"目前是**本地重放三腿全绿**，不是 CI 上的绿。
+
+### 三、环境现读：今晚那些屏证与这枚合并尖之间的代差
+
+`Get-CimInstance Win32_OperatingSystem.LastBootUpTime` 现读 **2026-10-28 09:21:15**（本机 +08 钟），
+取样时刻 10:11:52 ⇒ 这台机器在 §65 之后重启过一次。
+`netstat -ano -p tcp | grep LISTENING` 对 `60361 / 14461 / 60391 / 14492 / 4173` 现读全空
+⇒ gozero 栈与课堂栈都不在世（第二刀/第三刀的屏证要再走就得先把栈起回来）。
+D 卷现读 290G 已用／19G 可用（95%），不再是整晚卡着的 100%。
+
+所以 §50／§52／§53 的屏读仍然是"真机上按得到的"，这一点不变；但它们对的是重启前那一代工作树
+（还带着 §59 那三枚别人未提交的前端文件），不是这枚 `3ad2f482ff`。
+#339（在干净尖上重放 390 以闭合同代性保留）仍未闭，且现在多了一道前置：先把 gozero 栈与 canary 库起回来。

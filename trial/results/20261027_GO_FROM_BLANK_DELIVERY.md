@@ -1,7 +1,12 @@
 # 交付件：QODER_GO_FROM_BLANK_AND_AGENT_VISIBILITY 三刀（2026-10-27 01:08 本地 / 17:08Z 起算的同一夜）
 
-权威枝 `rescue/v3-final-departure-20261022`，本件对应尖 **12609ae5e3f08519c82d5a17511257ab68c2815b**
-（`git ls-remote` 逐字回验相同）。明细全部在 `trial/results/20261026_GO_FROM_BLANK_REPORT.md` §47–§60。
+权威枝 `rescue/v3-final-departure-20261022`，本件对应尖 **3ad2f482ff5868c396371ed6d1fa8e5d83c059bb**
+（本地与 `git ls-remote` 逐字相同；这枚是把远端新增的 19 笔——含 PR #56 `4dfeac260b` 与 CI 门禁 `575318cbf1`——
+经 `git merge-tree --write-tree` 只读预测零冲突之后 merge 进来的合并代；没有 force-push，没有 rebase 已发布枝）。
+合并代上门禁三条腿本地重放全绿：后端聚焦选择集 **213 passed**、`npx tsc -p tsconfig.check.json --noEmit` RC=0、
+`npm run build` RC=0（收据 `trial/results/20261026_gozero/ci-gate-merged-r72.txt`；§66 记了 Actions 上为何没有这一代的运行）。
+其后又落了两枚产品刀：`e5fdc2734e`（§64，已保存过的草案卡仍允许「按以上时间重新准备方案」，并在重存时换新幂等键）、
+`d1b016040e`/`739b4162e8`（W 臂派生器与 §65 读数）。明细在 `trial/results/20261026_GO_FROM_BLANK_REPORT.md` §47–§66。
 
 ## 1. PRODUCT_SHA（本夜落线的产品字节，逐笔可取回）
 

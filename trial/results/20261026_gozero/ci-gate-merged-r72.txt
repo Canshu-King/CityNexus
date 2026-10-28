@@ -1,0 +1,14 @@
+CI gate three legs replayed locally on merged tip
+tip 3ad2f482ff5868c396371ed6d1fa8e5d83c059bb
+ls-remote 3ad2f482ff5868c396371ed6d1fa8e5d83c059bb
+interp
+Python 3.12.14
+[leg1 backend] tests/test_issue49_*.py + map_active_plan_stops_r1 + wp01_wp03 + goal_route_freeze
+.....................................................................    [100%]
+213 passed in 53.59s
+PYTEST_RC=0
+[leg2 tsc] npx tsc -p tsconfig.check.json --noEmit
+TSC_RC=0
+[leg3 vite build] npm run build
+[32m✓ built in 6.31s[39m
+BUILD_RC=0
