@@ -1,0 +1,46 @@
+PROFILE_USED _chrome_gozero_be109 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=14.1
+HTTP POST 201 /api/v1/journeys/501ba597-c919-49e6-a6bd-e1953c538660/agent/goal-tasks
+HIT trips-tab true t=14.4
+CARDS 2
+MISS card-0
+HIT card-1 true t=25.0
+HTTP POST 200 /api/v1/journeys/501ba597-c919-49e6-a6bd-e1953c538660/agent/goal-tasks/dd6e2e4d-a3ad-49f6-92d8-867be2bef76f/run
+IN_CARD_1 state="当前展示的是已保存版本。" freeze="换地区 ›"
+IN_CARD_1 KEY {"id":"rev-v3-travel-gaps","count":0}
+IN_CARD_1 KEY {"id":"rev-v3-gap-shortfalls","count":0}
+IN_CARD_1 KEY {"id":"rev-v3-gap-shortfall","count":0}
+IN_CARD_1 KEY {"id":"rev-v3-replan-refusal","count":0}
+IN_CARD_1 KEY {"id":"rev-v3-replan","count":0}
+IN_CARD_1 KEY {"id":"rev-v3-replan-diff","count":0}
+IN_CARD_1 KEY {"id":"rev-v3-replan-apply","count":0}
+IN_CARD_1 KEY {"id":"rev-v3-replan-reverify","count":0}
+HIT layer-timeline true t=30.6
+ON_TIMELINE state="当前展示的是已保存版本。" freeze="换地区 ›"
+ON_TIMELINE KEY {"id":"rev-v3-travel-gaps","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfalls","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfall","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-refusal","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-diff","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-apply","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-reverify","count":0}
+MISS freeze-routes
+FREEZE_PRESSED false t=47.0
+AFTER_FREEZE state="当前展示的是已保存版本。" freeze="换地区 ›"
+AFTER_FREEZE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfalls","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_FREEZE TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_FREEZE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+REPLAN_DOOR replan=0 hit=false reverify=0 t=47.0
+NO_DOOR gaps_block={"id":"rev-v3-travel-gaps","count":0} t=47.0
+FINAL_HAS_APPLIED false
+FINAL_CLEAN true
+DONE t=47.1
