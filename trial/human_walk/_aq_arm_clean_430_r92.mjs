@@ -12,7 +12,7 @@ const TAG = String(W);
 const PROFILE = "D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_aq92";
 const BASE = "http://127.0.0.1:14462";
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
-const OUT = `${DIR}/aq2-clean-chain-430-r92.txt`;
+const OUT = `${DIR}/aq3-clean-chain-430-r92.txt`;
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (value) => { lines.push(value); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };
@@ -134,12 +134,24 @@ const saveButton = page.getByRole("button", { name: /保存为正式候选方案
 // still was not visible, because this walk ends on the 对话 screen while the draft card lives on the
 // itinerary one.  Try the hands the product may use and say which one worked -- guessing silently
 // would just reproduce the abort.
+// Readings from r95/r96: the welcome screen's nav is rev-mobile-bottom-nav, while the nav inside an
+// open journey is rev-mobile-nav (that is the testid the r91 arm enumerated its tabs through).  Try
+// the in-journey one first, then the role names, and record which hand moved.
+const inJourney = page.locator('[data-testid="rev-mobile-nav"] button');
+let moved = false;
+for (let k = 0; k < Math.min(await inJourney.count().catch(() => 0), 5) && !moved; k += 1) {
+  const text = await inJourney.nth(k).innerText().catch(() => "");
+  if (/行程|日程|计划/.test(text)) { moved = await press(inJourney.nth(k), `in-journey-${k}`, 8000); note(`IN_JOURNEY ${k} ${JSON.stringify(text.slice(0, 10))} ${moved}`); }
+}
 for (const [hand, name] of [[0, /^行程$/], [1, /行程与日程/], [2, /^我的旅程$/]].entries()) {
+  if (moved) break;
   if (await press(page.getByRole("button", { name }), `tab-hand-${hand}`, 8000)) {
     note(`TAB_USED ${hand} t=${elapsed()}`);
+    moved = true;
     break;
   }
 }
+note(`TAB_MOVED ${moved}`);
 await page.waitForTimeout(2000);
 // The r91 run aborted here for an instrument reason, not a product one: a draft heading can appear
 // while the round is still running, and the card says so out loud ("Agent 正在研究，等这一轮结束即可

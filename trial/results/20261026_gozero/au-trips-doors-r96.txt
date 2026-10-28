@@ -1,0 +1,16 @@
+PRESS rev-mobile-tab-trips count=1
+DOOR of=rev-mobile-tab-trips tag=SUMMARY text="AI 已配置 · 未验证" testid=null disabled=false visible=true top=10 href=null
+DOOR of=rev-mobile-tab-trips tag=BUTTON text="课堂演示：进入示例行程" testid=rev-demo-session disabled=false visible=true top=235 href=null
+DOOR of=rev-mobile-tab-trips tag=BUTTON text="开始探索 →" testid=rev-mobile-empty-start disabled=false visible=true top=235 href=null
+DOOR of=rev-mobile-tab-trips tag=BUTTON text="探索" testid=rev-mobile-tab-explore disabled=false visible=true top=866 href=null
+DOOR of=rev-mobile-tab-trips tag=BUTTON text="我的旅程" testid=rev-mobile-tab-trips disabled=false visible=true top=866 href=null
+DOOR of=rev-mobile-tab-trips tag=BUTTON text="我的" testid=rev-mobile-tab-me disabled=false visible=true top=866 href=null
+DOOR of=rev-mobile-tab-trips tag=BUTTON text="×" testid=null disabled=false visible=false top=0 href=null
+SCREEN_TEXT of=rev-mobile-tab-trips "C CityNexus 你的智能旅行伙伴 AI 已配置 · 未验证 TRIPS 行程 这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度。 课堂演示：进入示例行程开始探索 → AI 服务 AI 已配置 · 未验证 选好地点并确认行程后，Agent 就会开始工作。 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认"
+PRESS rev-mobile-tab-me count=1
+DOOR of=rev-mobile-tab-me tag=SUMMARY text="AI 已配置 · 未验证" testid=null disabled=false visible=true top=10 href=null
+DOOR of=rev-mobile-tab-me tag=BUTTON text="探索" testid=rev-mobile-tab-explore disabled=false visible=true top=866 href=null
+DOOR of=rev-mobile-tab-me tag=BUTTON text="我的旅程" testid=rev-mobile-tab-trips disabled=false visible=true top=866 href=null
+DOOR of=rev-mobile-tab-me tag=BUTTON text="我的" testid=rev-mobile-tab-me disabled=false visible=true top=866 href=null
+DOOR of=rev-mobile-tab-me tag=BUTTON text="×" testid=null disabled=false visible=false top=0 href=null
+SCREEN_TEXT of=rev-mobile-tab-me "C CityNexus 你的智能旅行伙伴 AI 已配置 · 未验证 CITYNEXUS 我的 开始探索后，这里会显示你的地区和助手状态。 AI 助手 AI 已配置 · 未验证 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认"
