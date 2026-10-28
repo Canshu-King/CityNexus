@@ -2263,3 +2263,14 @@ aq6 是这一串里最接近成功的一跑：t=33.3 跳过提问，t=309.7 真�
 顺带两条如实记录：① 截图文件名用的是固定 `430-aq-after-research`，aq2/aq3/aq6 互相覆盖，违反"一臂一份证据文件"，aq3 的图已经没了（它的文本收据我另存为 aq4-crash-referenceerror.txt 与 aq3-missed-hands-430-r92.txt，未受影响）；② 顶部标签在轮次未返回时呈灰色，这与 §91 里草稿输入框被禁用是同一族的产品行为，但**我没有把它写成缺陷**——因为我还没读到那两枚按钮的 `disabled` 读数，普查腿就是为拿这个读数而加的。
 
 现尖 `f7bba7a6d0` 之后本次只动臂与本报告，产品字节 0 改；409 屏证一格仍标未证，不并入任何"完成"。
+## 96. 第 2 刀对着现尖重审：一处真缺口、一处达标、一处我只敢写"未确认"
+
+等 aq7 出草案的空档，我把派单第 2 刀的三项要求逐条对着 `ea51658c9a` 的代码走了一遍——不是复述当初做了什么，而是按"旅客能不能看到"重新读。三条的结论不一样，分开写。
+
+**2a「真实 AgentRunStep 做成可展开的工具时间线」——不满足，这是真缺口。** 承担这件事的组件是 [features/agent/AgentRunRail.tsx](file:///d/moodle/_cmdr_rescue_v3_1022/frontend/src/features/agent/AgentRunRail.tsx)，现读 27 行：一个 `<ol className="cn-agent-rail" aria-live="polite">`，每步渲染 `<b>{step.label}</b>` 加可选 `<small>{step.runMeta}</small>`。全树 `grep` 该文件里没有 `details`、`summary`、`aria-expanded`、`expand` 任何一词——**它是扁平进度轨，不是可展开时间线**。另一半要求它是满足的：`:6-9` 的注释写明 `label` 是"这一屏自己的措辞、由调用方构造"，并且特意把过去那个叫 `detail` 的槽改名，因为"用一个上游答案的字段名渲染的槽，无法与转发那句话区分（Q64/Q71）"——所以"不外泄模型私有文本"这一条有设计依据。但"可展开、能逐步看真实工具调用状态与来源"这一条没有实现。
+
+**2b「接受键旁边给新旧方案 diff，缺的费用写未知」——在旅客侧那一屏是有的。** 旅客侧真正调 `acceptReplan` 的是 [trial/mobile/GuardianRealityPanel.tsx:356](file:///d/moodle/_cmdr_rescue_v3_1022/frontend/src/trial/mobile/GuardianRealityPanel.tsx#L356)，而同一文件 `:152-157` 就在读 `proposal.diff.removed` / `proposal.diff.added` 并铸成句子（「移除…」「加入…」，取不到站名时退化成「移除 N 站」）。另外两处同类实现也在世：课堂演示侧 `ClassroomPresenterPanel.tsx:298-308` 逐条列 移除/加入/挪动，并对 `cost == null` 与 `travel == null` 写「未知」；旧应用壳 `LegacyApp.tsx:1725` 用 `testIds.replanDiff` 渲染 `proposalDiffText`（:122）。**注意我核对时踩的一个坑**：我先在 `trial/mobile/MobilePlanWorkbench.tsx` 里找 diff，0 命中，差点写成"旅客屏没有 diff"——真正的接受面板是 `GuardianRealityPanel`，不是工作台。缺席结论要带清单，清单得先找对读者。
+
+**2c「接受之后主动刷新外层 Journey/PlanVersion/活动/地图/状态」——未确认。** 我只读到四个 `acceptReplan` 调用方（`LegacyApp.tsx:932`、`features/simulation/SimulationPanel.tsx:653`、`ClassroomPresenterPanel.tsx:343`、`GuardianRealityPanel.tsx:356`），还没有逐一读它们在 accept 返回之后各自刷了哪些面。历史上 #335 修过"接受后地图 0 处地点"、#337/#339 在 390/430 证过接受后地图站点数与活动数相等（6=6），那是**旧代次的屏证**；现尖这一格我不写满足，也不写不满足，等读调用方。
+
+所以第 2 刀的当前状态是：2a 有一处需要补的产品缺口（可展开），2b 达标，2c 待读。这三条我都只报代码形状，屏上证词另说——尤其不要把"组件里有这段逻辑"当成"旅客在 430 屏上看到过"。
