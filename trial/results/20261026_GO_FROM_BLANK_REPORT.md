@@ -1472,3 +1472,60 @@ profile `_chrome_gozero_x73`→`_chrome_gozero_y75`、收据名），派生器�
   纯净树第一次跑到就露出来了。
 - 下一步（新格，未开工）：读 `GOAL_TASK_REQUIRES_DRAFT_JOURNEY` 是在哪一步把旅程挪出 DRAFT 的
   （`backend/app/` 里 `prepare-plan` 的状态断言），然后决定这一刀是"把状态门说清楚"还是"根本不该挪"。
+## 69. 纯净尖走到哪一格：Y 臂终态——方案其实已经生效，是我的量具没看见那颗出发键
+
+Y 臂（`trial/human_walk/_y_arm_clean_r75.mjs`，收据 `trial/results/20261026_gozero/clean-chain-390-r75.txt`，
+终拍 `X_END … t=891.6`）在纯净尖 `d5deb1f34c`＋dirty 0 那棵树上真走到的位置：
+
+### 一、库里落成的事实与屏上点名的安排是同一件事
+
+只读连接（`mode=ro`）现读 `E:/_cmdr_clean_1028_data/citynexus_v3_clean_1028.db`：
+
+| 读 | 值 |
+| --- | --- |
+| `journeys.status` | `PLANNED`（journey `d44da3bc-aed1-4d5a-8d16-af53efaffa44`） |
+| `journeys.active_plan_version_id` | `7a05ed66-eaf9-42ab-9b9f-3abe22ad63f7`——非空 |
+| `plan_versions` 计数 | 一枚（`created_at 2026-10-28T02:33:59Z`） |
+| `activities` 计数 | 五条 |
+
+同一时刻屏上把这几条逐一点名（`SURVEY_PLAN_AFTER_FORMAL` 现读的输入框标签）：
+「故宫博物院开始/结束时间」「景山公园（含北海公园，相邻约400米）…」「王府井步行街…」「颐和园（东门进，逛长廊、佛香阁、昆明湖）…」，
+旁边还有「＋ 添加安排」与「检查草案保存状态」两颗键。⇒ 冷首屏→输入→研究→续跑→保存这条链
+在**纯净尖上确实产出了正式安排**，不是演示壳。
+
+### 二、§47／#336 那一族在纯净尖上没有复现
+
+```
+X_PLAN_GAPS ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"]
+X_SELECT 0 enabled=false   X_START 1
+```
+
+缺口清单里**没有** `PLACE_REQUIRED` 句，只剩一句费用披露。
+而且方案屏给的不是选用键而是出发键（`rev-plan-select` 计数为 0、`rev-plan-start` 计数为一枚），
+与 `active_plan_version_id` 非空相互印证。所以今晚脏树反复撞到的"被 `PLACE_REQUIRED` 挡一次"那一环，
+在纯净尖这一趟里根本没发生——它不是产品不变量，是那一趟的地点解析结果决定的。
+
+### 三、我的量具第五次吞掉出路（记成仪表缺陷，不记成产品缺陷）
+
+尾段那一支的条件写的是 `if (await xSelect.count() && xSelectState)`，
+于是当屏上只有出发键时它整段跳过，臂直接收工——明明同一拍就记着 `X_START 1`。
+这与 §63「按不动是量具造的」同族。修法是放宽而不是加保险：
+
+```
+if ((await xSelect.count()) || (await xStart.count())) {
+```
+
+派生成 `trial/human_walk/_aa_arm_clean_r77.mjs`（三处替换逐条断言：该条件唯一、profile 与收据名各唯一），
+`node --check` 过后正在同一棵干净树上跑（收据 `trial/results/20261026_gozero/aa-clean-chain-390-r77.txt`）。
+
+另一条不能升格的话：`MISS find-city hidden`——探索屏 `rev-quick-find-city` 存在但 `isVisible()` 为假，
+我的 `pressNear` 判 hidden 就放弃。这只能说明**我的臂没滚到那颗键**，不足以判"旅客到不了探索入口"；
+AA 臂那一趟会带滚动后重测，届时才有资格定性。
+
+### 四、一个必须现在就写下的代次事实
+
+AA 臂跑的仍是 worktree 那枚 `d5deb1f34c`，**不含** `2b12752108`（把「已排好还在教人重试」改成实话那一刀）
+也不含 `9592e47c94` 之后的改动。所以 AA 臂即使撞回 409 循环，屏上的句子仍是旧的。
+看新刀的屏证要把树推进到现尖再跑，命令（AA 结束后做，中途做会 HMR 污染正在读的屏）：
+
+    git -C E:/_cmdr_clean_1028 fetch origin && git -C E:/_cmdr_clean_1028 checkout --detach <现尖四十位>
