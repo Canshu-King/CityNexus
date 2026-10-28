@@ -1,0 +1,9 @@
+[  11.1s] active-page fix Teacher_01_System_Overview.vsdx: reopened on '系统总览' (OK)
+[  13.3s] Teacher_01_System_Overview: 0 failures, 8 nodes, 7 edges, pages=['系统总览', '附注']
+[  25.6s] active-page fix Teacher_02_Agent_User_Flow.vsdx: reopened on '用户流程' (OK)
+[  27.8s] Teacher_02_Agent_User_Flow: 0 failures, 9 nodes, 9 edges, pages=['用户流程', '附注']
+[  38.3s] active-page fix Teacher_01_System_Overview_EN.vsdx: reopened on 'System Overview' (OK)
+[  40.5s] Teacher_01_System_Overview_EN: 0 failures, 8 nodes, 7 edges, pages=['System Overview', 'Appendix']
+[  51.0s] active-page fix Teacher_02_Agent_User_Flow_EN.vsdx: reopened on 'User Flow' (OK)
+[  53.3s] Teacher_02_Agent_User_Flow_EN: 0 failures, 9 nodes, 9 edges, pages=['User Flow', 'Appendix']
+[  53.3s] TEACHER DIAGRAMS R2 OK (4 built, 0 refused)

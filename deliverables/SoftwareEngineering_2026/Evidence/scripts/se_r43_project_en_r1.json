@@ -1,0 +1,406 @@
+{
+ "audit": {
+  "tasks": 65,
+  "summaries": 11,
+  "milestones": 13,
+  "links": 61,
+  "assignments": 61,
+  "summaryRollupDrift": [],
+  "renamedSummaries": 11,
+  "renamedMilestones": 5,
+  "missingOriginalNames": [],
+  "summaryNamesEN": [
+   "1  Coursework initiation and project selection",
+   "2  Requirements engineering",
+   "3  System design and architecture",
+   "4  Backend platform and data layer",
+   "5  Map and place data integration",
+   "6  AI agent and Hermes capability",
+   "7  Frontend UI and interaction",
+   "8  Integration and consolidation",
+   "9  Verification and defect management",
+   "10  Coursework deliverables and reporting",
+   "11  Final acceptance, documentation and delivery"
+  ],
+  "milestoneDatesKept": true,
+  "frozenTwinUnchanged": true,
+  "sha256_16": "deeb1500b4cd257d",
+  "bytes": 477184
+ },
+ "base": {
+  "summaries": {
+   "1": {
+    "name": "选题、立项与分工",
+    "start": "2026-09-07",
+    "finish": "2026-09-09",
+    "pct": 100,
+    "work": 660.0,
+    "cost": 220.0
+   },
+   "6": {
+    "name": "需求工程与基线",
+    "start": "2026-09-09",
+    "finish": "2026-10-21",
+    "pct": 81,
+    "work": 1379.9,
+    "cost": 459.97
+   },
+   "12": {
+    "name": "系统设计与架构",
+    "start": "2026-09-16",
+    "finish": "2026-09-22",
+    "pct": 100,
+    "work": 1379.7,
+    "cost": 459.9
+   },
+   "17": {
+    "name": "后端平台与数据层",
+    "start": "2026-09-16",
+    "finish": "2026-10-23",
+    "pct": 83,
+    "work": 1318.9,
+    "cost": 439.65
+   },
+   "24": {
+    "name": "地图与地点数据接入",
+    "start": "2026-09-16",
+    "finish": "2026-09-28",
+    "pct": 69,
+    "work": 899.9,
+    "cost": 299.97
+   },
+   "30": {
+    "name": "AI Agent 与 Hermes 能力",
+    "start": "2026-09-16",
+    "finish": "2026-10-07",
+    "pct": 82,
+    "work": 1319.6,
+    "cost": 451.87
+   },
+   "37": {
+    "name": "前端界面与交互",
+    "start": "2026-09-16",
+    "finish": "2026-10-01",
+    "pct": 100,
+    "work": 959.7,
+    "cost": 325.9
+   },
+   "42": {
+    "name": "集成、联调与归并",
+    "start": "2026-09-16",
+    "finish": "2026-09-23",
+    "pct": 75,
+    "work": 540.0,
+    "cost": 186.0
+   },
+   "46": {
+    "name": "验证与缺陷管理",
+    "start": "2026-09-24",
+    "finish": "2026-10-21",
+    "pct": 58,
+    "work": 2038.9,
+    "cost": 697.65
+   },
+   "54": {
+    "name": "课程交付物与汇报",
+    "start": "2026-09-23",
+    "finish": "2026-10-23",
+    "pct": 52,
+    "work": 2339.3,
+    "cost": 779.78
+   },
+   "62": {
+    "name": "最终验收、文档与交付",
+    "start": "2026-10-19",
+    "finish": "2026-10-23",
+    "pct": 75,
+    "work": 420.0,
+    "cost": 140.0
+   }
+  },
+  "milestones": {
+   "5": {
+    "name": "M1 选题与范围确认",
+    "tag": "M1",
+    "start": "2026-09-08",
+    "finish": "2026-09-08",
+    "deadline": "NA"
+   },
+   "10": {
+    "name": "M2 需求基线草稿",
+    "tag": "M2",
+    "start": "2026-09-15",
+    "finish": "2026-09-15",
+    "deadline": "NA"
+   },
+   "16": {
+    "name": "M3 架构设计完成",
+    "tag": "M3",
+    "start": "2026-09-22",
+    "finish": "2026-09-22",
+    "deadline": "NA"
+   },
+   "23": {
+    "name": "M4 后端主干跑通",
+    "tag": "M4",
+    "start": "2026-10-05",
+    "finish": "2026-10-05",
+    "deadline": "NA"
+   },
+   "29": {
+    "name": "M5 供应商接齐",
+    "tag": "M5",
+    "start": "2026-09-28",
+    "finish": "2026-09-28",
+    "deadline": "NA"
+   },
+   "36": {
+    "name": "M6 Agent 实测通过",
+    "tag": "M6",
+    "start": "2026-10-05",
+    "finish": "2026-10-05",
+    "deadline": "NA"
+   },
+   "41": {
+    "name": "M7 前端接通后端",
+    "tag": "M7",
+    "start": "2026-10-01",
+    "finish": "2026-10-01",
+    "deadline": "NA"
+   },
+   "45": {
+    "name": "M8 集成线稳定",
+    "tag": "M8",
+    "start": "2026-09-23",
+    "finish": "2026-09-23",
+    "deadline": "NA"
+   },
+   "53": {
+    "name": "M9 系统测试就绪",
+    "tag": "M9",
+    "start": "2026-10-06",
+    "finish": "2026-10-06",
+    "deadline": "2026-11-02"
+   },
+   "59": {
+    "name": "M10 10-02 待确认",
+    "tag": "M10",
+    "start": "2026-09-29",
+    "finish": "2026-09-29",
+    "deadline": "2026-10-02"
+   },
+   "60": {
+    "name": "M11 10-23 待确认",
+    "tag": "M11",
+    "start": "2026-10-16",
+    "finish": "2026-10-16",
+    "deadline": "2026-10-23"
+   },
+   "61": {
+    "name": "M12 11-06 截止",
+    "tag": "M12",
+    "start": "2026-10-23",
+    "finish": "2026-10-23",
+    "deadline": "2026-11-06"
+   },
+   "65": {
+    "name": "M13 10-23 交付",
+    "tag": "M13",
+    "start": "2026-10-23",
+    "finish": "2026-10-23",
+    "deadline": "2026-11-06"
+   }
+  },
+  "tasks": 65,
+  "links": 61,
+  "assignments": 61
+ },
+ "back": {
+  "summaries": {
+   "1": {
+    "name": "1  Coursework initiation and project selection",
+    "start": "2026-09-07",
+    "finish": "2026-09-09",
+    "pct": 100,
+    "work": 660.0,
+    "cost": 220.0
+   },
+   "6": {
+    "name": "2  Requirements engineering",
+    "start": "2026-09-09",
+    "finish": "2026-10-21",
+    "pct": 81,
+    "work": 1379.9,
+    "cost": 459.97
+   },
+   "12": {
+    "name": "3  System design and architecture",
+    "start": "2026-09-16",
+    "finish": "2026-09-22",
+    "pct": 100,
+    "work": 1379.7,
+    "cost": 459.9
+   },
+   "17": {
+    "name": "4  Backend platform and data layer",
+    "start": "2026-09-16",
+    "finish": "2026-10-23",
+    "pct": 83,
+    "work": 1318.9,
+    "cost": 439.65
+   },
+   "24": {
+    "name": "5  Map and place data integration",
+    "start": "2026-09-16",
+    "finish": "2026-09-28",
+    "pct": 69,
+    "work": 899.9,
+    "cost": 299.97
+   },
+   "30": {
+    "name": "6  AI agent and Hermes capability",
+    "start": "2026-09-16",
+    "finish": "2026-10-07",
+    "pct": 82,
+    "work": 1319.6,
+    "cost": 451.87
+   },
+   "37": {
+    "name": "7  Frontend UI and interaction",
+    "start": "2026-09-16",
+    "finish": "2026-10-01",
+    "pct": 100,
+    "work": 959.7,
+    "cost": 325.9
+   },
+   "42": {
+    "name": "8  Integration and consolidation",
+    "start": "2026-09-16",
+    "finish": "2026-09-23",
+    "pct": 75,
+    "work": 540.0,
+    "cost": 186.0
+   },
+   "46": {
+    "name": "9  Verification and defect management",
+    "start": "2026-09-24",
+    "finish": "2026-10-21",
+    "pct": 58,
+    "work": 2038.9,
+    "cost": 697.65
+   },
+   "54": {
+    "name": "10  Coursework deliverables and reporting",
+    "start": "2026-09-23",
+    "finish": "2026-10-23",
+    "pct": 52,
+    "work": 2339.3,
+    "cost": 779.78
+   },
+   "62": {
+    "name": "11  Final acceptance, documentation and delivery",
+    "start": "2026-10-19",
+    "finish": "2026-10-23",
+    "pct": 75,
+    "work": 420.0,
+    "cost": 140.0
+   }
+  },
+  "milestones": {
+   "5": {
+    "name": "M1 选题与范围确认",
+    "tag": "M1",
+    "start": "2026-09-08",
+    "finish": "2026-09-08",
+    "deadline": "NA"
+   },
+   "10": {
+    "name": "M2 需求基线草稿",
+    "tag": "M2",
+    "start": "2026-09-15",
+    "finish": "2026-09-15",
+    "deadline": "NA"
+   },
+   "16": {
+    "name": "M3 架构设计完成",
+    "tag": "M3",
+    "start": "2026-09-22",
+    "finish": "2026-09-22",
+    "deadline": "NA"
+   },
+   "23": {
+    "name": "M4 后端主干跑通",
+    "tag": "M4",
+    "start": "2026-10-05",
+    "finish": "2026-10-05",
+    "deadline": "NA"
+   },
+   "29": {
+    "name": "M5 供应商接齐",
+    "tag": "M5",
+    "start": "2026-09-28",
+    "finish": "2026-09-28",
+    "deadline": "NA"
+   },
+   "36": {
+    "name": "M6 Agent 实测通过",
+    "tag": "M6",
+    "start": "2026-10-05",
+    "finish": "2026-10-05",
+    "deadline": "NA"
+   },
+   "41": {
+    "name": "M7 前端接通后端",
+    "tag": "M7",
+    "start": "2026-10-01",
+    "finish": "2026-10-01",
+    "deadline": "NA"
+   },
+   "45": {
+    "name": "M8 集成线稳定",
+    "tag": "M8",
+    "start": "2026-09-23",
+    "finish": "2026-09-23",
+    "deadline": "NA"
+   },
+   "53": {
+    "name": "M9  System test ready (plan 10-06, deadline 11-02)",
+    "tag": "M9",
+    "start": "2026-10-06",
+    "finish": "2026-10-06",
+    "deadline": "2026-11-02"
+   },
+   "59": {
+    "name": "M10  Part 1 contract deadline 10-02 (submission record pending platform confirmation)",
+    "tag": "M10",
+    "start": "2026-09-29",
+    "finish": "2026-09-29",
+    "deadline": "2026-10-02"
+   },
+   "60": {
+    "name": "M11  10-23 teacher-student meeting (held? unconfirmed)",
+    "tag": "M11",
+    "start": "2026-10-16",
+    "finish": "2026-10-16",
+    "deadline": "2026-10-23"
+   },
+   "61": {
+    "name": "M12  Part 2 contract deadline 11-06",
+    "tag": "M12",
+    "start": "2026-10-23",
+    "finish": "2026-10-23",
+    "deadline": "2026-11-06"
+   },
+   "65": {
+    "name": "M13  Course delivery complete (plan 10-23)",
+    "tag": "M13",
+    "start": "2026-10-23",
+    "finish": "2026-10-23",
+    "deadline": "2026-11-06"
+   }
+  },
+  "tasks": 65,
+  "links": 61,
+  "assignments": 61
+ }
+}

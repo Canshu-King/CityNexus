@@ -1,0 +1,31 @@
+{
+ "vsdx": "Teacher_02_Agent_User_Flow.vsdx",
+ "sha256_16": "b5f9392370d22f05",
+ "loop": {
+  "connectorName": "动态连接线.23",
+  "flowEdge": "t2n7->t2n3",
+  "gluedTo": [
+   "t2n3",
+   "t2n7"
+  ],
+  "ends": {
+   "begin": [
+    6.625,
+    4.36
+   ],
+   "end": [
+    6.625,
+    5.13
+   ]
+  },
+  "routeExt": "2",
+  "beginArrow": "0",
+  "endArrow": "4",
+  "arrowSize": "3",
+  "endArrowValue": 4.0,
+  "beginArrowValue": 0.0
+ },
+ "findings": [],
+ "verdict": "LOOP_OK: connector 动态连接线.23 is glued to both boxes, its tail sits on 继续调整方案 top edge (6.625,4.360) and its arrow head enters 调用地点与路线工具 bottom edge (6.625,5.130); EndArrow=4, BeginArrow=0",
+ "unchanged": true
+}

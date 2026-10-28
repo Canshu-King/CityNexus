@@ -1,0 +1,7 @@
+[   0.0s] frozen zh twin sha256/16 30af900a34a46f0d65b0e491ecd87e607005b4b0d388109f2a273a9b3553e72f (read-only during this run)
+[   0.0s] copied -> Teacher_03_Project_Overview_R4_EN.mpp (475136 bytes)
+[   2.8s] before: tasks=65 summaries=11 milestones=13 links=61 assignments=61
+[   4.3s] EN display names written: 11 summaries, 5 milestones
+[   4.4s] saved (589824 bytes)
+[   9.9s] read back: {"tasks": 65, "summaries": 11, "milestones": 13, "links": 61, "assignments": 61, "summaryRollupDrift": [], "renamedSummaries": 11, "renamedMilestones": 5, "missingOriginalNames": [], "summaryNamesEN": ["1  Coursework initiation and project selection", "2  Requirements engineering", "3  System design and architecture", "4  Backend platform and data layer", "5  Map and place data integration", "6  AI agent and Hermes capability", "7  Frontend UI and interaction", "8  Integration and consolidation", "9  Verification and defect management", "10  Coursework deliverables and reporting", "11  Final acceptance, documentation and delivery"], "milestoneDatesKept": true, "frozenTwinUnchanged": true, "sha256_16": "deeb1500b4cd257d", "bytes": 477184}
+[   9.9s] PROJECT EN BUILD OK: 65 tasks, 11 summaries renamed, 5 milestones renamed, 61 links, 61 assignments

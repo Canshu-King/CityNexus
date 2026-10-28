@@ -1,0 +1,65 @@
+{
+ "copy": "E:\\r43_review\\_rt_Teacher_02_edited_copy.vsdx",
+ "notes": [],
+ "sourceLoop": {
+  "gluedTo": [
+   "t2n3",
+   "t2n7"
+  ],
+  "flowEdge": "t2n7->t2n3",
+  "begin": [
+   6.625,
+   4.36
+  ],
+  "end": [
+   6.625,
+   5.13
+  ],
+  "endArrow": 4.0,
+  "beginArrow": 0.0
+ },
+ "shapesEdited": 1,
+ "reopenTextFound": 1,
+ "reopenShapes": 23,
+ "reopenConnects": 18,
+ "reopenedLoop": {
+  "gluedTo": [
+   "t2n3",
+   "t2n7"
+  ],
+  "flowEdge": "t2n7->t2n3",
+  "begin": [
+   6.625,
+   4.36
+  ],
+  "end": [
+   6.625,
+   5.13
+  ],
+  "endArrow": 4.0,
+  "beginArrow": 0.0
+ },
+ "dragTest": {
+  "boxPinBefore": [
+   6.625,
+   3.9
+  ],
+  "tailBefore": [
+   6.625,
+   4.36
+  ],
+  "tailAfter": [
+   7.125,
+   4.66
+  ],
+  "followed": true,
+  "tailAfterUndo": [
+   6.625,
+   4.36
+  ]
+ },
+ "copyDigest": "d91783e038d6cda5",
+ "digestBefore": "b5f9392370d22f05",
+ "digestAfter": "b5f9392370d22f05",
+ "sourceUnchanged": true
+}

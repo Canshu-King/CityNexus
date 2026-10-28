@@ -1,0 +1,84 @@
+[
+ {
+  "file": "Teacher_01_System_Overview",
+  "app": "visio",
+  "title": "Teacher_01_System_Overview.vsdx  [只读] - Visio Professional",
+  "printwindow_ok": true,
+  "frame_px": [
+   2416,
+   1048
+  ],
+  "bytes": 209136,
+  "ink_whole": 0.5988,
+  "ink_body": 0.5705
+ },
+ {
+  "file": "Teacher_02_Agent_User_Flow",
+  "app": "visio",
+  "title": "Teacher_02_Agent_User_Flow.vsdx  [只读] - Visio Professional",
+  "printwindow_ok": true,
+  "frame_px": [
+   2416,
+   1048
+  ],
+  "bytes": 207999,
+  "ink_whole": 0.5751,
+  "ink_body": 0.5387
+ },
+ {
+  "file": "Teacher_01_System_Overview_EN",
+  "app": "visio",
+  "title": "Teacher_01_System_Overview_EN.vsdx  [只读] - Visio Professional",
+  "printwindow_ok": true,
+  "frame_px": [
+   2416,
+   1048
+  ],
+  "bytes": 205378,
+  "ink_whole": 0.5995,
+  "ink_body": 0.5714
+ },
+ {
+  "file": "Teacher_02_Agent_User_Flow_EN",
+  "app": "visio",
+  "title": "Teacher_02_Agent_User_Flow_EN.vsdx  [只读] - Visio Professional",
+  "printwindow_ok": true,
+  "frame_px": [
+   2416,
+   1048
+  ],
+  "bytes": 208280,
+  "ink_whole": 0.5752,
+  "ink_body": 0.5388
+ },
+ {
+  "file": "Teacher_03_Project_Overview_R4",
+  "app": "project",
+  "title": "Project Professional - Teacher_03_Project_Overview_R4.mpp [只读]",
+  "printwindow_ok": true,
+  "frame_px": [
+   2416,
+   1048
+  ],
+  "bytes": 164948,
+  "ink_whole": 0.1919,
+  "ink_body": 0.0678,
+  "ink_chart_half": 0.0552,
+  "ink_table_half": 0.1035
+ },
+ {
+  "file": "Teacher_03_Project_Overview_R4_EN",
+  "app": "project",
+  "title": "Project Professional - Teacher_03_Project_Overview_R4_EN.mpp [只读]",
+  "printwindow_ok": true,
+  "frame_px": [
+   2416,
+   1048
+  ],
+  "bytes": 146259,
+  "ink_whole": 0.1844,
+  "ink_body": 0.0588,
+  "ink_chart_half": 0.0494,
+  "ink_table_half": 0.088
+ }
+]

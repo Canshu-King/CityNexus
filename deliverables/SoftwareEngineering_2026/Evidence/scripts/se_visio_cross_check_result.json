@@ -1,0 +1,110 @@
+[
+ {
+  "file": "Teacher_01_System_Overview.vsdx",
+  "crossings": [],
+  "throughShapes": [],
+  "offPage": [],
+  "readFailures": [],
+  "connectors": 7,
+  "notes": [],
+  "pages": [
+   {
+    "name": "系统总览",
+    "shapesOnPage": 19,
+    "shapes": 12,
+    "connectors": 7,
+    "connects": 14
+   },
+   {
+    "name": "附注",
+    "shapesOnPage": 8,
+    "shapes": 8,
+    "connectors": 0,
+    "connects": 0
+   }
+  ],
+  "unchanged": true,
+  "sha256_16": "069929aa1666580d"
+ },
+ {
+  "file": "Teacher_02_Agent_User_Flow.vsdx",
+  "crossings": [],
+  "throughShapes": [],
+  "offPage": [],
+  "readFailures": [],
+  "connectors": 9,
+  "notes": [],
+  "pages": [
+   {
+    "name": "用户流程",
+    "shapesOnPage": 23,
+    "shapes": 14,
+    "connectors": 9,
+    "connects": 18
+   },
+   {
+    "name": "附注",
+    "shapesOnPage": 10,
+    "shapes": 10,
+    "connectors": 0,
+    "connects": 0
+   }
+  ],
+  "unchanged": true,
+  "sha256_16": "b5f9392370d22f05"
+ },
+ {
+  "file": "Teacher_01_System_Overview_EN.vsdx",
+  "crossings": [],
+  "throughShapes": [],
+  "offPage": [],
+  "readFailures": [],
+  "connectors": 7,
+  "notes": [],
+  "pages": [
+   {
+    "name": "System Overview",
+    "shapesOnPage": 19,
+    "shapes": 12,
+    "connectors": 7,
+    "connects": 14
+   },
+   {
+    "name": "Appendix",
+    "shapesOnPage": 8,
+    "shapes": 8,
+    "connectors": 0,
+    "connects": 0
+   }
+  ],
+  "unchanged": true,
+  "sha256_16": "7ea95c28576f5a83"
+ },
+ {
+  "file": "Teacher_02_Agent_User_Flow_EN.vsdx",
+  "crossings": [],
+  "throughShapes": [],
+  "offPage": [],
+  "readFailures": [],
+  "connectors": 9,
+  "notes": [],
+  "pages": [
+   {
+    "name": "User Flow",
+    "shapesOnPage": 23,
+    "shapes": 14,
+    "connectors": 9,
+    "connects": 18
+   },
+   {
+    "name": "Appendix",
+    "shapesOnPage": 11,
+    "shapes": 11,
+    "connectors": 0,
+    "connects": 0
+   }
+  ],
+  "unchanged": true,
+  "sha256_16": "1044e869d607d097"
+ }
+]

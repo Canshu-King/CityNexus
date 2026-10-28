@@ -1180,6 +1180,16 @@ class Builder:
                                       % (key, type(exc).__name__))
             raise GateError("%d layout/semantics failure(s); first: %s"
                             % (len(rep["failures"]), rep["failures"][0]))
+        # A multi-page save used to leave the last-filled page active, and Visio
+        # remembers the active page across saves - a teacher double-clicking the
+        # file landed on the appendix instead of the classroom sheet. Measured on
+        # this install: Page.Activate does not even exist on the COM binding,
+        # but assigning the drawing window's Page does, and it survives
+        # save/reopen (probe: E:\r43_review\_probe_activepage.vsdx run).
+        try:
+            self.doc.ActiveWindow.Page = self.doc.Pages.Item(1)
+        except Exception:
+            self.notes.append("active-page reset to page 1 failed")
         self.doc.SaveAs(self.out["vsdx"])
         stem = os.path.splitext(self.out["png"])[0]
         for i in range(1, self.doc.Pages.Count + 1):
