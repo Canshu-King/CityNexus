@@ -1633,3 +1633,58 @@ AD 臂（`trial/human_walk/_ad_arm_clean_r80.mjs`，收据 `trial/results/202610
 `open` 读到 false 就是 React 把它当受控属性丢掉了（改法：`defaultOpen` 状态或直接把 pane 从 details 里提出来）；
 `open` 为 true 而那颗键 `visibility/height` 为零，就顺着 `parentDisplay` 那一层继续找。两种结果分别对应不同的刀，
 我不在这两种之外先落第三枚改动。
+## 73. 勘误＋新读数：我那枚 `open` 刀其实生效了；而"键不可见"连续两次都是我的量具不在那一屏
+
+### 一、对 §72 的勘误（旧正文不改，这里发新的）
+
+§72 我写的是「现读判为未生效」。AF 臂在同一棵零 dirty 树上把那一拍的 DOM 形状读了出来
+（收据 `trial/results/20261026_gozero/af-clean-chain-390-r82.txt`，`t=1234.9`）：
+
+    PANE_SHAPE detailsOpen=true
+             detailsBox {w:0,h:0,top:0, display:block, visibility:visible, opacity:1}
+             summaryBox {w:0,h:0, display:list-item, visibility:visible}
+             keyBox     {w:0,h:0, display:flex, visibility:visible}
+             keyAncestors BUTTON(flex) → .rev-quick-inline(grid) → .rev-quick-pane(block)
+                          → .rev-quick-secondary(block) → .rev-quick(block) → .rev-firstlook-real-ui(block)
+    KEY_ISVISIBLE_NOW false count=1
+
+`detailsOpen=true` ⇒ **`840534ec11` 那枚默认展开的刀是生效的**，§72 那句"未生效"作废。
+祖先六层的 `display/visibility/opacity/overflow` 全部正常，没有任何规则把尺寸压成零——所以那颗键的 `0×0` 不是"被样式藏起来"。
+
+### 二、那 `0×0` 的真正形状：我的臂不在那一屏
+
+同一拍的另一条读数是决定性的：`PLAN_HAND 0`。这颗 hand 是旅客从方案屏进探索屏**唯一**的入口（`MobilePlanWorkbench.tsx:376`）。
+它计数为零，意味着那一拍旅客手上没有入口，而我却拿 `EXPLORE_STAGE_PROBE area=1 explore=1` 当作"已经站在探索屏"——
+那个判据用的是 **`count()`，即 DOM 里存不存在**，不是"这位旅客眼前有没有这块"。
+AD 臂同一位置也是 `PLAN_HAND 0` ＋同一颗键 hidden，两臂同因。
+
+⇒ 「探索屏的查询键旅客按不到」这条**产品定性不成立**，它是我的仪表第 8 次同一形状
+（`DOM 存在≠已渲染`；与 §63 的 strict-mode 误读、10-05 傍晚"折叠层没点开就量"同源）。
+连带把 `840534ec11` 的依据降级：代码事实仍然成立——那段 pane 确实包在默认关闭、标题写着「我想自己先挑地点（可选）」的折叠层里，
+而同一屏的句子是「这里可以手动查找地点」；但"旅客因此按不到"没有屏证，我不再用它作理由。
+
+### 三、AF 终拍与 AD 同形，而我又一次只读了第一枚
+
+```
+TELLS_REFRESH false start=0 select=3   t=1304.2
+HIT select-final {"hitSelf":true,"cx":187.65,"cy":411.76,"disabled":true}
+```
+
+`disabled` 是 `.first()` 一枚的读数——这与 §63「我把 select.isEnabled() 取在 locator 上」是同族的偷懒。
+而只读库里 AF 这一趟（journey `81c256c7`）的三枚候选是：
+
+| 候选 | lifecycle / status | mobility_snapshot | unresolved_facts 的 kinds | 活动数 |
+| --- | --- | --- | --- | --- |
+| `a28609a8` | ACTIVE / CANDIDATE | `7889a669` | 全 `ADMISSION_PRICE` | 9 |
+| `2952ce86` | ACTIVE / CANDIDATE | 非空（快照 id 我不在这里转抄，逐枚形状见收据） | 全 `ADMISSION_PRICE` | 9 |
+| `e669021c` | ACTIVE / CANDIDATE | `a4b22de3` | 全 `ADMISSION_PRICE` | 9 |
+
+`services.py:992` 的选用判据是 `lifecycle != STANDBY and not stale and authority_blocker is None`，
+而 `services.py:742` 的阻断只在 `SOURCE_IDENTITY`/`PLACE_REQUIRED` 那两族缺口上——这三枚**一枚都没有**。
+⇒ 三枚都禁用与服务器判据不一致，但也可能只是我 `.first()` 那一枚恰好 `stale`（快照过期）。
+所以下一臂的判据写死成逐枚读，而不是 `.first()`：
+
+    page.locator('[data-testid="rev-plan-select"]').evaluateAll(nodes => nodes.map(n => ({disabled: n.disabled, card: n.closest('[data-testid]')?.getAttribute('data-testid'), text: (n.closest('article,section,div')?.innerText || '').replace(/\s+/g,' ').slice(0,90)})))
+
+（本节数据来自只读 sqlite 连接（`mode=ro`），用途是给屏证到的"键是灰的"找服务器给的理由；
+屏证本身仍然是真机上按出来的，没有用 API 替代任何一次旅客点击。）
