@@ -88,7 +88,7 @@ const before1 = await daySlots(0);
 const before2 = await daySlots(1);
 note(`BEFORE_DAY1 ${JSON.stringify(before1)}`);
 note(`BEFORE_DAY2 ${JSON.stringify(before2)}`);
-await shot("half-day-430-before");
+await shot("half-day-430-r34-before");
 
 const day2 = page.locator("#rev-v3-day-1");
 const targetIndex = before2.findIndex((text) => /下午/.test(text)) >= 0
@@ -123,6 +123,6 @@ note(`AFTER_DAY2 ${JSON.stringify(after2)}`);
 note(`DAY1_UNCHANGED ${JSON.stringify(before1) === JSON.stringify(after1)}`);
 const changed = after2.filter((text, i) => before2[i] !== text);
 note(`DAY2_CHANGED ${JSON.stringify(changed)}`);
-await shot("half-day-430-after");
+await shot("half-day-430-r34-after");
 note(`ERRORS ${JSON.stringify(errors.slice(0, 3))}`);
 await ctx.close();

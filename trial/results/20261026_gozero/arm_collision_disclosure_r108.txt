@@ -45,3 +45,13 @@ RULER VERDICT AT COMMIT TIME (read from the run, not from memory)
 Before the repair the same ruler reported COLLISIONS 7 groups and RULER_RC=1; the 7 groups are the ones
 listed above.  The control writes two synthetic arms into a temporary directory and runs the real scan()
 over them, so a ruler that lost the ability to see a collision exits 2 instead of reporting the tree clean.
+
+SAME DEFECT ON SCREENSHOTS (closed in the same ruler, second leg)
+The ruler now also reads literal screenshot names (shot("x") / path: "${DIR}/x.png"), skipping names
+built from a variable or a ${TAG} prefix because those resolve per run and would bury the real ones under
+false red: measured 218 literal names and 2 clash groups before the rename, both from _half_day_r33.mjs and _half_day_r34.mjs writing
+half-day-430-before and half-day-430-after.  _half_day_r34.mjs now writes half-day-430-r34-before and
+half-day-430-r34-after, so from this generation each arm owns its own frames.  The ruler now counts 220 literal names and reports COLLISIONS 0.
+The two png files already on disk (142727 and 141757 bytes, stamped 10-26 15:24 and 15:25) hold whichever
+arm ran last, and their receipt half-day-430.txt is the same merged pair, so the frame content cannot be
+re-attributed to one run either.  Nothing was copied or renamed on disk.
