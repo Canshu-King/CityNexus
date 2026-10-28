@@ -1594,3 +1594,42 @@ AA 臂跑的仍是 worktree 那枚 `d5deb1f34c`，**不含** `2b12752108`（把�
 同样不预先升格的是 #339：纯净尖上"走到 ACTIVE＋地图对账"这一格目前仍未拿到，
 只有 Y 臂那一趟把旅程落成 `PLANNED`＋`active_plan_version_id` 非空（§69），
 以及 AA 臂证明 `已保存 7 项正式安排` 那一类回执在纯净尖上会真的出现（AB 收据现读 `已保存 7 项正式安排`）。
+## 72. 纯净尖最后一臂的确凿读数：三枚选用键命中自己却是灰的；我自己那枚 `open` 刀**判为未生效**
+
+AD 臂（`trial/human_walk/_ad_arm_clean_r80.mjs`，收据 `trial/results/20261026_gozero/ad-clean-chain-390-r80.txt`，
+纯净树现读 `E_tip=840534ec11…`、`E_dirty=0`，两把刀 grep 到各自一枚）跑到 `t=1071.2`：
+
+| 拍 | 读数 | 意思 |
+| --- | --- | --- |
+| `W_CONFIRM true SAVE_ENABLED true`（t=253.5） | 保存过一次之后重存键仍是亮的 | §64 那刀（`e5fdc2734e`）在**纯净尖**上第二次成立（AA/AC 各一次，本次再一次） |
+| `HTTP 200 …/plans/98cda140…/freeze-routes` | 转场证据冻住成功 | 方案已具备被选用的前提 |
+| `PLAN_HAND 0`（t=1001.9） | 这一屏没有补地点 hand | 与 AC 的 `PLAN_HAND 1` 同树不同趟——形状随那一趟的地点解析而变，我不把任一侧写成固定行为 |
+| `TELLS_REFRESH false start=0 select=3`（t=1071.2） | 屏上三枚 `rev-plan-select`，没有出发键 | 旅客面前摆着三份候选方案，还没选 |
+| `HIT select-final {"hitSelf":true,"disabled":true}` | **中心命中自己，但键是 `disabled`** | 选用门拒着，所以走不到出发那一格 |
+
+⇒ #339 尾格（走到 ACTIVE＋地图点数＝活动数）在纯净尖上**仍未拿到**，而卡点第一次拿到确凿形状：
+不是屏上没有门，是三枚候选的选用键全为禁用。这正是 #338／§336 那一族的反例形状，
+在零 dirty 的树上复现。这一格接下来要读的是"为什么禁用"：`selectionBlocker(plan)` 那侧服务器给的理由句，
+而不是我再猜一个原因。
+
+### 我那枚 CityPicker 刀：现读判为**未生效**，不写成已修
+
+同一臂 `SCROLL_RETRY find-city stillHidden=true`（t=1003.1）——即使 `<details … open>` 已进线，
+`rev-quick-find-city` 仍然不可见。两条附带事实，避免过度解读：
+
+- 整份 AD 收据里 `grep -c rev-quick-find-city` = 0，但我的 survey 有"只取前九十个可命中节点"的上限，
+  **所以这个 0 不能当作"这颗键不存在"**（`key 名 grep 的 0 只能说词面没有`这条纪律）；
+- `pressNear` 报的是 `hidden` 而不是 `absent`，说明 locator 数得到这颗键，只是不可见。
+- 我也检查过那条 CSS（`RevolutionQuickExplore.css:39`）：它只设 `border/color/background`，
+  **不是** `display:none`，所以"被 CSS 藏掉"这个猜测当场被否掉。
+
+结论写死：这枚刀目前只做到"折叠层默认展开"，屏上那颗键的可得性**没有变化**，
+`840534ec11` 因此不能计入"已修的可见性"。下一条可复现判据（先测再改，不再猜）：
+
+    # 在 :14462 的探索屏上现读那枚 details 与那颗键的真实形状
+    page.locator('[data-testid="rev-quick-area-secondary"]').evaluate(n => ({open: n.open, display: getComputedStyle(n).display, visibility: getComputedStyle(n).visibility}))
+    page.locator('[data-testid="rev-quick-find-city"]').evaluate(n => {const b=n.getBoundingClientRect(); return {w:b.width,h:b.height,vis:getComputedStyle(n).visibility,op:getComputedStyle(n).opacity, parentDisplay:getComputedStyle(n.parentElement).display};})
+
+`open` 读到 false 就是 React 把它当受控属性丢掉了（改法：`defaultOpen` 状态或直接把 pane 从 details 里提出来）；
+`open` 为 true 而那颗键 `visibility/height` 为零，就顺着 `parentDisplay` 那一层继续找。两种结果分别对应不同的刀，
+我不在这两种之外先落第三枚改动。
