@@ -1,12 +1,18 @@
 # 交付件：QODER_GO_FROM_BLANK_AND_AGENT_VISIBILITY 三刀（2026-10-27 01:08 本地 / 17:08Z 起算的同一夜）
 
-权威枝 `rescue/v3-final-departure-20261022`，本件对应尖 **3ad2f482ff5868c396371ed6d1fa8e5d83c059bb**
-（本地与 `git ls-remote` 逐字相同；这枚是把远端新增的 19 笔——含 PR #56 `4dfeac260b` 与 CI 门禁 `575318cbf1`——
-经 `git merge-tree --write-tree` 只读预测零冲突之后 merge 进来的合并代；没有 force-push，没有 rebase 已发布枝）。
-合并代上门禁三条腿本地重放全绿：后端聚焦选择集 **213 passed**、`npx tsc -p tsconfig.check.json --noEmit` RC=0、
-`npm run build` RC=0（收据 `trial/results/20261026_gozero/ci-gate-merged-r72.txt`；§66 记了 Actions 上为何没有这一代的运行）。
-其后又落了两枚产品刀：`e5fdc2734e`（§64，已保存过的草案卡仍允许「按以上时间重新准备方案」，并在重存时换新幂等键）、
-`d1b016040e`/`739b4162e8`（W 臂派生器与 §65 读数）。明细在 `trial/results/20261026_GO_FROM_BLANK_REPORT.md` §47–§66。
+权威枝 `rescue/v3-final-departure-20261022`，本件最后核对的尖 **57ac24254a7429a4afe5145724485e8b909d506d**
+（`git ls-remote` 现读 `57ac24254a7429a4afe5145724485e8b909d506d`，逐字相同）。自表头上一版 pin 的 `3ad2f482ff` 之后又走 14 笔，
+其中产品字节只有三枚：`e5fdc2734e`（§64，已保存过的草案卡仍允许「按以上时间重新准备方案」，重存时换新幂等键）、
+`2b12752108`（§68／§72／§75，一次真成功的保存不再教旅客原地重试）、
+`840534ec11`（§72／§73／§76，探索屏「自己先挑地点」那层默认展开；§73 已把它的支持读数更正过一次）。
+
+**#339（同代性保留）已闭**：另有一棵零 dirty 的干净树 `E:/_cmdr_clean_1028`，现读 tip `840534ec11…`、
+`git status --porcelain=v1` 行数 **0**，它与现尖之间的产品差异现读为空
+（`git diff --stat 840534ec11..HEAD -- backend frontend contracts` → 空输出）。
+在这棵树上真机走到「行程执行中」，地图 6 处＝计划点标签 6 枚＝地图列表 6 条＝库里 `activities` 6 条（§74）。
+§47–§53 的早期屏证仍带 §67 记下的代差，未被这棵树追认；#337 的「430 且零 dirty」这一格还空着（§77：卡在网关超时）。
+
+明细全部在 `trial/results/20261026_GO_FROM_BLANK_REPORT.md` §47–§77。
 
 ## 1. PRODUCT_SHA（本夜落线的产品字节，逐笔可取回）
 
