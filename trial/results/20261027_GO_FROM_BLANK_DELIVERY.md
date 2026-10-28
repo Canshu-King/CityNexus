@@ -102,6 +102,23 @@
    （`e351f5089c` 那半条改动就是这样被"clean"放过去的，修复见 `5182018dab`）。宽配置
    `tsconfig.typecheck.json`（`src/**/*.ts(x)`）在修好的树上退出码 `0`。要不要把窄配置扩到这两枚文件，
    是别人正在写的表面，要点名后由主人或该文件写者决定。
+9. 第 2 刀 2a 三件，各交各的账（报告 §13.1–§13.3、§13.6）：
+   事件时间线已上屏 —— 折叠、可按开、八十行服务端记录，屏上没有私有文本
+   （`trial/results/20261026_gozero/bk116-agent-tool-timeline-430.txt:47-51`）；
+   步骤行的来源披露也已上屏，并与库侧一对一（`bl117-tool-step-source-430.txt:15-21` 对
+   `bl118-step-provider-census.txt:4-8`：库里七行带 provider，屏上七行来源；六行有核实状态，屏上六行
+   「已核实」；两步全无 provider 的不挂来源行）。
+   **仍欠两格**：接受键旁的差异在码里有「费用：未知」分支
+   （`frontend/src/trial/mobile/ClassroomPresenterPanel.tsx:307-308`、
+   `frontend/src/trial/mobile/DraftDepartureCard.tsx:376-377`），但屏上证到的那次读的是「费用：不变」，
+   未知那一格没有证词（要一条真算不出总价的候选，不可预置）；r117 只走 430×932 一档，390×844 同格未量。
+10. 现尖验证栈 `E:/_cmdr_tip_113` 仍携带一枚外来文件 —— `WorkspaceActions.tsx` 是 `599ed95b76` 的那枚
+   blob（`82a158d91bf0…`），其余仍是 `dea0328e0b`；这是屏证的前提，也是要还原的偏差，还原一行：
+   `git -C E:/_cmdr_tip_113 checkout HEAD -- frontend/src/trial/mobile/WorkspaceActions.tsx`。
+   另自报：本班两次 `git commit` 漏带 pathspec，把同一写者的二十二条前端暂存条目卷进我的提交信息底下，
+   两次都 `git reset --soft` 退回并按路径重打（他人 index 每笔之后仍为二十二条），并把这条装进门
+   `trial/human_walk/_cmdr_pathspec_commit_gate_r119.py --selftest`（三格真跑：对照组确实吞、门确实不吞、
+   ROOT 深度、点名不存在的文件即拒）。见报告 §13.5。
 
 ## 8. 纯净树上的账（截至 2026-10-28 晚 · 报告 §74–§82）
 
