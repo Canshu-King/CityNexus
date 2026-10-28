@@ -130,6 +130,17 @@ note(`DRAFT_SEEN ${draftSeen}`);
 await shot(`${TAG}-aq-after-research`);
 
 const saveButton = page.getByRole("button", { name: /保存为正式候选方案/ });
+// Run two proved the missing hand: the round had already returned ("当前展示的是已保存版本") and the key
+// still was not visible, because this walk ends on the 对话 screen while the draft card lives on the
+// itinerary one.  Try the hands the product may use and say which one worked -- guessing silently
+// would just reproduce the abort.
+for (const [hand, name] of [[0, /^行程$/], [1, /行程与日程/], [2, /^我的旅程$/]].entries()) {
+  if (await press(page.getByRole("button", { name }), `tab-hand-${hand}`, 8000)) {
+    note(`TAB_USED ${hand} t=${elapsed()}`);
+    break;
+  }
+}
+await page.waitForTimeout(2000);
 // The r91 run aborted here for an instrument reason, not a product one: a draft heading can appear
 // while the round is still running, and the card says so out loud ("Agent 正在研究，等这一轮结束即可
 // 编辑保存").  So wait for the key itself, not for a heading on some other panel.
