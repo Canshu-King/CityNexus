@@ -97,3 +97,9 @@ jobs:
         # another arm was still driving, and two arms sharing a receipt name destroyed one run's evidence.
         # The ruler carries its own positive control, so a pass here means it can still see a collision.
         run: python trial/human_walk/_arm_collision_ruler_r108.py
+      - name: Prove a commit can only carry the paths it names
+        # Twice in one session `git commit` without a pathspec swept another writer's staged frontend
+        # files under my own message; both had to be undone with reset --soft.  The self-test runs the
+        # mistake first -- a throwaway repository really does lose the foreign staged entry -- then
+        # shows the gate keeping it, and refuses a named path that is not in the tree.
+        run: python trial/human_walk/_cmdr_pathspec_commit_gate_r119.py --selftest
