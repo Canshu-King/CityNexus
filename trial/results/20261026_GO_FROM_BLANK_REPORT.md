@@ -2312,3 +2312,29 @@ NAME {"name":"对话","disabled":false,"testid":"rev-mission-layer-agent"}
 于是"为什么 aq6 五枚手全 MISS"有了新方向：不是标签缺席、也不是被禁用，而是**我用名字正则去按、而这一屏的按钮有自己的 testid**。修法已随本节落地——先按 `rev-mission-layer-timeline`（日程层），命中就记 `LAYER_USED`，再走两次保存。名字正则退居兜底。
 
 这一节只报已读到的读数：aq8 的普查、层标签状态、以及我改完的按法。**409 那一屏的句子仍未证**——aq8 后续是否按到「保存为正式候选方案」、第二次按下去服务端是否回 409、屏上落的是哪一句，我写这一节时还没有那些行，就不预判也不补写。派单第 1 刀的"看到当前方案与下一站"与第 2 刀"接受键旁的 diff、缺费用写未知"、"接受后主动刷新"三格里，后两格已分别由 §96/§97 用代码与读者清单结案，2a（可展开工具时间线）仍是缺口。
+## 99. 手法换成 testid 仍然 MISS——于是"不可见"取代了"找不到"
+
+aq9 是第一次带着层 testid 去按的一跑，读数把问题从"我按错了什么"收窄成一句具体的话：
+
+```
+BUTTON_TOTAL 52
+NAME {"name":"地图","disabled":false,"testid":"rev-mission-layer-map"}
+NAME {"name":"日程","disabled":false,"testid":"rev-mission-layer-timeline"}
+NAME {"name":"对话","disabled":false,"testid":"rev-mission-layer-agent"}
+MISS layer-0
+MISS layer-1
+HTTP POST 200 /api/v1/journeys/05c9e3d6-…/agent/goal-tasks/45b80ebc-…/resume
+MISS layer-2
+MISS tab-hand-0 … MISS tab-hand-4
+WAIT_KEY t=125.5 ["当前展示的是已保存版本。"]
+```
+
+同一跑、相隔不过几行：`document.querySelectorAll("button")` 明明把这三枚标签连 testid 一起打了出来，而 `page.locator('[data-testid="rev-mission-layer-timeline"]')` 配 `waitFor({state:"visible"})` 报 MISS。我的 `press()` 只在**等不到可见元素**时打 MISS（元素不存在也是这一句，所以单看 MISS 分不开两种）。两者一夹，剩下的解释是：**这三枚标签在 DOM 里，但那一刻不可见**——不是名字猜错，也不是被禁用（`disabled:false` 已排除）。
+
+这恰好是我自己反复记过的那条：折叠层没点开就量，会把"够不着"测成"不存在"。而这一屏上还有一个同族的强线索——44→52 枚按钮之间夹着一发 `POST …/resume` 回 http 200，也就是我按下的其实是 `刷新任务`/`重试这一轮` 那一类键（`draft-retry` 腿），层标签在整个过程中一次都没进入可点击状态。
+
+同时普查第二次确认：整屏 52 枚按钮里**没有** `保存为正式候选方案`（含 `/保存/` 字样的只有 `检查草案保存状态`，且它是 `disabled:true`）。所以"这一代从没按成过一次正式保存"不是手法问题，而是**那枚键在草案刚出来、轮次刚返回的这个状态下根本不存在于屏上**——它要等某个别的东西成立才出现。这一句是本轮最值钱的收窄，也直接指向 #340 剩下的那一半。
+
+下一手因此是确定的、一次 evaluate 就能结的：对这三枚 testid 同时取 `getBoundingClientRect()` 的宽高、`offsetParent`、`getComputedStyle().visibility/display`、以及最近的 `<details>` 祖先及其 `open` 状态。它能把"藏在收起的披露层里""零尺寸""被 CSS 隐藏"三种成因分开——分开了我才好说清 409 那一屏到底要靠哪一步才按得到。
+
+**仍未证**：409 屏上的句子。本轮没有新增产品字节，只有 aq9 的读数与这一处判据收窄。
