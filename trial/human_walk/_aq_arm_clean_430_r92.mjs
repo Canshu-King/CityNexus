@@ -12,7 +12,7 @@ const TAG = String(W);
 const PROFILE = "D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_aq92";
 const BASE = "http://127.0.0.1:14462";
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
-const OUT = `${DIR}/aq-clean-chain-430-r92.txt`;
+const OUT = `${DIR}/aq2-clean-chain-430-r92.txt`;
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (value) => { lines.push(value); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };
@@ -130,6 +130,16 @@ note(`DRAFT_SEEN ${draftSeen}`);
 await shot(`${TAG}-aq-after-research`);
 
 const saveButton = page.getByRole("button", { name: /保存为正式候选方案/ });
+// The r91 run aborted here for an instrument reason, not a product one: a draft heading can appear
+// while the round is still running, and the card says so out loud ("Agent 正在研究，等这一轮结束即可
+// 编辑保存").  So wait for the key itself, not for a heading on some other panel.
+const keyEnd = Date.now() + 12 * 60 * 1000;
+while (Date.now() < keyEnd && !(await visible(saveButton))) {
+  if (await visible(saveButton)) break;
+  const waiting = await page.locator(".rev-plan-message, [role='status']").allInnerTexts().catch(() => []);
+  note(`WAIT_KEY t=${elapsed()} ${JSON.stringify(waiting.slice(0, 1))}`);
+  await page.waitForTimeout(20000);
+}
 note(`SAVE_KEY ${await saveButton.count().catch(() => 0)} t=${elapsed()}`);
 if (!(await visible(saveButton))) {
   note("ABORT no visible 保存为正式候选方案 key -- nothing to press twice");

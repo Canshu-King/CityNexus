@@ -1,0 +1,23 @@
+SHOT 430-aq-cold t=5.2
+HIT continue true t=6.1
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.9
+HIT open-settings true t=12.4
+CONSENT true
+CONSENT true
+HIT close-settings true t=14.6
+HIT send true t=16.2
+HTTP POST 201 /api/v1/journeys/737b3a6c-8e4d-4cfd-a681-602f71cee9f4/agent/goal-tasks
+SENT t=17.2
+HTTP POST 200 /api/v1/journeys/737b3a6c-8e4d-4cfd-a681-602f71cee9f4/agent/goal-tasks/e798cd3c-f16b-4cea-a6f1-e41519f434bf/run
+HIT skip-questions true t=38.6
+SKIP t=39.5
+SKIPPED true
+DRAFT t=183.8
+DRAFT_SEEN true
+SHOT 430-aq-after-research t=183.9
+SAVE_KEY 0 t=183.9
+ABORT no visible 保存为正式候选方案 key -- nothing to press twice
+NO_KEY TEXTS ["Agent 正在研究，等这一轮结束即可编辑保存。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。","Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"]
+NO_KEY LEAK citynexus_api_in_body=false api_in_band=false uuid_in_band=false
+SHOT 430-aq-no-key t=183.9
