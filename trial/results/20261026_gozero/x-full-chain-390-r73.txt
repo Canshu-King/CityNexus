@@ -1,0 +1,10 @@
+SHOT 390-g7-cold t=6.5
+HIT continue true t=7.4
+MISS tab-chat
+MISS open-settings
+CONSENT /本次允许 AI 处理旅行目标/ null
+CONSENT /本次允许查询公开地图和地点来源/ null
+MISS close-settings
+MISS send
+SENT
+SKIPPED false

@@ -1412,3 +1412,63 @@ D 卷现读 290G 已用／19G 可用（95%），不再是整晚卡着的 100%。
 
 §59 当时没写错（那刻确实三枚），但它的"三枚"已经过期，且它给的闭合办法（等进线）比我以为的更慢。
 本条不改 §59 的正文（勘误另发是纪律），在这里点名它并给出更严的判据。
+## 68. 纯净尖的第二棵树真起来了：它跑到的第一个 blocker，正是脏树从未暴露的那一枚
+
+### 一、干净树与干净栈（全部现读）
+
+| 物 | 现读 |
+| --- | --- |
+| 树 | `E:/_cmdr_clean_1028`，`git worktree add --detach`，tip `d5deb1f34cddc3bb6a63bf2c4ffb3e34b683a521`，`git status --porcelain=v1 \| wc -l` = **0** |
+| 依赖 | `frontend/node_modules` 是指回现树的 junction（不复制第二份 `node_modules`，D 只剩 19G） |
+| 后端 | `:60362`，pid 45288，`/api/v1/health` 回 `ok`；库是全新路径 `E:/_cmdr_clean_1028_data/citynexus_v3_clean_1028.db`（起前打印 `new_database False`＝那时文件还不存在，不是复用旧库） |
+| 前端 | `:14462`，pid 38868，`CITYNEXUS_BACKEND_PORT=60362` 让 vite proxy 指向干净后端（`E:/_cmdr_clean_1028/frontend/vite.config.ts:132`） |
+| 凭证 | 打印只有 `AMAP_KEY_INHERITED True`——高德键从 User 级环境进子进程，不打印、不落盘；网关键从 shim 读进 env，同理 |
+
+### 二、我自己的仪表错了一次，而且错得会骗人
+
+`trial/human_walk/_boot_clean_stack_r74.py` 第一版用 `subprocess(..., text=True)` 读 `git rev-parse`，
+这台机器默认按 GBK 解码，中文路径一进去就抛 `UnicodeDecodeError`，于是 tip 读成空串，
+脚本接着把**完全干净**的树判成"dirty, ABORT"。
+这是"空读数被当成负结论"的老形状（与 §57 同族）。修法两条：显式 `encoding="utf-8"`，
+并把两种情形分开口——`len(tip) != 40` 报"仪表读不到"，`dirty != "0"` 才报"树不干净"。
+第二版仍读不到（`bash -lc` 这条腿在本机起不来），最终形态是把 shell 里现读到的两枚值注入
+`CLEAN_TIP` / `CLEAN_DIRTY`，脚本必须同时打印它们才允许 boot。回执：
+
+    shell_read tip=d5deb1f34c… dirty=0
+    WORKTREE_TIP d5deb1f34c… / WORKTREE_DIRTY_LINES 0 / AMAP_KEY_INHERITED True / HEALTH ok
+
+### 三、Y 臂：同一位旅客，同一句话，在纯净树上
+
+`trial/human_walk/_y_arm_clean_r75.mjs` 由 X 臂派生，只换三处并逐条断言（基址 `14461`→`14462`、
+profile `_chrome_gozero_x73`→`_chrome_gozero_y75`、收据名），派生器还钉住"全文件只剩一枚 `14462`、
+不再出现 `14461`"。输入还是那句「2026 年 12 月 3 日到 4 日在北京玩两天，两个人，每段步行不超过 1 公里，太远坐地铁」。
+
+纯净树上真走到的位置（收据 `trial/results/20261026_gozero/clean-chain-390-r75.txt`）：
+
+    journey d44da3bc-aed1-4d5a-8d16-af53efaffa44 / goal_task 5d7a73b7-c49c-4d38-808f-c326d936953b
+    COMPOSER_ENABLED true t=117.9 → FIX_SENT t=119.0 → HIT save-2-22 true t=555.4
+
+### 四、它撞出来的是一枚新缺陷，而不是老问题
+
+每一次保存尝试都拿到同一句服务端回执。收据现读的枚数是：保存键 `HIT save-2-*` 按到 **二十四次**，
+`prepare-plan` 的 409 落回 **三十五枚**，三十五枚枚枚都是同一个 reason code（两数不等是因为臂在等待循环里
+还会从别的腿重发同一请求，我不把 35 说成"旅客按了 35 次"）：
+
+    HTTP 409 /api/v1/journeys/{journey}/agent/goal-tasks/{task}/prepare-plan
+    BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY", …
+
+而卡片对旅客说的是「现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮」。
+旅客照做，于是上面那三十五枚 409 全是"重试"出来的。**拒绝被写成超时**——与 #292／§301 同一族，但这枚的成因是旅程状态门
+（`GOAL_TASK_REQUIRES_DRAFT_JOURNEY`），不是地点或营业时间。
+我不在这里断言脏树没有它：X 臂此刻还停在研究等待（收据十行，停在 `SENT` / `SKIPPED false`），
+两臂各用不同 profile、端口与库，互不干扰，所以要等 X 臂走到同一格才有对照。
+
+### 五、#339 判级（不升过头）
+
+- 已闭的部分：**"等别人进线"这条捷径作废之后，干净树真的能建起来并跑起来**；
+  纯净树上的冷首屏→输入→研究→续跑→按保存，全在同代（tip `d5deb1f34c`、dirty 0）里发生。
+- 未闭的部分：走到 ACTIVE 与"地图点数＝活动数"——被上面那枚 409 挡在 `prepare-plan` 之前。
+  这一条恰恰证明 §59 的保留不是形式主义：脏树跑到几十万秒都没露出的 blocker，
+  纯净树第一次跑到就露出来了。
+- 下一步（新格，未开工）：读 `GOAL_TASK_REQUIRES_DRAFT_JOURNEY` 是在哪一步把旅程挪出 DRAFT 的
+  （`backend/app/` 里 `prepare-plan` 的状态断言），然后决定这一刀是"把状态门说清楚"还是"根本不该挪"。
