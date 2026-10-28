@@ -1,0 +1,12 @@
+HTTP POST 201 /api/v1/journeys
+SENT t=12.7
+HTTP POST 201 /api/v1/journeys/f646fe3c-9b7b-4aaa-994e-10cc5ff079ca/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/f646fe3c-9b7b-4aaa-994e-10cc5ff079ca/agent/goal-tasks/a22c9f41-a949-4705-8a7f-b177c0777dbc/run
+SKIP t=24.8
+SEQ 0 t=24.8 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"}
+SEQ 1 t=27.8 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"旅行研究 · 正在研究"}
+SEQ 67 t=226.4 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"已整理 2 天 · 7 项安排"}
+NO_KEY_WINDOW TEXTS ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。","消息还在确认中，刷新任务查看最新进度。"]
+NO_KEY_WINDOW LEAK api_in_body=false api_in_band=false uuid_in_band=false
+NO_KEY_WINDOW SENTENCE null
+ABORT the save key never mounted inside the window; the sequence above names the last state seen
