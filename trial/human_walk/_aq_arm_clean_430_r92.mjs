@@ -146,7 +146,17 @@ const saveButton = page.getByRole("button", { name: /保存为正式候选方案
 // Read off the screenshot the previous run left behind: inside a journey the top tabs are 地图 / 日程 /
 // 对话, and the draft card with its save key sits under 日程.  My earlier hand list named 行程 and
 // 我的旅程 -- both absent here -- which is why every one of them missed.  日程 goes first.
-for (const [hand, name] of [[0, /^日程$/], [1, /^地图$/], [2, /^行程$/], [3, /行程与日程/], [4, /^我的旅程$/]].entries()) {
+// aq6 missed all five hands on a screen that visibly carries 地图 / 日程 / 对话, and I have now aborted
+// five times without once reading what the buttons are actually called.  So: print every button with
+// its accessible name and disabled state first, and drop the ^...$ anchors that can miss a name
+// carrying an icon or a count.
+const nameCensus = await page.evaluate(() => Array.from(document.querySelectorAll("button")).map((b) => ({
+  name: (b.innerText || b.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim().slice(0, 20),
+  disabled: Boolean(b.disabled), testid: b.getAttribute("data-testid") })));
+note(`BUTTON_TOTAL ${nameCensus.length}`);
+for (const b of nameCensus) if (/地图|日程|对话|保存|草案|刷新|任务/.test(b.name) || /plan|draft|day|save/.test(b.testid || "")) note(`NAME ${JSON.stringify(b)}`);
+
+for (const [hand, name] of [[0, /日程/], [1, /地图/], [2, /行程/], [3, /保存草案/], [4, /我的旅程/]].entries()) {
   if (await press(page.getByRole("button", { name }), `tab-hand-${hand}`, 8000)) {
     note(`TAB_USED ${hand} t=${elapsed()}`);
     break;
