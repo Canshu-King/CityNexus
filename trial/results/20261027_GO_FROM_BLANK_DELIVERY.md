@@ -97,3 +97,23 @@
 | #283／#330 裁语 | 事实已交 | 选用门查营业时间缺口（`services.py:776-782` → `UNRESOLVED_ACTIVITY_FACTS`）而出发门不查；430 这一趟另有可行性拒绝（赶路 1 段）。两方向（放宽选用门／出发门补校验）不代裁（§75、§82） |
 | 十五枚后端红 | 具名清单已交 | 现尖重跑宽面 129 条：`test_sol_concurrency_and_remap.py` 9、`test_qoder_live_replans_endpoint.py` 5、`test_dsh_list_replans_bound.py` 1，与 §58 同名同数 ⇒ 本夜刀零新增红（§76） |
 | 平板 | 仍 `USER_VERIFIED=PENDING` | 需主人亲自走一遍真机，未做任何模拟替代 |
+## 9. 代次续记（10-29 凌晨）：#340/#341 结案、2a 归别人在飞、409 一格改为"有依据的取不到"
+
+**权威线**：`rescue/v3-final-departure-20261022` 现尖 `3ae3fd1878`（远端 `git ls-remote` 回读同枚）。本段之内的提交依次为 `3a11fb144d`、`97577718cd`、`f7bba7a6d0`、`11a07d8f2c`、`0e8b7364ea`、`e598eade8a`、`641da56b8d`、`3ae3fd1878`，另有尺与门禁两笔 `dd7d4abd48`、`2af5efac60` 与臂脚本 `3d888949e2`、`79c2f87606`、`96c966780e`、`87e983348e`、`4cdb80d984`。**产品字节改动：0**（本段只动 `trial/`、`.github/workflows/` 与报告）。
+
+**干净代次现场**：`E:/_cmdr_clean_1028` 已从 `840534ec11` 切到 `ea51658c9a`，`git status --porcelain=v1` 计数 0；后端 `:60362`、前端 `:14462` 全程 LISTENING 未断；canary 库 `E:/_cmdr_clean_1028_data/citynexus_v3_clean_1028.db` 与一次性 profile 逐跑独立。
+
+**这一轮结掉的单**
+
+- **#340（「重新准备方案」那一按的真链屏证）→ 已闭**。bd106 在 430×932 真 Chrome 上：勾「按以上时间准备方案」（`was=false → true`）→ `key_disabled` 由 true 翻 false（`fieldset_disabled` 恒 false）→ 两次按下都成功，服务端 `prepare-plan 201`、`prepare-plan 201`，**4xx 计数 0**；屏上「已保存 6 项正式安排」，按钮改名「按以上时间重新准备方案」。泄漏三档 `api_in_body / api_in_band / uuid_in_band` 两轮全 false，`FINAL_CLEAN true`。收据 `trial/results/20261026_gozero/bd-confirm-then-press-430-r106.txt`，截图 `430-bd-after-press-1.png` / `-2.png`，报告 §105。
+- **#341（量「保存为正式候选方案」的挂载条件）→ 已结**。条件不是层、不是轮次、不是标签，而是**一枚必须先勾的确认框**；同一枚键有三种标签（`DraftDepartureCard.tsx:324`：`busy` → 「正在保存安排…」、有 `result` → 「按以上时间重新准备方案」、否则 → 「保存为正式候选方案」），我早前的探针只搜第一种，因此连错九跑。报告 §101-§105。
+- **裸错误上屏这一族**：源码侧 7 支口全走 `travelerErrorMessage`；尺带**实物历史对照**（`840534ec11` 旧文件体命中 7 处、现尖 0 处）并已挂进 `v3-rescue-release-gate.yml` 的 `assistant-screen-text`，外读证据是 run 40685781818 的两步 **success 而非 skipped**（浅历史会 rc 7，故 `fetch-depth: 0` 是承重件）。报告 §93/§94/§97。
+- **#332 补硬事实**：冷开时行程屏 7 扇门、我的屏 5 扇门、3 枚 `<summary>` 同名「AI 已配置 · 未验证」，**没有登录/认领/再认证任何一扇**；行程屏自己说「这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度」。这是逐门量过的负结论，不再是"找不到"。报告 §93。
+
+**没结的、以及为什么**
+
+- **「旅客在真 409 上看到哪一句」→ 从"未证"改为"有依据的取不到"**：这条路径两次按下都是 201，不再产生 `GOAL_TASK_REQUIRES_DRAFT_JOURNEY`；剩下的 409 入口（轮次 WORKING 时 `resume`）被 `WorkspaceActions.tsx:512` 与 `<fieldset disabled>` 双重挡住。所以 `travelerError.ts:7` 的 `GOAL_TASK_ALREADY_RUNNING` 句子是**状态滞后兜底**，正常点击路径按不到。我不拿"没触发"冒充"看到过"。
+- **#342（2a 可展开工具时间线）→ 归别人**：HEAD 上 `AgentRunRail.tsx` 仍是 27 行扁平 `<ol>`（0 个 `details`），但工作树里有 19 增/11 删的未提交实现正把它变成 `<details data-testid="agent-run-timeline">`。我不在别人的在飞文件上叠改动。
+- 其余照旧：#283/#330 两道门的裁语、平板 `USER_VERIFIED`、课堂随机城市池 0/3、六枚后端红的归属、#331 账本镜像 401、#333 裸路由仍回 200 的观察项。
+
+**本轮新增的量具纪律（都付过学费）**：派生脚本时收据名、截图前缀、profile 目录三样必须一起换（`ba103`/`bb104` 因沿用 `az102` 的 profile 造成一页两跑与撞锁，§104 已披露）；判"功能不存在"要同时看 HEAD 与工作树并指名代次（§106）；`node --check` 不解析未定义标识符、`grep -c` 的 0 是计数不是退出码、`tail -2` 会截掉崩溃栈——三处都改成显式读数后才拿到真因。
