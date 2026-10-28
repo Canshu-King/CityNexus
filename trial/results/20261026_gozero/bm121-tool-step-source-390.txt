@@ -1,0 +1,29 @@
+PROFILE_USED _chrome_gozero_bm121 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=13.6
+HTTP POST 201 /api/v1/journeys/3d5093ba-6011-4022-888a-655604529315/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/3d5093ba-6011-4022-888a-655604529315/agent/goal-tasks/fe9e5a5e-a20f-4d51-b67c-84fb06cbfc6b/run
+SKIP t=22.7
+DRAFT_WAIT 1 state=null t=22.7
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" t=40.7
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" t=58.7
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" t=76.7
+DRAFT_WAIT 13 state="旅行研究 · 正在研究" t=94.8
+DRAFT_WAIT 16 state="旅行研究 · 正在研究" t=112.8
+DRAFT_WAIT 19 state="旅行研究 · 正在研究" t=130.8
+DRAFT_WAIT 22 state="旅行研究 · 正在研究" t=148.9
+DRAFT_WAIT 25 state="旅行研究 · 正在研究" t=166.9
+DRAFT_WAIT 28 state="旅行研究 · 正在研究" t=184.9
+DRAFT_READY "已整理 2 天 · 8 项安排" t=190.9
+JOURNEY_URL /revolution
+HIT layer-agent true t=191.2
+AGENT_LAYER_OPENED true t=192.5
+STEPS_BEFORE {"present":true,"open":false,"summary":"Agent 工具时间线 · 15 步","rows":15,"row_texts":["","","",""],"source_rows":12,"source_texts":["","","","","","","",""],"vendors":{"amap":0,"public_lists":0,"not_recorded":0,"checked":0,"unchecked":0},"private_markers":[],"uuid_in_source":false} t=195.0
+HIT steps-summary true t=195.5
+STEPS_SUMMARY_PRESSED true t=196.7
+HTTP POST 200 /api/v1/journeys/3d5093ba-6011-4022-888a-655604529315/agent/goal-tasks/fe9e5a5e-a20f-4d51-b67c-84fb06cbfc6b/resume
+STEPS_AFTER {"present":true,"open":false,"summary":"Agent 工具时间线 · 15 步","rows":15,"row_texts":["","","",""],"source_rows":12,"source_texts":["","","","","","","",""],"vendors":{"amap":0,"public_lists":0,"not_recorded":0,"checked":0,"unchecked":0},"private_markers":[],"uuid_in_source":false} t=198.6
+VERDICT DISCLOSURE_ON_SCREEN rows=15 sources=12 amap=0
+SOURCE_HIT_PROOF {"box":"236x26@1204","inViewport":false,"visible":true}
+FINAL_CLEAN true
+DONE t=198.6

@@ -1,0 +1,7 @@
+DATABASES ['citynexus_v3_rescue_113.db']
+USING E:/_cmdr_tip_113_data/citynexus_v3_rescue_113.db BYTES 5574656
+RUNS 2
+STEPS 8
+TOOL ask_traveler steps=1 with_provider=0 with_provenance=0 providers={}
+TOOL discover_places steps=6 with_provider=6 with_provenance=6 providers={"amap": 6}
+TOOL save_draft_itinerary steps=1 with_provider=0 with_provenance=0 providers={}

@@ -1,0 +1,24 @@
+PROFILE_USED _chrome_gozero_bn122 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=13.7
+HTTP POST 201 /api/v1/journeys/99c4f1f2-9b97-4ae3-b617-d1e930294711/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/99c4f1f2-9b97-4ae3-b617-d1e930294711/agent/goal-tasks/3b389683-d088-4921-8e9c-9f1836293963/run
+SKIP t=22.7
+DRAFT_WAIT 1 state=null t=22.7
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" t=40.7
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" t=58.8
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" t=76.8
+DRAFT_WAIT 13 state="旅行研究 · 正在研究" t=94.8
+DRAFT_READY "已整理 2 天 · 7 项安排" t=106.8
+JOURNEY_URL /revolution
+HIT layer-agent true t=107.2
+AGENT_LAYER_OPENED true t=108.4
+HTTP POST 200 /api/v1/journeys/99c4f1f2-9b97-4ae3-b617-d1e930294711/agent/goal-tasks/3b389683-d088-4921-8e9c-9f1836293963/resume
+STEPS_BEFORE {"present":true,"open":false,"summary":"Agent 工具时间线 · 8 步","rows":8,"row_texts":["","","",""],"source_rows":6,"source_texts":["","","","","",""],"vendors":{"amap":0,"public_lists":0,"not_recorded":0,"checked":0,"unchecked":0},"private_markers":[],"uuid_in_source":false} t=110.9
+HIT steps-summary true t=111.4
+STEPS_SUMMARY_PRESSED true t=112.6
+STEPS_AFTER {"present":true,"open":true,"summary":"Agent 工具时间线 · 8 步","rows":8,"row_texts":["1 与你商量安排 完成 4 条已有路线 03:27:09 · 0.0 秒","2 查找公开地点 完成 查找故宫博物院位置 8 处地点 来源：高德地图 · 真供应商已核实 03:27:17 · 0.3 秒","3 查找公开地点 完成 查找天坛公园位置 8 处地点 来源：高德地图 · 真供应商已核实 03:27:22 · 0.3 秒","4 查找公开地点 完成 查找颐和园位置 8 处地点 来源：高德地图 · 真供应商已核实 03:27:26 · 0.3 秒"],"source_rows":6,"source_texts":["来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实"],"vendors":{"amap":6,"public_lists":0,"not_recorded":0,"checked":6,"unchecked":0},"private_markers":[],"uuid_in_source":false} t=114.4
+VERDICT DISCLOSURE_ON_SCREEN rows=8 sources=6 amap=6
+SOURCE_HIT_PROOF {"box":"236x26@600","inViewport":true,"visible":true}
+FINAL_CLEAN true
+DONE t=114.5
