@@ -1367,3 +1367,48 @@ D 卷现读 290G 已用／19G 可用（95%），不再是整晚卡着的 100%。
 所以 §50／§52／§53 的屏读仍然是"真机上按得到的"，这一点不变；但它们对的是重启前那一代工作树
 （还带着 §59 那三枚别人未提交的前端文件），不是这枚 `3ad2f482ff`。
 #339（在干净尖上重放 390 以闭合同代性保留）仍未闭，且现在多了一道前置：先把 gozero 栈与 canary 库起回来。
+## 67. 自纠：§59 那句"三枚未提交文件"已经过期——现读是十九枚，而且入口多了一枚未跟踪的样式表
+
+§59 是在 19:07、尖 `64a48c5431` 上拍的 `git status`，当时确实只有三枚。
+10-28 上午 10:2x 我在**同一棵工作树**上现读 `git diff --numstat -- frontend/src frontend/vite.config.ts`，
+得到十九行改动，其中与我这三刀面同屏的包括：
+
+    frontend/src/main.tsx                     25 加 / 1775 删
+    frontend/src/trial/RevolutionFirstLook.tsx   2 加 /  1 删
+    frontend/src/trial/mobile/AgentWorkStatus.tsx  1 加 /  1 删
+    frontend/src/trial/mobile/RevolutionV3.css    77 加 /  77 删
+    frontend/vite.config.ts                     7 加 /  2 删
+    （另有多枚 CSS 与 features/ 下的面板文件，以及两枚未跟踪新文件
+     `frontend/src/trial/mobile/RevolutionTokens.css`、`frontend/src/features/setup/cityNamed.ts`）
+
+逐条把"能不能排除"分开写，不打包成一句"都是别人的改动所以无关"：
+
+| 改动 | 现读依据 | 能否从今晚屏证的代差里排除 |
+| --- | --- | --- |
+| `frontend/vite.config.ts` | diff 全文只在 PWA manifest：`theme_color` 与四枚 icons，`start_url` 是 `/v8/live` | **能**——不碰 `/revolution` 的渲染 |
+| `frontend/src/main.tsx` | HEAD 版 `main.tsx:1804` 与工作树版 `main.tsx:52` 都是同一条判断 `path === "/revolution" → <ProductErrorBoundary><RevolutionFirstLook /></ProductErrorBoundary>`；删掉的那一千七百多行是 V8 单体搬去 `LegacyApp.tsx` | **能**——我那一屏的入口在两棵树上逐字同判 |
+| `AgentWorkStatus.tsx` | `+1/-1`，只给「有操作待审核，请在下方确认。」那句加了 `role="status"` | **能**（不增删文字、不改键）；但它改了 ARIA 语义，任何以 `[role=status]` 取句的量具都要重算 |
+| `RevolutionFirstLook.tsx` | 两处：`cityNamedIn` 的 import 从 `JourneyTrialSetup` 换到未跟踪的 `cityNamed.ts`；新增 `import "./mobile/RevolutionTokens.css"`（未跟踪，九十六行） | **不能**——今晚那一屏的调色板确实来自一枚还没进权威线的样式表 |
+| 六枚 CSS（`RevolutionV3.css` `+77/-77` 等） | 我没有逐枚读 | **不能**——CSS 会动几何，而我今晚的判据里有 hit-test 与"被压住"两类 |
+
+一枚可以收窄的东西：`RevolutionTokens.css` 现读只定义色值类 token，
+`grep -cE "^\s*--(space|gap|pad|z|radius|font|line)"` = 0，且文件自述是"从十九枚 Revolution 样式表做的值保持提取"。
+所以它影响的是色对比判据，不是几何判据——但这条只适用于它自己，不适用于那六枚 CSS。
+
+### 判据因此改写
+
+§59 我给的办法是"等这三枚进入权威线之后在同一代再走一趟 390"。现在正确的写法是：
+**#339 不能靠论证无关闭合，只能在干净树重放。** 我也不会去 stash 别人的在途工作。
+
+两步前置（本条**未执行**，命令写在这里，下一条就是这个）：
+
+    git worktree add E:/_cmdr_clean_1028 af08e70df1ed9c3729ea9068f8a033bb94120e9c   # 纯净尖，不含任何 M/?? 文件
+    # 新端口一套：后端 60362 / 前端 14462 / 一份新 canary 库；node_modules 用 junction 指回现树
+
+盘量现读：E 卷 27G 可用（92% 满），D 卷 19G 可用（95% 满）——够一棵 worktree，但不许再复制第二份 `node_modules`，
+所以 junction 是唯一形制。
+
+### 与 §59 的关系
+
+§59 当时没写错（那刻确实三枚），但它的"三枚"已经过期，且它给的闭合办法（等进线）比我以为的更慢。
+本条不改 §59 的正文（勘误另发是纪律），在这里点名它并给出更严的判据。
