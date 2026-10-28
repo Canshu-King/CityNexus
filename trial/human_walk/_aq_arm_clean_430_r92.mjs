@@ -12,7 +12,7 @@ const TAG = String(W);
 const PROFILE = "D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_aq92";
 const BASE = "http://127.0.0.1:14462";
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
-const OUT = `${DIR}/aq6-clean-chain-430-r92.txt`;
+const OUT = `${DIR}/aq8-clean-chain-430-r92.txt`;
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (value) => { lines.push(value); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };
@@ -133,9 +133,31 @@ if (!draftSeen) {
   // nine more minutes and tried five tab hands against a screen that has no draft card at all.  Say
   // what happened and stop -- the model giving an idle round is not a reason to keep pressing.
   await leakReading("NO_DRAFT");
-  note("ABORT no draft this round (IDLE_NO_DRAFT); tab hands and save key not attempted");
-  await ctx.close();
-  process.exit(7);
+  // The guard did its job on aq7 (three lines instead of five missed hands and nine wasted minutes).
+  // What it should not do is give up on the first unlucky round, because the 409 press then depends on
+  // the model feeling like producing a draft.  Take the recovery the screen already offers, bounded.
+  let recovered = false;
+  for (let attempt = 1; attempt <= 3 && !recovered; attempt += 1) {
+    const retry = page.getByRole("button", { name: /重试这一轮|按讨论的方向开始研究|再请一次守护/ });
+    if (!(await press(retry, `draft-retry-${attempt}`, 12000))) {
+      note(`RETRY ${attempt} no recovery key on this screen t=${elapsed()}`);
+      break;
+    }
+    const until = Date.now() + 300000;
+    while (Date.now() < until) {
+      if (/已整理\s*\d+\s*天|行程草案/.test(await bodyText())) { recovered = true; break; }
+      await page.waitForTimeout(8000);
+    }
+    note(`RETRY ${attempt} recovered=${recovered} t=${elapsed()}`);
+  }
+  if (recovered) {
+    note(`DRAFT_AFTER_RETRY true t=${elapsed()}`);
+  } else {
+    await leakReading("NO_DRAFT");
+    note("ABORT no draft after bounded retries; tab hands and save key not attempted");
+    await ctx.close();
+    process.exit(7);
+  }
 }
 
 const saveButton = page.getByRole("button", { name: /保存为正式候选方案/ });
@@ -156,6 +178,15 @@ const nameCensus = await page.evaluate(() => Array.from(document.querySelectorAl
 note(`BUTTON_TOTAL ${nameCensus.length}`);
 for (const b of nameCensus) if (/地图|日程|对话|保存|草案|刷新|任务/.test(b.name) || /plan|draft|day|save/.test(b.testid || "")) note(`NAME ${JSON.stringify(b)}`);
 
+// The census settled it: the three layer tabs are enabled buttons with their own testids
+// (rev-mission-layer-map / -timeline / -agent), so press those instead of a name regex that kept
+// missing for reasons the accessibility tree owns.
+for (const [hand, id] of [[0, "rev-mission-layer-timeline"], [1, "rev-mission-layer-map"], [2, "rev-mission-layer-agent"]].entries()) {
+  if (await press(page.locator(`[data-testid="${id}"]`), `layer-${hand}`, 8000)) {
+    note(`LAYER_USED ${id} t=${elapsed()}`);
+    break;
+  }
+}
 for (const [hand, name] of [[0, /日程/], [1, /地图/], [2, /行程/], [3, /保存草案/], [4, /我的旅程/]].entries()) {
   if (await press(page.getByRole("button", { name }), `tab-hand-${hand}`, 8000)) {
     note(`TAB_USED ${hand} t=${elapsed()}`);
