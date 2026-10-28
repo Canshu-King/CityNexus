@@ -42,13 +42,27 @@ R4.2 补的回环箭头。投影只放第 1 页；备查时翻第 2 页或看形
   **新建**文档上不落盘；最终用"打开→指回第 1 页→另存→重开验证"的后处理
   （已烘进生成器 `se_teacher_diagrams_r2.py`），4 份全部重开即第 1 页。
 
-## 四、没有做与不做
+## 四、最终 SHA 一览（与 Issue #53 回执一致，已推送字节）
+
+| 文件 | sha256/16 |
+|---|---|
+| `Teacher_01_System_Overview.vsdx` | `069929aa1666580d` |
+| `Teacher_02_Agent_User_Flow.vsdx` | `b5f9392370d22f05` |
+| `Teacher_01_System_Overview_EN.vsdx` | `7ea95c28576f5a83` |
+| `Teacher_02_Agent_User_Flow_EN.vsdx` | `1044e869d607d097` |
+| `Teacher_03_Project_Overview_R4.mpp`（冻结） | `30af900a34a46f0d` |
+| `Teacher_03_Project_Overview_R4_EN.mpp` | `deeb1500b4cd257d` |
+
+## 五、没有做与不做
 
 - Project 中文版、取证版 Visio、65 行事实计划：一律未动（冻结是 GPT 与操作者的
   共同决定；英文 mpp 是副本，见上表摘要）。
-- `se_evidence_index_r1.py` 的 STALE 旧缺口维持 10-26 的处置：等主人点头再动。
 - 英文 mpp 的任务名列比中文窄一档（英文名更长换行到三行，首屏 8 行、滚动可见
   其余），布局沿用冻结版视图没再做列宽手术——要不要加宽留给主人定。
+- `se_evidence_index_r1.py` 的 STALE 缺口已于本夜了结：ORIGIN 表里登记的
+  `se_review_package_r2_result.json` 从未被任何提交产出过（`git log --all` 计数 0），
+  R2 评审包 zip 是直接上传物、不可复现——摘掉该行后索引重跑 PASS，
+  84 条引用路径全部可解析（commit `8ab6fc62d5`）。
 
 生成器与全部证据：`Evidence/scripts/se_teacher_diagrams_r2.py`、
 `se_r43_project_en_r1.py`、`se_r43_{loop_proof_*,roundtrip_*,eye_r2,fidelity_en}` 等，
