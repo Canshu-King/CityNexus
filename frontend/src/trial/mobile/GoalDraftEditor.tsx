@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CityNexusApiError } from "../../api/citynexus";
+import { travelerErrorMessage } from "./travelerError";
 import type { GoalDraftArtifact, GoalDraftSlot, GoalPlaceMediaResult } from "../../api/citynexus";
 
 const PERIOD: Record<GoalDraftSlot["time_of_day"], string> = {
@@ -10,7 +11,7 @@ const PERIOD: Record<GoalDraftSlot["time_of_day"], string> = {
 function saveFailureMessage(error: unknown): string {
   const retry = "没有保存成功，请稍后重试。";
   if (!(error instanceof CityNexusApiError)) {
-    return error instanceof Error && error.message ? error.message : retry;
+    return travelerErrorMessage(error, retry);
   }
   const reason = (error.body as { error?: { reason_code?: unknown } } | undefined)?.error?.reason_code;
   if (reason === "DRAFT_RESEARCH_RUNNING") return "Agent 正在跑这一轮，等它结束再保存。你的改动还在这个页面。";

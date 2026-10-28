@@ -2105,3 +2105,32 @@ FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_
 在本节剩余的窗口里做不到"改完并且重跑两条屏证"。所以这里只交清单与形制：
 共享 `travelerErrorMessage(error, fallback)`（reason 表已在 §85 那张表里定稿），
 调用点各自保留自己的 fallback 句；改完必须重放 §85 末尾那条断言（含 `CityNexus API` 或 36 位 id 即红）。
+## 87. §86 那三张口一次收进同一个 helper（并把我又翻坏的行尾当场复原）
+
+三处 sink（`WorkspaceActions.tsx` 的启动／继续／取消／确认四支，其中启动那支同形）与 `GoalDraftEditor.tsx:13`
+的通用兜底，现在都走同一枚 `frontend/src/trial/mobile/travelerError.ts` 的
+`travelerErrorMessage(error, fallback)`：reason 表与 §85 那张一致（另补 `GOAL_TASK_STATE_INVALID`），
+认不出的理由一律用调用方自己的 fallback，**不再端 `CityNexus API <状态>: <带 UUID 的路径>`**。
+§85 那处内联映射也折回同一个 helper，避免两套 reason 表各说各话。
+
+门禁：`npx tsc -p tsconfig.check.json --noEmit` **RC=0**、`npm run build` **RC=0**、
+`git diff --numstat` 现读 `WorkspaceActions.tsx` 五加十五删、`GoalDraftEditor.tsx` 二加一删
+（净减的那九行就是被收掉的本地映射）。
+
+### 我自己又踩了一次行尾坑，当场复原并写下判据
+
+第一版提交前 `git diff --numstat` 报的是 **761 加 / 771 删** —— 我又用 `write_text(newline="
+")` 把一枚
+CRLF 文件整体翻成 LF（这台机器的老坑，今天已经在报告里记过别的形式）。
+复原没有靠"看起来对了"：先 `git show HEAD:<路径>` 现读该文件在库里的行尾计数
+（`CRLF 771 / bare LF 0`），据此把内容统一写回 CRLF，再看 `numstat` 落回五加十五删、`tsc` 仍 RC=0。
+判据固化成一句：**改这棵树里的文件之前，先数 HEAD 版本里 `
+
+` 与裸 `
+` 各有多少**，按多数写回。
+
+### 还欠的那格
+
+这一刀的屏证与 §85 同一条断言（同一批 reason 只在服务端拒绝时才出现，需要臂真撞一次 409）：
+屏上 `[role='alert']` 文本含「这一轮还在进行中」或对应句子，且**不含** `CityNexus API`、不含 36 位 id。
+在那之前本节只声明"编译与构建门绿、四支口全部走同一映射"，不声明"旅客已经看到新句子"。

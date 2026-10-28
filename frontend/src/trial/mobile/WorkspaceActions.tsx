@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { travelerErrorMessage } from "./travelerError";
 import { cityNexusApi, type TravelPlanningInput, type BootstrapDiscoveryCandidate, type DraftGoalTask, type DraftGoalTaskEvent, type GoalResearchRoute } from "../../api/citynexus";
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap } from "./WorkspaceMap";
@@ -459,7 +460,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       setRequestError(error instanceof Error && error.name === "AbortError"
         ? "本次响应等待超时；刷新可查看服务端任务进度。"
-        : error instanceof Error ? error.message : "任务未能启动。");
+        : travelerErrorMessage(error, "任务这次没能启动，可以刷新后再试。"));
     } finally {
       window.clearTimeout(timer);
       if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
@@ -485,18 +486,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       await refreshGoalTask(actor, task.task_id);
     } catch (error) {
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
-      // A raw "CityNexus API 409: /journeys/<id>/agent/goal-tasks/<id>/resume" reached the screen
-      // (measured on the clean generation, §83). Read the server's own reason and answer in words;
-      // an unknown reason gets a plain sentence rather than the identifier of a route.
-      const body = (error as { body?: { error?: { message?: string }; detail?: string } } | undefined)?.body;
-      const reason = `${body?.error?.message ?? ""} ${body?.detail ?? ""}`;
-      setRequestError(error instanceof Error && error.name === "AbortError"
-        ? "本次响应等待超时；刷新可查看服务端任务进度。"
-        : reason.includes("GOAL_TASK_ALREADY_RUNNING") ? "这一轮还在进行中，先等它结束再发新的消息。"
-          : reason.includes("GOAL_TASK_NOT_RESUMABLE") ? "这一轮已经结束了，直接说下一步想怎么调整就行。"
-            : reason.includes("MESSAGE_ID_REUSED_WITH_DIFFERENT_TEXT") ? "这条消息已经记下别的文字，请把这条重新发一次。"
-              : reason.includes("GOAL_TASK_REQUIRES_DRAFT") ? "这趟已经有排好的方案，这一轮不再改草案；到「我的旅程」查看方案。"
-                : "任务暂时没能继续，刷新可以看这一轮的进度。");
+      setRequestError(travelerErrorMessage(error, "任务暂时没能继续，刷新可以看这一轮的进度。"));
     } finally {
       window.clearTimeout(timer);
       if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
@@ -511,7 +501,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       const value = await cityNexusApi.cancelDraftGoalTask(actor.id, task.task_id);
       if (sameContext(actor, readContext())) await refreshGoalTask(actor, value.task_id);
     } catch (error) {
-      setRequestError(error instanceof Error ? error.message : "任务取消失败。");
+      setRequestError(travelerErrorMessage(error, "任务取消这次没有成功，可以刷新后再试。"));
     }
   };
 
@@ -546,7 +536,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         ? "消息还在确认中，刷新任务查看最新进度。"
         : error instanceof Error && error.message.includes("GOAL_TASK_ALREADY_RUNNING")
           ? "Agent 正在处理上一条指令，等这轮结束后可以继续发消息。"
-          : error instanceof Error ? error.message : "当前消息没有确认成功，请检查任务状态。");
+          : travelerErrorMessage(error, "这条消息这次没有确认成功，请刷新后重试。"));
     } finally {
       window.clearTimeout(timer);
       if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
