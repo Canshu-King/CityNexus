@@ -1,0 +1,24 @@
+[   0.0s] live plan digest 6398e58f9b4cd3b3
+[   0.0s]   se_deck_result.json                       16198 B  c47facb986dbf0d8  -
+[   0.0s]   se_evidence_reconcile_result.json          9549 B  5483ddea04f22ad6  planSha256_12: 6398e58f9b4c (current)
+[   0.0s]   se_evidence_revision_result.json            733 B  85e363d17b0556c8  -
+[   0.0s]   se_milestone_view_result.json              3243 B  fc68ee0f31b2b7e1  -
+[   0.0s]   se_plan_cpm_r2.json                       20470 B  8107d4ce6bd60f49  -
+[   0.0s]   se_plan_status_result.json                34958 B  e01ad57e037d96ba  -
+[   0.0s]   se_project_brief_result.json               4526 B  59cb883632b12c3b  -
+[   0.0s]   se_project_build_r2_result.json          129195 B  760f54dbfabc605d  publication.sha256AfterVerification: 6398e58f9b4cd3b3 (current)
+[   0.0s]   se_project_export_r2_result.json            788 B  7cee8ac240861887  -
+[   0.0s]   se_project_recovery_result.json            2523 B  cc5f815b4a8ad191  sourcePlanSha256: 6398e58f9b4cd3b3 (current)
+[   0.0s]   se_project_snapshot_r2_result.json         6461 B  999d9007902aaf29  -
+[   0.0s]   se_visio_build_result.json                61641 B  f1c94e98f239a49f  -
+[   0.0s]   se_visio_plan_brief_result.json            8379 B  f00d0f87197b7d95  -
+[   0.0s]   se_visio_proof_result.json                10248 B  61ebbbba022af9a8  -
+[   0.0s]   fact links declared                     ['61'] AGREE
+[   0.0s]   fact links violating date order         ['0'] AGREE
+[   0.0s]   fact M13 coursework delivery date (engine) ['2026-10-23'] AGREE
+[   0.0s]   fact late rows at the status date (engine dates) ['14'] AGREE
+[   0.0s]   fact student hours                      ['220.9'] AGREE
+[   0.0s]   fact over-allocated person-weeks        ['0'] AGREE
+[   0.1s] cited paths: 84, unresolvable: 0
+[   0.1s] wrote Evidence/EVIDENCE_INDEX.md (50 lines)
+[   0.1s] EVIDENCE INDEX OK

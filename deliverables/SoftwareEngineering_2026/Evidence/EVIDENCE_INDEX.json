@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-24 02:46",
+ "generatedAt": "2026-10-29 02:35",
  "planSha256": "6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee",
  "recoverySha256": "7e4f561a46d32b229bf593c18b37adfdc1cfc63080388c595b684f9142fcc0fb",
  "files": [
@@ -8,7 +8,7 @@
    "generator": "se_deck_r1.py",
    "bytes": 16198,
    "sha256_16": "c47facb986dbf0d8",
-   "written": "2026-10-23 04:38",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -17,7 +17,7 @@
    "generator": "se_evidence_reconcile_r1.py",
    "bytes": 9549,
    "sha256_16": "5483ddea04f22ad6",
-   "written": "2026-10-23 04:37",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": [
     "planSha256_12: 6398e58f9b4c (current)"
@@ -28,7 +28,7 @@
    "generator": "se_evidence_revision_r1.py",
    "bytes": 733,
    "sha256_16": "85e363d17b0556c8",
-   "written": "2026-10-22 18:53",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -37,7 +37,7 @@
    "generator": "se_milestone_view_r2.py",
    "bytes": 3243,
    "sha256_16": "fc68ee0f31b2b7e1",
-   "written": "2026-10-23 04:37",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -46,7 +46,7 @@
    "generator": "se_plan_cpm_r1.py",
    "bytes": 20470,
    "sha256_16": "8107d4ce6bd60f49",
-   "written": "2026-10-23 04:36",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -55,7 +55,7 @@
    "generator": "se_plan_status_r1.py",
    "bytes": 34958,
    "sha256_16": "e01ad57e037d96ba",
-   "written": "2026-10-23 04:37",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -64,7 +64,7 @@
    "generator": "se_project_brief_r1.py",
    "bytes": 4526,
    "sha256_16": "59cb883632b12c3b",
-   "written": "2026-10-23 04:37",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -73,7 +73,7 @@
    "generator": "se_project_build_r2.py",
    "bytes": 129195,
    "sha256_16": "760f54dbfabc605d",
-   "written": "2026-10-23 04:35",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": [
     "publication.sha256AfterVerification: 6398e58f9b4cd3b3 (current)"
@@ -84,7 +84,7 @@
    "generator": "se_project_export_r2.py",
    "bytes": 788,
    "sha256_16": "7cee8ac240861887",
-   "written": "2026-10-22 18:47",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -93,7 +93,7 @@
    "generator": "se_project_recovery_r1.py",
    "bytes": 2523,
    "sha256_16": "cc5f815b4a8ad191",
-   "written": "2026-10-23 04:37",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": [
     "sourcePlanSha256: 6398e58f9b4cd3b3 (current)"
@@ -104,17 +104,8 @@
    "generator": "se_project_snapshot_r2.py",
    "bytes": 6461,
    "sha256_16": "999d9007902aaf29",
-   "written": "2026-10-23 04:38",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
-   "sourceDigestClaims": []
-  },
-  {
-   "file": "Evidence/se_review_package_r2_result.json",
-   "generator": "se_review_package_r2.py",
-   "bytes": 1723,
-   "sha256_16": "288abb3c6c8dd010",
-   "written": "2026-10-23 18:26",
-   "inPackage": false,
    "sourceDigestClaims": []
   },
   {
@@ -122,7 +113,7 @@
    "generator": "se_visio_build_r1.py",
    "bytes": 61641,
    "sha256_16": "f1c94e98f239a49f",
-   "written": "2026-10-22 18:50",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -131,7 +122,7 @@
    "generator": "se_visio_plan_brief_r1.py",
    "bytes": 8379,
    "sha256_16": "f00d0f87197b7d95",
-   "written": "2026-10-22 18:51",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   },
@@ -140,7 +131,7 @@
    "generator": "se_visio_proof_r2.py",
    "bytes": 10248,
    "sha256_16": "61ebbbba022af9a8",
-   "written": "2026-10-22 18:50",
+   "written": "2026-10-24 02:46",
    "inPackage": true,
    "sourceDigestClaims": []
   }
@@ -195,7 +186,7 @@
    "agree": true
   }
  ],
- "citedPaths": 76,
+ "citedPaths": 84,
  "missingCitations": [],
  "stale": []
 }

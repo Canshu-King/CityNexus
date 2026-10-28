@@ -49,7 +49,11 @@ ORIGIN = {
     "se_evidence_reconcile_result.json": "se_evidence_reconcile_r1.py",
     "se_project_snapshot_r2_result.json": "se_project_snapshot_r2.py",
     "se_project_brief_result.json": "se_project_brief_r1.py",
-    "se_review_package_r2_result.json": "se_review_package_r2.py",
+    # se_review_package_r2.py builds the review ZIP upload and has never
+    # written a result JSON; the row registered a file that does not exist
+    # on any ref (git log --all count 0), which made every index run
+    # refuse on a gap nobody could fill. Removed 2026-10-29 with the
+    # operator's standing directive; documented in Issue #53.
 }
 # every field in these files that claims "I was derived from this plan digest"
 SOURCE_SHA_FIELDS = {
