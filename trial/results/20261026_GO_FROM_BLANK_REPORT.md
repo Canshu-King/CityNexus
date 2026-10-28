@@ -2003,3 +2003,48 @@ FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_
 | #339 同代性 | 已闭 | §74：390 零 dirty 走到「行程执行中」，地图 6 处＝计划点 6 枚＝列表 6 条＝库 6 项 |
 | #340 重存链 | 屏证到位（选用门另计） | AM/AN/AO 三臂同拍 `*_RESIVE_KEY 1 enabled=true`，重存后服务端重生成候选并把冲突从 2 段报成 1 段 |
 | #337 430 尾格 | 未闭 | AO 停在「赶路时间不够（1 段）」，`SELECT_LIVE_INDEX -1`；成因已从"我的腿"换成"排不下"，交 #283/#330 裁语口径 |
+## 83. #337 闭：430 在零 dirty 的树上走到「行程执行中」，地图六处对上库里六项
+
+`trial/human_walk/_ap_arm_clean_430_r91.mjs`，收据 `trial/results/20261026_gozero/ap-clean-chain-430-r91.txt`
+（430×932，`E:/_cmdr_clean_1028` 起臂前现读 dirty 0）：
+
+    DEPART_FIRST start=… select=… → AP_REFUSAL_SEEN false            t=924.1
+    DEPART_START_ENABLED true
+    REFUSAL ["CityNexus API 409: …/agent/goal-tasks/419934a5…/resume"]
+    按下去之后屏文：「旅途正在继续。」「行程执行中」「执行与待办」…
+    DEPART_MAP_COUNT_LINE 地图地点 6 处 · 高德地点 0 处                t=938.9
+    DEPART_MAP_PLANNED_TAGS 6 / DEPART_MAP_LIST_ITEMS 6
+    X_END alert="" errors=[]                                          t=942.0
+
+只读库现读同一趟（journey `4c6ff80b…`）：状态 **`ACTIVE`**、
+`active_plan_version_id` 指向 `d8f29fe8…`、`activities` 计数 = **6**、候选 [["d8f29fe8", "ACTIVE"]]。
+
+⇒ 刀 1 要的两个视口**都在同一棵零 dirty 树上拿到了同号收据**：
+390（§74）与 430（本节），两边都是「地图 N 处＝计划点标签 N 枚＝地图列表 N 条＝库里 N 项」。
+#337 的「430×932 走到 ACTIVE」那格由 pending 转**闭**。
+
+两点必须同时写下，不然这一节会被读成"问题都解决了"：
+
+1. **这一趟不是被 §81／§82 那两腿救活的**。`AP_REFUSAL_SEEN false`——它这一路没出现"赶路时间不够"那句，
+   所以 #337 这格是靠"重新走一趟、这趟恰好排得下"闭的，不是靠把 AO 停住的那 1 段挪没。
+   AO 那一趟（`SELECT_LIVE_INDEX -1`、剩 1 段）仍是 #283／#330 裁语的事实，没被本节抵消。
+2. 途中仍带着一条 409（`…/resume`），屏上照旧给了「现场模型这一轮…」那一族句；
+   它与 §68 那枚已落刀（GOAL_TASK_REQUIRES_DRAFT_JOURNEY 不再谎称超时）不是同一支，
+   说明"被拒时把原因说清"这族还有一支没扫完——记入待办，不在这里宣布完成。
+
+## 84. 那十五枚红里的九枚：夹具读的键只在旅程确有激活方案时存在
+
+`tests/test_sol_concurrency_and_remap.py` 那九枚（§76 具名清单里的最大一族），我挑一枚跑到底：
+
+    FAILED tests/test_sol_concurrency_and_remap.py::test_two_sessions_without_the_lock_still_cannot_produce_two_active_plans
+    tests/test_sol_concurrency_and_remap.py:1005:
+        plan = client.get(f"/api/v1/journeys/{id}/experience").json()["active_plan"]
+    E   KeyError: 'active_plan'
+
+成因用代码现读钉住（**没有**用 `GET /experience` 当探针——它是会写状态的读端，见 `main.py:10326-10347`
+在响应里挂 `recovery`／可行性，早记过"读会写"的坑）：
+`active_plan` 在 `main.py:10352` 只是个局部变量，真正进 payload 的分支要求
+`journey.active_plan_version_id` 有值（`:10332`、`:10357`）；该键的产出者在 `app/stay_mobility.py:2052`。
+⇒ 这九枚不是产品崩溃：夹具假设"任何 `_started_for_race()` 造出的旅程都带 `active_plan` 键"，
+而那个前提要求旅程真有激活方案。归属仍是裁决面，但成因从"未知"变成"夹具前置与实际状态不符"，
+其余六枚（live replan 五枚、list-replans-bound 一枚）我没有逐枚跑，不把这一条推广过去。

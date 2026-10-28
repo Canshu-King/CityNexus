@@ -1,0 +1,246 @@
+SHOT 430-g7-cold t=5.0
+HIT continue true t=5.9
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.5
+HIT open-settings true t=11.7
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.6
+HIT send true t=15.0
+HTTP POST 201 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/run
+HIT skip-questions true t=25.1
+SKIP t=25.8
+SKIPPED true
+DRAFT t=79.9
+DRAFT_SEEN true
+SHOT 430-g7-after-research t=80.0
+HIT tab-chat true t=80.3
+COMPOSER_ENABLED true t=206.6
+HIT send-fix false t=207.0
+FIX_SENT t=207.0
+FIX_IDLE true t=242.0
+SHOT 430-g7-after-fix t=242.1
+HIT journey-tab true t=242.4
+DRAFT_SLOTS 6
+NO_OPTIONAL_SLOT
+DRIFT_FOLD true TIME_COUNT 12 BEFORE [{"label":"故宫博物院（上午·午门进神武门出）开始时间","value":"09:00"},{"label":"故宫博物院（上午·午门进神武门出）结束时间","value":"10:00"},{"label":"景山公园（午后·神武门步行约815米到达）开始时间","value":"14:00"},{"label":"景山公园（午后·神武门步行约815米到达）结束时间","value":"15:00"},{"label":"北海公园（午后延续·景山步行约874米）开始时间","value":"16:00"},{"label":"北海公园（午后延续·景山步行约874米）结束时间","value":"17:00"},{"label":"王府井步行街（傍晚·地铁前往用餐购物）开始时间","value":"19:00"},{"label":"王府井步行街（傍晚·地铁前往用餐购物）结束时间","value":"20:00"},{"label":"颐和园（上午·新建宫门进，沿湖轻松漫步）开始时间","value":"09:00"},{"label":"颐和园（上午·新建宫门进，沿湖轻松漫步）结束时间","value":"10:00"},{"label":"圆明园遗址公园（下午·地铁连乘到达）开始时间","value":"14:00"},{"label":"圆明园遗址公园（下午·地铁连乘到达）结束时间","value":"15:00"}] t=248.5
+TIME_EDITED "圆明园遗址公园（下午·地铁连乘到达）结束时间" 15:00 -> 14:15 t=248.5
+W_CONFIRM true SAVE_ENABLED true t=249.7
+HIT save-drift true t=250.1
+HTTP POST 201 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan
+DRIFT_SAVE_ALERT ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","已保存 6 项正式安排。下方可以查看日程和出发待办。"]
+TIME_AFTER [{"label":"故宫博物院（上午·午门进神武门出）开始时间","value":"09:00"},{"label":"故宫博物院（上午·午门进神武门出）结束时间","value":"10:00"},{"label":"景山公园（午后·神武门步行约815米到达）开始时间","value":"14:00"},{"label":"景山公园（午后·神武门步行约815米到达）结束时间","value":"15:00"},{"label":"北海公园（午后延续·景山步行约874米）开始时间","value":"16:00"},{"label":"北海公园（午后延续·景山步行约874米）结束时间","value":"17:00"},{"label":"王府井步行街（傍晚·地铁前往用餐购物）开始时间","value":"19:00"},{"label":"王府井步行街（傍晚·地铁前往用餐购物）结束时间","value":"20:00"},{"label":"颐和园（上午·新建宫门进，沿湖轻松漫步）开始时间","value":"09:00"},{"label":"颐和园（上午·新建宫门进，沿湖轻松漫步）结束时间","value":"10:00"},{"label":"圆明园遗址公园（下午·地铁连乘到达）开始时间","value":"14:00"},{"label":"圆明园遗址公园（下午·地铁连乘到达）结束时间","value":"14:15"}] t=257.8
+DRIFT_CHANGED_ONLY ["圆明园遗址公园（下午·地铁连乘到达）结束时间"] COUNT 12->12 LOST []
+DRIFT_COUNT 0 TARGET_ONLY yes t=257.8
+SHOT 430-drift-after t=257.9
+HIT price-1-0 true t=258.2
+HTTP POST 200 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/plans/d8f29fe8-f4bf-4005-9241-d0a9f6848f15/accept-unknown-price
+HIT refresh-after-price-1 true t=263.3
+HIT freeze-1-1 true t=268.4
+HTTP POST 200 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/plans/d8f29fe8-f4bf-4005-9241-d0a9f6848f15/freeze-routes
+HIT refresh-after-freeze-1 true t=275.4
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=280.2
+SHOT 430-g7-plans-1 t=280.2
+HIT select-1 true t=280.5
+HTTP POST 200 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/departure/commit
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。"]
+HIT ask-refusal-1 true t=286.6
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"45d6cab5-74ef-4722-917f-527791240f51","details":null,"error_receipt_id":"CNX-WB9VBK8R"}}
+ASK_REFUSAL_SENT 1 t=287.4
+GAP_REPAIR 1 ["故宫博物院（上午·午门进神武门出）结束时间 10:00->09:45","景山公园（午后·神武门步行约815米到达）结束时间 15:00->14:45","北海公园（午后延续·景山步行约874米）结束时间 17:00->16:45","王府井步行街（傍晚·地铁前往用餐购物）结束时间 20:00->19:45","颐和园（上午·新建宫门进，沿湖轻松漫步）结束时间 10:00->09:45","圆明园遗址公园（下午·地铁连乘到达）结束时间 14:15->14:00"] t=287.4
+SHOT 430-g7-selected-1 t=334.0
+HIT journey-tab true t=334.3
+HIT save-2-0 true t=338.8
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"8ff481a8-f368-4197-a612-c8849efe9101","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/0 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-1 true t=347.5
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"bc4d5fd9-4ee1-4e50-a781-743ca7e83f80","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/1 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-2 true t=356.3
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"c187af5b-b9e9-4c23-8308-f4152295611f","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/2 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-3 true t=365.0
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"c51f6f76-43ff-4a67-b8cb-47c784f8cc97","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/3 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-4 true t=373.8
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"c4a999b5-1313-4b04-94a8-6a69e2bfcc80","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/4 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-5 true t=382.6
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"60d37d85-f80a-446a-a91a-8b7f05f73cdd","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/5 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-6 true t=391.3
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"7acb326c-7631-4d1e-89a7-737eefc5f662","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/6 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-7 true t=400.1
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"f1727a0b-e9fc-4ed4-b82b-b4506c6daab2","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/7 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-8 true t=408.8
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"435f84bc-abf0-4e3f-8d02-fde8f49cba4f","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/8 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-9 true t=417.6
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"d4feb542-b6ef-4616-86d0-bb09fb1edb4e","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/9 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-10 true t=426.4
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"cbc7e223-d34d-4244-9ca6-98355acaf0c8","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/10 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-11 true t=435.2
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"43e3a423-dda7-4212-9519-344821a1b5f5","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/11 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-12 true t=444.0
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"4ae520a1-f392-4e35-a024-7eeb4038d7a4","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/12 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-13 true t=452.7
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"afff0026-2207-47bf-8df9-91bc135150a2","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/13 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-14 true t=461.5
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"b9cf1e8e-f531-40d6-b80b-0ee80465e5d0","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/14 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-15 true t=470.3
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"f04e24c9-4c0a-4c74-afbe-88f9fd3e0752","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/15 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-16 true t=479.0
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"e7ae312f-d596-47d7-a285-8ee31e603e3f","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/16 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-17 true t=487.8
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"6fb3eea6-dab5-44e6-9af6-dbfec194c7a5","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/17 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-18 true t=496.6
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"0419edb1-aa23-41b3-b9f3-57fa44b04c2f","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/18 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-19 true t=505.3
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"b497e42a-e0a2-4d42-bf68-2d80820a35ba","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/19 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-20 true t=514.1
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"734fc4d0-d633-4899-bd20-7487b3f1cca9","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/20 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-21 true t=522.9
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"f72d08a3-a091-403b-af71-0087fa2ef81f","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/21 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-22 true t=531.6
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"107c2f67-d92f-4c7e-810b-e5976619b2fd","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/22 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-2-23 true t=540.4
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"852b7eaf-78b3-47d1-abdc-6d946e6b0d37","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 2/23 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-0 true t=549.2
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"f4c510aa-1262-48aa-b18b-e6a963aac84c","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/0 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-1 true t=557.9
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"e5dcb647-e6b3-4bb0-a60e-02272d215341","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/1 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-2 true t=566.7
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"930d0446-aabc-4c48-be57-0026d3714a0f","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/2 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-3 true t=575.4
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"e32e0447-1ff7-4984-ba5c-89c614327304","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/3 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-4 true t=584.2
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"c1787845-e73e-454e-bf05-eedfbc181f18","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/4 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-5 true t=593.0
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"58ef4c2c-5999-432b-b643-1d1c3bd7c535","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/5 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-6 true t=601.7
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"c5a34f32-1a3b-44f8-929d-3fb89e58af54","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/6 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-7 true t=610.5
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"0845f502-e84d-4c9b-911f-ccb21ca34566","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/7 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-8 true t=619.3
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"7fa936a3-9a2c-4c12-bdd5-99e48b9e3fd0","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/8 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-9 true t=628.0
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"e9124199-9665-490a-824c-0e998aeca697","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/9 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-10 true t=636.8
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"2fcff560-a86d-432e-a617-a18856f2fdf6","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/10 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-11 true t=645.6
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"b3fcc720-a6ef-46a0-ab6d-5d18ded17b29","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/11 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-12 true t=654.3
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"04669e58-994e-499b-8edf-fa4d3c64bca7","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/12 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-13 true t=663.1
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"60fbb31a-0d0b-4a35-b713-f3d40c0a6de0","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/13 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-14 true t=671.9
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"8f4faaf0-c3ea-48f3-a1c6-b2b2e14bfd7d","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/14 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-15 true t=680.7
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"3c7402ea-ae45-4813-849e-9d7aa71bcadd","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/15 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-16 true t=689.4
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"68ec1c3e-4c32-47c3-a734-063191d63349","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/16 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-17 true t=698.2
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"8b93f71a-9269-47f6-889d-6d7343c8e021","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/17 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-18 true t=707.0
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"579c0055-124a-4511-be7b-3285bb247dfc","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/18 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-19 true t=715.7
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"8c2a5125-dbc9-4e2e-b1f8-8c0d183e49a5","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/19 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-20 true t=724.5
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"3dacb19d-0af6-408e-850e-58af616d84ba","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/20 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-21 true t=733.3
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"1a9422a2-283d-4bef-ae6f-6ae20fbd6262","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/21 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-22 true t=742.0
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"470b2fa9-a8a1-4dbb-998d-11e63862bcfc","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/22 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+HIT save-3-23 true t=750.8
+HTTP POST 409 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"78075f6a-3a6f-4b39-9bb8-81414e35c4d9","details":null,"error_receipt_id":"CNX-2HVMXK29"}}
+SAVE_ALERT 3/23 ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume","当前展示的是已保存版本。","这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"]
+STATE t=759.2 {"inUse":false,"next":null}
+SHOT 430-g7-final t=852.5
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n旅行插画\n已有阶段性成果\n地图\n日程\n对话\n按天调整行程\n\n6 项安排 · 2 天\n\n你的旅行草案\n\n草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。\n\nDay 1\n12-03\nDay 2\n12-04\n2026-12-03 · 4 项安排\n上午\n· 故宫博物院（上午·午门进神武门出）\n点击编辑\n下午\n· 景山公园（午后·神武门步行约815米到达）\n点击编辑\n下午\n· 北海公园（午后延续·景山步行约874米）\n点击编辑\n晚上\n· 王府井步行街（傍晚·地铁前往用餐购物）\n点击编辑\n＋ 添加安排\n检查草案保存状态\n\n当前展示的是已保存版本。\n\n准备出发 · 正式计划与待办\n从这份安排继续\n\n保留已选地点和日期；时间可以稍后调整。\n\n编辑行程时间（可选）\n12-03 · 故宫博物院（上午·午门进神武门出）\n开始\n结束\n12-03 · 景山公园（午后·神武门步行约815米到达）\n开始\n结束\n12-03 · 北海公园（午后延续·景山步行约874米）\n开始\n结束\n12-03 · 王府井步行街（傍晚·地铁前往用餐购物）\n开始\n结束\n12-04 · 颐和园（上午·新建宫门进，沿湖轻松漫步）\n开始\n结束\n12-04 · 圆明园遗址公园（下午·地铁连乘到达）\n开始\n结束\n按以上时间准备方案// Once a version is saved the time fields above stay editable — the card's own refusal text tells the // traveller to move a time and save again (measured on the gozero walks: 改这一项的时间再保存，其余不用动), // so keeping this key dead made that instruction impossible to follow.\n保存为正式候选方案\n\n这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。\n\n按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。\n\n和 Agent 补齐出发资料\nTRAVEL PLAN\n你的行程方案\n刷新方案\n可以确认出发\n\n6 项正式安排\n\n方案 1\n已选用\n2 天 · 6 项安排\n费用待确认\n\n这 6 项费用你已经确认先不计入预算（总价不含这些项）。\n\n12月03日\n09:00—10:00\n故宫博物院（上午·午门进神武门出）\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n景山公园（午后·神武门步行约815米到达）\n费用待确认\n查看地点来源 ↗\n16:00—17:00\n北海公园（午后延续·景山步行约874米）\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n王府井步行街（傍晚·地铁前往用餐购物）\n费用待确认\n查看地点来源 ↗\n12月04日\n09:00—10:00\n颐和园（上午·新建宫门进，沿湖轻松漫步）\n费用待确认\n查看地点来源 ↗\n14:00—14:15\n圆明园遗址公园（下午·地铁连乘到达）\n费用待确认\n查看地点来源 ↗\n\n已选好方案。确认后开始正式行程。\n\n确认方案，开始行程\n准备出发\n行程守护\n同行决策\nYOUR TRIP\n我的行程\n\n还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。\n\n去发现地点 →\nAI 助手\nAI 工作动态\nAI 服务\nAI 已配置 · 未验证\n本次行程\n暂无运行记录\n\n选定真实地点后，在上方确认正式行程。\n\n正式行程开始且 AI 可用时，实际工作记录会显示在这里。\n\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认\n⚙\n继续和当前 Agent 对话\n发送 ↑\n\nCityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume"
+ERRORS []
+PLAN_GAPS_ALL ["这 6 项费用你已经确认先不计入预算（总价不含这些项）。"] t=852.5
+PLAN_SELECT 0
+PLAN_START 1
+PLAN_HAND 0 t=852.5
+SHOT 430-r54-plan-blocked t=854.6
+EXPLORE_STAGE_PROBE area=1 category=0 results=0 explore=1 t=854.6
+PANE_SHAPE {"detailsOpen":true,"detailsBox":{"w":0,"h":0,"top":0,"display":"block","visibility":"visible","opacity":"1"},"summaryBox":{"w":0,"h":0,"top":0,"display":"list-item","visibility":"visible","opacity":"1"},"keyBox":{"w":0,"h":0,"top":0,"display":"flex","visibility":"visible","opacity":"1"},"keyAncestors":[{"cls":"BUTTON","display":"flex","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-quick-inline","display":"grid","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-quick-pane","display":"block","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-quick-secondary","display":"block","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-quick","display":"block","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-firstlook-real-ui","display":"block","visibility":"visible","opacity":"1","overflow":"visible"}],"areaExists":true} t=854.6
+KEY_ISVISIBLE_NOW false count=1 t=854.6
+SURVEY_EXPLORE_ENTRY [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院（上午·午门进神武门出）开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院（上午·午门进神武门出）结束时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（午后·神武门步行约815米到达）开始时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（午后·神武门步行约815米到达）结束时间","dis":false},{"tag":"INPUT","id":"","name":"北海公园（午后延续·景山步行约874米）开始时间","dis":false},{"tag":"INPUT","id":"","name":"北海公园（午后延续·景山步行约874米）结束时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街（傍晚·地铁前往用餐购物）开始时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街（傍晚·地铁前往用餐购物）结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（上午·新建宫门进，沿湖轻松漫步）开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（上午·新建宫门进，沿湖轻松漫步）结束时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园（下午·地铁连乘到达）开始时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园（下午·地铁连乘到达）结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":false},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-start","name":"确认方案，开始行程","dis":false},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false}] t=854.6
+MISS type-CITY hidden t=854.6
+SCROLL_RETRY find-city stillHidden=true t=855.8
+CITY_RESULTS 0 [] t=886.2
+NO_CITY_RESULT_SCREEN t=886.2
+SURVEY_AFTER_PHOTON [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院（上午·午门进神武门出）开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院（上午·午门进神武门出）结束时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（午后·神武门步行约815米到达）开始时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（午后·神武门步行约815米到达）结束时间","dis":false},{"tag":"INPUT","id":"","name":"北海公园（午后延续·景山步行约874米）开始时间","dis":false},{"tag":"INPUT","id":"","name":"北海公园（午后延续·景山步行约874米）结束时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街（傍晚·地铁前往用餐购物）开始时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街（傍晚·地铁前往用餐购物）结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（上午·新建宫门进，沿湖轻松漫步）开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（上午·新建宫门进，沿湖轻松漫步）结束时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园（下午·地铁连乘到达）开始时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园（下午·地铁连乘到达）结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":false},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-start","name":"确认方案，开始行程","dis":false},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false}] t=886.2
+RESULTS_PANE 0 t=916.4
+SURVEY_INTEREST_OR_RESULTS [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院（上午·午门进神武门出）开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院（上午·午门进神武门出）结束时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（午后·神武门步行约815米到达）开始时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（午后·神武门步行约815米到达）结束时间","dis":false},{"tag":"INPUT","id":"","name":"北海公园（午后延续·景山步行约874米）开始时间","dis":false},{"tag":"INPUT","id":"","name":"北海公园（午后延续·景山步行约874米）结束时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街（傍晚·地铁前往用餐购物）开始时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街（傍晚·地铁前往用餐购物）结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（上午·新建宫门进，沿湖轻松漫步）开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（上午·新建宫门进，沿湖轻松漫步）结束时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园（下午·地铁连乘到达）开始时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园（下午·地铁连乘到达）结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":false},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-start","name":"确认方案，开始行程","dis":false},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false}] t=916.4
+CARDS 0 t=918.4
+CARD_TEXTS []
+CARD_BLOCKERS []
+FORMAL_KEYS 0 t=918.4
+NO_FORMAL_DOOR cards=0 alert="" t=918.5
+SHOT 430-x-no-formal-door t=918.5
+HIT back-to-journey {"hitSelf":true,"cx":207.5125732421875,"cy":894.5888977050781,"disabled":false} t=918.6
+BACK_ON_PLAN explore=1 start=1 select=0 t=924.1
+TELLS_REFRESH false start=1 select=0 t=924.1
+DEPART_FIRST start=1 select=0 t=924.1
+SELECT_EACH [] t=924.1
+SELECT_LIVE_INDEX -1 t=924.1
+AP_REFUSAL_SEEN false t=924.1
+DEPART_START_ENABLED true REFUSAL ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume"] t=924.1
+HIT depart-now {"hitSelf":true,"cx":207.51677703857422,"cy":455.9815425872803,"disabled":false} t=924.2
+HTTP POST 200 /api/v1/journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/start
+DEPART_ACTIVE_BODY "C CityNexus 你的智能旅行伙伴 AI 已配置 · 未验证 北京 旅途正在继续。 换地区 › 旅行插画 行程执行中 地图 执行与待办 课堂演示 · 模拟时间与推进都在课堂控制台里 去课堂控制台 ↓ 执行与待办 还没出发 这一趟的安排 第一站：故宫博物院（上午·午门进神武门出） · 12月3日 09:00 行程助手 高级信息 Journey Operator is off. 今天的行程 现在：故宫博物院（上午·午门进神武门出） 接下来：景山公园（午后·神武门步行约815米到达） 路线还需要检查。 检查路线 我出发了 同行者位置 这趟行程目前只有你一位有效成员。 附近有什么可以顺路玩？ 点击后读取一次当前位置。推荐仅你可见，距离以直线计算。 个人时间偏好 15 分钟 30 分钟 45 分钟 兴趣（可选） 随便看看 咖啡 / 美食 文化 自然 查找附近体验 直接搜索真实附近地点（需同意） 你: 尚未分享位置 集合点：故宫博物院（上午·午门进神武门出）（来自当前行程安排） 显示同行者的粗略位置；浏览器定位供路线参考。 同时看着后面的行程 I’m watching the rest of your journey. 未来 0 个行程点 · 看到 07:47 AGENT 计划 高级信息 Planning AI is ready. 照看这趟行程 你将从哪里出发？ CityNexus 需要" t=929.7
+SHOT 430-ac-active t=932.8
+DEPART_ACTIVITY_ROWS 0
+HIT map-after-depart {"hitSelf":true,"cx":109.25335121154785,"cy":103.98908996582031,"disabled":false} t=932.8
+DEPART_MAP_COUNT_LINE "地图地点 6 处 · 高德地点 0 处" t=938.9
+DEPART_MAP_PLANNED_TAGS 6
+DEPART_MAP_LIST_ITEMS 6
+SHOT 430-ac-map t=941.9
+X_PLAN_GAPS [] t=941.9
+X_SELECT 0 enabled=false X_START 0 t=942.0
+SURVEY_PLAN_AFTER_FORMAL [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"执行与待办","dis":false},{"tag":"BUTTON","id":"rev-jump-clock","name":"去课堂控制台 ↓","dis":false},{"tag":"BUTTON","id":"","name":"查看其他研究（42）","dis":false},{"tag":"BUTTON","id":"","name":"在地图中查看","dis":false},{"tag":"BUTTON","id":"","name":"在地图中查看","dis":false},{"tag":"BUTTON","id":"","name":"在地图中查看","dis":false},{"tag":"BUTTON","id":"","name":"先看看这个地点","dis":false},{"tag":"BUTTON","id":"","name":"在地图中查看","dis":false},{"tag":"BUTTON","id":"","name":"先看看这个地点","dis":false},{"tag":"BUTTON","id":"","name":"在地图中查看","dis":false},{"tag":"BUTTON","id":"","name":"先看看这个地点","dis":false},{"tag":"BUTTON","id":"","name":"在地图中查看","dis":false},{"tag":"BUTTON","id":"","name":"查看更多地点（24）","dis":false},{"tag":"BUTTON","id":"","name":"展开相邻 4 处地点","dis":false},{"tag":"BUTTON","id":"","name":"展开相邻 2 处地点","dis":false},{"tag":"BUTTON","id":"","name":"加载地图","dis":false},{"tag":"BUTTON","id":"","name":"手动探索地点","dis":false},{"tag":"BUTTON","id":"","name":"查看当前行程 →","dis":false},{"tag":"BUTTON","id":"","name":"回到行程工作台","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"rev-mobile-hermes-submit","name":"发送 ↑","dis":false}] t=942.0
+X_END alert="" errors=[] t=942.0
