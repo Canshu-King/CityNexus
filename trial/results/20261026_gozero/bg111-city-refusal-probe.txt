@@ -1,0 +1,18 @@
+JOURNEY 3d9715f7-3bac title="北京 · 2日行程" city_code=CN-RV-A0EDFF4347FE status=DRAFT
+  MISSION f58ef668-39d6 status=PARTIAL_READY candidate_place_ids=56 research_leads=56
+   slot 0:0 title="天安门广场 + 故宫博物院（" place_id=amap:B000A83C1S in_known=False by_id=0 by_key=1 lead=True lead_region=MATCHED canonical_rows=1 bound_city=CN-RV-A0EDFF4347FE MISMATCH=False via site_268_lead_canonical,site_274_provider_key_with_city_filter
+   slot 0:1 title="景山公园（神武门出后对面即到" place_id=amap:B000A7I1OL in_known=False by_id=0 by_key=1 lead=True lead_region=MATCHED canonical_rows=1 bound_city=CN-RV-A0EDFF4347FE MISMATCH=False via site_268_lead_canonical,site_274_provider_key_with_city_filter
+   slot 0:2 title="王府井步行街晚餐与闲逛" place_id=amap:B000A48169 in_known=False by_id=0 by_key=1 lead=True lead_region=MATCHED canonical_rows=1 bound_city=CN-RV-A0EDFF4347FE MISMATCH=False via site_268_lead_canonical,site_274_provider_key_with_city_filter
+   slot 1:0 title="北海公园（北岸/北门进，看白" place_id=amap:B000A80UL1 in_known=False by_id=0 by_key=1 lead=True lead_region=MATCHED canonical_rows=1 bound_city=CN-RV-D39D52531220 MISMATCH=True via site_268_lead_canonical,site_274_provider_key_with_city_filter
+   slot 1:1 title="南锣鼓巷逛胡同、小吃" place_id=amap:B0FFFAH7I9 in_known=False by_id=0 by_key=1 lead=True lead_region=MATCHED canonical_rows=1 bound_city=CN-RV-A0EDFF4347FE MISMATCH=False via site_268_lead_canonical,site_274_provider_key_with_city_filter
+   slot 1:2 title="颐和园（坐地铁4号线到北宫门" place_id=amap:B000A7O1CU in_known=False by_id=0 by_key=1 lead=True lead_region=MATCHED canonical_rows=1 bound_city=CN-RV-A0EDFF4347FE MISMATCH=False via site_268_lead_canonical,site_274_provider_key_with_city_filter
+  PLACES_IN_THIS_CITY_POOL 48
+JOURNEY 75fb5a97-8d8f title="北京 · 2日行程" city_code=CN-RV-6479B7BF49FC status=DRAFT
+  MISSION e9284257-5b08 status=PARTIAL_READY candidate_place_ids=56 research_leads=56
+   slot 0:0 title="天安门广场" place_id= in_known=False by_id=0 by_key=0 lead=False lead_region=None canonical_rows=0 bound_city=None MISMATCH=False via no_binding_at_all
+   slot 0:1 title="故宫博物院（午门入）" place_id= in_known=False by_id=0 by_key=0 lead=False lead_region=None canonical_rows=0 bound_city=None MISMATCH=False via no_binding_at_all
+   slot 0:2 title="王府井步行街" place_id= in_known=False by_id=0 by_key=0 lead=False lead_region=None canonical_rows=0 bound_city=None MISMATCH=False via no_binding_at_all
+   slot 1:0 title="北海公园" place_id= in_known=False by_id=0 by_key=0 lead=False lead_region=None canonical_rows=0 bound_city=None MISMATCH=False via no_binding_at_all
+   slot 1:1 title="南锣鼓巷" place_id= in_known=False by_id=0 by_key=0 lead=False lead_region=None canonical_rows=0 bound_city=None MISMATCH=False via no_binding_at_all
+   slot 1:2 title="前门大街" place_id= in_known=False by_id=0 by_key=0 lead=False lead_region=None canonical_rows=0 bound_city=None MISMATCH=False via no_binding_at_all
+  PLACES_IN_THIS_CITY_POOL 8

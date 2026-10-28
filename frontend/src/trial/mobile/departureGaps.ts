@@ -397,6 +397,25 @@ export type ScheduleRefusalRow = {
   start_time?: string; end_time?: string; previous_end_time?: string | null;
 };
 
+// The city door names the item and the place it landed on (backend/app/agent/goal_preparation.py refuse_place_city).
+export type PlaceCityRefusalRow = { sequence_no?: number; title?: string; place_name?: string; date?: string };
+
+export function placeCityRefusalSentence(row: PlaceCityRefusalRow | null | undefined): string {
+  // One writer for this sentence: an older answer that carries the code but no row still lands here, and
+  // the caller only routes a city refusal in, so returning "" would fall through to "可以重试".
+  if (!row || typeof row.sequence_no !== "number") {
+    return "这版安排里有一处地点记在另一座城市的清单上，不在这趟旅行的城市里。改时间没有用——回到探索，换一处同城的地点再保存。";
+  }
+  const title = String(row.title || "").trim();
+  const place = String(row.place_name || "").trim();
+  // 「可以重试」 was the sentence this replaced, and it sent people back to the same refusal: only one of
+  // the six items was bound to a row from another city's list, and a retry changes nothing about that
+  // (trial/results/20261026_gozero/bg111-city-refusal-probe.txt).  So the sentence points at the item, says
+  // what is wrong in travel terms, and gives the one step that can change the answer.
+  return `第 ${row.sequence_no} 项${title ? `「${title}」` : ""}对上的地点${place ? `「${place}」` : ""}记在另一座城市的清单上，`
+    + "不在这趟旅行的城市里。改时间没有用——回到探索，换一处同城的地点再保存。";
+}
+
 const SCHEDULE_RULE_SENTENCES: Record<string, string> = {
   end_not_after_start: "结束时间不晚于开始时间",
   overlaps_previous_item: "开始时间排在上一项结束之前",

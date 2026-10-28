@@ -1,0 +1,18 @@
+PROFILE_USED _chrome_gozero_bf110 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=13.7
+HTTP POST 201 /api/v1/journeys/f97421ae-d069-413c-8793-e0e4eac38dfa/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/f97421ae-d069-413c-8793-e0e4eac38dfa/agent/goal-tasks/7a0e4209-6096-4c29-a974-fa73f5900b6f/run
+SKIP t=22.7
+DRAFT_WAIT 1 state=null promote=null t=22.7
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" promote=null t=40.8
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" promote=null t=58.8
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" promote=null t=76.8
+DRAFT_WAIT 13 state="旅行研究 · 正在研究" promote=null t=94.9
+DRAFT_WAIT 16 state="旅行研究 · 正在研究" promote=null t=112.9
+DRAFT_WAIT 19 state="旅行研究 · 正在研究" promote=null t=130.9
+DRAFT_WAIT 22 state="旅行研究 · 正在研究" promote=null t=149.0
+DRAFT_WAIT 25 state="已整理 2 天 · 7 项安排" promote=null t=167.0
+HTTP POST 200 /api/v1/journeys/f97421ae-d069-413c-8793-e0e4eac38dfa/agent/goal-tasks/7a0e4209-6096-4c29-a974-fa73f5900b6f/resume
+DRAFT_WAIT 28 state="已整理 2 天 · 7 项安排" promote=null t=185.0
+DRAFT_WAIT 31 state="已整理 2 天 · 7 项安排" promote=null t=203.1

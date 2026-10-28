@@ -69,6 +69,32 @@ def refuse_schedule_row(*, rule: str, sequence_no: int, title: str, date: str, s
     return refused
 
 
+def refuse_place_city(*, sequence_no: int, title: str, date: str, place_name: str,
+                      place_city_code: str | None, journey_city_code: str | None) -> HTTPException:
+    """Name the item whose bound place belongs to another city's list, instead of refusing in one word.
+
+    Measured on the clean generation (trial/results/20261026_gozero/bf110-replan-apply-full-chain-430-r2.txt:35):
+    a traveller who finished the round, entered the trip, ticked 「按以上时间准备方案」 and pressed
+    「保存为正式候选方案」 got 409 PLACE_NOT_IN_JOURNEY_CITY with `details: null`, and the card answered
+    「这次未能保存，时间仍留在这里，可以重试。」 (frontend/src/trial/mobile/DraftDepartureCard.tsx:151).  The
+    probe (trial/results/20261026_gozero/bg111-city-refusal-probe.txt) shows why "retry" was the wrong
+    instruction: six slots, five bound inside this journey's own city pool and exactly one -- item 4,
+    北海公园 -- bound to a row in a different pool, so the same press repeats the same refusal.
+
+    `message` keeps its verbatim value so every existing reader of this door still works; which item, its
+    title, its date and the two city codes ride as the optional attributes the one envelope already supports
+    (app/main.py:884-892), the same way refuse_schedule_row above does for the time rules.
+    """
+    refused = HTTPException(409, "PLACE_NOT_IN_JOURNEY_CITY")
+    refused.reason_code = "PLACE_NOT_IN_JOURNEY_CITY"  # type: ignore[attr-defined]
+    refused.error_details = {  # type: ignore[attr-defined]
+        "sequence_no": sequence_no, "title": title[:80], "date": date,
+        "place_name": place_name[:80], "place_city_code": place_city_code,
+        "journey_city_code": journey_city_code,
+    }
+    return refused
+
+
 def validate_draft_date_constraint(*, draft: dict, date: str, slot: dict, start_time: str) -> None:
     """Reject an exact prepared time that violates this date/block's optional lower bound."""
     constraints = draft.get("date_constraints")
@@ -257,7 +283,9 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
             source_id = str(slot.get("place_id") or "")
             place = session.get(Place, source_id) if source_id in known else None
             if place is not None and place.city_code != journey.city_code:
-                raise HTTPException(409, "PLACE_NOT_IN_JOURNEY_CITY")
+                raise refuse_place_city(sequence_no=number, title=str(slot.get("title") or ""),
+                                        date=str(date), place_name=str(getattr(place, "name", "") or ""),
+                                        place_city_code=place.city_code, journey_city_code=journey.city_code)
             lead = goal_research_lead(task, source_id) if source_id and place is None else None
             if source_id and place is None and (lead is None or lead.get("region_status") == "CONFLICT"):
                 raise HTTPException(422, "PLACE_NOT_IN_GOAL_TASK_SCOPE")
@@ -275,7 +303,9 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                             Place.external_id.in_([external_id, f"{provider}:{external_id}"]),
                             Place.city_code == journey.city_code))
                 if place is not None and place.city_code != journey.city_code:
-                    raise HTTPException(409, "PLACE_NOT_IN_JOURNEY_CITY")
+                    raise refuse_place_city(sequence_no=number, title=str(slot.get("title") or ""),
+                                            date=str(date), place_name=str(getattr(place, "name", "") or ""),
+                                            place_city_code=place.city_code, journey_city_code=journey.city_code)
             missing = []
             on_date: dict | None = None
             date_ask = ASK_AGENT_FOR_PLACE_FACT

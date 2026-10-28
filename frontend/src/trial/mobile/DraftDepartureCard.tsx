@@ -210,7 +210,9 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: task.journey_id }));
     } catch (error) {
       if (epoch !== scope.current || token !== readTravelerBearer()) return;
-      const named = scheduleRefusalSentence(refusalRow(error));
+      const named = refusalReason(error) === "PLACE_NOT_IN_JOURNEY_CITY"
+        ? placeCityRefusalSentence(refusalRow(error))
+        : scheduleRefusalSentence(refusalRow(error));
       setMessage(named || "这一版没能保存，原来的时间还在这里。");
     } finally { inFlight.current = false; setBusy(false); }
   };
