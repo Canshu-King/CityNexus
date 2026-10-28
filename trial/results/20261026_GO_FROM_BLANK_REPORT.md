@@ -1716,3 +1716,43 @@ AG 臂（`trial/human_walk/_ag_arm_clean_r83.mjs`，收据 `trial/results/202610
    也就是说"全禁用"目前唯一没被排除的解释是 `plan_authority_blocker`（`services.py:929`）返回了非 None，
    而它到底因为什么返回，我没有现读，所以**这一格留空**，不在这里编成因。
    但注意：出发键亮着且按得动，所以"候选全禁用"并没有把旅客堵死在路上——它堵的是"换另一版方案"那扇门。
+## 75. 现读钉死：三枚候选为什么全灰，以及"出发门要得、选用门要不得"的不对称
+
+不需要再跑臂，`app/services.py` 的判据与只读库就能对上（列名是 `places.opening_hours_json`，
+我上一轮打印时按 `opening_hours` 取列才读到 `n/a`，那格是我打印错位，不是数据形状）。
+
+现读链条（三枚候选 `a28609a8`／`2952ce86`／`e669021c` 逐枚同值）：
+
+| 判据所需 | 现读值 |
+| --- | --- |
+| `explanation.authority_state` | `COST_UNKNOWN_ACCEPTED`（`services.py:771`） |
+| `explanation.cost_unknown_policy` | `USER_ACCEPTS_UNKNOWN_PRICE_NOT_INC…`（`:772`） |
+| `cost_summary.unknown_item_count` | 9 > 0（`:774`）⇒ `cost_unknown_mode = True` |
+| 所用地点的 `provider_key` | 全是 `amap` ⇒ 不是锚点，进入 `used_content_places`（`:764-769`） |
+| 同一批地点行的 `opening_hours_json` | 见下方实测计数 ⇒ `_place_has_unresolved_opening` 为真（`:689-692`） |
+| ⇒ 分支 | `services.py:776-782` 命中，返回 `UNRESOLVED_ACTIVITY_FACTS` ⇒ `:992` 判 `selectable=False` ⇒ 屏上 `SELECT_LIVE_INDEX -1` |
+
+```
+places total 150 empty-or-null opening_hours_json 0
+opening status histogram {"VERIFIED_PROVIDER": 119, "UNKNOWN": 31}```
+
+⇒ 三枚候选全灰**有确定服务端理由**，不是我的量具造的，也不是 §74 留空时说的"未排除的猜测"了——
+`plan_authority_blocker` 返回的正是 `UNRESOLVED_ACTIVITY_FACTS`。
+
+### 同一套数据里的不对称（这条要交裁语）
+
+AG 臂那趟 `6d9ea8f3` 的候选 `86bff399` 与上面三枚同形制：`COST_UNKNOWN_ACCEPTED`、
+`policy=USER_ACCEPTS_UNKNOWN_PRICE_NOT_INC`、所用地点也全是 `amap` 且营业时间同一批缺证。
+可那一屏读到的是：`SELECT_LIVE_INDEX -1`（选用门全拒）**同时** `DEPART_START_ENABLED true`（出发门亮着），
+按下去真进了 `行程执行中`。⇒ 选用门与出发门对"营业时间未知"的取值不一致。
+代码上的注释也承认这一层：`services.py:779-781` 写的是"OSM 身份不证明营业，选用/出发前仍要独立取证"，
+出发那侧显然没执行同一句。
+
+这正是 #283（「冻转场证据＋营业时间未知是否否决选用」）等的那条裁语需要的现场事实：
+旅客现在能出发、不能换版；把不对称抹平有两个方向（选用门放宽到与出发门一致，或出发门补上同一条 opening 校验），
+**我不替裁决选方向**，这里只交读数与两处代码坐标（`services.py:776-782` 与 `services.py:992`）。
+
+### §74 那一格随之更正
+
+§74 我写的"唯一未被排除的解释是 `plan_authority_blocker` 返回非 None，返回原因没有现读"——
+原因已经现读到并落在本节；§74 正文按纪律不改，勘误以本节为准（同 §73 对 §72 的处理）。
