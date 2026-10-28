@@ -258,7 +258,10 @@ export function CityPicker({
   return (
     <>
       {promptFirst}
-      <details className="rev-quick-secondary" data-testid="rev-quick-area-secondary">
+      {/* The screen's own sentence says 这里可以手动查找地点, so the query key must not wait behind a
+          closed layer -- measured on the clean tip: after the plan screen's 补上没排地点的那段时间 hand,
+          rev-quick-find-city reported isVisible=false even when scrolled to centre. */}
+      <details className="rev-quick-secondary" data-testid="rev-quick-area-secondary" open>
         <summary>我想自己先挑地点（可选）</summary>
         {pane}
       </details>
