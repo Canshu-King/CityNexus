@@ -1,0 +1,22 @@
+PROFILE_USED _chrome_gozero_bl117 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=13.8
+HTTP POST 201 /api/v1/journeys/fd6e8fa0-0b23-4df8-8f68-115807ce6ea9/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/fd6e8fa0-0b23-4df8-8f68-115807ce6ea9/agent/goal-tasks/d9047cf9-d204-440a-8d08-b4c73bb432f2/run
+SKIP t=19.9
+DRAFT_WAIT 1 state=null t=19.9
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" t=37.9
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" t=56.0
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" t=74.0
+DRAFT_READY "已整理 2 天 · 6 项安排" t=80.0
+JOURNEY_URL /revolution
+HIT layer-agent true t=80.3
+AGENT_LAYER_OPENED true t=81.5
+STEPS_BEFORE {"present":true,"open":false,"summary":"Agent 工具时间线 · 8 步","rows":8,"row_texts":["","","",""],"source_rows":6,"source_texts":["","","","","",""],"vendors":{"amap":0,"public_lists":0,"not_recorded":0,"checked":0,"unchecked":0},"private_markers":[],"uuid_in_source":false} t=84.1
+HIT steps-summary true t=84.6
+STEPS_SUMMARY_PRESSED true t=85.8
+STEPS_AFTER {"present":true,"open":true,"summary":"Agent 工具时间线 · 9 步","rows":9,"row_texts":["1 与你商量安排 完成 4 条已有路线 03:12:54 · 0.0 秒","2 查找公开地点 完成 搜索故宫博物院作为第1天核心景点 8 处地点 来源：高德地图 · 真供应商已核实 03:13:02 · 0.3 秒","3 查找公开地点 完成 搜索天安门广场作为故宫南侧景点 8 处地点 来源：高德地图 · 真供应商已核实 03:13:10 · 0.2 秒","4 查找公开地点 完成 搜索景山公园作为故宫北门出口景点 8 处地点 来源：高德地图 · 真供应商已核实 03:13:22 · 0.2 秒"],"source_rows":7,"source_texts":["来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 真供应商已核实","来源：高德地图 · 核实状态未记录"],"vendors":{"amap":7,"public_lists":0,"not_recorded":1,"checked":6,"unchecked":0},"private_markers":[],"uuid_in_source":false} t=87.6
+VERDICT DISCLOSURE_ON_SCREEN rows=9 sources=7 amap=7
+SOURCE_HIT_PROOF {"box":"236x26@713","inViewport":true,"visible":true}
+FINAL_CLEAN true
+DONE t=87.6
