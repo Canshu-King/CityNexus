@@ -133,6 +133,29 @@ function toolStepClock(step: { created_at?: string; completed_at?: string | null
   return [clock, elapsed].filter(Boolean).join(" · ");
 }
 
+// Who actually answered for a step, read off the row the server wrote when it called the tool
+// (backend/app/agent/goal_amap.py:153 and goal_artifacts.py:262 carry these two keys).  A
+// traveller weighing “太远坐地铁” needs to know whether a walk came from the real map vendor or an
+// unverified public list.  When the row records neither, the panel prints 未记录 instead of going
+// quiet -- a missing disclosure must read as missing, not as if it had already been checked.
+const PROVIDER_NAME: Record<string, string> = {
+  amap: "高德地图", overpass: "OpenStreetMap 公开数据", photon: "公开地点清单",
+  nominatim: "公开地点清单", official_web: "官方网站", valhalla: "路线计算服务",
+  deepseek: "公开检索", searxng: "公开检索",
+};
+const PROVENANCE_NAME: Record<string, string> = {
+  LIVE_PROVIDER: "真供应商已核实", LIVE_OPENSTREETMAP_OVERPASS: "公开地图已核实",
+  UNVERIFIED: "还没核实",
+};
+function toolStepSourceText(result: Record<string, unknown>): string {
+  const provider = typeof result.provider === "string" ? result.provider : "";
+  const provenance = typeof result.provider_provenance === "string" ? result.provider_provenance : "";
+  if (!provider && !provenance) return "";
+  const who = provider ? (PROVIDER_NAME[provider] ?? "未记录的来源") : "未记录的来源";
+  const how = provenance ? (PROVENANCE_NAME[provenance] ?? "核实状态未记录") : "核实状态未记录";
+  return `来源：${who} · ${how}`;
+}
+
 /** What the traveller can do right now, read from the task's own state — never a model sentence. */
 function nextActionSentence(task: { status: string; pending_question?: unknown; draft_artifact?: { days?: Array<{ slots?: unknown[] }> } | null }): string {
   if (task.status === "WORKING") return "Agent 正在调用工具，等这一轮结束再操作。";
@@ -684,6 +707,10 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               <span className={`rev-agent-tool-status is-${String(step.status || "").toLowerCase()}`} data-testid="rev-agent-tool-status">{STEP_STATUS_TEXT[step.status] ?? step.status}</span>
               {typeof step.result.public_action === "string" && <span>{step.result.public_action}</span>}
               <span>{step.tool_name === "inspect_journey" && step.status === "COMPLETED" ? "行程已读取" : taskStepText(step.result)}</span>
+              {(() => {
+                const source = toolStepSourceText(step.result);
+                return source ? <span className="rev-agent-tool-source" data-testid="rev-agent-tool-source">{source}</span> : null;
+              })()}
               <small>{toolStepClock(step)}</small>
             </li>)}
           </ol>
