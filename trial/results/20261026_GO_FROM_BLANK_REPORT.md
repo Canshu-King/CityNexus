@@ -2150,3 +2150,25 @@ CRLF 文件整体翻成 LF（这台机器的老坑，今天已经在报告里记
 §88 是用 shell 内引号生成的，反引号与 `$( )` 被 bash 吃掉，落进去的正文不完整——按纪律不改旧正文，本节作完整替代。同时 §86 我把 `DraftDepartureCard.tsx:259`、`:298` 判成「只喂判定、不喂屏」，这把尺一扫就现形：两支都是 `setMessage(...)`，**原样端上屏**。那条假绿还有一层：尺第一版用 `bash -lc grep` 取文件，在本机读不到任何文件却报「0 命中」——我把它改成 python 遍历，并加了一条硬闸：`files_checked` 为 0 即 `SELFTEST_RED`（退出码 4），零命中不再是通过。
 
 改完的现读：`SELFTEST_OK negative=2 positive=0 / RAW_ERROR_SINKS 0 files_checked=17`，退出码 0；`DraftDepartureCard.tsx` 的 diff 为 `380	379	frontend/src/trial/mobile/DraftDepartureCard.tsx`，`tsc` RC=0、生产构建无 error。§87 那一步因此才真正覆盖全部六张口。
+## 90. 尺第一次拿到实物负对照：产品自己历史上漏过的那一行
+
+先更正我自己上一轮说错的话。我看到 r91 收据里屏上有 "CityNexus API 409: …/resume"，就直接说了"尺绿而屏红，我的尺假绿了"。**这句话是错的，当场撤回。** 尺扫的是当代 HEAD 的文件体，而那一行在 3a01aeec22 就已经被搬走，当代文件里根本没有它 —— 尺判 0 是正确的读数，不是漏判。我犯的正是记忆里那条"别人给的成因是假设"的同类错：拿一条历史收据去推断当前尺的行为，而没有先测。
+
+于是这轮把"测"补上了，而且补的不是我自己敲的形状。之前尺的负对照是我手写的两行示例；它只能证明尺认得我预想的写法，证明不了它认得**当年真的走到屏幕上**的那一行。新的对照件 trial/human_walk/_raw_error_sink_control_r2.py 直接取历史提交的文件体：把 840534ec11 的三枚文件原文喂进同一个 scan()，尺必须报出东西来，因为它报的那一行就是旅客在屏上读到的那句。
+
+一次运行同时读两代，实测如下（左列是旧代次里泄漏真的在文件中的行，右列是同一支口在现尖 ea51658c9a 上行 helper 之后所在的行）：
+
+| 文件 | 旧代次 840534ec11 命中行 | 现尖 ea51658c9a 命中行 | 现尖是否仍报泄漏 |
+| --- | --- | --- | --- |
+| frontend/src/trial/mobile/WorkspaceActions.tsx:462 | 462,490,505,540 | 463,489,504,539 | 0 处 |
+| frontend/src/trial/mobile/DraftDepartureCard.tsx:259 | 259,298 | 260,299 | 0 处 |
+| frontend/src/trial/mobile/GoalDraftEditor.tsx:13 | 13 | 14 | 0 处 |
+
+旧代次合计 7 处、现尖 0 处，尺自身判语 CONTROL_OK（退出码 0）。**关键是这 7 处和现尖那 7 支 helper 调用一一对得上**：旧代次每一处泄漏的落点，在现尖都变成了 travelerErrorMessage 的那一支 —— 不是"我删了 7 行"，而是"7 支口全部改走同一张映射表"。这把"裸错误都堵住了"从一句自我声明变成能用实物反证的读数。
+
+顺带从同一批收据里读清了两件以前被我含糊过去的事：
+
+- r91 屏上那句"消息还在确认中，刷新任务查看最新进度。"并不是 409 的句子，而是 frontend/src/trial/mobile/WorkspaceActions.tsx:535 的 AbortError 分支 —— 那次是 180 秒等待被客户端自己掐断。我之前把它当成"拒绝句"引用过，现在按读数改正。
+- "这一轮还在进行中"那句（frontend/src/trial/mobile/travelerError.ts:7 对 GOAL_TASK_ALREADY_RUNNING 的映射）在正常点击路径上旅客按不到：sendFollowup 在 frontend/src/trial/mobile/WorkspaceActions.tsx:512 就先用 writeBusy 与 task.status 为 WORKING 把第二次发送挡在门外，草稿屏的输入框也在研究未返回时保持禁用（r91 臂被迫先等它变可用，就是这件事）。所以映射表里这一条是**状态滞后时的兜底**，不是我已证到屏的路径 —— 我不把它写成"旅客已经看到"。
+
+屏证这一轮仍在跑：从 r91 派生的精简臂 trial/human_walk/_aq_arm_clean_430_r92.mjs 在零 dirty 代次 ea51658c9a 上用真实 Chrome 走 430×932（干净树已切到该代，现读 DIRTY=0，:60362 与 :14462 均在 LISTENING，/revolution 回 http_status=200；独立 canary 库与一次性 Chrome profile，无预置状态）。它只走到"同一枚 保存为正式候选方案 连按两次"：第一次是真保存，第二次就是当年产生泄漏的那一发。两类文本分别判 —— 整屏正文里出现 "CityNexus API" 即红（该短语只可能是客户端错误串），消息带里出现 36 位 id 即红（id 也会合法出现在来源链接里，所以只判消息带，避免假红）。当前进度：第 39.5 秒已按到跳过提问（SKIP），正在等草案。读数没落盘之前，本节只声明尺的实物对照成立与上面两处更正，不声明旅客已在新代次看到新句子。
