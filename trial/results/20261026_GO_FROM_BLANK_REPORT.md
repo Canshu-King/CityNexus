@@ -1857,3 +1857,29 @@ FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_
 2. **profile 复用被 Chrome 拒**：AI 臂崩在 `browserType.launchPersistentContext: Target page, context or browser has been closed`，
    浏览器日志里那句（GBK 转码后）是"已在现有的浏览器会话中打开"——残留 chrome 占着 `_chrome_gozero_ai85`。
    正解是换 profile 名重派生（AK 就是这么起来的），**不去杀别人的 chrome 进程**。
+## 79. AL 臂（430 纯净树）站在方案屏上看见了一枚候选键，我的腿却只等出发键
+
+`trial/human_walk/_al_arm_clean_430_r87.mjs`，收据 `trial/results/20261026_gozero/al-clean-chain-430-r87.txt`
+（同树 `E:/_cmdr_clean_1028`，起前 dirty 0；journey `393188ec…`、goal_task `22211a17…`、plan `cc2c9dc6…`）：
+
+    W_CONFIRM true SAVE_ENABLED true   t=420.1      # 重存键亮着（§64 那刀在 430 纯净树第二次成立）
+    HTTP POST 200 …/plans/cc2c9dc6…/freeze-routes   # 转场证据冻住成功
+    PLAN_HAND 0                        t=1117.6     # 这一趟没有补地点 hand
+    DEPART_FIRST start=0 select=1      t=1187.0     # 方案屏上有一枚候选选用键，没有出发键
+    X_END alert="" errors=[]           t=1193.1
+
+§78 让臂照屏上那句「请刷新后继续」去刷新，这条腿这次**没被触发**，而且是对的：
+这一拍本来就站在方案屏上（`select=1`），不需要回程。真正的问题是我自己的另一条腿——
+`DEPART_FIRST` 那段只在 `if (await dStart.count())` 里才去逐枚读 `rev-plan-select` 并按亮着的那枚，
+于是**屏上明明有一枚候选键，臂却没碰它**，直接收工。这是 §63／§70 那一族的第九次同形：
+判据写死在"下一扇门已经出现"的前提上，前提不成立就把眼前这扇也跳过。
+
+修法一条（顺序，不是新机制）：把"逐枚读 select＋按 live 的那枚"提到 start 判断之外，
+按完 select 之后**重读同一屏**再决定按不按出发键：
+
+    const perKey = await dSelect.evaluateAll(...)   // 现在在 if (dStart.count()) 里面，要提到外面
+    if (liveIndex >= 0) { press(select.nth(liveIndex)); await page.waitForTimeout(6000); }
+    // 然后才读 dStart，再走 §74 那套 ACTIVE＋地图对账
+
+#337 判级不变（430 且零 dirty 的「ACTIVE＋地图对账」仍未拿到），但卡点已经从"未知"收窄成
+"我这一条腿的顺序"；#339（390 纯净树）那格的成法在同一条链上，改完顺序即可复用。
