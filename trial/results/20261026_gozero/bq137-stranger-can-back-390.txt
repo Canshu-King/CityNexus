@@ -1,0 +1,10 @@
+PROFILE_USED _chrome_gozero_bp136b t=0.5
+A_LOCAL_POINTER keys=["id","cityCode","cityName","status","ownerTravelerId"] old_id_shape=uuid
+A_SESSION_NOW ["citynexus.revolution.v3.space"]
+EXPLORE_MISS
+HTTP POST 201 /api/v1/travelers
+HTTP POST 201 /api/v1/journeys
+B_NEW_JOURNEY new_id_shape=not_seen t=45.6
+C_OLD_ADDRESS {"head":"用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步 同行者加入 加入正在进行的行程 刷新 目前没有待处理的行程邀请。","refuses":false,"showsShanghai":false,"showsBeijing":false,"cards":0} t=53.1
+VERDICT UNKNOWN old_id_shape=uuid t=53.2
+DONE t=53.2
