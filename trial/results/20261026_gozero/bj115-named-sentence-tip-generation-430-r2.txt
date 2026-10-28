@@ -1,0 +1,83 @@
+PROFILE_USED _chrome_gozero_bj115 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=14.0
+HTTP POST 201 /api/v1/journeys/65c20cad-ea40-4084-b0d7-596bc5a433c5/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/65c20cad-ea40-4084-b0d7-596bc5a433c5/agent/goal-tasks/23a6209e-2098-4bdd-b6fd-ae1c30bbfe75/run
+SKIP t=23.1
+DRAFT_WAIT 1 state=null t=23.1
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" t=41.1
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" t=59.1
+DRAFT_WAIT 10 state="已整理 2 天 · 6 项安排" t=77.2
+DRAFT_READY "已整理 2 天 · 6 项安排" t=77.2
+HIT trips-tab true t=77.5
+CARDS 8
+MISS card-0
+MISS card-1
+MISS card-2
+MISS card-3
+MISS card-4
+MISS card-5
+HTTP POST 200 /api/v1/journeys/65c20cad-ea40-4084-b0d7-596bc5a433c5/agent/goal-tasks/23a6209e-2098-4bdd-b6fd-ae1c30bbfe75/resume
+MISS card-6
+HIT card-7 true t=130.2
+IN_CARD_7 state="当前展示的是已保存版本。" sentence=null
+IN_CARD_7 freeze=null promote="保存为正式候选方案"
+IN_CARD_7 KEY {"id":"rev-v3-travel-gaps","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan-diff","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan-apply","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan-reverify","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan-refusal","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-gap-shortfall","count":0}
+HIT layer-timeline true t=135.3
+ON_TIMELINE state="当前展示的是已保存版本。" sentence=null
+ON_TIMELINE freeze=null promote="保存为正式候选方案"
+ON_TIMELINE KEY {"id":"rev-v3-travel-gaps","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-diff","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-apply","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-reverify","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-refusal","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfall","count":0}
+CONFIRMED true was=false t=141.9
+HIT promote true t=142.2
+HTTP POST 201 /api/v1/journeys/65c20cad-ea40-4084-b0d7-596bc5a433c5/agent/goal-tasks/23a6209e-2098-4bdd-b6fd-ae1c30bbfe75/prepare-plan
+PROMOTE_PRESSED true t=143.5
+AFTER_PROMOTE state="当前展示的是已保存版本。" sentence="已保存 6 项正式安排。"
+AFTER_PROMOTE freeze="核实并冻结今天的转场" promote="按以上时间重新准备方案"
+AFTER_PROMOTE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_PROMOTE TEXTS ["当前展示的是已保存版本。","已保存 6 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_PROMOTE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+SENTENCE_KIND refused=false verbatim="已保存 6 项正式安排。" t=158.5
+HIT freeze-routes true t=158.8
+FREEZE_PRESSED true t=160.1
+FREEZE_WAIT 1 busy=true gaps=0 t=160.1
+HTTP POST 200 /api/v1/journeys/65c20cad-ea40-4084-b0d7-596bc5a433c5/agent/goal-tasks/23a6209e-2098-4bdd-b6fd-ae1c30bbfe75/plans/43092a8d-35b7-4b3a-8838-79d7b22b84e9/freeze-routes
+FREEZE_WAIT 2 busy=false gaps=0 t=165.1
+FREEZE_WAIT 3 busy=false gaps=0 t=170.1
+FREEZE_WAIT 4 busy=false gaps=0 t=175.1
+FREEZE_WAIT 5 busy=false gaps=0 t=180.1
+FREEZE_WAIT 6 busy=false gaps=0 t=185.1
+FREEZE_WAIT 7 busy=false gaps=0 t=190.1
+FREEZE_WAIT 8 busy=false gaps=0 t=195.1
+FREEZE_WAIT 9 busy=false gaps=0 t=200.1
+AFTER_FREEZE state="当前展示的是已保存版本。" sentence=null
+AFTER_FREEZE freeze="重新核实转场" promote="按以上时间重新准备方案"
+AFTER_FREEZE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_FREEZE TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_FREEZE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+REPLAN_DOOR replan=0 hit=false box=null reverify=0 refusal_line=null t=200.2
+FINAL_CLEAN true
+DONE t=200.2

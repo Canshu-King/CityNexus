@@ -17,7 +17,7 @@ import fs from "node:fs";
 // DraftDepartureCard.tsx, copied at 18:33 and restored afterwards; the backend stays on its own generation.
 // No seeded storage, no direct API calls, no DOM injection: every request below answers a real press.
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
-const OUT = `${DIR}/bj115-named-sentence-tip-generation-430.txt`;
+const OUT = `${DIR}/bj115-named-sentence-tip-generation-430-r2.txt`;
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (v) => { lines.push(v); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };
