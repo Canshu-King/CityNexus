@@ -1922,3 +1922,44 @@ FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_
 挪完按「按以上时间重新准备方案」（§64 那枚键，本拍现读仍亮），再逐枚读 `rev-plan-select`，
 `SELECT_LIVE_INDEX >= 0` 才继续选用→出发→地图对账。若挪完仍是 `-1`，就报"按句子挪了仍然排不下"，
 把句子与门之间的矛盾交裁决，**不会改断言凑绿**。
+## 81. AN 臂：照句子挪完，冲突段数从 2 降到 1——同时我的粗挪自己造出一枚 422
+
+`trial/human_walk/_an_arm_clean_430_r89.mjs`（430×932，零 dirty 树），
+收据 `trial/results/20261026_gozero/an-clean-chain-430-r89.txt`。这条臂是 §80 承诺的"照屏上句子做"：
+
+    PLAN_HAND 0 → DEPART_FIRST start=0 select=1 → SELECT_LIVE_INDEX -1   t=1066.3
+    AN_REFUSAL_SEEN true                                                  t=1066.3
+    AN_MOVED ["天安门广场（看广场/拍照）开始时间 09:00->09:15",
+              "故宫博物院（午门进、神武门出）开始时间 11:00->11:15",
+              "景山公园（万春亭俯瞰故宫）开始时间 14:00->14:15",
+              "什刹海·后海（散步/晚餐）开始时间 19:00->19:15", "颐和园（轻松环湖）开始时间 09:00->09:…"]
+    AN_RESIVE_KEY 1 enabled=true                                          t=1069.8   # §64 那枚重存键，真按下去
+    HTTP POST 422 …/prepare-plan  {"code":"VALIDATION_ERROR","message":"SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY",
+        "details":{"rule":"end_not_after_start","sequence_no":6,"title":"王府井步行街（购物/晚餐）",
+                    "date":"2026-12-04","start_time":"14:00","end_time":"14:00","previous_end_time":"09:45",
+                    "journey_start_at":"2026-12-03T09:00:00+08:00","journey_end_at":"2026-12-04T21:00:00+08:00"}}
+    AN_SELECT_DISABLED [true]                                             t=1080.4
+    DEPART_START_ENABLED false
+    REFUSAL [... "这版方案排不下：两段安排之间留的赶路时间不够（1 段）。…再按一次「选用这份方案」。"]  t=1080.4
+    X_END alert="" errors=[]                                              t=1089.5
+
+### 三条判定，各自归谁
+
+1. **产品侧（正向）**：拒绝句里的段数**会随旅客的挪动减少**——AM 臂读到「赶路时间不够（**2 段**）」，
+   AN 臂挪完再重存之后读到「（**1 段**）」。也就是说那句指令是真有效的指引，不是一句安慰；
+   这条链（挪 → 重存 → 服务端重生成候选 → 重新报剩余冲突）在零 dirty 的树上完整走通了一圈。
+2. **产品侧（正向，第 2 刀的续证）**：422 的 `details` 精确到 `sequence_no=6`、`title`、日期、
+   该项 start/end 与**前一项的结束时间** `previous_end_time`，外加整趟的 `journey_start_at`／`journey_end_at`
+   ——服务端把"是哪一项、和谁撞"说全了，这正是 #292／#301／#315 那一族要的形状。
+3. **我的臂（缺陷，不当产品结论）**：422 是**我的粗挪造出来的**——我把每一项开始时间一律 +15 分钟，
+   没检查同一项的结束时间，于是第 6 项变成 `start=end=14:00`，被 `rule=end_not_after_start` 挡回。
+   这条只算"我这一腿的输入不合法"，不能读成产品 bug；修法写在下面，AO 臂带着走。
+
+### AO 臂的改法（一条，不是新机制）
+
+挪某一项开始时间之前，先在同一张卡里找到它的结束时间：
+若 `新开始 >= 原结束`，就把这一项**整体后移**（结束时间同步 +15），而不是只推开始——
+这样不会再自己造出 `end_not_after_start`。段数继续降（1→0）时，
+`SELECT_LIVE_INDEX` 应由 `-1` 转成可用值，那时才谈选用→出发→地图对账（#337 尾格）。
+若挪到没有可挪空间（`journey_end_at 21:00` 顶住）仍剩 1 段，
+我就把它报成"按句子挪到边界仍排不下"，交回 #283/#330 那两条裁语，不改断言凑绿。
