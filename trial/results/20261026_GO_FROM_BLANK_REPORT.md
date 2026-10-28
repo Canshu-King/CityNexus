@@ -2274,3 +2274,24 @@ aq6 是这一串里最接近成功的一跑：t=33.3 跳过提问，t=309.7 真�
 **2c「接受之后主动刷新外层 Journey/PlanVersion/活动/地图/状态」——未确认。** 我只读到四个 `acceptReplan` 调用方（`LegacyApp.tsx:932`、`features/simulation/SimulationPanel.tsx:653`、`ClassroomPresenterPanel.tsx:343`、`GuardianRealityPanel.tsx:356`），还没有逐一读它们在 accept 返回之后各自刷了哪些面。历史上 #335 修过"接受后地图 0 处地点"、#337/#339 在 390/430 证过接受后地图站点数与活动数相等（6=6），那是**旧代次的屏证**；现尖这一格我不写满足，也不写不满足，等读调用方。
 
 所以第 2 刀的当前状态是：2a 有一处需要补的产品缺口（可展开），2b 达标，2c 待读。这三条我都只报代码形状，屏上证词另说——尤其不要把"组件里有这段逻辑"当成"旅客在 430 屏上看到过"。
+## 97. 2c 用读者清单结案；aq7 被新装的快失败挡下，这正是它该有的样子
+
+先把 §96 里我标"未确认"的那一格读掉，读法是逐行看调用方在 `acceptReplan` 返回之后做了什么，而不是猜。
+
+旅客侧那一枚在 [trial/mobile/GuardianRealityPanel.tsx:350](file:///d/moodle/_cmdr_rescue_v3_1022/frontend/src/trial/mobile/GuardianRealityPanel.tsx#L350) 的 `settleProposal`，`:356` 接受之后连着做了四件事：`:359` 把视口滚回顶部（注释写明原因——不滚的话"接受后的第一站变化发生在几千像素之上"）；`:363-365` 清掉提案、状态转 done、给出「行程已按这份调整更新。」；`:366` 广播 `citynexus:mission-refresh`；`:367` 递增 `identityRevision` 触发外层重读；`:372` 接受分支再延迟 1200 毫秒整页 reload，注释说得很直白——"这张屏所依据的方案已经不存在了"。
+
+事件没有读者就等于没刷，所以我把清单也取了：`trial/mobile/MissionCockpit.tsx:206` 与 `trial/mobile/WorkspaceActions.tsx:332` 各自 `addEventListener("citynexus:mission-refresh", refreshWorkspace / refresh)` 并在卸载时摘掉；`MissionCockpit.tsx:349` 与 `:419` 自己也会广播同一事件。**所以派单第 2 刀第三项「接受之后主动刷新外层 Journey/PlanVersion/活动/地图/状态」在旅客侧是满足的**，凭的是"广播 + 两个具名读者 + 一次整页 reload"这三层，不是凭一次绿屏。
+
+第 2 刀三项目前状态：2b 满足（`GuardianRealityPanel.tsx:152-157` 读 `proposal.diff.removed/added` 铸句）、2c 满足（本节）、**2a 仍不满足**——`features/agent/AgentRunRail.tsx` 现读 27 行是扁平 `<ol>`，全文件无 `details`/`summary`/`aria-expanded`，"可展开的工具时间线"没实现。这一项是接下来该开的产品刀，不是走查刀。
+
+再说 aq7。它是我给臂装上"DRAFT_SEEN 为 false 就退出"之后的第一跑，账上三行：
+
+```
+DRAFT_SEEN false
+NO_DRAFT   LEAK citynexus_api_in_body=false api_in_band=false uuid_in_band=false
+ABORT      no draft this round (IDLE_NO_DRAFT); tab hands and save key not attempted
+```
+
+同一条 `IDLE_NO_DRAFT`（现场模型这一轮没交草案）在 aq5 上换来的是"五枚 tab 手全 MISS + 再空转 9 分钟"，在 aq7 上换来的是"读一次消息带、说明没有草案、退出"。**这道闸按设计挡住了我上一次犯的那个错**——这也是我这一串里第一次看到自己写的判据真的咬住自己的旧行为。它顺带留下一个负读数：那一屏没有 `CityNexus API`、没有 36 位 id（三档全 false），但这一格不算 409 屏证，因为没有 409 发生，我不会拿它充数。
+
+于是 409 屏证剩下的障碍很清楚，而且只有一个：**运气**——现场模型得交出一版草案。下一步因此不是再改判据，而是把"这一轮没出草案"变成可重试的：`IDLE_NO_DRAFT` 之后按屏上那枚「重试这一轮」（或再发一次同一句话），限定三到四次，直到某一轮真出草案，才让普查腿与两次保存去跑。这条改完，第 2 刀的屏证就不该再靠碰。

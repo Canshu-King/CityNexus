@@ -1,0 +1,18 @@
+SHOT 430-aq-cold t=5.4
+HIT continue true t=6.3
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=10.0
+HIT open-settings true t=12.5
+CONSENT true
+CONSENT true
+HIT close-settings true t=14.5
+HIT send true t=16.1
+HTTP POST 201 /api/v1/journeys/9112f827-3b92-4662-82c5-26e47fa691a3/agent/goal-tasks
+SENT t=17.0
+HTTP POST 200 /api/v1/journeys/9112f827-3b92-4662-82c5-26e47fa691a3/agent/goal-tasks/b5537fe8-1180-4c2e-ba92-683d618398e8/run
+SKIPPED false
+DRAFT_SEEN false
+SHOT 430-aq-after-research t=1461.3
+NO_DRAFT TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+NO_DRAFT LEAK citynexus_api_in_body=false api_in_band=false uuid_in_band=false
+ABORT no draft this round (IDLE_NO_DRAFT); tab hands and save key not attempted
