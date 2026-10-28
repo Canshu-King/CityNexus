@@ -2338,3 +2338,21 @@ WAIT_KEY t=125.5 ["当前展示的是已保存版本。"]
 下一手因此是确定的、一次 evaluate 就能结的：对这三枚 testid 同时取 `getBoundingClientRect()` 的宽高、`offsetParent`、`getComputedStyle().visibility/display`、以及最近的 `<details>` 祖先及其 `open` 状态。它能把"藏在收起的披露层里""零尺寸""被 CSS 隐藏"三种成因分开——分开了我才好说清 409 那一屏到底要靠哪一步才按得到。
 
 **仍未证**：409 屏上的句子。本轮没有新增产品字节，只有 aq9 的读数与这一处判据收窄。
+## 100. 把 §99 的更正写进正文：层标签不是不可见，是我按的时机没挂载
+
+§99 我写下"三枚层标签在 DOM 里但此刻不可见——折叠披露层没点开"。**这条不成立，用一次 evaluate 就推翻，而且推翻它的正是我自己为它准备的探针**（trial/human_walk/_ax_probe_layer_visibility_r100.mjs → trial/results/20261026_gozero/ax-layer-visibility-r100.txt，提交 435397722f）：
+
+```
+COLD t=6.8   三枚 testid 全部 present:false（冷开欢迎屏，合理）
+LAYERS_PRESENT t=22.5
+  rev-mission-layer-map      w=125 h=46 top=81 offsetParent=DIV display=flex visibility=visible opacity=1 disabled=false details=null hiddenAncestor=null
+  rev-mission-layer-timeline 同上
+  rev-mission-layer-agent    同上
+HAS_SAVE_KEY false t=22.5
+```
+
+四个量（矩形尺寸、offsetParent、computed visibility/display/opacity、最近 `<details>` 祖先与 `hiddenAncestor` 链）全指同一件事：**它们是真的在屏幕上、125×46、顶边 81、完全不透明、不在任何折叠层里**。所以"够不着"这个说法要换成另一句：aq9 那三枚 `MISS` 出自**挂载窗口**——我的 `press()` 只在"等可见元素超时"时打 MISS，元素不存在与元素存在但不可见都写同一句，所以我把一条时序读数当成了可见性结论。这是我这一串里第三次"用眼睛/用推断代替量具"，也是唯一一次由我自己补的探针把自己推翻。
+
+同一次测量还留下两个可用的事实：一是层切换器在 t=22.5 就已挂载（远早于草案出现），二是**同一帧 `HAS_SAVE_KEY false`**——`保存为正式候选方案` 在层标签已经可见的时候仍然不在屏上。这两条合起来把 #340 剩下那一半的问题改写成一句可查的话：**那枚键要什么条件才挂载**（草案卡是否要求轮次彻底停稳、是否要求 goal-task 处于某个状态、还是只在 `日程` 层被激活后才渲染）。下一手就是拿这一枚键自己的挂载条件做同 tick 序列：每 3 秒记一次 `present / visibility / 当前激活层 / goal-task 状态`，跑满一轮，看它在哪个条件下从 false 翻成 true。
+
+**当前交付状态（不含修饰）**：派单第 1 刀（390/430 冷开走到 ACTIVE、同 journey/task 收据、改半天不漂移）已由 §74/§83/§84 在零 dirty 代次上证到位，#334/#337/#339 已闭；第 2 刀三格里 2b（接受键旁的 diff、缺费用写未知）与 2c（接受后主动刷新，凭 `GuardianRealityPanel.tsx:356-372` 加 `MissionCockpit.tsx:206`、`WorkspaceActions.tsx:332` 两个具名读者）已结案，**2a「可展开工具时间线」仍是产品缺口**（`AgentRunRail.tsx` 27 行扁平 `<ol>`，全文件无 `details`/`summary`/`aria-expanded`）；第 3 刀（走查文档过期断言与 QUICK_CARD）早前已交。**仍未证的一格**：旅客撞真 409 时屏上到底是哪一句——本块九笔提交没有一笔宣称过它。
