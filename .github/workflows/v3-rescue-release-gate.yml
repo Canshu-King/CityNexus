@@ -8,6 +8,10 @@ on:
       - backend/**
       - frontend/**
       - contracts/**
+      # The walk arms live under trial/ and the collision ruler reads exactly those files, so a push that
+      # adds a colliding arm has to wake the gate.  Without this line the ruler only runs when someone
+      # touches product code, which is the one case it cannot be wrong about.
+      - trial/**
       - .github/workflows/v3-rescue-release-gate.yml
   workflow_dispatch:
 
