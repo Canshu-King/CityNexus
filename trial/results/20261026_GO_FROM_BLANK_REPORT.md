@@ -2048,3 +2048,36 @@ FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_
 ⇒ 这九枚不是产品崩溃：夹具假设"任何 `_started_for_race()` 造出的旅程都带 `active_plan` 键"，
 而那个前提要求旅程真有激活方案。归属仍是裁决面，但成因从"未知"变成"夹具前置与实际状态不符"，
 其余六枚（live replan 五枚、list-replans-bound 一枚）我没有逐枚跑，不把这一条推广过去。
+## 85. 屏上原样端出了带 UUID 的 API 路径——这一支我按 §68 的形制改掉了，但**没有屏证**
+
+§83 那屏的 REFUSAL 原文是一条这样的句子（收据现读，不是我复述）：
+
+    REFUSAL ["CityNexus API 409: /journeys/4c6ff80b-4195-4675-9002-695c8a21abb5/agent/goal-tasks/419934a5-0a76-4a4a-a738-1624e1649e32/resume"]
+
+两处代码把它凑成的：`frontend/src/api/citynexus.ts:2895` 造的 message 就是 `"CityNexus API " + status + ": " + path`，
+而 `frontend/src/trial/mobile/WorkspaceActions.tsx:490` 在 `catch` 里直接 `error.message` 上屏。
+⇒ 违反 #315 立的口径（拒绝要给人句子，不端内部码与 id）：这里端的是**路由＋两枚 UUID**。
+
+改法与 §68 同一形制：先读服务端自己给的理由（`body.error.message`，形状由 §68 那把 409 的 body 证过是
+`{"error":{"code":"CONFLICT","message":"GOAL_TASK_…"}}`；同时兜住 `body.detail`），再映射成人话，
+认不出的理由给一句普通话而**不端路径**：
+
+| 服务端理由 | 屏上句子 |
+| --- | --- |
+| `GOAL_TASK_ALREADY_RUNNING` | 这一轮还在进行中，先等它结束再发新的消息。 |
+| `GOAL_TASK_NOT_RESUMABLE` | 这一轮已经结束了，直接说下一步想怎么调整就行。 |
+| `MESSAGE_ID_REUSED_WITH_DIFFERENT_TEXT` | 这条消息已经记下别的文字，请把这条重新发一次。 |
+| `GOAL_TASK_REQUIRES_DRAFT*` | 这趟已经有排好的方案，这一轮不再改草案；到「我的旅程」查看方案。 |
+| 其他／读不到 | 任务暂时没能继续，刷新可以看这一轮的进度。 |
+
+门禁：`npx tsc -p tsconfig.check.json --noEmit` **RC=0**，`npm run build` **RC=0**（8.18 秒），
+`git diff --numstat` = 十加一删，只动这一支 `catch`。
+
+**这一刀的屏证我没有**，所以判 `NOT-SCREEN-PROVEN`，不写进 KNOWN 已验清单。
+可复现的验法（下一个人不必猜）：在同一棵零 dirty 的树上，走 AP 臂那段对话流程，
+在本轮仍在跑时再发一条消息，让服务端回 `409 GOAL_TASK_ALREADY_RUNNING`，
+断言 `[role='alert']` 的文本含「这一轮还在进行中」且**不含** `CityNexus API` 与任何 `-` 分隔的 36 位 id。
+
+另记一条更通用的口子：这类"端路径"不该靠一处处手改来防。#315 那族需要一把尺——
+扫屏上/断言里的文本是否含 `CityNexus API`、`/[0-9a-f]{8}-` 或 `GOAL_TASK_`／`STALE_RECOMPOSE_` 这类内部码，
+命中即红。这把尺的归属与是否开成产品单交裁决，我不自己扩面。

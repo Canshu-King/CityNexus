@@ -485,9 +485,18 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       await refreshGoalTask(actor, task.task_id);
     } catch (error) {
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
+      // A raw "CityNexus API 409: /journeys/<id>/agent/goal-tasks/<id>/resume" reached the screen
+      // (measured on the clean generation, §83). Read the server's own reason and answer in words;
+      // an unknown reason gets a plain sentence rather than the identifier of a route.
+      const body = (error as { body?: { error?: { message?: string }; detail?: string } } | undefined)?.body;
+      const reason = `${body?.error?.message ?? ""} ${body?.detail ?? ""}`;
       setRequestError(error instanceof Error && error.name === "AbortError"
         ? "本次响应等待超时；刷新可查看服务端任务进度。"
-        : error instanceof Error ? error.message : "任务未能继续。");
+        : reason.includes("GOAL_TASK_ALREADY_RUNNING") ? "这一轮还在进行中，先等它结束再发新的消息。"
+          : reason.includes("GOAL_TASK_NOT_RESUMABLE") ? "这一轮已经结束了，直接说下一步想怎么调整就行。"
+            : reason.includes("MESSAGE_ID_REUSED_WITH_DIFFERENT_TEXT") ? "这条消息已经记下别的文字，请把这条重新发一次。"
+              : reason.includes("GOAL_TASK_REQUIRES_DRAFT") ? "这趟已经有排好的方案，这一轮不再改草案；到「我的旅程」查看方案。"
+                : "任务暂时没能继续，刷新可以看这一轮的进度。");
     } finally {
       window.clearTimeout(timer);
       if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
