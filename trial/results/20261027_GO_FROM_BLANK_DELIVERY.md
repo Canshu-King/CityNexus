@@ -80,9 +80,23 @@
    （§59），闭法见 #339。
 3. 平板 `USER_VERIFIED=PENDING`：要主人真机走一遍，我不代按。
 4. 课堂随机城市池仍 0/3；冻结公交事实 `route_geometry=[]` 那格未变。
-5. 「和 Agent 补齐出发资料」之后，被拒的方案没有"应用这一版"的可达键（#336 的分辨仍未跑成）。
+5. ~~「和 Agent 补齐出发资料」之后，被拒的方案没有"应用这一版"的可达键（#336 的分辨仍未跑成）。~~
+   **10-29 凌晨改口径**：bf110 在零 dirty 干净代真按到这一环，`rev-v3-replan` / `rev-v3-replan-apply` 两格
+   仍然没有屏证，但原因不是"键没接回来"，而是上一步先被拒 —— 勾「按以上时间准备方案」后按
+   「保存为正式候选方案」得 `409 PLACE_NOT_IN_JOURNEY_CITY`（`details=null`），屏上只说「可以重试」，
+   其后八枚 `rev-v3-*` 键计数皆 0。读数在 `trial/results/20261026_gozero/bf110-replan-apply-full-chain-430-r2.txt:35`，
+   根因探针在同目录 `bg111-city-refusal-probe.txt`（六槽里只有「北海公园」一枚绑到别的城市池；
+   而 bd106 当年那两枚 201 是因为六槽 `place_id` 全空、根本没触发这道门）。账见报告 §11。
 6. 15 枚后端红（`test_sol_concurrency_and_remap` 9／`test_qoder_live_replans_endpoint` 5／
    `test_dsh_list_replans_bound` 1）经同代对照臂证明早于本刀存在（§58），归属待裁。
+7. 新句子「第 N 项…记在另一座城市的清单上…改时间没有用」只有代码级与 details 级证据，**还没有屏上证词**：
+   真机那台 vite 服务的是 `E:/_cmdr_clean_1028` 那一代，要看到句子得把那棵树推到本代并重启 :60362，
+   而重启会丢掉随环境启动的地图键 —— 本会话不打印也不重写那枚键，所以没动。下一步命令写在报告 §11.5。
+8. `frontend/tsconfig.check.json:16` 的 `include` 只有 5 枚具名文件，不含 `trial/mobile/DraftDepartureCard.tsx`
+   与 `departureGaps.ts`，CI 的 `Typecheck current V3 product` 步骤同样看不见这两枚文件的引用错误
+   （`e351f5089c` 那半条改动就是这样被"clean"放过去的，修复见 `5182018dab`）。宽配置
+   `tsconfig.typecheck.json`（`src/**/*.ts(x)`）在修好的树上退出码 `0`。要不要把窄配置扩到这两枚文件，
+   是别人正在写的表面，要点名后由主人或该文件写者决定。
 
 ## 8. 纯净树上的账（截至 2026-10-28 晚 · 报告 §74–§82）
 
