@@ -70,3 +70,21 @@ jobs:
         run: npx tsc -p tsconfig.check.json --noEmit
       - name: Vite production build
         run: npm run build
+
+  assistant-screen-text:
+    name: A refused request must never reach the screen verbatim
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The control below reads the file body of one specific past commit.  A depth-1 checkout
+          # cannot see it, and a control that silently cannot run is the same lie as a pass.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scan every screen setter for a raw client error string
+        run: python trial/human_walk/_raw_error_sink_ruler_r1.py
+      - name: Prove the ruler still catches the leak that really reached a traveller
+        run: python trial/human_walk/_raw_error_sink_control_r2.py 840534ec1141b40c20e492f9cee6af12e3da58b4

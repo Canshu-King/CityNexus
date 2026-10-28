@@ -34,6 +34,12 @@ def main() -> int:
     tip = subprocess.run(["git", "-C", ROOT, "rev-parse", "--short=10", "HEAD"],
                          capture_output=True).stdout.decode().strip()
     print("CONTROLS old=" + OLD + " current=" + tip)
+    # A shallow checkout that does not carry the old commit is a missing reading, not a pass and not
+    # a red ruler.  Reporting it as CONTROL_RED would make CI fail over the fetch depth.
+    if not show(OLD, PATHS[0]):
+        print("CONTROL_NOT_RUNNABLE the old file body cannot be read here (fetch depth too shallow,"
+              " or that commit is no longer reachable) -- no verdict about the ruler")
+        return 7
     old_caught = 0
     current_leaks = 0
     for path in PATHS:
