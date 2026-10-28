@@ -2145,3 +2145,8 @@ CRLF 文件整体翻成 LF（这台机器的老坑，今天已经在报告里记
 
 它管的是形状，不管句子好不好；句子内容仍以 §85 那张 reason 表为准。
 下一位在本仓库里再写  就会当场变红，不必再靠人肉普查（§86 那次普查是我手工做的）。
+## 89. 尺抓到我了：§86 说那两处不上屏是判错的；§88 那段被 shell 引号搅乱，以本节为准
+
+§88 是用 shell 内引号生成的，反引号与 `$( )` 被 bash 吃掉，落进去的正文不完整——按纪律不改旧正文，本节作完整替代。同时 §86 我把 `DraftDepartureCard.tsx:259`、`:298` 判成「只喂判定、不喂屏」，这把尺一扫就现形：两支都是 `setMessage(...)`，**原样端上屏**。那条假绿还有一层：尺第一版用 `bash -lc grep` 取文件，在本机读不到任何文件却报「0 命中」——我把它改成 python 遍历，并加了一条硬闸：`files_checked` 为 0 即 `SELFTEST_RED`（退出码 4），零命中不再是通过。
+
+改完的现读：`SELFTEST_OK negative=2 positive=0 / RAW_ERROR_SINKS 0 files_checked=17`，退出码 0；`DraftDepartureCard.tsx` 的 diff 为 `380	379	frontend/src/trial/mobile/DraftDepartureCard.tsx`，`tsc` RC=0、生产构建无 error。§87 那一步因此才真正覆盖全部六张口。

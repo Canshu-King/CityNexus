@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { travelerErrorMessage } from "./travelerError";
 import { cityNexusApi, CityNexusApiError, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalTravelGapAnswer, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, hopSentences, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, REPLAN_APPLY_BUTTON, REPLAN_BUTTON, REPLAN_NEEDS_FREEZE_SENTENCE, gapShortfallSentence, replanAppliedSentence, replanDiffSentence, replanRefusalSentence, routeSentence, scheduleRefusalSentence, type ScheduleRefusalRow, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
@@ -256,7 +257,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: result.journey_id }));
     } catch (error) {
       if (epoch !== scope.current || token !== readTravelerBearer()) return;
-      setMessage(error instanceof Error && error.message ? error.message : "转场没能核实，时间仍留在这里，可以重试。");
+      setMessage(travelerErrorMessage(error, "转场没能核实，时间仍留在这里，可以重试。"));
     } finally { inFlight.current = false; setRoutesBusy(false); }
   };
   // The plan workbench refuses 选用 for its own reason (measured on the live card: "两段安排之间
@@ -295,7 +296,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: result.journey_id }));
     } catch (error) {
       if (epoch !== scope.current || token !== readTravelerBearer()) return;
-      setMessage(error instanceof Error && error.message ? error.message : "这次没能记下你的确认，可以重试。");
+      setMessage(travelerErrorMessage(error, "这次没能记下你的确认，可以重试。"));
     } finally { inFlight.current = false; setPriceBusy(false); }
   };
 

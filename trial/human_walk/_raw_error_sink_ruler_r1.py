@@ -35,17 +35,11 @@ def scan(text: str) -> list[int]:
 
 
 def main() -> int:
-    files = subprocess.run(
-        ["bash", "-lc", "grep -rl --include=*.tsx --include=*.ts 'error\\.message' " + SRC],
-        capture_output=True, text=True, timeout=180,
-    ).stdout.split()
+    files = [str(path) for path in sorted(pathlib.Path(SRC).rglob("*.ts*"))
+             if path.suffix in (".ts", ".tsx") and "error.message" in path.read_text(encoding="utf-8", errors="replace")]
     offenders: list[str] = []
     for path in files:
-        try:
-            with open(path, encoding="utf-8") as handle:
-                hits = scan(handle.read())
-        except OSError:
-            continue
+        hits = scan(pathlib.Path(path).read_text(encoding="utf-8", errors="replace"))
         if hits:
             offenders.append(path.replace(SRC + "/", "") + ":" + ",".join(str(n) for n in hits))
     negative = "\n".join([
@@ -65,6 +59,9 @@ def main() -> int:
         for item in offenders:
             print("  " + item)
         return 1
+    if not files:
+        print("SELFTEST_RED: the ruler saw zero files, which is not a pass")
+        return 4
     print("RAW_ERROR_SINKS 0 files_checked=" + str(len(files)))
     return 0
 
