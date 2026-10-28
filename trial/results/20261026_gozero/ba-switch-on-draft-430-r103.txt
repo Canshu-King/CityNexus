@@ -1,0 +1,13 @@
+HTTP POST 201 /api/v1/journeys
+SENT t=12.6
+HTTP POST 201 /api/v1/journeys/63255ff2-96e2-4e44-8386-5ef146c638b9/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/63255ff2-96e2-4e44-8386-5ef146c638b9/agent/goal-tasks/61d332c0-5566-4b25-8810-453b8edfe124/run
+SKIP t=21.7
+SEQ 0 t=21.7 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"}
+SEQ 1 t=24.7 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"旅行研究 · 正在研究"}
+SEQ 12 t=57.8 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"已整理 2 天 · 4 项安排"}
+EARLY_AFTER rev-mission-layer-timeline {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"Agent 正在研究，等这一轮结束即可编辑保存。"} t=61.4
+EARLY_AFTER rev-mission-layer-map {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"} t=65.0
+SEQ 13 t=68.0 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"}
+HTTP POST 200 /api/v1/journeys/63255ff2-96e2-4e44-8386-5ef146c638b9/agent/goal-tasks/61d332c0-5566-4b25-8810-453b8edfe124/resume
+SEQ 50 t=179.5 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":null}
