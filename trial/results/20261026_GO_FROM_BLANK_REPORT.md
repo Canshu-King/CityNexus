@@ -1529,3 +1529,34 @@ AA 臂跑的仍是 worktree 那枚 `d5deb1f34c`，**不含** `2b12752108`（把�
 看新刀的屏证要把树推进到现尖再跑，命令（AA 结束后做，中途做会 HMR 污染正在读的屏）：
 
     git -C E:/_cmdr_clean_1028 fetch origin && git -C E:/_cmdr_clean_1028 checkout --detach <现尖四十位>
+## 70. 同一句话在同一棵树的两侧：AA 臂（纯净尖）保存成 6 项并按到补地点 hand，X 臂（脏树）停在 DRAFT
+
+两臂输入逐字相同（「2026 年 12 月 3 日到 4 日在北京玩两天，两个人，每段步行不超过 1 公里，太远坐地铁」），
+形制同源（AA 由 Y 派生，只放宽我 §69 点名的那道条件），差别只有一处：**树**。
+
+| 读数 | 纯净尖 `d5deb1f34c`（AA，收据 `aa-clean-chain-390-r77.txt`） | 脏工作树（X，收据 `x-full-chain-390-r73.txt`） |
+| --- | --- | --- |
+| 保存回执（屏上原句） | `已保存 6 项正式安排。下方可以查看日程和出发待办。` | 无（收据里没有这句） |
+| 缺口句 | `另有 1 段时间还没有确定地点，没有算进转场核实。` | 尾拍 `X_PLAN_GAPS []` |
+| 补地点 hand | `PLAN_HAND 1` → `HAND_PRESSED true` → 进探索屏 `area=1` | `PLAN_HAND 0` → `EXPLORE_STAGE_PROBE area=0 results=0` |
+| 库里终态（`mode=ro` 现读） | journey `13aaa4ca-f655-4c4f-b32b-d1efd77450fc`＝`DRAFT`／`active_plan_version_id=None`，同库另一趟 `d44da3bc…`＝`PLANNED`／`7a05ed66…`；`activities` 十一条 | journey `f56f286c…`＝`DRAFT`／`None` |
+
+所以 §47／#336 那一环（"被 `PLACE_REQUIRED` 挡一次、原因句旁边的键真按得到"）**第一次在纯净尖上成立**，
+不再带 §59／§67 的代差。而 §69 里那句"这一族在纯净树没复现"要收窄：它对 Y 臂那一趟（`d44da3bc`，直接落成 PLANNED）成立，
+对 AA 臂这一趟不成立——同一棵树上两趟走成两种形状，取决于那一趟的地点解析结果。我不把任一形状说成产品的固定行为。
+
+### 我这两处量具形状缺陷，读数因此不能往上用
+
+1. **`MISS find-city hidden`**：`rev-quick-find-city` 在屏上存在但 `isVisible()` 为假，我的 `pressNear` 判 hidden 就直接放弃，
+   没有滚到它再测。所以 AA 臂 `CARDS 0 / FORMAL_KEYS 0 / NO_FORMAL_DOOR` 只能说"**我的臂没搜出候选**"，
+   不能说"旅客在探索屏搜不出地点"。§65 的脏树那次同样是 area 阶段停住，同一形状。
+2. **停在探索屏就结束了**：`X_SELECT 0 enabled=false X_START 0` 是拍在探索屏上的，不是拍在方案屏上的。
+   库里那趟确实有 activities、屏上也确实出现过「已保存 6 项正式安排」，
+   所以这两枚 0 无法归因——它是我的尾段缺一条"回行程页再读"的腿。
+   （对照 §69 的 Y 臂：那一拍是在方案屏上读的，才拿到 `X_START 1` 这种有效形状。）
+
+### 下一臂必须带的三条腿（已写成形制，未跑）
+
+1. 探索屏 area 阶段：先 `scrollIntoView()` 再重测 `find-city` 的可见性，仍 hidden 才允许记不可达；
+2. 无论探索屏成功与否，臂都要回「我的旅程／行程页」再读 `rev-plan-select`／`rev-plan-start`，把"有没有出发键"这件事拍在该屏上；
+3. 出发按下去之后读 `X_MAP_COUNT_LINE` 与 `activities` 计数对账（这一格是 #339 唯一还没在纯净尖上拿到的东西）。
