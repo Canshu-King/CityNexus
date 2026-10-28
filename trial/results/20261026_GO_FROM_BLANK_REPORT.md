@@ -1756,3 +1756,59 @@ AG 臂那趟 `6d9ea8f3` 的候选 `86bff399` 与上面三枚同形制：`COST_UN
 
 §74 我写的"唯一未被排除的解释是 `plan_authority_blocker` 返回非 None，返回原因没有现读"——
 原因已经现读到并落在本节；§74 正文按纪律不改，勘误以本节为准（同 §73 对 §72 的处理）。
+## 76. 坐标勘误（AG/AH 跑的树尖现读是 `840534ec11`）＋ 那十五枚后端红的具名清单
+
+### 一、§74 写错了一枚坐标
+
+§74 正文写「树是 `E:/_cmdr_clean_1028`，现读 tip `f78c85ac07…`」。**那是错的**：`f78c85ac07` 是我在本机推进的
+**文档尖（D 树）**，干净 worktree 当时的现读是 `840534ec11`。两条现读界定损害范围：
+
+    git diff --stat 840534ec11..HEAD -- backend frontend contracts  → 空输出（读到 0 字符）
+    git log --format=%s 840534ec11..HEAD                            → 4 笔，提交前缀逐字 ['docs(go-from-blank)']
+
+⇒ 两枚尖之间**只有 `trial/` 下的文档笔**，产品字节（backend／frontend／contracts）逐字节同代，
+AG/AH 的屏证结论不受影响，受影响的只是我转述的坐标。§74 正文按纪律不动，勘误在此。
+本节自身也补一条现读，避免再犯同一错：干净树此刻 tip `840534ec11`，dirty 行数 **0**。
+
+教训是具体的：报"哪棵树哪个尖"必须 `git -C <那棵树> rev-parse HEAD`，不能把当前目录的尖抄过去。
+（顺带自报一次：这一节的生成器第一版又踩了 GBK——`subprocess(text=True)` 读带中文的 git 输出炸掉，
+把 `diff` 变成 None，我差点据此说"读不到"。修成显式 `encoding="utf-8"` 并加了一条
+"读不到就 ABORT，不把空读数当结论"的闸，本节的数据是修好后重跑的。）
+
+### 二、宽面十五枚红：现读复算，名字逐枚列
+
+在现尖上重跑 §58 那批宽面选择集（map / travel_brief / replan / schedule_refusal 共 26 枚文件），
+收据 `trial/results/20261026_gozero/backend-reds-attrib-r85.txt`，读数 15 failed, 114 passed in 10.44s。
+
+| 文件 | 红数 |
+| --- | --- |
+| `test_sol_concurrency_and_remap.py` | 9 |
+| `test_qoder_live_replans_endpoint.py` | 5 |
+| `test_dsh_list_replans_bound.py` | 1 |
+
+逐枚名字（可直接交给归属裁决的清单）：
+
+```
+FAILED tests/test_dsh_list_replans_bound.py::test_list_replans_on_an_ordinary_journey_keeps_the_full_shape
+FAILED tests/test_qoder_live_replans_endpoint.py::test_live_provider_healthy_control_produces_proposal
+FAILED tests/test_qoder_live_replans_endpoint.py::test_L1_live_failure_on_mock_explicit_leg_is_not_rescued
+FAILED tests/test_qoder_live_replans_endpoint.py::test_L3_all_candidates_unavailable_reports_data_not_no_alternative
+FAILED tests/test_qoder_live_replans_endpoint.py::test_L2_fully_live_candidate_survives_when_another_is_live_failed
+FAILED tests/test_qoder_live_replans_endpoint.py::test_L4_accepted_hard_evidence_contains_no_mock_fallback
+FAILED tests/test_sol_concurrency_and_remap.py::test_concurrent_acceptance_of_the_same_proposal_produces_one_transition
+FAILED tests/test_sol_concurrency_and_remap.py::test_replaying_the_same_idempotency_key_never_transitions_twice
+FAILED tests/test_sol_concurrency_and_remap.py::test_competing_proposals_can_never_both_become_active
+FAILED tests/test_sol_concurrency_and_remap.py::test_capture_after_an_accept_does_not_promote_a_stale_pointer
+FAILED tests/test_sol_concurrency_and_remap.py::test_capture_and_accept_racing_leave_no_stranded_commitment
+FAILED tests/test_sol_concurrency_and_remap.py::test_accept_then_capture_keeps_the_c4_on_the_active_plan
+FAILED tests/test_sol_concurrency_and_remap.py::test_a_recovery_cannot_be_accepted_over_a_duplicated_protected_anchor
+FAILED tests/test_sol_concurrency_and_remap.py::test_two_sessions_without_the_lock_still_cannot_produce_two_active_plans
+FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_two_sessions_replays_without_the_lock
+```
+
+与 §58（合并前，尖 `89dbbe22c1`）**同名同数**。⇒ 本夜全部刀（`0188ebd5f4`／`c160a9cea3`／`12609ae5e3`／
+`e5fdc2734e`／`2b12752108`／`840534ec11`）在这一族上零新增红（分母 {len(names) + 114}，红 {len(names)}）。
+"为什么红"我仍不替它定性——并发锁那一族与 live replan 那一族的归属属裁决面，
+这里只交具名清单与复现命令：
+
+    cd backend && python -m pytest -q -p no:warnings --tb=no $(ls tests/test_*map*.py tests/test_*travel_brief*.py tests/test_*replan*.py tests/test_*schedule_refusal*.py)
