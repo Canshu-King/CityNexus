@@ -2193,3 +2193,27 @@ CRLF 文件整体翻成 LF（这台机器的老坑，今天已经在报告里记
 所以 §90 末尾那句保留仍然成立，并且要写得更硬：**"旅客在新代次看到的是什么句子"这一格仍未证到**，我已证的只有"源码里 7 支口全部走同一张映射表、且那把能咬住历史真泄漏的尺在 CI 上每次都盯着"。下一步是明确的、一行级的一手：在等键之前先按「行程」tab，再按两次保存。不重跑整链也可以 —— 这一跑已经建出一趟有草案的旅行（profile 与 canary 库都还在），从「我的旅程」直接进去比再等一次研究便宜得多。
 
 未闭项照旧点名，不并入门禁那一笔的绿光里：#340 的选用门那一侧、#332 重启身份恢复、#283/#330 两道门的裁语、§85/§87 新句子的屏证（就是上面这条）、平板 USER_VERIFIED、课堂随机城市池 0/3、六枚后端红的归属。
+## 92. 接续臂没重跑研究，却撞上一条更基础的事：那枚 tab 在我按的时刻不在 DOM 里
+
+省时间的一手：r92 那趟旅程留在了 canary 库里，只读现读（query_only 打开 E:/_cmdr_clean_1028_data/citynexus_v3_clean_1028.db）是 `737b3a6c` status=DRAFT、active_plan_version_id=NONE。这条读数本身就有信息：**在 ea51658c9a 这一代，"保存为正式候选方案"从头到尾一次都没有按成过** —— 草案存住了，正式方案没有。所以 409 屏证必须靠一次真按成，而不是靠继承上一代的收据。
+
+于是写了接续臂 trial/human_walk/_ar_arm_resume_430_r93.mjs：不做研究、不填目标，复用同一份一次性 profile 打开 /revolution，走旅客自己的 tab 回到那趟 DRAFT，再连按两次保存。它第一次跑就 ABORT，而 ABORT 的原因比我原本要验的东西更基础。
+
+同一屏、同一次运行里的四种手段读数（DIAG 腿，落盘 trial/results/20261026_gozero/ar-resume-430-r93.txt）：
+
+| 手段 | 读数 |
+| --- | --- |
+| getByRole button 名为 /我的旅程/ | 0 |
+| getByText 我的旅程（exact） | 1 |
+| locator `[data-testid="rev-mobile-bottom-nav"]` | 1 |
+| locator `[data-testid="rev-mobile-tab-trips"]` | 0 |
+
+并且 nav 的 outerHTML 打出来第一枚是 `<button … aria-label="探索" aria-current="page" data-testid="rev-mobile-tab-explore" class="… is-active">`。
+
+对照前一分钟的角色普查（trial/human_walk/_as_probe_roles_r94.mjs → as-role-census-r94.txt，36 枚交互元素里筛出 28 条候选），那次**确实**在同屏看到过 `tag=BUTTON testid=rev-mobile-tab-trips visible=true top=866 label="我的旅程"`。也就是说：文本在、底部 nav 在、这枚带 testid 的 tab 在一趟运行里在而另一趟里不在。
+
+我能确定的与不能确定的分开写。确定的是：① 底部三枚 tab 的 testid 是 `rev-mobile-tab-explore / -trips / -me`，走查臂该用它们而不是靠中文名字猜；② `getByRole("button", {name: 中文})` 在这一屏取不到东西，而 `getByText` 取得到 —— nav_html 显示 explore 那枚挂着 `aria-label`，这是 accessible name 计算与可见文本不一致的**成因候选**，我只把它记成候选，因为 trips 那枚的 aria-label 我没能读到（它当时就不在 DOM 里）；③ 我先前把它归因成"等了 5 秒 vs 6 秒"是**没有依据的**，DIAG 腿在同一次运行里同时给出了 nav=1 与 tab-trips=0，时序解释被这条读数自己推翻了。
+
+不确定、需要下一手才能定的：这枚 tab 的渲染条件。定它只需要一次"同一个 tick 内"的并读——把 nav 的完整 outerHTML（不截断）与三枚 testid 各自的 count 在同一次 page.evaluate 里取，跑两趟对比；若稳定缺席，那就是产品事实（无 journey 上下文时不给这枚入口），若时有时无，那就是我自己的臂在 React 提交之间动手。这条我没跑完，所以不写结论。
+
+因此 §91 那句保留原样继续有效，并且更硬了：**旅客在新代次撞 409 时看到哪一句，仍未证到**；已证的还是那两条——源码里 7 支口全走同一张映射表，以及那把能咬住历史真泄漏的尺现在挂在 CI 上每次都跑（run 40685781818 逐步 success，非 skipped）。另外这一代"正式方案一次都没按成过"这条库侧读数，恰好说明 #340 的选用门那一侧仍是活的战场，不是已闭项。
