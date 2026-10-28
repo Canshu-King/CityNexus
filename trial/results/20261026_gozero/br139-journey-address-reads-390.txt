@@ -1,0 +1,10 @@
+PROFILE_USED _chrome_gozero_bp136b t=0.4
+A_OLD_POINTER id_shape=uuid owner_shape=uuid city="上海" status="DRAFT" t=9.0
+HTTP POST 201 /api/v1/travelers
+HTTP POST 201 /api/v1/journeys
+B_NEW_POINTER id_shape=uuid city="广州" same_as_old=false t=13.7
+C_OWN_NEW_JOURNEY {"head":"用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步 同行者加入 ","bouncedToCreate":true,"refuses":false,"hasJourneyContent":false,"articles":0,"buttons":["EN","高级设置","目的地","抵达地点","离开地点","使用封存的演示行程","下一步","刷新"]} shape=REDIRECTED_TO_CREATE t=20.6
+D_OTHERS_OLD_JOURNEY {"head":"用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步 同行者加入 ","bouncedToCreate":true,"refuses":false,"hasJourneyContent":false,"articles":0,"buttons":["EN","高级设置","目的地","抵达地点","离开地点","使用封存的演示行程","下一步","刷新"]} shape=REDIRECTED_TO_CREATE t=27.6
+PAIR own=REDIRECTED_TO_CREATE other=REDIRECTED_TO_CREATE
+VERDICT CONTROL_FAILED_positive_side_did_not_read_REDIRECTED_TO_CREATE t=27.6
+DONE t=27.6
