@@ -163,3 +163,35 @@
 - 其余照旧：#283/#330 两道门的裁语、平板 `USER_VERIFIED`、课堂随机城市池 0/3、六枚后端红的归属、#331 账本镜像 401、#333 裸路由仍回 200 的观察项。
 
 **本轮新增的量具纪律（都付过学费）**：派生脚本时收据名、截图前缀、profile 目录三样必须一起换（`ba103`/`bb104` 因沿用 `az102` 的 profile 造成一页两跑与撞锁，§104 已披露）；判"功能不存在"要同时看 HEAD 与工作树并指名代次（§106）；`node --check` 不解析未定义标识符、`grep -c` 的 0 是计数不是退出码、`tail -2` 会截掉崩溃栈——三处都改成显式读数后才拿到真因。
+
+## 9. 本班完成审计（2026-10-29 凌晨 · 代次 `d45c5f3250`）
+
+三刀逐件，每件只写看到的与没看到的：
+
+| 件 | 状态 | 凭据（本班现读） |
+| --- | --- | --- |
+| 刀一 · 两档真实 Chrome 从空白走到 ACTIVE | 已交（前班） | 390 走到「行程执行中」且地图 6＝库 6（§339 闭，`#339` 行在本件第 8 节）；430 同代另有一趟（报告 §12.1） |
+| 刀二 2a · 可展开的 Agent 工具时间线 | 已交 | 事件线八十行可按开、无私有文本（`trial/results/20261026_gozero/bk116-agent-tool-timeline-430.txt:47-51`）；步骤行来源披露在两档各证一次并与只读探针一对一（`bl117…:15-21` 对 `bl118…:4-8`；`bn122…:20-22` 对 `bn123…:4-7`）；长页面形状滚后可按（`bo128…:20-23`）；代次负对照 `bo128-generation-ticket.txt:1-3` 与 `bo128…:16` |
+| 刀二 · 新旧差异摆在接受键旁 | 码在两处，屏上一格未证 | 出发卡 `DraftDepartureCard.tsx:376` 紧贴 `:377`；课堂面板 `ClassroomPresenterPanel.tsx:307-308` 两枝都写「未知」；本档证到的是「费用：不变」那一枝，**「费用：未知」仍无证词**（#344） |
+| 刀二 · 接受后主动刷新 | 已交（前班） | 整链 confirm→promote→freeze→replan→按这一版→`prepare-plan 201` 在两代各走通（`bf110…-r4.txt:75-81`、`bj115….txt:74-99`）；地图 6＝计划点 6（#335） |
+| 刀三 · 课堂手册过期断言与 QUICK_CARD | 已交（前班） | 本档未再动课堂线，未新增读数 |
+
+门禁与门的原话（都是本班内取的，不是沿用的）：
+
+一、宽面类型检查 `frontend/tsconfig.typecheck.json` 覆盖 `src/**/*.ts(x)`，退出码 `0`（回执`trial/results/20261026_gozero/r133-typecheck-broad-receipt.txt:1-4`，其中带测量时的尖 d45c5f3250 与被检文件的 blob 82a158d91bf0）；窄配置只含五枚具名文件的盲区已写在第 8 条，未擅自动。
+二、走查臂互不污染尺 `trial/human_walk/_arm_collision_ruler_r108.py`：`SELFTEST_OK`、`ARMS files=315 … COLLISIONS 0`。
+三、提交门 `trial/human_walk/_cmdr_pathspec_commit_gate_r119.py` 三格自测在 GitHub runner 上印出`ROOT_ARM True` / `COMMIT_PATHS 1` / `FOREIGN_STAGED before=1 after=1` / `SELFTEST_OK …`（`trial/results/20261026_gozero/r130-ci-gate-step-proof.txt:10-13`，run `40756205676` 步号 7）。
+四、发布门两代 `4d5895d89e`、`4d1eee472a` 的 backend / frontend-build / screen-text 三个 job 全 success；`dc7b5e6d5d` 那一代被并发取消（`cancel-in-progress` 的形状），所以那步的原话只认上面那一条。
+
+    "本班的写动作全部可取回：十笔提交 `599ed95b76`、`bebdf21b72`、`95997901dd`、`fb63b625f2`、`9a559d6c78`、
+
+    "那十枚不是墙上的说法：逐枚 `git cat-file -t` 现读都是 commit；拆笔重打后的 `bebdf21b72` 经 `git merge-base --is-ancestor` 判在 HEAD 祖先链上，"且 `git branch -r --contains` 显示 `origin/rescue/v3-final-departure-20261022` 已含它；它带五个文件，就是 r116 那笔。原本要在这里写一条「坐标取不回」的勘误，'
+    "是测量把它推翻的 —— 它根本没丢。这段留下来当凭：报告 §13.5 的那个 sha 是有效坐标，不需要勘误。",
+没做的事，直说：
+
+一、整套后端测试本档没有重跑 —— 本班没改后端，代次级后端读数来自 CI 的 backend job；第 6 条那十五枚红的归属仍待裁，没有把它算成已修。
+二、平板 `USER_VERIFIED` 仍是 PENDING，主人真机走过之前我不代按。
+三、课堂随机城市池仍 0/3；冻结公交事实 `route_geometry=[]` 那一格未变。
+四、`#283`、`#312`、`#330`、`#333` 等裁语未落，`#331` 镜像腿的 401 未修，`#332` 重启身份恢复仍未做（本班两次靠「另起一栈」绕过它，那是绕行不是修）。
+五、e2e 套件未跑：权威口径要 `npm run dev`，dev 数字不算交付证据，跑它只会多一张不可比的表。
+

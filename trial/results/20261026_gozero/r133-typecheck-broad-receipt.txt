@@ -1,0 +1,4 @@
+EXIT=0
+CONFIG=frontend/tsconfig.typecheck.json
+TIP_AT_RUN=d45c5f3250
+CITED_FILE=src/trial/mobile/WorkspaceActions.tsx blob 82a158d91bf0
