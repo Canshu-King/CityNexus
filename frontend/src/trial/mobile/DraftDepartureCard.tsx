@@ -140,7 +140,11 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
         ? (error.body as { error: { message: string } }).error.message : "")} `
         + `${error instanceof Error ? error.message : ""}`;
       // With the row named, "可以重试" would be the wrong instruction: the same numbers refuse again.
-      setMessage(named || (detail.includes("DRAFT_CHANGED") ? "草案已更新，请刷新任务后再确认时间。"
+      setMessage(named || (detail.includes("GOAL_TASK_REQUIRES_DRAFT_JOURNEY")
+        // Measured on the clean generation: the first save really did land (journey PLANNED, an active
+        // plan version exists), so every later 重试 answers 409 and the card still blames the model.
+        ? "这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"
+          : detail.includes("DRAFT_CHANGED") ? "草案已更新，请刷新任务后再确认时间。"
         : detail.includes("PLACE_NOT_IN_GOAL_TASK_SCOPE") ? "要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"
           : detail.includes("SCHEDULE") ? "请调整时间：各项安排按顺序衔接，并放在这趟旅行的日期内。"
             : "这次未能保存，时间仍留在这里，可以重试。"));
