@@ -2958,3 +2958,29 @@ r116 在现尖栈（vite :14464 / 后端 :60364，全新空库）走旅客自己
 小票里另写了**怎么证它不是空转**：末句前半就是对照组 —— 一枚不带 pathspec 的提交在临时仓库里确实
 吃掉了别人暂存的文件；哪天这个形状不再吃文件，那步就红。这道门由此不再依赖我记性。
 
+
+## 14 本班后端整套证书（§14.1–§14.2）
+
+### 14.1 现读结果与写集零交集
+
+整套跑完并落盘：`trial/results/20261029_BACKEND_CERTIFICATE_24a342198d.md`（日志
+`trial/results/20261026_gozero/bt143-backend-full-24a342198d.log`、分组摘要
+`bt143-backend-digest.txt`）。分母先取：`--collect-only` 退出码 `0`、`2828 tests collected`；
+末行原样是 `255 failed, 2545 passed, 15 skipped, 1 xfailed, 12 errors in 270.29s`，
+五项相加正好等于分母 2828 —— 这个自校验是证书脚本硬要求的，缺任何一项它就不写文件。
+
+为什么这套红不算本班引入：`git diff --name-only 22106314c2..HEAD` 共五十七个文件，
+分布是 `.github` 一处、`frontend` 一处、`trial` 五十五处，`backend/` 与 `contracts/` **各零处**
+（证书 §一，数字由 git 现读）。本班唯一的产品文件改动仍是 `WorkspaceActions.tsx`。
+
+### 14.2 blocker 6 的十五枚逐条对上，但整套总数不拿来判新红
+
+三枚具名文件逐条现读：`test_sol_concurrency_and_remap.py` 9、`test_qoder_live_replans_endpoint.py` 5、
+`test_dsh_list_replans_bound.py` 1 —— 与交付件 blocker 6 记的 9／5／1 一模一样，合计十五枚，
+归属仍待裁，本班没有把任何一枚上膛成产品缺陷。
+
+整套的 255 枚只报总数：上一次同机记录（2026-10-26 的 261／2401／12 errors）出自当日记录、
+本次没有重跑那一代，也没有逐条基线在册 —— 按口径，**没有逐条基线就只能报总数与聚焦范围，不判新红**。
+要开始判新红，得先把这份 255 枚的逐条清单立成基线；`test_r64_member_side_quest.py` 一组 52 枚
+是最大的一块，它是否与 live provider 缺席有关，我没测，留作下一步。
+
