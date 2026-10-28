@@ -2081,3 +2081,27 @@ FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_
 另记一条更通用的口子：这类"端路径"不该靠一处处手改来防。#315 那族需要一把尺——
 扫屏上/断言里的文本是否含 `CityNexus API`、`/[0-9a-f]{8}-` 或 `GOAL_TASK_`／`STALE_RECOMPOSE_` 这类内部码，
 命中即红。这把尺的归属与是否开成产品单交裁决，我不自己扩面。
+## 86. 普查：同一支口还开着三处，我这一刀只收了 §85 那一处（另有半件已回退）
+
+按 §85 末段说的那把"尺"先做一次手普查（`grep` 屏用 sinks：`setRequestError` / `setMessage` 直接吃 `error.message`），
+在 `frontend/src/trial/mobile/` 现读到三处仍会把 `CityNexus API <status>: <含 UUID 的路径>` 端上屏：
+
+| 位置 | 屏用 | 触发时机 |
+| --- | --- | --- |
+| `WorkspaceActions.tsx:514` | `setRequestError(error instanceof Error ? error.message : "任务取消失败。")` | 取消任务被拒（同一条 `resume`／状态机 409 一族） |
+| `WorkspaceActions.tsx:549` | `: error instanceof Error ? error.message : "当前消息没有确认成功…"` | 确认某条消息被拒（`MESSAGE_ID_REUSED_…`／`GOAL_TASK_STATE_INVALID`） |
+| `GoalDraftEditor.tsx:13` | `return error instanceof Error && error.message ? error.message : retry;` | 草案编辑器的通用兜底句 |
+
+另有两处我判定**不算泄漏口**（原文只喂判定、不喂屏）：`DraftDepartureCard.tsx:141`、`:168`
+（把 message 拼进 `detail` 再走 named-refusal 映射，§68／#315 已验过那一条链）。
+
+**这一刀没有把三处一起改掉，是一次失败的批量重构被我自己退掉了**：我先建了共享映射
+`frontend/src/trial/mobile/travelerError.ts` 并让脚本逐处替换，其中一枚锚点（我以为是 `import { AgentWorkStatus }` 那行）
+在 `WorkspaceActions.tsx` 里不存在，脚本按预置的断言 `ABORT`，因此**只有新文件落地、三个调用点一个字都没改**；
+我随即删掉那个未跟踪的新文件并重跑 `tsc`（RC=0），`git status` 现读 `WorkspaceActions.tsx`／`GoalDraftEditor.tsx`
+均无改动，工作树回到 §85 那一刀的状态。留着半件（一个没人引用的 helper）比不修更糟，所以宁可回退。
+
+为什么不当场重做：跨三枚文件的同构改动要连带 §68／§64 已落刀的两处句表一起复核（`DraftDepartureCard` 的判定链共用同一批 reason），
+在本节剩余的窗口里做不到"改完并且重跑两条屏证"。所以这里只交清单与形制：
+共享 `travelerErrorMessage(error, fallback)`（reason 表已在 §85 那张表里定稿），
+调用点各自保留自己的 fallback 句；改完必须重放 §85 末尾那条断言（含 `CityNexus API` 或 36 位 id 即红）。
