@@ -1688,3 +1688,31 @@ HIT select-final {"hitSelf":true,"cx":187.65,"cy":411.76,"disabled":true}
 
 （本节数据来自只读 sqlite 连接（`mode=ro`），用途是给屏证到的"键是灰的"找服务器给的理由；
 屏证本身仍然是真机上按出来的，没有用 API 替代任何一次旅客点击。）
+## 74. 纯净尖上第一次走到执行中：出发键按得动，地图六处对上屏幕六条列表
+
+AG 臂（`trial/human_walk/_ag_arm_clean_r83.mjs`，收据 `trial/results/20261026_gozero/ag-clean-chain-390-r83.txt`；
+树是 `E:/_cmdr_clean_1028`，现读 tip `f78c85ac07…`、dirty 行数 0）带着 §73 承诺的**逐枚**判据跑到 `t=1136.5`：
+
+| 拍 | 读数 |
+| --- | --- |
+| `SELECT_LIVE_INDEX -1` | 屏上每一枚 `rev-plan-select` 都数了，一枚都没有亮着（这不再是 `.first()` 的一句话） |
+| `DEPART_START_ENABLED true` | 同一屏的出发键是亮着的 |
+| 按下去之后的屏文 | 「旅途正在继续。」「行程执行中」「第一站：故宫博物院（上午） · 12月3日 09:00」「现在：故宫博物院（上午） 接下来：景山公园（下午）」 |
+| `DEPART_MAP_COUNT_LINE` | 地图地点 6 处 · 高德地点 0 处 |
+| `DEPART_MAP_PLANNED_TAGS` / `DEPART_MAP_LIST_ITEMS` | 6 / 6 |
+| 只读库现读 | journey `6d9ea8f3…` 状态 `ACTIVE`、`active_plan_version_id` 指向 `86bff399…`，该方案下 `activities` 计数 = **6**；候选 [["86bff399", "ACTIVE"]] |
+
+⇒ 刀 1 里「在纯净尖上从空白走到执行中，并且地图上的点数与这趟的安排数对得上」那一格**拿到了**：
+屏上「6 处」与计划点标签 6 枚、列表 6 条、库里 6 条安排是同一件事的四种读法。
+这条也第一次让 #335／§50／§52 那条"接受后站要上图"的刀在**零 dirty 的代**上成立。
+
+### 两处我自己的仪表还得记着
+
+1. `DEPART_ACTIVITY_ROWS 0`：我拿 `rev-activity-row` 与 `.rev-activity` 去数活动行，两个都不存在——
+   屏上的安排行没有这两个 testid。活动数改由库与地图列表对账（上表），不用这个 0 说任何话。
+2. `SELECT_LIVE_INDEX -1` 与 §73 的服务器判据仍对不上：这趟之前的 `81c256c7` 三枚候选
+   按 `_plan_staleness`（`app/services.py:573-592`）不判过期——`expires_at` 现读为 None，
+   那条 `if expires_at:` 分支根本不走；缺口 kinds 又只有 `ADMISSION_PRICE`，不是 `services.py:742` 认的两族。
+   也就是说"全禁用"目前唯一没被排除的解释是 `plan_authority_blocker`（`services.py:929`）返回了非 None，
+   而它到底因为什么返回，我没有现读，所以**这一格留空**，不在这里编成因。
+   但注意：出发键亮着且按得动，所以"候选全禁用"并没有把旅客堵死在路上——它堵的是"换另一版方案"那扇门。
