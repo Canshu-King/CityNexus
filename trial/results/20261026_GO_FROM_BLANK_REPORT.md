@@ -1828,3 +1828,32 @@ FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_
 这一空的成因已定位到 AI 通道超时（不是我在前面几节里那类量具形状问题），
 所以我按同一形制再起一臂（`_ai_arm_clean_430_r85.mjs`，profile 与收据名两处换名并逐处断言），
 读数进 §78。若再次超时，我报"网关侧挡住，需换时段或换通道"，不会把屏证写成通过。
+## 78. 430 在纯净树上按到了补地点 hand；尾格仍空，成因是我的回程腿，不是门
+
+`trial/human_walk/_ak_arm_clean_430_r86.mjs`（430×932，同一棵 `E:/_cmdr_clean_1028`，起前现读 tip `840534ec11…`、dirty 行数 0），
+收据 `trial/results/20261026_gozero/ak-clean-chain-430-r86.txt`：
+
+| 拍 | 读数 | 归谁 |
+| --- | --- | --- |
+| `SHOT 430-g7-cold t=5.3` → `POST /api/v1/journeys 201` | 冷首屏真建了新 journey `7941ca3c…` | 旅客路径 |
+| `W_CONFIRM true SAVE_ENABLED true`（t=530.2） | 保存过一次之后重存键仍亮 | 产品侧（§64 那刀在 430 纯净树上也成立） |
+| `HTTP 200 …/plans/567b3868…/freeze-routes`（t=555.0） | 转场证据冻住成功 | 产品侧 |
+| `PLAN_HAND 1` → `HAND_PRESSED true`（t=1028.5／1035.4） | **430 这一档第一次在纯净尖上按到「补上没排地点的那段时间 →」** | 产品侧（§47／#336 那枚 hand） |
+| `DEPART_FIRST start=0 select=0`（t=1110.4）＋尾句「行程状态已更新，请刷新后继续」 | 这一拍落在**探索屏**上，不是方案屏 | **我的仪表** |
+
+⇒ #337 判级不变：**「430 且零 dirty」的 ACTIVE＋地图对账仍未拿到**。
+它现在缺的不是门（门在上面四行都真按到了），而是我那条"回行程页"的腿——
+屏上已经明说「请刷新后继续」，我的臂却仍在按 tab、且把刷新判断放在回屏之前，所以拍到的 0 无法归因。
+下一臂的修法具体到顺序：按 hand 之后直接照屏上那句做 `reload`，回方案屏再读 `rev-plan-select`／`rev-plan-start`；
+在那之前 430 的 ACTIVE 只由 §52（脏树）撑着，我不把它算进纯净树的账。
+
+### 两件必须记下的仪器自报
+
+1. **干净栈曾整条下线**：本轮起点现读 `0 listeners`、`curl :60362/api/v1/health` 回 `000`（我先前用 `nohup … &` 起的
+   vite 与后端随会话被回收）。用 `trial/human_walk/_boot_clean_stack_r74.py` 起回（`BACKEND_PID 49528`、`HEALTH ok`）。
+   数据没丢：`citynexus_v3_clean_1028.db` 现读 **8 421 376 字节**、八趟 journey 全在，其中 `6d9ea8f3…` 状态仍是 `ACTIVE`
+   （就是 §74 那趟）。顺带一个命名坑：脚本里 `new_database` 打印的其实是 `os.path.exists(DB)`＝"文件在不在"，
+   我第一眼看成"是不是新库"，命名会让下一个读它的人犯同样的错。
+2. **profile 复用被 Chrome 拒**：AI 臂崩在 `browserType.launchPersistentContext: Target page, context or browser has been closed`，
+   浏览器日志里那句（GBK 转码后）是"已在现有的浏览器会话中打开"——残留 chrome 占着 `_chrome_gozero_ai85`。
+   正解是换 profile 名重派生（AK 就是这么起来的），**不去杀别人的 chrome 进程**。
