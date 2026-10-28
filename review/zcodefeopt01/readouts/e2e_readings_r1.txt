@@ -1,0 +1,6 @@
+zh-shanghai: stored_departure=2026-10-09T18:00:00+08:00 stored_arrival=2026-10-10T09:30:00+08:00
+zh-shanghai: device={'locale': 'zh-CN', 'timezoneId': 'Asia/Shanghai'} read_departure=2026-10-09T18:00 read_arrival=2026-10-10T09:30
+zh-shanghai: labels={'departure': '计划出发', 'arrival': '计划到达'}
+en-utc: stored_departure=2026-10-09T18:00:00+08:00 stored_arrival=2026-10-10T09:30:00+08:00
+en-utc: device={'locale': 'en-US', 'timezoneId': 'UTC'} read_departure=2026-10-09T10:00 read_arrival=2026-10-10T01:30
+en-utc: labels={'departure': 'Scheduled departure', 'arrival': 'Scheduled arrival'}

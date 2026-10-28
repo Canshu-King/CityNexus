@@ -1,0 +1,23 @@
+{
+  "node": "inbox-clock-en-utc",
+  "stored": {
+    "departure": "2026-10-09T18:00:00+08:00",
+    "arrival": "2026-10-10T09:30:00+08:00"
+  },
+  "draft": {
+    "id": "1513fcf7-43a5-4fb6-9690-773ba300ec24",
+    "status": "NEEDS_REVIEW"
+  },
+  "device": {
+    "locale": "en-US",
+    "timezoneId": "UTC"
+  },
+  "read": {
+    "departure": "2026-10-09T10:00",
+    "arrival": "2026-10-10T01:30"
+  },
+  "labels": {
+    "departure": "Scheduled departure",
+    "arrival": "Scheduled arrival"
+  }
+}

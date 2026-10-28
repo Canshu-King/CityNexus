@@ -7,6 +7,7 @@ import {
   OriginResponseUnusableError,
 } from "../../lib/failureAttribution";
 import { formatWhen } from "../../lib/formatWhen";
+import { localWallToStored, storedToLocalWall, zoneSuffixOf } from "../../lib/inboxScheduleClock";
 import { CnxSelect } from "../../components/CnxSelect";
 import { extractionStatusLabel, summaryHeldLabel } from "../../lib/displayVocabulary";
 import {
@@ -168,12 +169,12 @@ function readImage(file: File): Promise<string> {
 }
 
 function dateInput(value: unknown): string {
-  return typeof value === "string" ? value.replace(/Z$/, "").slice(0, 16) : "";
+  return typeof value === "string" ? storedToLocalWall(value) : "";
 }
 
-function serverDate(value: string): string | undefined {
+function serverDate(value: string, zone: string): string | undefined {
   if (!value) return undefined;
-  return value.length === 16 ? `${value}:00+08:00` : value;
+  return value.length === 16 ? localWallToStored(value, zone) : value;
 }
 
 // Traveller-facing names for booking facts.  Internal field names
@@ -331,6 +332,10 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
   const [role, setRole] = useState("UNKNOWN");
   const [scheduledDeparture, setScheduledDeparture] = useState("");
   const [scheduledArrival, setScheduledArrival] = useState("");
+  /* The offset the server stamped on the stored schedule, kept so an edit typed in the
+     traveller's own wall clock lands back on that zone instead of a hardcoded one. */
+  const [departureZone, setDepartureZone] = useState("+08:00");
+  const [arrivalZone, setArrivalZone] = useState("+08:00");
   // Consumer manual entry: a traveller who has a booking but no text to paste
   // fills this in and goes through the same preview -> confirm path.
   const [manualOpen, setManualOpen] = useState(false);
@@ -394,8 +399,11 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
                 confirmation_ref: manualRef.trim() || null,
                 origin: manualFrom.trim() || null,
                 destination: manualTo.trim() || null,
-                scheduled_departure_at: serverDate(manualDepart) ?? null,
-                scheduled_arrival_at: serverDate(manualArrive) ?? null,
+                /* A manual entry has no stored zone to inherit; the traveller types their own
+                   wall clock and the instant lands in the server's zone, the same one the
+                   save path has always stamped. */
+                scheduled_departure_at: serverDate(manualDepart, "+08:00") ?? null,
+                scheduled_arrival_at: serverDate(manualArrive, "+08:00") ?? null,
                 amount_minor: Number.isFinite(amountMinor) ? amountMinor : null,
                 currency: "CNY",
                 provider_key: "manual-entry",
@@ -462,8 +470,12 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
   useEffect(() => {
     if (!draft) return;
     setRole(String(draft.extracted.anchor_role ?? "UNKNOWN"));
-    setScheduledDeparture(dateInput(draft.extracted.scheduled_departure_at));
-    setScheduledArrival(dateInput(draft.extracted.scheduled_arrival_at));
+    const departureRaw = draft.extracted.scheduled_departure_at;
+    const arrivalRaw = draft.extracted.scheduled_arrival_at;
+    setScheduledDeparture(dateInput(departureRaw));
+    setScheduledArrival(dateInput(arrivalRaw));
+    setDepartureZone(typeof departureRaw === "string" && departureRaw ? zoneSuffixOf(departureRaw) : "+08:00");
+    setArrivalZone(typeof arrivalRaw === "string" && arrivalRaw ? zoneSuffixOf(arrivalRaw) : "+08:00");
     /* Whatever put a draft in this panel -- manual entry, a paste, a scan, a queue row -- the list
        next to it has to agree with the server about it, or the queue goes stale on screen. */
     void readInbox();
@@ -613,8 +625,8 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             anchor_role: role,
-            scheduled_departure_at: serverDate(scheduledDeparture),
-            scheduled_arrival_at: serverDate(scheduledArrival),
+            scheduled_departure_at: serverDate(scheduledDeparture, departureZone),
+            scheduled_arrival_at: serverDate(scheduledArrival, arrivalZone),
           }),
         },
       );

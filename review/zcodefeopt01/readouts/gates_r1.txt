@@ -1,0 +1,12 @@
+== gate: tsc (tsconfig.check.json --noEmit), run in frontend/ ==
+TSC_RC=0
+
+== gate: vite build (npm run build) ==
+precache  8 entries (2983.11 KiB)
+files generated
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
+BUILD_RC=0
+
+== gate: backend pytest tests/test_contract.py -q ==
+5 passed in 5.38s (exit 0) -- backend untouched by this branch, smoke only

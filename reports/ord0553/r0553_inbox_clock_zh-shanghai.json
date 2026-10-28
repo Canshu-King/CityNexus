@@ -1,0 +1,23 @@
+{
+  "node": "inbox-clock-zh-shanghai",
+  "stored": {
+    "departure": "2026-10-09T18:00:00+08:00",
+    "arrival": "2026-10-10T09:30:00+08:00"
+  },
+  "draft": {
+    "id": "b09cf59a-1702-4765-adbf-a62e2401d88f",
+    "status": "NEEDS_REVIEW"
+  },
+  "device": {
+    "locale": "zh-CN",
+    "timezoneId": "Asia/Shanghai"
+  },
+  "read": {
+    "departure": "2026-10-09T18:00",
+    "arrival": "2026-10-10T09:30"
+  },
+  "labels": {
+    "departure": "计划出发",
+    "arrival": "计划到达"
+  }
+}

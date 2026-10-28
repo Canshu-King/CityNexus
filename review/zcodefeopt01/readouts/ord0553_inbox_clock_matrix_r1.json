@@ -1,0 +1,103 @@
+{
+  "total": 16,
+  "passed": 16,
+  "failed": 0,
+  "cases": [
+    {
+      "id": "A_wall_+08_device",
+      "got": "2026-10-09T18:00",
+      "want": "2026-10-09T18:00",
+      "pass": true
+    },
+    {
+      "id": "A_roundtrip_unchanged",
+      "got": "2026-10-09T18:00:00+08:00",
+      "want": "2026-10-09T18:00:00+08:00",
+      "pass": true
+    },
+    {
+      "id": "B_wall_UTC_device",
+      "got": "2026-10-09T10:00",
+      "want": "2026-10-09T10:00",
+      "pass": true
+    },
+    {
+      "id": "B_roundtrip_instant_kept",
+      "got": "2026-10-09T18:00:00+08:00",
+      "want": "2026-10-09T18:00:00+08:00",
+      "pass": true
+    },
+    {
+      "id": "C_edit_foreign_device",
+      "got": "2026-10-09T19:30:00+08:00",
+      "want": "2026-10-09T19:30:00+08:00",
+      "pass": true
+    },
+    {
+      "id": "D_wall_Z_stored",
+      "got": "2026-10-09T18:00",
+      "want": "2026-10-09T18:00",
+      "pass": true
+    },
+    {
+      "id": "D_roundtrip_Z",
+      "got": "2026-10-09T10:00:00Z",
+      "want": "2026-10-09T10:00:00Z",
+      "pass": true
+    },
+    {
+      "id": "E_wall_legacy_bare",
+      "got": "2026-10-09T18:00",
+      "want": "2026-10-09T18:00",
+      "pass": true
+    },
+    {
+      "id": "E_save_legacy_bare",
+      "got": "2026-10-09T18:00:00+08:00",
+      "want": "2026-10-09T18:00:00+08:00",
+      "pass": true
+    },
+    {
+      "id": "F_wall_-05_stored_UTC_device",
+      "got": "2026-10-09T23:00",
+      "want": "2026-10-09T23:00",
+      "pass": true
+    },
+    {
+      "id": "F_roundtrip_-05",
+      "got": "2026-10-09T18:00:00-05:00",
+      "want": "2026-10-09T18:00:00-05:00",
+      "pass": true
+    },
+    {
+      "id": "H_wall_NY_device",
+      "got": "2026-10-09T05:00",
+      "want": "2026-10-09T05:00",
+      "pass": true
+    },
+    {
+      "id": "G_zone_Z",
+      "got": "Z",
+      "want": "Z",
+      "pass": true
+    },
+    {
+      "id": "G_zone_offset",
+      "got": "+08:00",
+      "want": "+08:00",
+      "pass": true
+    },
+    {
+      "id": "G_zone_nocolon",
+      "got": "+08:00",
+      "want": "+08:00",
+      "pass": true
+    },
+    {
+      "id": "G_zone_bare_falls_back",
+      "got": "+08:00",
+      "want": "+08:00",
+      "pass": true
+    }
+  ]
+}
