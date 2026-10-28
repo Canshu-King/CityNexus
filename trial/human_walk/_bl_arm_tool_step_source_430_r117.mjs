@@ -74,7 +74,11 @@ async function tap(locator, label, timeout = 9000) {
   }).catch(() => false);
   note(`HIT ${label} ${hit} t=${elapsed()}`);
   if (!hit) return false;
-  await target.click({ timeout: 15000 }).catch(() => {});
+  // A swallowed click rejection is how an instrument reports "pressed" for a press that never landed:
+  // the first 390x844 run printed STEPS_SUMMARY_PRESSED true while the details stayed closed.  Scroll
+  // with Playwright's own container-aware call, then name the rejection instead of hiding it.
+  await target.scrollIntoViewIfNeeded().catch((e) => note(`SCROLL_FAIL ${label} ` + String(e).replace(/\s+/g, " ").slice(0, 150)));
+  await target.click({ timeout: 15000 }).catch((e) => note(`CLICK_FAIL ${label} ` + String(e).replace(/\s+/g, " ").slice(0, 220)));
   await page.waitForTimeout(1200);
   return true;
 }
