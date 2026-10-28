@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { travelerErrorMessage } from "./travelerError";
 import { cityNexusApi, CityNexusApiError, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalTravelGapAnswer, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, hopSentences, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, REPLAN_APPLY_BUTTON, REPLAN_BUTTON, REPLAN_NEEDS_FREEZE_SENTENCE, gapShortfallSentence, replanAppliedSentence, replanDiffSentence, replanRefusalSentence, routeSentence, scheduleRefusalSentence, type ScheduleRefusalRow, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
+import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, hopSentences, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, REPLAN_APPLY_BUTTON, REPLAN_BUTTON, REPLAN_NEEDS_FREEZE_SENTENCE, gapShortfallSentence, placeCityRefusalSentence, replanAppliedSentence, replanDiffSentence, replanRefusalSentence, routeSentence, scheduleRefusalSentence, type ScheduleRefusalRow, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
 
@@ -25,6 +25,15 @@ function refusalRow(error: unknown): ScheduleRefusalRow | null {
   const envelope = (error.body ?? {}) as { error?: { details?: unknown } };
   const details = envelope.error?.details;
   return details && typeof details === "object" ? details as ScheduleRefusalRow : null;
+}
+
+function refusalReason(error: unknown): string | null {
+  // Which door refused decides which sentence is true.  The city refusal also carries a sequence_no, so
+  // feeding its row to scheduleRefusalSentence would have said "这一项的时间对不上" about a place that is
+  // in another city -- a wrong attribution is worse than a generic one.
+  if (!(error instanceof CityNexusApiError)) return null;
+  const envelope = (error.body ?? {}) as { error?: { reason_code?: unknown } };
+  return typeof envelope.error?.reason_code === "string" ? envelope.error.reason_code : null;
 }
 
 function scheduleFor(task: DraftGoalTask): GoalPreparationSchedule[] {
@@ -136,7 +145,11 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: task.journey_id }));
     } catch (error) {
       if (epoch !== scope.current || token !== readTravelerBearer()) return;
-      const named = scheduleRefusalSentence(refusalRow(error));
+      // The city door also carries a sequence_no, so routing by reason_code first is what keeps
+      // scheduleRefusalSentence from calling a wrong-city row "这一项的时间对不上".
+      const named = refusalReason(error) === "PLACE_NOT_IN_JOURNEY_CITY"
+        ? placeCityRefusalSentence(refusalRow(error))
+        : scheduleRefusalSentence(refusalRow(error));
       const detail = `${(error instanceof CityNexusApiError && typeof (error.body as { error?: { message?: string } } | undefined)?.error?.message === "string"
         ? (error.body as { error: { message: string } }).error.message : "")} `
         + `${error instanceof Error ? error.message : ""}`;
@@ -147,6 +160,11 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
         ? "这一版已经排好，不用再保存。到「我的旅程」查看方案，或直接出发。"
           : detail.includes("DRAFT_CHANGED") ? "草案已更新，请刷新任务后再确认时间。"
         : detail.includes("PLACE_NOT_IN_GOAL_TASK_SCOPE") ? "要排的地点里有一处不属于这趟任务，回到探索换一处同城的地点再保存。"
+          // The same travel step for a place filed under another city.  Reached on a real press at
+          // trial/results/20261026_gozero/bf110-replan-apply-full-chain-430-r2.txt:35, where this arm did not
+          // exist and the line under it told the traveller to retry a refusal that cannot change.  Kept for an
+          // answer that carries the code but no named row.
+          : detail.includes("PLACE_NOT_IN_JOURNEY_CITY") ? placeCityRefusalSentence(null)
           : detail.includes("SCHEDULE") ? "请调整时间：各项安排按顺序衔接，并放在这趟旅行的日期内。"
             : "这次未能保存，时间仍留在这里，可以重试。"));
     } finally { inFlight.current = false; setBusy(false); }
