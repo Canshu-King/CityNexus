@@ -1812,3 +1812,19 @@ FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_
 这里只交具名清单与复现命令：
 
     cd backend && python -m pytest -q -p no:warnings --tb=no $(ls tests/test_*map*.py tests/test_*travel_brief*.py tests/test_*replan*.py tests/test_*schedule_refusal*.py)
+## 77. 430 在纯净树上这一趟没走到出发：卡点是网关超时，不是门
+
+`trial/human_walk/_ah_arm_clean_430_r84.mjs`（430×932，同一棵零 dirty 干净树）终拍 `X_END … t=1554.7`：
+
+| 拍 | 读数 | 归谁 |
+| --- | --- | --- |
+| `W_CONFIRM true SAVE_ENABLED true`（t=516.1） | 保存过一次之后重存键仍亮 | **产品侧**——§64 那刀在纯净树上第三次成立（AG/AA/本次） |
+| `DRIFT_SAVE_ALERT` 含「现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮」 | 那一轮 AI 没回，候选没落成 | **网关侧**（`:7863` 那条通道），与屏幕的门无关 |
+| `DEPART_FIRST start=0 select=0` | 屏上既无候选键也无出发键 | 上一行的直接后果：没有候选就谈不上选用 |
+
+⇒ #337「430×932 走到 ACTIVE」**在纯净树上仍未闭**，我不改判。
+已闭的一侧不变：430 走到 ACTIVE＋地图 8 处是 §52 在脏工作树上拿到的，
+纯净树上走到 ACTIVE＋地图对账是 §74 在 390 上拿到的；两半各自成立，但"430 且零 dirty"这一格还空着。
+这一空的成因已定位到 AI 通道超时（不是我在前面几节里那类量具形状问题），
+所以我按同一形制再起一臂（`_ai_arm_clean_430_r85.mjs`，profile 与收据名两处换名并逐处断言），
+读数进 §78。若再次超时，我报"网关侧挡住，需换时段或换通道"，不会把屏证写成通过。
