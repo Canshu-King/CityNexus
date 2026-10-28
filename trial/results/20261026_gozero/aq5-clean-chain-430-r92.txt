@@ -1,0 +1,37 @@
+SHOT 430-aq-cold t=5.2
+HIT continue true t=6.1
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.9
+HIT open-settings true t=12.4
+CONSENT true
+CONSENT true
+HIT close-settings true t=14.4
+HIT send true t=16.0
+HTTP POST 201 /api/v1/journeys/c4febd8b-0638-4f61-8bf0-2ff52a592fbe/agent/goal-tasks
+SENT t=16.9
+HTTP POST 200 /api/v1/journeys/c4febd8b-0638-4f61-8bf0-2ff52a592fbe/agent/goal-tasks/e0c79521-0844-4df2-b91b-6829c799cff0/run
+HIT skip-questions true t=32.3
+SKIP t=33.3
+SKIPPED true
+IDLE_NO_DRAFT t=285.7
+DRAFT_SEEN false
+SHOT 430-aq-after-research t=285.8
+MISS tab-hand-0
+MISS tab-hand-1
+MISS tab-hand-2
+MISS tab-hand-3
+MISS tab-hand-4
+WAIT_KEY t=287.8 ["当前展示的是已保存版本。"]
+WAIT_KEY t=307.8 ["当前展示的是已保存版本。"]
+WAIT_KEY t=327.8 ["当前展示的是已保存版本。"]
+WAIT_KEY t=347.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=367.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=387.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=407.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=427.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=448.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=468.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=488.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=508.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=528.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=548.0 ["当前展示的是已保存版本。"]
