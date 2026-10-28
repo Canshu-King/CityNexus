@@ -2984,3 +2984,23 @@ r116 在现尖栈（vite :14464 / 后端 :60364，全新空库）走旅客自己
 要开始判新红，得先把这份 255 枚的逐条清单立成基线；`test_r64_member_side_quest.py` 一组 52 枚
 是最大的一块，它是否与 live provider 缺席有关，我没测，留作下一步。
 
+
+### 14.3 最大那一块红拆开了：夹具漏签名头，改一行多绿二十四枚
+
+`tests/test_r64_member_side_quest.py` 那 52 枚不是 live provider 的事。现读第一枚的栈：夹具
+`_active_shared_journey()` 在 `:113-118` 给 `plans/select` 带了 `_auth(traveler_id)`，到 `:120` 的
+`journeys/{id}/start` 却**一个头都不带**，于是 `401 Unauthorized` 卡在每枚臂真正要断言的事情之前。
+把那一处补成同一个签名（`trial/human_walk/_fix_r64_start_header_r148.py` 只改这一处，改前先数、
+改后立刻再数，两个数都印出来）：
+
+    BEFORE  52 failed, 7 passed in 5.53s
+    AFTER   28 failed, 31 passed in 15.92s
+
+同一条命令、同一个解释器（`pytest -q tests/test_r64_member_side_quest.py --tb=no -p no:warnings`，
+python 3.12.14）—— 多绿二十四枚，产品文件零改动。
+
+剩下 28 枚的第一枚现读是另一类东西：`tests/test_r64_member_side_quest.py:338` 断言
+`rendezvous.time_state == "AVAILABLE"`，实读 `'PAST'` —— 夹具里的时间点会随墙钟过期，属刀三那族
+「过期断言」，不是鉴权、也不是产品。逐枚把这一类挑出来重画是下一步；**整套 255 那个总数没有重跑，
+所以不推算它会降到多少**，只报这一枚文件实测的 52→28。
+
