@@ -1,0 +1,101 @@
+PROFILE_USED _chrome_gozero_bj115 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=13.9
+HTTP POST 201 /api/v1/journeys/e19a9aa6-0ebd-456f-9d8e-458e93675edb/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/e19a9aa6-0ebd-456f-9d8e-458e93675edb/agent/goal-tasks/108ce482-9086-4430-a584-608184921e09/run
+SKIP t=26.0
+DRAFT_WAIT 1 state=null t=26.0
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" t=44.0
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" t=62.0
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" t=80.1
+DRAFT_READY "已整理 2 天 · 6 项安排" t=86.1
+HIT trips-tab true t=86.4
+HTTP POST 200 /api/v1/journeys/e19a9aa6-0ebd-456f-9d8e-458e93675edb/agent/goal-tasks/108ce482-9086-4430-a584-608184921e09/resume
+CARDS 8
+MISS card-0
+MISS card-1
+MISS card-2
+MISS card-3
+MISS card-4
+MISS card-5
+MISS card-6
+HIT card-7 true t=139.2
+IN_CARD_7 state="当前展示的是已保存版本。" sentence=null
+IN_CARD_7 freeze=null promote="保存为正式候选方案"
+IN_CARD_7 KEY {"id":"rev-v3-travel-gaps","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan-diff","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan-apply","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan-reverify","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-replan-refusal","count":0}
+IN_CARD_7 KEY {"id":"rev-v3-gap-shortfall","count":0}
+HIT layer-timeline true t=144.3
+ON_TIMELINE state="当前展示的是已保存版本。" sentence=null
+ON_TIMELINE freeze=null promote="保存为正式候选方案"
+ON_TIMELINE KEY {"id":"rev-v3-travel-gaps","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-diff","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-apply","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-reverify","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-refusal","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfall","count":0}
+CONFIRMED true was=false t=151.0
+HIT promote true t=151.3
+HTTP POST 201 /api/v1/journeys/e19a9aa6-0ebd-456f-9d8e-458e93675edb/agent/goal-tasks/108ce482-9086-4430-a584-608184921e09/prepare-plan
+PROMOTE_PRESSED true t=152.5
+AFTER_PROMOTE state="当前展示的是已保存版本。" sentence="已保存 6 项正式安排。"
+AFTER_PROMOTE freeze="核实并冻结今天的转场" promote="按以上时间重新准备方案"
+AFTER_PROMOTE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_PROMOTE TEXTS ["当前展示的是已保存版本。","已保存 6 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_PROMOTE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+SENTENCE_KIND refused=false verbatim="已保存 6 项正式安排。" t=167.6
+HIT freeze-routes true t=168.0
+FREEZE_PRESSED true t=169.2
+FREEZE_WAIT 1 busy=true gaps=0 t=169.2
+HTTP POST 200 /api/v1/journeys/e19a9aa6-0ebd-456f-9d8e-458e93675edb/agent/goal-tasks/108ce482-9086-4430-a584-608184921e09/plans/7b6cecfe-46d3-4abc-bb19-178f2371eb19/freeze-routes
+FREEZE_WAIT 2 busy=false gaps=1 t=174.2
+AFTER_FREEZE state="当前展示的是已保存版本。" sentence=null
+AFTER_FREEZE freeze="重新核实转场" promote="按以上时间重新准备方案"
+AFTER_FREEZE KEY {"id":"rev-v3-travel-gaps","count":1,"visible":true,"disabled":null,"box":"323x216@272","hitSelf":true,"label":"量回来的路上时间 天安门广场（看广场/拍照） → 故宫博物院（午门进、神武门出）"}
+AFTER_FREEZE KEY {"id":"rev-v3-replan","count":1,"visible":true,"disabled":false,"box":"296x44@434","hitSelf":true,"label":"根据路线重新安排"}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfall","count":1,"visible":true,"disabled":null,"box":"296x75@323","hitSelf":true,"label":"天安门广场（看广场/拍照） → 故宫博物院（午门进、神武门出）：这一段路上要 7"}
+AFTER_FREEZE TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_FREEZE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+REPLAN_DOOR replan=1 hit=true box=296x44@434 reverify=0 refusal_line=null t=174.3
+HIT rev-v3-replan true t=174.6
+AFTER_REPLAN state="当前展示的是已保存版本。" sentence=null
+AFTER_REPLAN freeze="重新核实转场" promote="按以上时间重新准备方案"
+AFTER_REPLAN KEY {"id":"rev-v3-travel-gaps","count":1,"visible":true,"disabled":null,"box":"323x440@48","hitSelf":true,"label":"量回来的路上时间 天安门广场（看广场/拍照） → 故宫博物院（午门进、神武门出）"}
+AFTER_REPLAN KEY {"id":"rev-v3-replan","count":0}
+AFTER_REPLAN KEY {"id":"rev-v3-replan-diff","count":1,"visible":true,"disabled":null,"box":"296x184@215","hitSelf":true,"label":"故宫博物院（午门进、神武门出）：11:00–12:00 改成 11:18–12:"}
+AFTER_REPLAN KEY {"id":"rev-v3-replan-apply","count":1,"visible":true,"disabled":false,"box":"296x44@434","hitSelf":true,"label":"按这一版安排"}
+AFTER_REPLAN KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_REPLAN KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_REPLAN KEY {"id":"rev-v3-gap-shortfall","count":1,"visible":true,"disabled":null,"box":"296x75@100","hitSelf":true,"label":"天安门广场（看广场/拍照） → 故宫博物院（午门进、神武门出）：这一段路上要 7"}
+APPLY_DOOR count=1 visible=true hit=true disabled=false box=296x44@434 label="按这一版安排" t=178.4
+HIT rev-v3-replan-apply true t=178.7
+HTTP POST 201 /api/v1/journeys/e19a9aa6-0ebd-456f-9d8e-458e93675edb/agent/goal-tasks/108ce482-9086-4430-a584-608184921e09/prepare-plan
+AFTER_APPLY state="当前展示的是已保存版本。" sentence=null
+AFTER_APPLY freeze="核实并冻结今天的转场" promote="按以上时间重新准备方案"
+AFTER_APPLY KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_APPLY TEXTS ["当前展示的是已保存版本。","已按路线把 3 处往后排，这是一份新的候选方案；生效的那一份没有变。新的一版还没有核实转场；先选用这一版，再核实并冻结转场。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_APPLY LEAK api_in_body=false api_in_band=false uuid_in_band=false
+ACCEPT_KEY_WALKED true t=196.1
+FINAL_CLEAN true
+DONE t=196.1

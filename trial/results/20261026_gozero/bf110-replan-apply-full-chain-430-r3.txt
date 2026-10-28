@@ -1,0 +1,16 @@
+PROFILE_USED _chrome_gozero_bf110 after 0 failed
+SKIP_SENTENCE true t=8.3
+HIT bottom-nav true t=8.7
+HIT trips-tab true t=10.3
+CARDS 0
+MISS layer-timeline
+ON_TIMELINE state=null freeze=null promote=null
+ON_TIMELINE KEY {"id":"rev-v3-travel-gaps","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfalls","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfall","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-refusal","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-diff","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-apply","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-reverify","count":0}
+ABORT no promote key inside the journey (entered=false) -- the chain cannot be walked from here

@@ -14,7 +14,7 @@ import fs from "node:fs";
 // (generation ea51658c9a, git status 0 lines), its own SQLite.  Nothing seeded, no localStorage, no DOM
 // injection -- every request below is the answer to a real press.
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
-const OUT = `${DIR}/bf110-replan-apply-full-chain-430-r2.txt`;
+const OUT = `${DIR}/bf110-replan-apply-full-chain-430-r4.txt`;
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (v) => { lines.push(v); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };
@@ -119,45 +119,50 @@ async function tap(locator, label, timeout = 9000) {
 
 await page.goto("http://127.0.0.1:14462/revolution", { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForTimeout(7000);
-await page.getByRole("textbox", { name: /想怎么玩/ }).first()
-  .fill("2026 年 12 月 3 日到 4 日在北京玩两天，两个人，每段步行不超过 1 公里，太远坐地铁");
-await page.waitForTimeout(600);
-await page.getByRole("button", { name: /继续规划/ }).first().click().catch(() => note("CONTINUE_MISS"));
-await page.waitForTimeout(2500);
-await page.getByRole("button", { name: "对话", exact: true }).first().click().catch(() => note("CHAT_MISS"));
-await page.waitForTimeout(1200);
-await page.getByRole("button", { name: /对话设置/ }).first().click().catch(() => {});
-await page.waitForTimeout(800);
-for (const label of [/本次允许 AI 处理旅行目标/, /本次允许查询公开地图和地点来源/]) {
-  const box = page.getByRole("checkbox", { name: label }).first();
-  if (await box.count() && !(await box.isChecked())) await box.check().catch(() => {});
-}
-await page.getByRole("button", { name: /关闭对话设置/ }).first().click().catch(() => {});
-await page.waitForTimeout(400);
-await page.getByRole("button", { name: /发送/ }).first().click().catch(() => note("SEND_MISS"));
-note(`SENT t=${elapsed()}`);
-
-// Wait for the draft the way bd106 proved it: the round has to finish before the card holds anything.
-const skipEnd = Date.now() + 6 * 60 * 1000;
-while (Date.now() < skipEnd) {
-  const s = page.locator('[data-testid="rev-agent-skip-questions"]');
-  if (await s.count()) { await s.first().click().catch(() => {}); note(`SKIP t=${elapsed()}`); break; }
-  await page.waitForTimeout(3000);
-}
-let draft = false;
-const draftEnd = Date.now() + 12 * 60 * 1000;
-let tick = 0;
-while (Date.now() < draftEnd) {
-  const c = await census();
-  tick += 1;
-  if (tick % 3 === 1) note(`DRAFT_WAIT ${tick} state=${JSON.stringify(c.stateLine)} promote=${JSON.stringify(c.promote_label)} t=${elapsed()}`);
-  if (/已整理 \d+ 天|行程草案|当前展示的是已保存版本/.test(c.stateLine || "")) {
-    draft = true; note(`DRAFT_READY ${JSON.stringify(c.stateLine)} promote=${JSON.stringify(c.promote_label)} t=${elapsed()}`);
-    break;
+// SKIP_SENTENCE=1 re-enters a journey this arm already created instead of starting another round.
+const SKIP_SENTENCE = process.env.SKIP_SENTENCE === "1";
+note(`SKIP_SENTENCE ${SKIP_SENTENCE} t=${elapsed()}`);
+if (!SKIP_SENTENCE) {
+  await page.getByRole("textbox", { name: /想怎么玩/ }).first()
+    .fill("2026 年 12 月 3 日到 4 日在北京玩两天，两个人，每段步行不超过 1 公里，太远坐地铁");
+  await page.waitForTimeout(600);
+  await page.getByRole("button", { name: /继续规划/ }).first().click().catch(() => note("CONTINUE_MISS"));
+  await page.waitForTimeout(2500);
+  await page.getByRole("button", { name: "对话", exact: true }).first().click().catch(() => note("CHAT_MISS"));
+  await page.waitForTimeout(1200);
+  await page.getByRole("button", { name: /对话设置/ }).first().click().catch(() => {});
+  await page.waitForTimeout(800);
+  for (const label of [/本次允许 AI 处理旅行目标/, /本次允许查询公开地图和地点来源/]) {
+    const box = page.getByRole("checkbox", { name: label }).first();
+    if (await box.count() && !(await box.isChecked())) await box.check().catch(() => {});
   }
-  await page.waitForTimeout(6000);
+  await page.getByRole("button", { name: /关闭对话设置/ }).first().click().catch(() => {});
+  await page.waitForTimeout(400);
+  await page.getByRole("button", { name: /发送/ }).first().click().catch(() => note("SEND_MISS"));
+  note(`SENT t=${elapsed()}`);
+
+  // Wait for the draft the way bd106 proved it: the round has to finish before the card holds anything.
+  const skipEnd = Date.now() + 6 * 60 * 1000;
+  while (Date.now() < skipEnd) {
+    const s = page.locator('[data-testid="rev-agent-skip-questions"]');
+    if (await s.count()) { await s.first().click().catch(() => {}); note(`SKIP t=${elapsed()}`); break; }
+    await page.waitForTimeout(3000);
+  }
+  let draft = false;
+  const draftEnd = Date.now() + 12 * 60 * 1000;
+  let tick = 0;
+  while (Date.now() < draftEnd) {
+    const c = await census();
+    tick += 1;
+    if (tick % 3 === 1) note(`DRAFT_WAIT ${tick} state=${JSON.stringify(c.stateLine)} promote=${JSON.stringify(c.promote_label)} t=${elapsed()}`);
+    if (/已整理 \d+ 天|行程草案|当前展示的是已保存版本/.test(c.stateLine || "")) {
+      draft = true; note(`DRAFT_READY ${JSON.stringify(c.stateLine)} promote=${JSON.stringify(c.promote_label)} t=${elapsed()}`);
+      break;
+    }
+    await page.waitForTimeout(6000);
+  }
+  if (!draft) note(`NO_DRAFT t=${elapsed()} ${JSON.stringify(await census())}`);
 }
-if (!draft) note(`NO_DRAFT t=${elapsed()} ${JSON.stringify(await census())}`);
 
 // Enter the trip, because the card lives in the journey cockpit, not on the trial screen.
 await tap(page.locator('[data-testid="rev-mobile-bottom-nav"]'), "bottom-nav", 4000);

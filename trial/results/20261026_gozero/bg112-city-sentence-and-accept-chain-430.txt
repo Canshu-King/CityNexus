@@ -1,0 +1,70 @@
+PROFILE_USED _chrome_gozero_bg112 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=13.9
+HTTP POST 201 /api/v1/journeys/b14f8736-475e-41af-b5ab-b2420e849e26/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/b14f8736-475e-41af-b5ab-b2420e849e26/agent/goal-tasks/355009ab-9fd4-4ad5-aecd-277a9307605a/run
+SKIP t=22.9
+DRAFT_WAIT 1 state=null t=22.9
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" t=41.0
+DRAFT_WAIT 7 state="已整理 2 天 · 5 项安排" t=59.0
+DRAFT_READY "已整理 2 天 · 5 项安排" t=59.0
+HIT trips-tab true t=59.3
+CARDS 5
+MISS card-0
+MISS card-1
+MISS card-2
+HTTP POST 200 /api/v1/journeys/b14f8736-475e-41af-b5ab-b2420e849e26/agent/goal-tasks/355009ab-9fd4-4ad5-aecd-277a9307605a/resume
+MISS card-3
+MISS card-4
+HIT layer-timeline true t=98.0
+ON_TIMELINE state="当前展示的是已保存版本。" sentence=null
+ON_TIMELINE freeze=null promote="保存为正式候选方案"
+ON_TIMELINE KEY {"id":"rev-v3-travel-gaps","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-diff","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-apply","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-reverify","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-refusal","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfall","count":0}
+CONFIRMED true was=false t=104.6
+HIT promote true t=105.0
+HTTP POST 201 /api/v1/journeys/b14f8736-475e-41af-b5ab-b2420e849e26/agent/goal-tasks/355009ab-9fd4-4ad5-aecd-277a9307605a/prepare-plan
+PROMOTE_PRESSED true t=106.2
+AFTER_PROMOTE state="当前展示的是已保存版本。" sentence="已保存 5 项正式安排。"
+AFTER_PROMOTE freeze="核实并冻结今天的转场" promote="按以上时间重新准备方案"
+AFTER_PROMOTE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_PROMOTE TEXTS ["当前展示的是已保存版本。","已保存 5 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_PROMOTE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+SENTENCE_KIND refused=false verbatim="已保存 5 项正式安排。" t=121.3
+HIT freeze-routes true t=121.6
+FREEZE_PRESSED true t=122.8
+FREEZE_WAIT 1 busy=true gaps=0 t=122.8
+HTTP POST 200 /api/v1/journeys/b14f8736-475e-41af-b5ab-b2420e849e26/agent/goal-tasks/355009ab-9fd4-4ad5-aecd-277a9307605a/plans/269390ac-dcc5-4f49-ae4f-75a6be4e59dc/freeze-routes
+FREEZE_WAIT 2 busy=false gaps=0 t=127.9
+FREEZE_WAIT 3 busy=false gaps=0 t=132.9
+FREEZE_WAIT 4 busy=false gaps=0 t=137.9
+FREEZE_WAIT 5 busy=false gaps=0 t=142.9
+FREEZE_WAIT 6 busy=false gaps=0 t=147.9
+FREEZE_WAIT 7 busy=false gaps=0 t=152.9
+FREEZE_WAIT 8 busy=false gaps=0 t=157.9
+FREEZE_WAIT 9 busy=false gaps=0 t=163.0
+AFTER_FREEZE state="当前展示的是已保存版本。" sentence=null
+AFTER_FREEZE freeze="重新核实转场" promote="按以上时间重新准备方案"
+AFTER_FREEZE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_FREEZE TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_FREEZE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+REPLAN_DOOR replan=0 hit=false box=null reverify=0 refusal_line=null t=163.0
+FINAL_CLEAN true
+DONE t=163.0
