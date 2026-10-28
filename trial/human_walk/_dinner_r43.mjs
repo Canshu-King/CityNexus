@@ -9,7 +9,7 @@ const note = (v) => { lines.push(v); fs.writeFileSync(OUT, lines.join(NL) + NL, 
 const t0 = Date.now();
 const el = () => ((Date.now() - t0) / 1000).toFixed(1);
 
-const ctx = await chromium.launchPersistentContext("D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_1032", {
+const ctx = await chromium.launchPersistentContext("D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_r43", {
   channel: "chrome", headless: false, viewport: { width: 390, height: 844 }, deviceScaleFactor: 1,
 });
 const page = ctx.pages()[0] ?? await ctx.newPage();

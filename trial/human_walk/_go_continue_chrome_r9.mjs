@@ -7,7 +7,7 @@ const TAG = String(W) + "-cont";
 const PROFILE = process.env.PROFILE || "D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_1026";
 const BASE = "http://127.0.0.1:14461";
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
-const OUT = `${DIR}/go-active-${TAG}.txt`;
+const OUT = `${DIR}/go-active-${TAG}-r9.txt`;
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (value) => { lines.push(value); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };

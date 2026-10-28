@@ -88,3 +88,8 @@ jobs:
         run: python trial/human_walk/_raw_error_sink_ruler_r1.py
       - name: Prove the ruler still catches the leak that really reached a traveller
         run: python trial/human_walk/_raw_error_sink_control_r2.py 840534ec1141b40c20e492f9cee6af12e3da58b4
+      - name: Prove no two walk arms drive one browser or write one receipt
+        # Two arms sharing a Chrome profile directory silently made one "independent" walk read a browser
+        # another arm was still driving, and two arms sharing a receipt name destroyed one run's evidence.
+        # The ruler carries its own positive control, so a pass here means it can still see a collision.
+        run: python trial/human_walk/_arm_collision_ruler_r108.py

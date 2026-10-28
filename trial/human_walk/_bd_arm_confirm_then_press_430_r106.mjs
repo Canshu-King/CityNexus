@@ -18,7 +18,7 @@ const elapsed = () => ((Date.now() - started) / 1000).toFixed(1);
 const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 const LABELS = ["保存为正式候选方案", "按以上时间重新准备方案", "正在保存安排…"];
 
-const ctx = await chromium.launchPersistentContext("D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_bc105", {
+const ctx = await chromium.launchPersistentContext("D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_bd106", {
   channel: "chrome", headless: false, viewport: { width: 430, height: 932 }, deviceScaleFactor: 1,
 });
 const page = ctx.pages()[0] ?? await ctx.newPage();

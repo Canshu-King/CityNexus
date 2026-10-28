@@ -8,7 +8,7 @@ import fs from "node:fs";
 // throwaway profile as r92 (that is where the client keeps its journey pointer), same isolated stack.
 const W = 430;
 const H = 932;
-const PROFILE = "D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_aq92";
+const PROFILE = "D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_ar93";
 const BASE = "http://127.0.0.1:14462";
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
 const OUT = `${DIR}/ar-resume-430-r93.txt`;

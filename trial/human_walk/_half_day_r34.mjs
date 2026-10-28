@@ -2,7 +2,7 @@ import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_m
 import fs from "node:fs";
 
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
-const OUT = `${DIR}/half-day-430.txt`;
+const OUT = `${DIR}/half-day-430-r34.txt`;
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (v) => { lines.push(v); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };

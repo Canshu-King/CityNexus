@@ -21,7 +21,7 @@ const IDS = {
   me: "[data-testid=\"rev-mobile-tab-me\"]",
 };
 
-const ctx = await chromium.launchPersistentContext("D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_aq92", {
+const ctx = await chromium.launchPersistentContext("D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_at95", {
   channel: "chrome", headless: false, viewport: { width: 430, height: 932 }, deviceScaleFactor: 1,
 });
 const page = ctx.pages()[0] ?? await ctx.newPage();
