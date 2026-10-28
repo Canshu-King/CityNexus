@@ -2943,3 +2943,18 @@ r116 在现尖栈（vite :14464 / 后端 :60364，全新空库）走旅客自己
 那句「那一代没有披露行」。读这类臂必须先认代次，否则负对照会被当成回归 —— 这条已在票里写明，
 以后同形制的臂一律随一张代次票落盘。
 
+
+### 13.9 提交门的自测已在 runner 上跑出原话（外读证据，不只本机）
+
+`dc7b5e6d5d` 把那步装进发布门之后，连着两代（`4d5895d89e`、`4d1eee472a`）都跑到 success。真正要看的
+不是 job 的绿，而是那一步自己印了什么 —— 取自 runner 日志（`gh run view 40756205676 --log`，
+步号 7，时刻 `19:41:32`），四行原话落盘在 `trial/results/20261026_gozero/r130-ci-gate-step-proof.txt:10-13`：
+
+    ROOT_ARM True
+    COMMIT_PATHS 1 ['mine.txt']
+    FOREIGN_STAGED before=1 after=1
+    SELFTEST_OK control swept theirs.tsx into the commit; the gate committed only mine.txt, left theirs.tsx staged, and refused a path that is not in the tree
+
+小票里另写了**怎么证它不是空转**：末句前半就是对照组 —— 一枚不带 pathspec 的提交在临时仓库里确实
+吃掉了别人暂存的文件；哪天这个形状不再吃文件，那步就红。这道门由此不再依赖我记性。
+
