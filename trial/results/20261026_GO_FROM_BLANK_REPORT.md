@@ -2481,3 +2481,25 @@ POST …/agent/goal-tasks/{id}/prepare-plan             201   ← 第二次按
 - 而"旅客在真 409 上看到哪一句"这一格，**在这条路径上无法再取**：不产生 409 就没有那一屏。要再取它只能造别的 409（例如轮次 WORKING 时按 `resume`），但客户端在 `WorkspaceActions.tsx:512` 与 `<fieldset disabled>` 两处就把它挡住了——所以映射表里 `GOAL_TASK_ALREADY_RUNNING` 那条**注定是状态滞后时的兜底，旅客在正常路径上按不到**，这一点我在 §92 就写过，现在有了第二次独立确认。
 
 **仍未证**：旅客在真 409 上看到哪一句（原因如上：这条路径不再 409，而客户端挡住了另一条）。我不把它算作完成，也不把它算作缺陷——它现在是一条有依据的"取不到"。
+## 106. 2a 有人在做，而且正做在未提交的树上——我不碰，只把边界画清
+
+去实现 #342 之前先读现场，结果读到一件必须先说清的事：`frontend/src/features/agent/AgentRunRail.tsx` 现在有 35 行，带 `<details className="cn-agent-timeline" data-testid="agent-run-timeline" open>` 与 `<summary>Agent 工具时间线 · {steps.length} 步</summary>`，每步挂着 `data-testid="agent-run-step"` 和 `data-status`——看起来 2a 已经做完了。
+
+但把两件事分开看就不是这样：
+
+```
+git diff --numstat HEAD -- …/AgentRunRail.tsx   →  19   11   …/AgentRunRail.tsx
+git show HEAD:…/AgentRunRail.tsx | wc -l        →  27
+git show HEAD:…/AgentRunRail.tsx | grep -c details|summary  →  0
+```
+
+也就是说 **HEAD（权威线，现尖 4cdb80d984）上的这一枚文件仍是 27 行、没有 `details`**；那 35 行的可展开版本是**工作树里一份未提交的改动**（19 增 11 删），是另一位写者正在做的活。两句话因此同时成立，而且都必须写下来：
+
+- §96 我判"2a 未实现"——**对权威线成立**，HEAD 上确实还是扁平 `<ol>`，那一格审计没有错。
+- 但"2a 没人做"**不成立**：它正在被实现，只是还没落到任何提交上。
+
+所以我的处置是**不碰这一枚文件**。这不是回避：未提交的树改动随时可能被它的作者继续改写，我去叠一层只会制造冲突与"谁的实现"的归属纠纷（这一串里我已经因为误碰别人的树吃过教训）。#342 保留 pending，描述里写清"工作树里已有 19/11 的未提交实现，等它落提交后再验屏，不重复实现"。
+
+顺带把这条变成一个可复用的检查：**判"某功能没实现"必须同时看 HEAD 与工作树**，两者不一致时结论要指名代次。§96 我当时只读了工作树却写成"现尖"，虽然这次结论碰巧与 HEAD 一致，但方法上是错的——如果那 19/11 的改动当时已经存在，我就等于把别人的在飞实现说成不存在。这条写进习惯：**审计产品状态时先 `git diff --numstat HEAD -- <file>`，再决定引用哪一版**。
+
+本节不动任何产品字节；#340/#341 已按 §105 的证据结案（两次 prepare-plan 201、零 4xx、泄漏三档全 false）。
