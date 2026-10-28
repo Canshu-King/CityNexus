@@ -2423,3 +2423,22 @@ SEQ 50 t=179.5  key_present=false  stateLine=null
 同时记一条我自己的量具教训，和这一串前面几条同源：**判据里写死一个中文标签，等于把结论押在产品的文案版本上**；标签是条件式渲染的时候，"找不到"就几乎必然是我的串过期，而不是屏上没有。下一次这类判据应当先读一次源码的渲染表达式，再决定匹配集。
 
 **仍未证**：409 那一屏的句子。但现在路径是确定的、且不需要新入口：按「按以上时间重新准备方案」两下（第一下真保存、第二下撞已存态），读消息带即可。#341 与 #340 在这一节里合成同一手。
+## 104. 九支臂找不到键的真因：我一直停在试玩屏，从没进入那趟行程
+
+bb2 把 §103 学到的三态标签全配上之后，读数反而更干净地指向一个更基本的事实（trial/results/20261026_gozero/bb2-three-labels-430-r104.txt，独立 profile 重跑，不与任何在跑的浏览器共享）：
+
+```
+SEQ  0 t=37.1  cockpit="explore/agent"  key_label=null  key_present=false  stateLine="Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
+SEQ  1 t=40.1  cockpit="explore/agent"  key_label=null  key_present=false  stateLine="旅行研究 · 正在研究"
+SEQ 41 t=160.5 cockpit="explore/agent"  key_label=null  key_present=false  stateLine="已整理 2 天 · 7 项安排"
+```
+
+草案出来了、轮次状态在走、三种标签任一都不在树里，而 `cockpit` 字段**从头到尾是 `explore/agent`**。对照 §103 的源码——那枚键在 `DraftDepartureCard` 里，而这张卡挂在**行程座舱**内。所以答案不在标签、不在层切换、也不在"轮次没结束"：
+
+**aq/r9x 这一整串臂从填目标到"等键"，全程停在 `/revolution` 的试玩与对话屏，从来没有按「我的旅程」走进那趟行程。** r91 那把能命中 SAVE_KEY，正是因为它开头就有 `openJourney()`（按「我的旅程」）；我把它当"开局噪声"删掉了，于是后面所有关于"键为什么不挂载"的推论都建立在一个没进门的屏幕上。§101 的"键根本没渲染"、§102 借用产品文案的解释，都因此要按这条重读——**它们不是被产品证伪，是被我的入口证伪**。
+
+同时必须披露一处证据污染：`ba103`（§102 那三条 EARLY_AFTER 读数）与 `bb104` 的第一版**沿用了 `az102` 的 profile**——我从 az102 逐份 cp 派生时只替换了收据名与截图名，没换 profile 目录。后果是 bb104 直接撞锁死掉（日志里 `--user-data-dir=..._chrome_gozero_az102` 与中文的"进程在现有会话中打开"），而 ba103 是**挂进 az102 那个已运行的浏览器另开一页**才拿到读数的。所以 §102 里那三条 `EARLY_AFTER` 不能算独立走查，只能算"同一浏览器里另一页的状态"；bb2 才是干净独立的一跑，也正是它给出了本节这条真因。派生脚本时**收据名、截图名、profile 目录三样必须一起换**，这条写进习惯。
+
+下一手已经在跑（trial/human_walk/_bc_arm_into_journey_430_r105.mjs → bc-into-journey-430-r105.txt）：同一条链，草案出现后**先按 `rev-mobile-tab-trips` 进入那趟行程**，必要时再切 `rev-mission-layer-timeline`，然后按三态标签找键、连按两次，读消息带是否含映射句且不含 `CityNexus API` 与 36 位 id。它带一个 `fieldset_disabled` 字段，因为 §103 的源码显示真正的门是 `<fieldset disabled={busy || task.status === "WORKING"}>`——如果键在树里但 fieldset 禁用，那才是"轮次门"，与"没进门"是两件事。
+
+**仍未证**：409 那一屏的句子。本节只把"为什么找不到键"从我的三层猜测换成一个可复现的入口缺失。

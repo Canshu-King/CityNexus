@@ -11,3 +11,11 @@ EARLY_AFTER rev-mission-layer-map {"key_present":false,"key_visible":false,"key_
 SEQ 13 t=68.0 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"}
 HTTP POST 200 /api/v1/journeys/63255ff2-96e2-4e44-8386-5ef146c638b9/agent/goal-tasks/61d332c0-5566-4b25-8810-453b8edfe124/resume
 SEQ 50 t=179.5 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":null}
+SWITCH rev-mission-layer-timeline found=1 t=983.3
+AFTER_SWITCH rev-mission-layer-timeline {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"当前展示的是已保存版本。"} t=987.5
+SWITCH rev-mission-layer-map found=1 t=987.5
+AFTER_SWITCH rev-mission-layer-map {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":null} t=991.6
+NO_KEY_WINDOW TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+NO_KEY_WINDOW LEAK api_in_body=false api_in_band=false uuid_in_band=false
+NO_KEY_WINDOW SENTENCE null
+ABORT the save key never mounted inside the window; the sequence above names the last state seen
