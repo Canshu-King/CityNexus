@@ -129,6 +129,14 @@
    且按 summary 之后读回仍 `open=false`；查明是尺把 click 的拒绝吞了（修在 `9a559d6c78`），
    因此**不给产品定性**，但也据此记下：还没在「步数多到 summary 自己落到视口外」的形状下按成过一次。
    「费用：未知」那一格仍无证词。账见报告 §13.7 与 #344。
+12. 「费用：未知」拿不到证词的原因已查明，不是漏测而是**当前契约下不可达**：课堂面板两枝都在
+   （`frontend/src/trial/mobile/ClassroomPresenterPanel.tsx:307-308`），但喂它的 `:181` 只在
+   `cost_delta_minor` 是数字时才给值，而后端处处把它定成整数并把缺失折成 0
+   （`backend/app/agent/contracts.py:93`、`backend/app/agent/gateway.py:543`、
+   `backend/app/agent/guardian.py:624`）——于是"两侧都有未核实价"也读成「费用：不变」，与
+   `frontend/src/i18n/LocaleContext.tsx:1230`「未知费用保持未知」矛盾。两条修法（甲改契约但要裁"拿不到差额时
+   自动门放行还是拦"；乙只补一个"存在未核实项"的展示标记、不动授权门）连证据一起写在
+   `trial/results/20261029_COST_UNKNOWN_UNREACHABLE_ANALYSIS.md`，**我没有自取**，等甲/乙点名。
 
 ## 8. 纯净树上的账（截至 2026-10-28 晚 · 报告 §74–§82）
 
