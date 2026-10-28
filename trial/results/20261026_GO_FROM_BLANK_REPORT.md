@@ -1560,3 +1560,37 @@ AA 臂跑的仍是 worktree 那枚 `d5deb1f34c`，**不含** `2b12752108`（把�
 1. 探索屏 area 阶段：先 `scrollIntoView()` 再重测 `find-city` 的可见性，仍 hidden 才允许记不可达；
 2. 无论探索屏成功与否，臂都要回「我的旅程／行程页」再读 `rev-plan-select`／`rev-plan-start`，把"有没有出发键"这件事拍在该屏上；
 3. 出发按下去之后读 `X_MAP_COUNT_LINE` 与 `activities` 计数对账（这一格是 #339 唯一还没在纯净尖上拿到的东西）。
+## 71. 第二棵树推进到现尖；三条腿的臂已装好并在跑；还有一件我自己必须报的误操作
+
+### 一、干净树推进 + 一件我做出来的危险动作
+
+我要把 `E:/_cmdr_clean_1028` 推到含 `2b12752108`（"已经排好就别再教人重试"那一刀）的那一代，
+命令里我先写了 `cd /d/moodle/_cmdr_clean_1028`——**那是我手打错的路径**（真实路径是 `/e/_cmdr_clean_1028`）。
+`cd` 失败但后续命令继续在**当前目录 D 那棵 rescue 树**里执行，于是
+`git checkout --detach f8110839b8` 打在了 D 树上：它从分支 `rescue/v3-final-departure-20261022` 被切到 detached HEAD。
+当场发现并立刻恢复，两侧都现读回验：
+
+    D 树：Switched to branch 'rescue/v3-final-departure-20261022'，tip f8110839b8…，dirty 行数 414（与操作前逐枚相同——别人那四百多枚在途文件一枚没被丢）
+    E 树：worktree_tip f8110839b8…，E_dirty 行数 0，`grep -c GOAL_TASK_REQUIRES_DRAFT_JOURNEY frontend/src/trial/mobile/DraftDepartureCard.tsx` = 1
+
+教训不是"路径要小心"这种空话：`cd` 失败之后**继续执行**才是危险源。
+以后我给多目录操作要么逐条 `git -C <路径>`，要么在 `cd` 后面接 `|| exit 1`，
+不允许 `cd` 的失败被下一条命令吞掉。这一条也解释了 §68 里那个 `bash -lc` 的读数为什么一直空。
+
+### 二、三条腿的臂（AB，纯净尖 `f8110839b8`＋dirty 0）
+
+由 AA 派生，两处定点替换＋两处换名，每处都断言"原文在源文件里恰好一枚"（`legs 1 1` 是派生器的自证）：
+
+| 腿 | 装在哪 | 干什么 |
+| --- | --- | --- |
+| 一 | `pressNear()` 的 hidden 分支 | 先 `scrollIntoView({block:"center"})`，等 1.2 秒再重测可见性，仍 hidden 才允许记不可达，并落 `SCROLL_RETRY <label> stillHidden=…`——这样"旅客按不到"与"我的臂没滚到"从此是两个不同的读数（§70 缺陷 1） |
+| 二 | 探索屏读完之后、方案屏读之前 | 按旅客自己的 tab（`行程` / `我的旅程` / `日程`）回行程页，再读 `rev-plan-select`／`rev-plan-start`，落 `BACK_ON_PLAN explore=… start=… select=…`（§70 缺陷 2） |
+| 三 | 出发按下去之后 | `X_MAP_COUNT_LINE` 与 `X_ACTIVITY_ROWS` 同时拍，让"地图 N 处"对得上"库里 N 条"（#339 唯一还没在纯净尖拿到的那格） |
+
+写法上沿用一个已经跑通的输入（那句逐字的北京两天）与同一个纯净库，因此 AB 与 AA/Y 可逐格对照。
+
+本条**不报读数**：写这一节时 AB 收据在 `156` 行、仍在方案屏的确认循环里，尚未走到 hand 那一格；
+读数与判级留到 §72，从 `trial/results/20261026_gozero/ab-clean-chain-390-r78.txt` 现读取。
+同样不预先升格的是 #339：纯净尖上"走到 ACTIVE＋地图对账"这一格目前仍未拿到，
+只有 Y 臂那一趟把旅程落成 `PLANNED`＋`active_plan_version_id` 非空（§69），
+以及 AA 臂证明 `已保存 7 项正式安排` 那一类回执在纯净尖上会真的出现（AB 收据现读 `已保存 7 项正式安排`）。

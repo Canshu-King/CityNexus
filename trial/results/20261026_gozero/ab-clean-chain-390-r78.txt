@@ -1,0 +1,167 @@
+SHOT 390-g7-cold t=4.8
+HIT continue true t=5.7
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.2
+HIT open-settings true t=11.5
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.3
+HIT send true t=14.7
+HTTP POST 201 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/run
+HIT skip-questions true t=30.8
+SKIP t=31.6
+SKIPPED true
+MISS recover-research
+MISS recover-research
+MISS recover-research
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/resume
+HIT recover-research true t=136.5
+RECOVERY 1
+DRAFT t=141.2
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=141.3
+HIT tab-chat true t=141.6
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/resume
+COMPOSER_ENABLED true t=287.9
+HIT send-fix true t=288.2
+FIX_SENT t=289.0
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/resume
+FIX_IDLE true t=409.2
+SHOT 390-g7-after-fix t=409.3
+HIT journey-tab true t=409.6
+DRAFT_SLOTS 7
+NO_REMOVE_BUTTON
+DRIFT_FOLD true TIME_COUNT 14 BEFORE [{"label":"天安门—故宫一带（步行≤1km）开始时间","value":"09:00"},{"label":"天安门—故宫一带（步行≤1km）结束时间","value":"10:00"},{"label":"景山公园—北海公园（故宫北侧，步行≤1km）开始时间","value":"14:00"},{"label":"景山公园—北海公园（故宫北侧，步行≤1km）结束时间","value":"15:00"},{"label":"王府井/前门大街 用餐与轻散步开始时间","value":"19:00"},{"label":"王府井/前门大街 用餐与轻散步结束时间","value":"20:00"},{"label":"研究待办：补齐各点开放时间/票价/最近地铁站开始时间","value":"20:00"},{"label":"研究待办：补齐各点开放时间/票价/最近地铁站结束时间","value":"21:00"},{"label":"颐和园（地铁至北宫门/东宫门）开始时间","value":"09:00"},{"label":"颐和园（地铁至北宫门/东宫门）结束时间","value":"10:00"},{"label":"圆明园 或 什刹海—南锣鼓巷（二选一）开始时间","value":"14:00"},{"label":"圆明园 或 什刹海—南锣鼓巷（二选一）结束时间","value":"15:00"},{"label":"三里屯/国贸 晚餐与夜景开始时间","value":"19:00"},{"label":"三里屯/国贸 晚餐与夜景结束时间","value":"20:00"}] t=424.2
+TIME_EDITED "三里屯/国贸 晚餐与夜景结束时间" 20:00 -> 19:15 t=424.2
+W_CONFIRM true SAVE_ENABLED true t=425.4
+HIT save-drift true t=425.8
+HTTP POST 201 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/prepare-plan
+DRIFT_SAVE_ALERT ["这次有一部分还没完成，你可以继续告诉我想怎么调整。","当前展示的是已保存版本。","已保存 7 项正式安排。下方可以查看日程和出发待办。"]
+TIME_AFTER [{"label":"天安门—故宫一带（步行≤1km）开始时间","value":"09:00"},{"label":"天安门—故宫一带（步行≤1km）结束时间","value":"10:00"},{"label":"景山公园—北海公园（故宫北侧，步行≤1km）开始时间","value":"14:00"},{"label":"景山公园—北海公园（故宫北侧，步行≤1km）结束时间","value":"15:00"},{"label":"王府井/前门大街 用餐与轻散步开始时间","value":"19:00"},{"label":"王府井/前门大街 用餐与轻散步结束时间","value":"20:00"},{"label":"研究待办：补齐各点开放时间/票价/最近地铁站开始时间","value":"20:00"},{"label":"研究待办：补齐各点开放时间/票价/最近地铁站结束时间","value":"21:00"},{"label":"颐和园（地铁至北宫门/东宫门）开始时间","value":"09:00"},{"label":"颐和园（地铁至北宫门/东宫门）结束时间","value":"10:00"},{"label":"圆明园 或 什刹海—南锣鼓巷（二选一）开始时间","value":"14:00"},{"label":"圆明园 或 什刹海—南锣鼓巷（二选一）结束时间","value":"15:00"},{"label":"三里屯/国贸 晚餐与夜景开始时间","value":"19:00"},{"label":"三里屯/国贸 晚餐与夜景结束时间","value":"19:15"}] t=433.5
+DRIFT_CHANGED_ONLY ["三里屯/国贸 晚餐与夜景结束时间"] COUNT 14->14 LOST []
+DRIFT_COUNT 0 TARGET_ONLY yes t=433.5
+SHOT 390-drift-after t=433.6
+HIT freeze-1-0 true t=433.9
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=441.0
+HIT freeze-1-1 true t=446.0
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=453.1
+HIT freeze-1-2 true t=458.1
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=465.2
+HIT freeze-1-3 true t=470.3
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=477.3
+HIT freeze-1-4 true t=482.4
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=489.4
+HIT freeze-1-5 true t=494.5
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=501.5
+HIT freeze-1-6 true t=506.6
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=513.7
+HIT freeze-1-7 true t=518.7
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=525.8
+HIT freeze-1-8 true t=530.8
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=537.9
+HIT freeze-1-9 true t=543.0
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=550.0
+HIT freeze-1-10 true t=555.1
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=562.2
+HIT freeze-1-11 true t=567.2
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=574.3
+HIT freeze-1-12 true t=579.3
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=586.4
+HIT freeze-1-13 true t=591.4
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=598.5
+HIT freeze-1-14 true t=603.6
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=610.6
+HIT freeze-1-15 true t=615.7
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=622.7
+HIT freeze-1-16 true t=627.8
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=634.8
+HIT freeze-1-17 true t=639.9
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=647.0
+HIT freeze-1-18 true t=652.0
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=659.1
+HIT freeze-1-19 true t=664.2
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=671.2
+HIT freeze-1-20 true t=676.3
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=683.3
+HIT freeze-1-21 true t=688.4
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=695.5
+HIT freeze-1-22 true t=700.5
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=707.6
+HIT freeze-1-23 true t=712.7
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-1 true t=719.7
+HIT freeze-2-0 true t=724.8
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=731.9
+HIT freeze-2-1 true t=736.9
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=744.0
+HIT freeze-2-2 true t=749.0
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=756.1
+HIT freeze-2-3 true t=761.2
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=768.2
+HIT freeze-2-4 true t=773.3
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=780.4
+HIT freeze-2-5 true t=785.4
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=792.5
+HIT freeze-2-6 true t=797.5
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=804.6
+HIT freeze-2-7 true t=809.7
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=816.7
+HIT freeze-2-8 true t=821.8
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=828.8
+HIT freeze-2-9 true t=833.9
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=841.0
+HIT freeze-2-10 true t=846.0
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=853.1
+HIT freeze-2-11 true t=858.2
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=865.2
+HIT freeze-2-12 true t=870.3
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=877.3
+HIT freeze-2-13 true t=882.4
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=889.5
+HIT freeze-2-14 true t=894.5
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=901.6
+HIT freeze-2-15 true t=906.6
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
+HIT refresh-after-freeze-2 true t=913.7
+HIT freeze-2-16 true t=918.8
+HTTP POST 200 /api/v1/journeys/e8396d9c-e528-48bc-9f1a-a0e323300aac/agent/goal-tasks/eb0c5ecf-3aa3-4dd3-97e6-c0ef2dbd4d43/plans/5e6960aa-b25b-4423-8d32-c12a2e6c5bdc/freeze-routes
