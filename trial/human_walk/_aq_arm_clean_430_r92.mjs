@@ -12,7 +12,7 @@ const TAG = String(W);
 const PROFILE = "D:/moodle/_cmdr_v3_live_1022/_chrome_gozero_aq92";
 const BASE = "http://127.0.0.1:14462";
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261026_gozero";
-const OUT = `${DIR}/aq5-clean-chain-430-r92.txt`;
+const OUT = `${DIR}/aq6-clean-chain-430-r92.txt`;
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (value) => { lines.push(value); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };
@@ -128,6 +128,15 @@ while (Date.now() < researchEnd) {
 }
 note(`DRAFT_SEEN ${draftSeen}`);
 await shot(`${TAG}-aq-after-research`);
+if (!draftSeen) {
+  // aq5 proved the shape to avoid: with no draft on screen it still went looking for the save key for
+  // nine more minutes and tried five tab hands against a screen that has no draft card at all.  Say
+  // what happened and stop -- the model giving an idle round is not a reason to keep pressing.
+  await leakReading("NO_DRAFT");
+  note("ABORT no draft this round (IDLE_NO_DRAFT); tab hands and save key not attempted");
+  await ctx.close();
+  process.exit(7);
+}
 
 const saveButton = page.getByRole("button", { name: /保存为正式候选方案/ });
 // Run two proved the missing hand: the round had already returned ("当前展示的是已保存版本") and the key
