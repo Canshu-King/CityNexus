@@ -1,0 +1,22 @@
+bw322 v3: 13 of 20 caller rows sit on a registry-rendered panel, and the 16 I published minutes ago was wrong
+
+v1 counted a module as mounted when its path appeared anywhere in v8PanelRegistry.tsx. The registry
+names app/V8Experience.tsx only inside a docstring comment, so four rows inherited "mounted panel"
+from a sentence about refactoring history. v2 required an import edge, which then missed rows whose
+building file is itself the component the registry renders (launch-origin, built inside
+features/execution/LiveRecovery.tsx, read as off-panel).
+
+v3 defines the mount the way a traveller meets it: the registry must import the module and render it as
+a JSX component, and a row whose own building file passes that test is mounted without needing an
+importer. Readings are recomputed from the scan: 13 on a mounted panel, 4 issued only by a file under
+app/, 2 by a component the registry never renders, 0 shared-api-only, 1 with no user, over 20 rows.
+
+Two new arms make the definition auditable instead of trusting me. MOUNT_TABLE prints the registry's
+imported modules and how many of them are rendered (25 and 25), so a reader can see the filter is not
+silently dropping panels. MOUNTED_CONCENTRATION prints that the 13 mounted rows rest on 2 files
+(LiveRecovery 10, JourneyTrashPanel 3), so nobody reads "13" as "13 screens". REGISTRY_MATCH names the
+modules that survive on text alone (app/V8Experience, features/trash/journeyTrash) and excludes them.
+
+REVISION records the three readings and where the first one is committed, because a count that moved
+twice is only trustworthy with its definition attached. NAME_UNIQUENESS and NEGATIVE_CONTROL carry over
+from v1 unchanged. 0 product bytes.

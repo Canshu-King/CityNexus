@@ -1,0 +1,22 @@
+bw322: of the 20 caller rows, 16 sit on a mounted panel, 3 off-panel, 1 unused
+
+bw318 proved a frontend file builds each path; that only says the sentence is
+reachable from code, not that a traveller screen asks for it. This ruler walks
+one hop further: for each of the 20 caller rows it resolves the whole-word
+users of the building function and tests each non-api user against
+v8PanelRegistry, giving four verdicts (ON_A_MOUNTED_PANEL / USED_OFF_PANEL /
+SHARED_API_ONLY / NO_USER_FOUND).
+
+Readings are computed from the receipt, not typed: 16 on a mounted panel, 3
+used off-panel, 0 shared-api-only, 1 with no user at all, over 20 rows.
+
+Two self-doubt arms ship with it. NAME_UNIQUENESS prints the most-named
+callable (7 of 20 rows) so a panel verdict cannot ride on a single catch-all
+function name that I mistook for a caller. NEGATIVE_CONTROL re-runs the same
+whole-word search against a name nobody defines and demands 0 files, so the
+ruler cannot invent users.
+
+COVERAGE_LIMIT is printed in the receipt: a registry entry is not proof a
+traveller opens that panel, and a whole-word mention is not proof of a call.
+This narrows which screens could show the English sentence; it does not
+replace walking one. 0 product bytes.

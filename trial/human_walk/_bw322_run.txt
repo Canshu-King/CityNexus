@@ -2,47 +2,52 @@ WHICH PANEL ASKS bw322
 SAME-SOURCE CHECK caller rows read from bw318 = 20, matching its published TALLY caller_found=20 (total 21)
  1. /api/v1/journeys/{journey_id}/agent/mobile-compat-runs  函数 getMobileCompatRun（frontend/src/api/citynexus.ts:3457）→ USED_OFF_PANEL，使用者 1 处（其中可成面板的 1 处）
       frontend/src/trial/mobile/MobileCompatAgentActivity.tsx:117
- 2. /api/v1/journeys/{journey_id}/launch-origin  函数 LiveRecovery（frontend/src/features/execution/LiveRecovery.tsx:409）→ ON_A_MOUNTED_PANEL，使用者 6 处（其中可成面板的 6 处）
-      frontend/src/app/V8Experience.tsx:18  ← 注册表引用此文件
+ 2. /api/v1/journeys/{journey_id}/launch-origin  函数 LiveRecovery（frontend/src/features/execution/LiveRecovery.tsx:409）→ ON_A_MOUNTED_PANEL，使用者 6 处（其中可成面板的 5 处）；此行构建的文件本身就被注册表渲染
+      frontend/src/features/execution/LiveRecovery.tsx:409  ← 注册表 import 并渲染此模块
+      frontend/src/app/V8Experience.tsx:18
  3. /api/v1/journeys/{journey_id}/in-transit/reroute  函数 rerouteInTransit（frontend/src/api/citynexus.ts:4682）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:909  ← 注册表引用此文件
+      frontend/src/features/execution/LiveRecovery.tsx:909  ← 注册表 import 并渲染此模块
  4. /api/v1/journeys/{journey_id}/missions/{mission_id}/clarification  函数 resolveJourneyRealityConflict（frontend/src/api/citynexus.ts:4754）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表引用此文件
+      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表 import 并渲染此模块
  5. /api/v1/journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id}  函数 getPendingJourneyMissions（frontend/src/api/citynexus.ts:3530）→ USED_OFF_PANEL，使用者 1 处（其中可成面板的 1 处）
       frontend/src/features/agent/JourneyClarificationPanel.tsx:77
- 6. /api/v1/journeys/{journey_id}  函数 useCandidateRejections（frontend/src/api/candidateRejections.ts:89）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/app/V8Experience.tsx:86  ← 注册表引用此文件
- 7. /api/v1/journeys/{journey_id}  函数 useCandidateRejections（frontend/src/api/candidateRejections.ts:89）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/app/V8Experience.tsx:86  ← 注册表引用此文件
+ 6. /api/v1/journeys/{journey_id}  函数 useCandidateRejections（frontend/src/api/candidateRejections.ts:89）→ USED_BY_APP_SHELL，使用者 1 处（其中可成面板的 1 处）
+      frontend/src/app/V8Experience.tsx:86
+ 7. /api/v1/journeys/{journey_id}  函数 useCandidateRejections（frontend/src/api/candidateRejections.ts:89）→ USED_BY_APP_SHELL，使用者 1 处（其中可成面板的 1 处）
+      frontend/src/app/V8Experience.tsx:86
  8. /api/v1/journeys/{journey_id}/undelete  函数 undeleteJourney（frontend/src/features/trash/journeyTrash.ts:56）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/trash/JourneyTrashPanel.tsx:10  ← 注册表引用此文件
+      frontend/src/features/trash/JourneyTrashPanel.tsx:10  ← 注册表 import 并渲染此模块
  9. /api/v1/journeys/{journey_id}/undelete  函数 undeleteJourney（frontend/src/features/trash/journeyTrash.ts:56）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/trash/JourneyTrashPanel.tsx:10  ← 注册表引用此文件
+      frontend/src/features/trash/JourneyTrashPanel.tsx:10  ← 注册表 import 并渲染此模块
 10. /api/v1/journeys/{journey_id}/undelete  函数 undeleteJourney（frontend/src/features/trash/journeyTrash.ts:56）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/trash/JourneyTrashPanel.tsx:10  ← 注册表引用此文件
+      frontend/src/features/trash/JourneyTrashPanel.tsx:10  ← 注册表 import 并渲染此模块
 11. /api/v1/journeys/{journey_id}/stay-options/{option_id}/mode  函数 anchorLabel（frontend/src/app/V8Experience.tsx:4935）→ NO_USER_FOUND，使用者 0 处（其中可成面板的 0 处）
 13. /api/v1/journeys/{journey_id}/group-recovery/apply  函数 applyGroupRecovery（frontend/src/api/citynexus.ts:4718）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:752  ← 注册表引用此文件
-14. /api/v1/journeys/{journey_id}/plans/generate  函数 getRouteEvidence（frontend/src/api/citynexus.ts:4939）→ USED_OFF_PANEL，使用者 1 处（其中可成面板的 1 处）
+      frontend/src/features/execution/LiveRecovery.tsx:752  ← 注册表 import 并渲染此模块
+14. /api/v1/journeys/{journey_id}/plans/generate  函数 getRouteEvidence（frontend/src/api/citynexus.ts:4939）→ USED_BY_APP_SHELL，使用者 1 处（其中可成面板的 1 处）
       frontend/src/app/LegacyApp.tsx:309
 15. /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select  函数 resolveJourneyRealityConflict（frontend/src/api/citynexus.ts:4744）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表引用此文件
+      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表 import 并渲染此模块
 16. /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select  函数 resolveJourneyRealityConflict（frontend/src/api/citynexus.ts:4744）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表引用此文件
+      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表 import 并渲染此模块
 17. /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select  函数 resolveJourneyRealityConflict（frontend/src/api/citynexus.ts:4744）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表引用此文件
+      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表 import 并渲染此模块
 18. /api/v1/journeys/{journey_id}/start  函数 resolveJourneyRealityConflict（frontend/src/api/citynexus.ts:4764）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表引用此文件
+      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表 import 并渲染此模块
 19. /api/v1/journeys/{journey_id}/start  函数 resolveJourneyRealityConflict（frontend/src/api/citynexus.ts:4764）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表引用此文件
+      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表 import 并渲染此模块
 20. /api/v1/journeys/{journey_id}/start  函数 resolveJourneyRealityConflict（frontend/src/api/citynexus.ts:4764）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表引用此文件
-21. /api/v1/journeys/{journey_id}/events  函数 useCandidateRejections（frontend/src/api/candidateRejections.ts:91）→ ON_A_MOUNTED_PANEL，使用者 1 处（其中可成面板的 1 处）
-      frontend/src/app/V8Experience.tsx:86  ← 注册表引用此文件
-TALLY on_a_mounted_panel=16 used_off_panel=3 shared_api_only=0 no_user_found=1 rows=20
+      frontend/src/features/execution/LiveRecovery.tsx:277  ← 注册表 import 并渲染此模块
+21. /api/v1/journeys/{journey_id}/events  函数 useCandidateRejections（frontend/src/api/candidateRejections.ts:91）→ USED_BY_APP_SHELL，使用者 1 处（其中可成面板的 1 处）
+      frontend/src/app/V8Experience.tsx:86
+TALLY on_a_mounted_panel=13 used_by_app_shell=4 used_off_panel=2 shared_api_only=0 no_user_found=1 rows=20
+MOUNTED_CONCENTRATION 13 mounted rows rest on 2 distinct file(s): frontend/src/features/execution/LiveRecovery.tsx=10, frontend/src/features/trash/JourneyTrashPanel.tsx=3 - read the screens off this line, not off the row count
+MOUNT_TABLE the registry imports 25 module(s) and renders 25 of them as a component: features/access/AccessPanel, features/agent/AgentComposer, features/checklist/PretripChecklistPanel, features/discovery/DestinationPreparationPanel, features/discovery/RealCityDiscoveryPanel, features/execution/LiveRecovery, features/execution/V10LiveExecutionPanel, features/execution/V12AuthoritativeJourneyPanel, features/inbox/BookingArtifactScanner, features/inbox/JourneyInboxWorkbench, features/intelligence/ControlTowerPanel, features/pending/PendingSetPanel, features/planning/PlanComparison, features/planning/PlanRankingPanel, features/recovery/RecoveryRequiredPanel, features/recovery/V14PreventivePanel, features/recovery/V14RecoveryTruthPanel, features/stay/HotelsPanel, features/stay/StayExplorer, features/studio/PlanVersionHistoryPanel, features/studio/V12TripStudioPanel, features/trash/JourneyTrashPanel, features/traveler-twin/TwinPanel, features/trip/ActivityDetail, features/trip/TripItinerary
+REGISTRY_MATCH 0 module(s) are imported but never rendered (none) and 2 module name(s) our rows touch appear in the registry text without an import edge (app/V8Experience, features/trash/journeyTrash); neither counts as a panel - v1 counted the second kind, v2 would have counted the first
+REVISION this ruler was published three times and the count moved: v1 called any text in the registry a mount and read 16, v2 required an import edge but ignored components the registry renders themselves and read 12, this one requires import plus JSX and also accepts a building file that is itself mounted, reading 13. v1's receipt is committed at e329db4b2c; v2 never left the working tree. The moving number is the point: the answer depends on how strictly 'mounted panel' is defined, so the definition is printed above.
 NAME_UNIQUENESS 7 of 20 resolved rows name 'resolveJourneyRealityConflict' - the rows name distinct callables, so a panel verdict rides on a real function
 REGISTRY frontend/src/app/v8PanelRegistry.tsx read from the same scan as bw318 (163 frontend files)
 NEGATIVE_CONTROL the same whole-word search run against a name nobody defines returns 0 files (CLEAN - the ruler does not invent users)
-COUNTING_RULE a user is a scanned file other than the defining file that mentions the function name as a whole word; only non-api users are tested against the registry, and a file counts as mounted when its module path appears in the registry source
+COUNTING_RULE a user is a scanned file other than the defining file that mentions the function name as a whole word; the api layer and the registry itself are users but not screens; a file is on a panel only when the registry both imports its module path and renders it as a JSX component; a row whose own building file passes that test is mounted without needing an importer; a user under app/ that fails the test is the shell
 COVERAGE_LIMIT a registry entry is not proof a traveller opens that panel, and a whole-word mention is not proof of a call - comments and re-exports count. This narrows which screens could show the sentence; it does not replace walking one.
 WROTE D:\moodle\_cmdr_rescue_v3_1022\trial\results\20261026_gozero\bw322-which-panel-asks.txt
