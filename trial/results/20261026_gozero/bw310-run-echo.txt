@@ -1,0 +1,36 @@
+INTERNAL VOCABULARY BY WORD bw310
+SAME-SOURCE CHECK sentences carrying internal vocabulary = 45, matching bw307 exactly
+VOCABULARY SOURCE imported from bw307 (17 terms, not retyped here)
+PER WORD (route-reachable sentences, worst-first; a sentence may carry several terms)
+  journey          10处  on a traveller path 8  case-insensitive would add 49  representative backend/app/main.py:3715
+                   coords: backend/app/main.py:3715, backend/app/main.py:7691, backend/app/main.py:7696, backend/app/main.py:7783, backend/app/main.py:7756, backend/app/main.py:7762, backend/app/main.py:18152, backend/app/main.py:20020, backend/app/main.py:22639, backend/app/main.py:22647
+  idempotency      9处  on a traveller path 1  case-insensitive would add 7  representative backend/app/main.py:14449
+                   coords: backend/app/main.py:14449, backend/app/main.py:16917, backend/app/main.py:17856, backend/app/main.py:17866, backend/app/main.py:22752, backend/app/main.py:22755, backend/app/main.py:25875, backend/app/main.py:25981, backend/app/main.py:25984
+  Journey member   7处  on a traveller path 2  case-insensitive would add 0  representative backend/app/main.py:1446
+                   coords: backend/app/main.py:1446, backend/app/main.py:1457, backend/app/main.py:1460, backend/app/main.py:1483, backend/app/main.py:5606, backend/app/main.py:20012, backend/app/main.py:20157
+  receipt          6处  on a traveller path 0  case-insensitive would add 0  representative backend/app/main.py:6535
+                   coords: backend/app/main.py:6535, backend/app/main.py:6537, backend/app/main.py:6560, backend/app/main.py:6559, backend/app/main.py:6581, backend/app/main.py:6609
+  commitment       3处  on a traveller path 0  case-insensitive would add 0  representative backend/app/main.py:25528
+                   coords: backend/app/main.py:25528, backend/app/main.py:26338, backend/app/main.py:28400
+  provider         3处  on a traveller path 3  case-insensitive would add 0  representative backend/app/main.py:1932
+                   coords: backend/app/main.py:1932, backend/app/main.py:11519, backend/app/main.py:21498
+  authority        2处  on a traveller path 2  case-insensitive would add 0  representative backend/app/main.py:18221
+                   coords: backend/app/main.py:18221, backend/app/main.py:20046
+  payload          2处  on a traveller path 2  case-insensitive would add 0  representative backend/app/main.py:5507
+                   coords: backend/app/main.py:5507, backend/app/main.py:11042
+  place_id         2处  on a traveller path 2  case-insensitive would add 0  representative backend/app/main.py:3424
+                   coords: backend/app/main.py:3424, backend/app/main.py:17621
+  plan_version     1处  on a traveller path 1  case-insensitive would add 0  representative backend/app/main.py:18167
+  adcode           0 hits in the 221 - the term is in the vocabulary but no reachable sentence says it
+  counterfactual   0 hits in the 221 - the term is in the vocabulary but no reachable sentence says it
+  envelope         0 hits in the 221 - the term is in the vocabulary but no reachable sentence says it
+  planVersion      0 hits in the 221 - the term is in the vocabulary but no reachable sentence says it
+  principal        0 hits in the 221 - the term is in the vocabulary but no reachable sentence says it
+  snapshot         0 hits in the 221 - the term is in the vocabulary but no reachable sentence says it
+  trace_id         0 hits in the 221 - the term is in the vocabulary but no reachable sentence says it
+RECONCILIATION bucket=45 per-word-sum=45 difference=0 explanation=0 sentences carry more than one term
+CASE SENSITIVITY the published 45 is a case-sensitive reading; matching the same vocabulary without case would put 95 sentences in the bucket (50 more), so the bucket size depends on this choice and not on the sentences
+SILENT TERMS (7 of 17): adcode, counterfactual, envelope, planVersion, principal, snapshot, trace_id
+NAMED CONTROL journey asserted on backend/app/main.py:3715 route app /api/v1/journeys/{journey_id}/in-transit/reroute screen='journey must have an ACTIVE plan'
+COVERAGE_LIMIT counting terms in source text cannot say which sentence the traveller reads first in a live session; it says what each word accounts for if reached.
+WROTE D:\moodle\_cmdr_rescue_v3_1022\trial\results\20261026_gozero\bw310-internal-vocabulary-by-word.txt
