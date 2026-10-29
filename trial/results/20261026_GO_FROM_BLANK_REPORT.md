@@ -3743,3 +3743,14 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 待裁两刀：甲，这 45 处带内部词汇与 36 处带裸 id 的，是否统一改成「点名地点＋人话＋不端 id」那一形制（本节前半给的是全量分母）；乙，是否顺手给它们配各自具名键（不配就仍按状态码拼键，中文接不上 —— 那一条已在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3721 记过，此处不另开目）。
 - 本班 0 改产品字节；上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3730。
 
+14.31 补（10-29 午后）：把「45 处内部词汇」按词摊开，顺带量出这把尺自己的两处口径依赖
+
+- 词表沿用 trial/human_walk/_cmdr_what_traveller_reads_r307.py:32 的 17 枚术语，本尺 import 复用不重打；分母与 §14.30 同源——两把尺各自现读都是 45 处（回执 trial/results/20261026_gozero/bw310-internal-vocabulary-by-word.txt:2、trial/results/20261026_gozero/bw307-what-a-traveller-would-read.txt:62），对不上就直接 ABORT 不出表。
+- 逐词命中（按处数降序，整串由回执解析而来）：journey 10 处（旅客路径 8 处）；idempotency 9 处（旅客路径 1 处）；Journey member 7 处（旅客路径 2 处）；receipt 6 处（旅客路径 0 处）；commitment 3 处（旅客路径 0 处）；provider 3 处（旅客路径 3 处）；authority 2 处（旅客路径 2 处）；payload 2 处（旅客路径 2 处）；place_id 2 处（旅客路径 2 处）；plan_version 1 处（旅客路径 1 处）。17 枚术语里只有 10 枚在 221 处里真出现过。
+- 最大一族单独点出来：journey 占 10 处、其中 8 处落在旅客真路径上，逐枚坐标见 trial/results/20261026_gozero/bw310-internal-vocabulary-by-word.txt:6 起的那一行。
+- 两处口径依赖（不写就等于报一个会飘的数）：其一，逐词相加 45 与桶 45 相等、差 0，因为没有句子同时带两个术语（带两个的句子 0 处，回执 trial/results/20261026_gozero/bw310-internal-vocabulary-by-word.txt:31）；其二，45 是大小写敏感的读法，同一词表改成不区分大小写会把桶撑到 95 处（多 50 处），单 journey 一名就多算 49 句（回执 :32）——所以「要改的就 45 处」只在当前口径内成立。
+- 词表过宽一格自报：表里 17 枚术语有 7 枚在 221 处里一次都没说到（回执 :33）——那是 §14.29 定表时按「工程常见黑话」拍的，不是从屏上句子归纳的；下一版词表应当从这 45 处反推。
+- 本班自己造的一格故障与修法（写下来不藏）：第一版逐枚坐标行恒空——渲染循环读的是排序前残留的循环变量。现在坐标随元组一起存，并装了「命中数与坐标数不等即 ABORT」的守卫（trial/human_walk/_cmdr_jargon_by_word_r310.py:79）。
+- 待裁仍是 §14.30 那两刀，只是甲现在能按词点单：先动 journey 这一族 10 处，还是 45 处一并动；乙（配具名键）不受本次读数影响。本班 0 改产品字节。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3738。
+
