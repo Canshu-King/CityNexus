@@ -3735,3 +3735,11 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 标注诚实性（本班在这格上错过一次，改掉）：第一版把 `_trip_studio_context` 里那句英文标成「绑在 /api/v1/health 上」——那是同模块的第一条路由，不是这句话的入口。现在具名对照写清「helper 自己无装饰器、其模块挂 288 条路由、不替它认领某一条 URL」（trial/results/20261026_gozero/bw302-which-surface-says-it-in-english.txt:5）。
 - 承 §14.28 待裁那条：要让这 221 处在 raise 处带上各自具名键，才谈得上中文；现状是统一出口 backend/app/main.py:784 按状态码拼键，同码不同句共用一枚。本班 0 改产品字节、不代裁。
 
+14.30 补（10-29 午后）：把 221 处排了序——屏上最丑的头几条与它们的形状分母
+
+- 排序尺 trial/human_walk/_cmdr_what_traveller_reads_r307.py:46 不复打口径：它 import §14.29 那把尺抽出来的 trial/human_walk/_cmdr_surface_of_english_refusals_r302.py:73 走同一份 collect()，对不上已发布的 221 就 ABORT 不出表（现读为 221 处、与回执 trial/results/20261026_gozero/bw307-what-a-traveller-would-read.txt:2 一字不差）。
+- 形状分母（回执 trial/results/20261026_gozero/bw307-what-a-traveller-would-read.txt）：221 处里落在旅客路径（/journeys、/plans、/trips、/travellers）的 132 处（:61），带内部词汇的 45 处（:62），带裸 id 槽的 36 处（:63）。
+- 排在最前的一条就在出发口：POST /api/v1/journeys/{journey_id}/start 拒绝时端给屏上的是 `PlanVersion {plan.id} is not authoritative: {start_authority_blocker}`（回执表首行 trial/results/20261026_gozero/bw307-what-a-traveller-would-read.txt:4，该 raise 的模板串在 backend/app/main.py:20048）——类名、裸 id、内部码三样同屏。选用口 POST /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select 是同一条模板的另一半，在 backend/app/main.py:18221。
+- 待裁两刀：甲，这 45 处带内部词汇与 36 处带裸 id 的，是否统一改成「点名地点＋人话＋不端 id」那一形制（本节前半给的是全量分母）；乙，是否顺手给它们配各自具名键（不配就仍按状态码拼键，中文接不上 —— 那一条已在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3721 记过，此处不另开目）。
+- 本班 0 改产品字节；上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3730。
+
