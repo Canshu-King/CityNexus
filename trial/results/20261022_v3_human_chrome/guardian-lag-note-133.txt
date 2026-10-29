@@ -1,0 +1,4 @@
+INJECTED {"mission":"16789b74-2314-4a0e-b59b-74e21d6e1888","agent":"925b2d7a-eb86-4dc5-b5c2-b08756ce2997","guardian":"1de62bd0-35ad-4258-abcc-6789b403c46a","pending":"96e45b03-e0f0-4c06-81fd-aed8d68d10c0"}
+LAG_NOTE 1 {"text":"守护模型这次已经判失败，模拟状态还在收尾；先等一会儿并点「刷新读数」。超过一分钟还没转，再重启课堂演示（双击启动器）。","visible":true,"inViewport":true}
+RESTORE RESTORED
+ERRORS []

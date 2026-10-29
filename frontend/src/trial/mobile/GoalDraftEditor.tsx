@@ -1,9 +1,24 @@
 import { useEffect, useState } from "react";
+import { CityNexusApiError } from "../../api/citynexus";
+import { travelerErrorMessage } from "./travelerError";
 import type { GoalDraftArtifact, GoalDraftSlot, GoalPlaceMediaResult } from "../../api/citynexus";
 
 const PERIOD: Record<GoalDraftSlot["time_of_day"], string> = {
   morning: "上午", afternoon: "下午", evening: "晚上", flexible: "时间灵活",
 };
+
+/** What to tell the traveller after a refused save, chosen from the reason the server named. */
+function saveFailureMessage(error: unknown): string {
+  const retry = "没有保存成功，请稍后重试。";
+  if (!(error instanceof CityNexusApiError)) {
+    return travelerErrorMessage(error, retry);
+  }
+  const reason = (error.body as { error?: { reason_code?: unknown } } | undefined)?.error?.reason_code;
+  if (reason === "DRAFT_RESEARCH_RUNNING") return "Agent 正在跑这一轮，等它结束再保存。你的改动还在这个页面。";
+  if (reason === "DRAFT_CHANGED_RELOAD") return "服务器的草案版本发生了变化。你的编辑仍在当前页面，请先确认新内容，再点上方「刷新任务」。";
+  if (error.status === 401 || error.status === 403) return "当前登录没有保存权限，请重新登录原来的旅行者。";
+  return retry;
+}
 
 export function GoalDraftEditor({ artifact, disabled, onSave, mediaById = {}, onPlaceSelect }: {
   artifact: GoalDraftArtifact; disabled: boolean; mediaById?: Record<string, GoalPlaceMediaResult>;
@@ -78,15 +93,8 @@ export function GoalDraftEditor({ artifact, disabled, onSave, mediaById = {}, on
       setDirty(false);
       setMessage("草案已保存到这趟旅行，刷新页面也可以找回。");
     } catch (error) {
-      const reason = error instanceof Error ? error.message : "";
       setSaveFailed(true);
-      if (reason.includes("DRAFT_CHANGED_RELOAD") || reason.includes("409")) {
-        setMessage("服务器的草案版本发生了变化。你的编辑仍在当前页面，请先确认新内容，再点上方「刷新任务」。");
-      } else if (reason.includes("401") || reason.includes("403")) {
-        setMessage("当前登录没有保存权限，请重新登录原来的旅行者。");
-      } else {
-        setMessage(`没有保存成功，请检查网络和任务状态后重试。${reason ? " " + reason.slice(0, 140) : ""}`);
-      }
+      setMessage(saveFailureMessage(error));
     } finally {
       setSaving(false);
     }

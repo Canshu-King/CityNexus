@@ -1,0 +1,12 @@
+BEFORE the season/24:00/comma fix, read from the walked plan rows on stack r9 (Monday departure)
+database citynexus_v3_human11_1022.db, journey started 2026-12-07, which is a Monday
+
+journey d40c4b3b-31bc-443c-b471-5700a51909c7 status DRAFT start 2026-12-07
+  plan d9319844-8ac3-48ce-b5db-623d62fd6c5e status CANDIDATE snapshot None
+    seq 1 八达岭长城（缆车上下，少爬坡）              type SIGHTSEE  place yes verdict OPEN_ON_DATE           reason -                                      window [360, 1050]
+    seq 2 颐和园（园林主体+昆明湖游船）              type SIGHTSEE  place yes verdict OPEN_ON_DATE           reason -                                      window [390, 1140]
+    seq 3 前门大街 / 大栅栏 散步吃饭              type SIGHTSEE  place yes verdict OPEN_ON_DATE           reason -                                      window [360, 1320]
+    seq 4 天安门广场 → 故宫博物院                type SIGHTSEE  place yes verdict CLOSED_ON_DATE         reason SOURCE_SAYS_CLOSED_ON_THIS_DAY         window None
+    seq 5 景山公园 → 北海公园（相邻，北海游船）         type SIGHTSEE  place yes verdict OPEN_ON_DATE           reason -                                      window [390, 1200]
+    seq 6 什刹海 / 南锣鼓巷 收尾                type SIGHTSEE  place yes verdict DATE_SPECIFIC_UNKNOWN  reason WEEKDAY_NOT_STATED                     window None
+    activities_in_plan=6

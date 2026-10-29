@@ -1,0 +1,4 @@
+FIRST {"present":1,"status":"模拟进行中 · 12-04 08:06","message":"","history":["开演 · 12-03 10:00","出发 · 12-04 08:06"],"banner":"","tab":""}
+AFTER_RELOAD {"present":1,"status":"模拟进行中 · 12-04 08:06","message":"","history":["开演 · 12-03 10:00","出发 · 12-04 08:06"],"banner":"","tab":""}
+AFTER_SECOND_RELOAD {"present":1,"status":"模拟进行中 · 12-04 08:06","message":"","history":["开演 · 12-03 10:00","出发 · 12-04 08:06"],"banner":"","tab":""}
+VERDICT first_present=1 reload_present=1 second_present=1 errors=[]

@@ -1,0 +1,7 @@
+SOURCE_SIM true
+SOURCE_VERIFIED false
+SOURCE_LINE "模拟供应商信号 · 课堂注入，非景区官方公告"
+CLOCK_VIRTUAL "模拟时间：12/03 09:00 · 服务器第 0 版"
+CLOCK_WALL "现实演示时间：10/25 14:51"
+PROPOSAL "移除故宫博物院；路上少 66 分钟。"
+ERRORS []

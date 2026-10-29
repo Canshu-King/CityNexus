@@ -1,0 +1,101 @@
+
+Running 5 tests using 1 worker
+
+[1/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:27:3 › Revolution signed-session recovery UI regression › a stale Journey's 403 offers one-tap restart without deleting its server record
+[WebServer] 00:47:55 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:55 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:55 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:55 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/bootstrap-shortlist
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:55 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:55 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:55 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[2/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:93:3 › Revolution signed-session recovery UI regression › failed signed-session lookup keeps the current bearer and offers a fresh-session recovery
+[3/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:138:3 › Revolution signed-session recovery UI regression › one signed traveler starts and reopens Journeys in multiple cities
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:58 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[4/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:203:3 › Revolution signed-session recovery UI regression › legacy bearer-only session restores a Journey after server membership proof
+[WebServer] 00:47:59 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000119
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:59 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000119/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:59 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000119/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:59 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000119/bootstrap-shortlist
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[5/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:241:3 › Revolution signed-session recovery UI regression › a Journey that already has a PlanVersion still restores, because a 409 shortlist is not a denial
+[WebServer] 00:48:01 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000120
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:48:01 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000120/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:48:01 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000120/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+  5 passed (11.3s)

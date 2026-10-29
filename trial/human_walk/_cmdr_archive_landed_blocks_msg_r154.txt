@@ -1,0 +1,6 @@
+Archive landed inbox blocks only after the ledger itself proves the title line.
+
+The applier inserts; it never moves the block out of the inbox, so the same block could be
+inserted twice by a second pass and the processed index could name a file whose text never
+reached the ledger. This tool reads the ledger, requires the first line to be present, and only
+then renames into _processed with the insertion stamp and writes the sha1 row.

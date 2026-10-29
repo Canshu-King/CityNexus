@@ -1,0 +1,26 @@
+WALK44_START 2026-10-22T16:44:19.293Z the photo strip at the three phone shapes
+SHAPE_390x844 {"viewport":[390,844],"track_box":{"x":0,"w":0},"scroll":{"scrollWidth":0,"clientWidth":0,"scrollable":0,"scrollLeft":0},"cards":[{"name":"故宫博物院来源实景 · 封面裁切user:k","right":0,"fully_visible":true,"ask_button":"none"},{"name":"南锣鼓巷来源实景 · 封面裁切Francis","right":0,"fully_visible":true,"ask_button":"none"},{"name":"什刹海来源实景 · 封面裁切FANG Che","right":0,"fully_visible":true,"ask_button":"none"},{"name":"还没核实到具体是哪个地点天坛公园正在查看","right":0,"fully_visible":true,"ask_button":"none"}]}
+SHOT_FAILED 390x844
+SHAPE_414x900 {"viewport":[414,900],"track_box":{"x":0,"w":0},"scroll":{"scrollWidth":0,"clientWidth":0,"scrollable":0,"scrollLeft":0},"cards":[{"name":"故宫博物院来源实景 · 封面裁切user:k","right":0,"fully_visible":true,"ask_button":"none"},{"name":"南锣鼓巷来源实景 · 封面裁切Francis","right":0,"fully_visible":true,"ask_button":"none"},{"name":"什刹海来源实景 · 封面裁切FANG Che","right":0,"fully_visible":true,"ask_button":"none"},{"name":"还没核实到具体是哪个地点天坛公园正在查看","right":0,"fully_visible":true,"ask_button":"none"}]}
+SHOT_FAILED 414x900
+SHAPE_430x932 {"viewport":[430,932],"track_box":{"x":0,"w":0},"scroll":{"scrollWidth":0,"clientWidth":0,"scrollable":0,"scrollLeft":0},"cards":[{"name":"故宫博物院来源实景 · 封面裁切user:k","right":0,"fully_visible":true,"ask_button":"none"},{"name":"南锣鼓巷来源实景 · 封面裁切Francis","right":0,"fully_visible":true,"ask_button":"none"},{"name":"什刹海来源实景 · 封面裁切FANG Che","right":0,"fully_visible":true,"ask_button":"none"},{"name":"还没核实到具体是哪个地点天坛公园正在查看","right":0,"fully_visible":true,"ask_button":"none"}]}
+SHOT_FAILED 430x932
+WALK44_END 2026-10-22T16:45:08.920Z
+WALK44_START 2026-10-22T16:45:48.142Z the photo strip at the three phone shapes
+SCREEN_STATE {"track":true,"card_box":205,"active_tab":"1. 选地方"}
+SHAPE_390x844 {"viewport":[390,844],"track_box":{"x":30,"w":316},"scroll":{"scrollWidth":858,"clientWidth":316,"scrollable":542,"scrollLeft":542},"cards":[{"name":"故宫博物院 来源实景 · 封面裁切 user","right":-306,"fully_visible":false,"ask_button":"none"},{"name":"南锣鼓巷 来源实景 · 封面裁切 Franc","right":-89,"fully_visible":false,"ask_button":"none"},{"name":"什刹海 来源实景 · 封面裁切 FANG C","right":128,"fully_visible":false,"ask_button":"none"},{"name":"还没核实到具体是哪个地点 天坛公园 正在查看","right":345,"fully_visible":true,"ask_button":"none"}]}
+SHOT human-223-strip-390x844.png bytes=371776
+SHAPE_414x900 {"viewport":[414,900],"track_box":{"x":30,"w":340},"scroll":{"scrollWidth":858,"clientWidth":340,"scrollable":518,"scrollLeft":518},"cards":[{"name":"故宫博物院 来源实景 · 封面裁切 user","right":-282,"fully_visible":false,"ask_button":"none"},{"name":"南锣鼓巷 来源实景 · 封面裁切 Franc","right":-65,"fully_visible":false,"ask_button":"none"},{"name":"什刹海 来源实景 · 封面裁切 FANG C","right":152,"fully_visible":false,"ask_button":"none"},{"name":"还没核实到具体是哪个地点 天坛公园 正在查看","right":369,"fully_visible":true,"ask_button":"none"}]}
+SHOT human-223-strip-414x900.png bytes=417154
+SHAPE_430x932 {"viewport":[430,932],"track_box":{"x":30,"w":356},"scroll":{"scrollWidth":858,"clientWidth":356,"scrollable":502,"scrollLeft":502},"cards":[{"name":"故宫博物院 来源实景 · 封面裁切 user","right":-266,"fully_visible":false,"ask_button":"none"},{"name":"南锣鼓巷 来源实景 · 封面裁切 Franc","right":-49,"fully_visible":false,"ask_button":"none"},{"name":"什刹海 来源实景 · 封面裁切 FANG C","right":168,"fully_visible":false,"ask_button":"none"},{"name":"还没核实到具体是哪个地点 天坛公园 正在查看","right":385,"fully_visible":true,"ask_button":"none"}]}
+SHOT human-223-strip-430x932.png bytes=450464
+WALK44_END 2026-10-22T16:45:57.200Z
+WALK44_START 2026-10-22T16:46:35.114Z the photo strip at the three phone shapes
+SCREEN_STATE {"track":true,"card_box":205,"active_tab":"1. 选地方"}
+SHAPE_390x844 {"viewport":[390,844],"track_box":{"x":30,"w":316},"scroll":{"scrollWidth":858,"clientWidth":316,"scrollable":542,"scrollLeft":1},"cards":[{"name":"故宫博物院 来源实景 · 封面裁切 user","right":234,"fully_visible":true,"ask_button":"none"},{"name":"南锣鼓巷 来源实景 · 封面裁切 Franc","right":451,"fully_visible":false,"ask_button":"none"},{"name":"什刹海 来源实景 · 封面裁切 FANG C","right":668,"fully_visible":false,"ask_button":"none"},{"name":"还没核实到具体是哪个地点 天坛公园 正在查看","right":885,"fully_visible":false,"ask_button":"none"}]}
+SHOT human-223-strip-390x844.png bytes=574135
+SHAPE_414x900 {"viewport":[414,900],"track_box":{"x":30,"w":340},"scroll":{"scrollWidth":858,"clientWidth":340,"scrollable":518,"scrollLeft":1},"cards":[{"name":"故宫博物院 来源实景 · 封面裁切 user","right":234,"fully_visible":true,"ask_button":"none"},{"name":"南锣鼓巷 来源实景 · 封面裁切 Franc","right":451,"fully_visible":false,"ask_button":"none"},{"name":"什刹海 来源实景 · 封面裁切 FANG C","right":668,"fully_visible":false,"ask_button":"none"},{"name":"还没核实到具体是哪个地点 天坛公园 正在查看","right":885,"fully_visible":false,"ask_button":"none"}]}
+SHOT human-223-strip-414x900.png bytes=633741
+SHAPE_430x932 {"viewport":[430,932],"track_box":{"x":30,"w":356},"scroll":{"scrollWidth":858,"clientWidth":356,"scrollable":502,"scrollLeft":1},"cards":[{"name":"故宫博物院 来源实景 · 封面裁切 user","right":234,"fully_visible":true,"ask_button":"none"},{"name":"南锣鼓巷 来源实景 · 封面裁切 Franc","right":451,"fully_visible":false,"ask_button":"none"},{"name":"什刹海 来源实景 · 封面裁切 FANG C","right":668,"fully_visible":false,"ask_button":"none"},{"name":"还没核实到具体是哪个地点 天坛公园 正在查看","right":885,"fully_visible":false,"ask_button":"none"}]}
+SHOT human-223-strip-430x932.png bytes=673598
+WALK44_END 2026-10-22T16:46:43.800Z

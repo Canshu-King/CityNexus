@@ -1,0 +1,12 @@
+HTTP POST 201 /api/v1/journeys
+SENT t=13.0
+HTTP POST 201 /api/v1/journeys/8df755ae-1568-423f-8bbf-8fb6b34c7131/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/8df755ae-1568-423f-8bbf-8fb6b34c7131/agent/goal-tasks/f41736ea-ae9d-44fc-9caa-2d6954d11864/run
+SKIP t=37.1
+SEQ 0 t=37.1 {"cockpit":"explore/agent","key_label":null,"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"}
+SEQ 1 t=40.1 {"cockpit":"explore/agent","key_label":null,"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"旅行研究 · 正在研究"}
+SEQ 41 t=160.5 {"cockpit":"explore/agent","key_label":null,"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"已整理 2 天 · 7 项安排"}
+HTTP POST 200 /api/v1/journeys/8df755ae-1568-423f-8bbf-8fb6b34c7131/agent/goal-tasks/f41736ea-ae9d-44fc-9caa-2d6954d11864/resume
+TRIP_ERR TimeoutError: locator.click: Timeout 8000ms exceeded.
+Call l
+AFTER_TRIP {"cockpit":"explore/agent","key_label":null,"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"已整理 2 天 · 7 项安排"} t=172.1

@@ -1,0 +1,25 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:250:1 › TEST_FIXTURE DRAFT activity entry only reads signed plans without starting a run or provider lookup
+  1) [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:250:1 › TEST_FIXTURE DRAFT activity entry only reads signed plans without starting a run or provider lookup 
+
+    Test timeout of 45000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-mobile-hermes-t-02591-ng-a-run-or-provider-lookup-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-mobile-hermes-t-02591-ng-a-run-or-provider-lookup-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-mobile-hermes-t-02591-ng-a-run-or-provider-lookup-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-mobile-hermes-t-02591-ng-a-run-or-provider-lookup-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:250:1 › TEST_FIXTURE DRAFT activity entry only reads signed plans without starting a run or provider lookup 

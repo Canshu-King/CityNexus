@@ -1,0 +1,14 @@
+BASE http://10.12.35.143:14492
+STEP open t=2.4s
+STEP trips t=3.5s
+STEP demo t=7.1s
+CLOCK_VISIBLE true
+CLOCK_TEXT "课堂时空模拟｜不是实际定位或真实灾情 模拟时间：12/03 09:00 · 服务器第 0 版 现实演示时间：10/25 19:08 当前站：故宫博物院 +30 分钟 +1 小时 到下一站"
+STEP guardian t=9.6s
+PROPOSAL_COUNT 1
+PROPOSAL_TEXT "移除故宫博物院；路上少 66 分钟。"
+BLUE_DOT count=1
+DOT_STATE "模拟旅客：故宫博物院 · 39.9164, 116.3908（WGS84，模拟位置，不是物理 GPS）"
+PRESENTER_COUNT 0（课堂后端没有 simulation 端点时应为 0）
+TITLE "CityNexus Trip Operations"
+ERRORS []

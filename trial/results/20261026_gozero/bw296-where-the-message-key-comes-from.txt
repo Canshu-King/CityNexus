@@ -1,0 +1,43 @@
+WHERE message_key IS PRODUCED bw296
+MODULES SCANNED 238 under backend/app; lines mentioning message_key: 41
+PRODUCED (a literal key assigned into a payload) 23 lines
+  backend/app/catalog_hydration_operations.py:617  "message_key": f"error.{code.lower()}",
+  backend/app/main.py:784  "message_key": message_key or f"error.{code.lower()}",
+  backend/app/main.py:863  payload["message_key"] = validation_message_key(payload)
+  backend/app/main.py:870  message_key="request.invalid",
+  backend/app/main.py:889  message_key=getattr(exc, "message_key", None)
+  backend/app/main.py:1047  message_key=TEMPORAL_MESSAGE_KEYS[code],
+  backend/app/main.py:6380  message_key="demo.reset_disabled",
+  backend/app/main.py:6424  message_key="demo.prepare_disabled",
+  backend/app/main.py:6436  message_key="demo.scenario_missing",
+  backend/app/main.py:6478  message_key="demo.start_disabled",
+  backend/app/main.py:6498  message_key="demo.scenario_missing",
+  backend/app/main.py:6513  message_key="demo.start_refused",
+  backend/app/main.py:10315  rule = JourneyRoleRule(role=row.role, capabilities=[], scope_message_key=row.scope_message_key)
+  backend/app/main.py:10474  message_key="hydration.store_busy",
+  backend/app/main.py:10534  message_key="generation.store_busy",
+  backend/app/main.py:10633  message_key="generation.store_busy",
+  backend/app/main.py:10652  message_key=str(stored.get("message_key") or "error.generation_failed"),
+  backend/app/main.py:10659  message_key="generation.abandoned",
+  backend/app/main.py:17458  message_key=(
+  backend/app/main.py:21455  message_key="twin.now_offset_required",
+READ / MAPPED 18 lines
+  backend/app/main.py:764  message_key: str | None = None,
+  backend/app/main.py:769  ORD-0055: a screen must not translate an English sentence.  `message_key` is what it
+  backend/app/main.py:840  def validation_message_key(item: dict) -> str:
+  backend/app/main.py:860  # `loc` decides *which field* to mark and `message_key`/`type` decide *what to say*;
+  backend/app/main.py:957  answer.message_key = PLAN_FIT_MESSAGE_KEYS[code]
+  backend/app/main.py:4221  refused.message_key = "bootstrap." + exc.code.lower()
+  backend/app/main.py:17858  exc.message_key = "plan_generation.in_flight"
+  backend/app/main.py:17868  exc.message_key = "plan_generation.attempt_superseded"
+  backend/app/schemas.py:80  `message_key` from `type`, never from the English message), and the rules themselves come from
+  backend/app/schemas.py:1597  scope_message_key: str
+  backend/app/db/models.py:2757  scope_message_key: Mapped[str] = mapped_column(String)
+  backend/app/db/session.py:268  " (role, capability, scope_message_key, created_at)"
+  backend/app/db/session.py:274  for role, capability, message_key in JOURNEY_ROLE_CAPABILITIES:
+  backend/app/db/session.py:277  " (role, capability, scope_message_key, created_at) VALUES (?, ?, ?, datetime('now'))",
+  backend/app/db/session.py:278  (role, capability, message_key),
+  backend/app/db/session.py:299  "scope_message_key TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (role, capability))"
+  backend/app/db/session.py:302  "INSERT INTO journey_role_capabilities (role, capability, scope_message_key, created_at) "
+  backend/app/db/session.py:303  "SELECT role, capability, scope_message_key, created_at "
+VERDICT the key is written somewhere other than the raise site

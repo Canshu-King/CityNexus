@@ -1,0 +1,110 @@
+WALK55_START 2026-10-23T20:58:05.485Z http://127.0.0.1:14436/revolution
+STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我
+STEP_02 days=2
+STEP_02A_PREFILLED party=1 budget=800
+STEP_02 party=2 budget=600
+ASK GET /journeys/0d83a51a-4d7d-44eb-94a6-c85cbd418797/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+STEP_03 sent_at 2026-10-23T20:58:21.023Z
+SETTLED ticks=5 elapsed_s=50
+STEP_04B_START_RESEARCH pressed=true
+WAIT_60s busy=true
+WAIT_60s DOCK Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。 PANEL_RESUME=false PANEL_DISABLED=null DOCK_RECOVERY_ROW=false
+SETTLED ticks=8 elapsed_s=80
+STEP_05_DRAFT slots=6
+LAYER rev-mission-layer-map attempt=1 clicked=true
+STEP_06_MAP [{"text":"故宫博物院 来源实景 · 封面裁切 user:kallgan · CC BY-SA 3.0 查看对应安排","picture":true,"ask":[],"answer":[]},{"text":"景山公园 来源实景 · 封面裁切 N509FZ · CC BY-SA 4.0 查看对应安排","picture":true,"ask":[],"answer":[]},{"text":"还没核实到具体是哪个地点 八达岭长城 查看对应安排","picture":false,"ask":[],"answer":["还没核实到具体是哪个地点"]},{"text":"先看看这个地点 颐和园 查看对应安排","picture":false,"ask":["先看看这个地点"],"answer":[]},{"text":"先看看这个地点 前门大街 查看对应安排","picture":false,"ask":["先看看这个地点"],"answer":[]},{"text":"先看看这个地点 簋街 查看对应安排","picture":false,"ask":["先看看这个地点"],"answer":[]}]
+SHOT walk108-06-map-strip.png bytes=152168
+LAYER rev-mission-layer-agent attempt=1 clicked=true
+STEP_07 variants_sent_at 2026-10-23T21:00:37.371Z
+SETTLED ticks=6 elapsed_s=60
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_08_VARIANTS {"cards":3,"tabs":["A · 轻松少走版","B · 省钱全打卡版","C · 本地特色版"],"chosen":[],"selectButtons":0,"slots":6}
+SHOT walk108-08-three-versions.png bytes=151024
+STEP_09_CARD_0 A 轻松少走版 八达岭单独放在一上午，回城后不赶颐和园；全天以中轴线步行为主，最省力、走得最少。 地点 4 路线 0 2
+STEP_09_choose_visible=true picked_card=0
+STEP_09_AFTER {"cards":3,"tabs":["A · 轻松少走版","B · 省钱全打卡版","C · 本地特色版"],"chosen":["已选为当前行程"],"selectButtons":0,"slots":6}
+SHOT walk108-09-chosen.png bytes=209264
+ASK GET /journeys/0d83a51a-4d7d-44eb-94a6-c85cbd418797/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_10_AFTER_RELOAD {"cards":3,"tabs":["A · 轻松少走版","B · 省钱全打卡版","C · 本地特色版"],"chosen":["已选为当前行程"],"selectButtons":0,"slots":6} screen=C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0 已有阶段性成果 地图 日程 对话 按天调整行程 6 项安排 · 2 天 挑一份更合适的安排 选用后可以继续调整每天的安排。 A · 轻松少
+SHOT walk108-10-after-reload.png bytes=335868
+STEP_11_DEPARTURE_VISIBLE=true
+STEP_11_CARD 从这份安排继续 保留已选地点和日期，先确认每天的时间。 确认每天的时间 12-03 · 天安门广场 → 故宫博物院 开始 结束 12-03 · 景山公园 → 南锣鼓巷 开始 结束 12-03 · 前门大街/大栅栏晚餐 开始 结束 12-04 · 八达岭长城 开始 结束 12-04 · 回城休整（不安排远途景点） 开始 结束 12-04 · 前门大街晚餐（21:00前收尾） 开始 结束 按以上时间准备方案 保存为正式候选方案 按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。 和 Agent 补齐出发资料
+STEP_12A_STAMPS_BEFORE [{"label":"天安门广场 → 故宫博物院开始时间","value":"09:00"},{"label":"天安门广场 → 故宫博物院结束时间","value":"10:00"},{"label":"景山公园 → 南锣鼓巷开始时间","value":"14:00"},{"label":"景山公园 → 南锣鼓巷结束时间","value":"15:00"},{"label":"前门大街/大栅栏晚餐开始时间","value":"19:00"},{"label":"前门大街/大栅栏晚餐结束时间","value":"20:00"},{"label":"八达岭长城开始时间","value":"09:00"},{"label":"八达岭长城结束时间","value":"10:00"},{"label":"回城休整（不安排远途景点）开始时间","value":"14:00"},{"label":"回城休整（不安排远途景点）结束时间","v
+STEP_12A_STAMPS_AFTER ["09:00","10:00","10:00","15:00","19:00","20:00","09:00","10:00","14:00","15:00","19:00","20:00"] zero_gap_written=true
+STEP_12_SAVE_STATUS 已保存 6 项正式安排。下方可以查看日程和出发待办。
+STEP_12A2_NO_NAMED_ROW round=1 status=已保存 6 项正式安排。下方可以查看日程和出发待办。
+STEP_12_CARD_AFTER 从这份安排继续 6 项安排已保存，刷新也能找回。 已确认时间 · 查看或调整 已保存 6 项正式安排。下方可以查看日程和出发待办。 当天的转场还没有向高德核实过。 核实并冻结今天的转场 另有 1 段时间还没有确定地点，没有算进转场核实。 天安门广场 → 故宫博物院 来源写这天开放（来源写的时段 08:30—16:30）；来源另写「以官方通知为准」 景山公园 → 南锣鼓巷 来源写这天开放（来源写的时段 06:30—20:00） 前门大街/大栅栏晚餐 来源写这天开放（来源写的时段 00:00—24:00） 八达岭长城 来源写这天开放（来源写的时段 06:00—17:30） 前门大街晚餐（21:00前收尾） 来源写这天开放（来源写的时段 00:00—24:00） 还没有来源给过确定的费用；另有 4 处门票没有来源，预算里没有把它们算作 0 元，实际花费可能超出预算。 票价没有来源，我接受先不计入预算 让 Agent 换成价格明确的地点 出发待办 天安门广场 → 故宫博物院 票价：没有来源给出这一项的价格 景山公园 → 南锣鼓巷 票价：没有来源给出这一项的价格 转场路线：让 Agent 量这一段路 前门大街/大栅栏晚餐 票价：没有来源给出这一项的价格 转场路线：让 Agent 量这一段路 八达岭长城 票价：没有来源给出这一项的价格 转场路线：让 Agent 量这一段路 回城休整（不安排远途景点） 具体地点：让 Agent 找这一处 前门大街晚餐（21:00前收尾） 票价：没有来源给出这一项的价格 转场路线：让 Agent 量这一段路 还有 10 项要主动向来源要，按下面这一个按钮逐项去补。 按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。 和 Agent 补齐出发资料
+SHOT walk108-12-departure-after-save.png bytes=183665
+STEP_12B_ROUTE_BEFORE 当天的转场还没有向高德核实过。 核实并冻结今天的转场
+HTTP_500 POST /journeys/0d83a51a-4d7d-44eb-94a6-c85cbd418797/agent/goal-tasks/2995277a-19d4-4633-aa3c-defdaa5552e1/plans/7f7a5b11-a510-47f6-96b9-2f2afc225316/freeze-routes Internal Server Error
+STEP_12B_ROUTE_STATE_ROUND_1 (no answer after 70s)
+STEP_12B_ROUND_1 BAND 当天的转场还没有向高德核实过。 核实并冻结今天的转场
+STEP_12B_ROUND_1 ASK_COUNT 还有 10 项要主动向来源要，按下面这一个按钮逐项去补。
+STEP_12B_ROUND_1 TODO_ROUTE_LINES=4 FROZEN=false
+SHOT walk108-12b-round-1.png bytes=200145
+HTTP_500 POST /journeys/0d83a51a-4d7d-44eb-94a6-c85cbd418797/agent/goal-tasks/2995277a-19d4-4633-aa3c-defdaa5552e1/plans/7f7a5b11-a510-47f6-96b9-2f2afc225316/freeze-routes Internal Server Error
+STEP_12B_ROUTE_STATE_ROUND_2 (no answer after 70s)
+STEP_12B_ROUND_2 BAND 当天的转场还没有向高德核实过。 核实并冻结今天的转场
+STEP_12B_ROUND_2 ASK_COUNT 还有 10 项要主动向来源要，按下面这一个按钮逐项去补。
+STEP_12B_ROUND_2 TODO_ROUTE_LINES=4 FROZEN=false
+SHOT walk108-12b-round-2.png bytes=200145
+HTTP_500 POST /journeys/0d83a51a-4d7d-44eb-94a6-c85cbd418797/agent/goal-tasks/2995277a-19d4-4633-aa3c-defdaa5552e1/plans/7f7a5b11-a510-47f6-96b9-2f2afc225316/freeze-routes Internal Server Error
+STEP_12B_ROUTE_STATE_ROUND_3 (no answer after 70s)
+STEP_12B_ROUND_3 BAND 当天的转场还没有向高德核实过。 核实并冻结今天的转场
+STEP_12B_ROUND_3 ASK_COUNT 还有 10 项要主动向来源要，按下面这一个按钮逐项去补。
+STEP_12B_ROUND_3 TODO_ROUTE_LINES=4 FROZEN=false
+SHOT walk108-12b-round-3.png bytes=200145
+STEP_12B_ROUTE_AFTER 当天的转场还没有向高德核实过。 核实并冻结今天的转场
+STEP_12B3_HOP_REFUSALS []
+SHOT walk108-12b2-before-reload.png bytes=200145
+ASK GET /journeys/0d83a51a-4d7d-44eb-94a6-c85cbd418797/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+HTTP_409 GET /journeys/0d83a51a-4d7d-44eb-94a6-c85cbd418797/bootstrap-shortlist {"error":{"code":"CONFLICT","message":"a shortlist is unavailable after a PlanVersion exists","message_key":"bootstrap.bootstrap_plan_already_exists","trace_id":"51f4ef0c-f971-4666-bbeb-6a588a96415b","details":{},"reason_code":"BOOTSTRAP_PLAN_ALREADY_EXISTS","error_receipt_id":"CNX-SKBP95K7"}}
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_12B2_DEPARTURE_VISIBLE=true
+STEP_12B2_ROUTE_STATE_AFTER_RELOAD 当天的转场还没有向高德核实过。 核实并冻结今天的转场
+STEP_12B3_HOP_REFUSALS_AFTER_RELOAD []
+LAYER rev-mission-layer-agent attempt=1 clicked=true
+STEP_12B3_DRAWER_TITLE 高德转场路线（1）
+STEP_12B3_DRAWER_ROWS ["八达岭长城 → 颐和园\n步行 · 52.2 公里 · 约 11 小时 36 分\n在高德地图查看路线 ↗"]
+STEP_12B3_DRAWER_TRANSIT_LABELED=0 WALK_LABELED=1
+STEP_12B3_DRAWER_LINK_MODES ["walk"]
+STEP_12B3_DRAWER_RAW_SECONDS=0 READABLE_UNITS=1 LINE_NAMES []
+STEP_12B3_PANEL_ROUTE_LINES ["查询步行路线 步行路线 · 52.2 公里 · 约 11 小时 36 分 0.1 秒"] RAW=0 CLOSED_READ=13 OPEN_READ=13
+SHOT walk108-12b4-agent-drawer.png bytes=222604
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_12B2_ASK_COUNT 还有 10 项要主动向来源要，按下面这一个按钮逐项去补。
+STEP_12B2_TODO_ROUTE_LINES=4 TODO_PLACE_LINES=2
+SHOT walk108-12b3-after-reload.png bytes=191563
+SHOT walk108-12b-routes-verified.png bytes=191563
+STEP_12C_PRICE_BEFORE 还没有来源给过确定的费用；另有 4 处门票没有来源，预算里没有把它们算作 0 元，实际花费可能超出预算。 票价没有来源，我接受先不计入预算 让 Agent 换成价格明确的地点
+SHOT walk108-12c-price-unknown.png bytes=191563
+STEP_12C_PRICE_AFTER 按你的确认保存：这 4 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。这一版还需要把待办逐项补完才能选用。
+SHOT walk108-12c-price-accepted.png bytes=203827
+STEP_12D_ASK_COUNT 还有 5 项要主动向来源要，按下面这一个按钮逐项去补。
+STEP_12D_ASK_HOW_BEFORE_PRESS 按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。
+LAYER rev-mission-layer-agent attempt=1 clicked=true
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_12D_ASK_BUTTON=1
+STEP_12D_ASK_HOW (unreadable)
+STEP_12D_COMPOSER_CHARS=309 HEAD=出发前还缺这几项，请逐项去来源补齐：「景山公园 → 南锣鼓巷」前面那一段路还没核实过，请量一次并告诉我几分钟；「前门大街/大栅栏晚餐」前面那一段路还没核实过，请量一次并告诉我几分钟；「八达岭长城」前面那一段路还没核实过，请量一次并告诉我几分钟；「回城休整（不安排远途景点）」还没有确定地点，请在正式地点表里找一处定下来；「前门大街晚餐（21
+STEP_12D_SEND_VISIBLE=true ENABLED=true
+STEP_12E_DOCK_STATUS_RIGHT_AFTER_SEND Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。
+LAYER rev-mission-layer-agent attempt=1 clicked=true
+STEP_12D_SENT=8s ANSWERED=88s FAILED=no failure line on screen TURNS_BEFORE=3 TURNS_AFTER=4
+STEP_12F_DOCK_STATUS_AFTER_WAIT (unreadable)
+STEP_12F_PANE_TAIL_HAS_FAILURE_TEXT=false ANSWER_MARK=true
+STEP_12D_PANE_HEADLINE 直接用正式地点表里已有的「汉庭酒店(北京天安门广场店)」作为休整点（已在地点表内，且紧挨前门晚餐区，适合回城休整）；若你想就近逛，也可定为「前门大街」。这是我的建议，不是来源测量值，你拍板用哪个。 5. 前门大街晚餐(21:00前收尾)（前一段步行时间）：来源未提供，无法测量。 说明：本会话目前只能读取行程卡，没有可调用的测距/检索工具，所以上面四段路的步行分钟数我无法从来源取得。按你的要求，这些我没有当作确定值，标记为「未查到」。 其余安排（12/3 上午天安门→故宫、下午景山、12/4 上午八达岭，及三版差异里
+STEP_12D_PANE_TAIL 实的营业时间/地理数据（门票与景点间交通时间仍待查）。核心差别在12/4 下午： 1) 轻松少走版 走得最少、最省力 12/3：天安门→故宫 / 景山→南锣鼓巷 / 前门晚餐 12/4：八达岭（半天）→ 回城休整 → 前门晚餐（不赶颐和园） 2) 省钱全打卡版 景点都去、最划算但最累 12/3：同上 12/4：八达岭 → 颐和园（与八达岭相距约52km，靠市郊铁路S2/公交衔接，当天车程最长）→ 簋街晚餐 3) 本地特色版 市井烟火气、不赶远路 12/3：同上 12/4：八达岭 → 南锣鼓巷胡同漫步 → 簋街小龙虾晚餐 三版都保留了：故宫/天安门/景山/南锣/八达岭、晚餐落在前门或簋街、21:00前收尾。门票和景点间确切交通时间我还没查实，选定一版后我再据此微调顺序与时长。 你选哪一版？或想让我把某版（比如省钱版里的八达岭→颐和园）再细化？ 这条回复没有改动日程（版本 1） 你 出发前还缺这几项，请逐项去来源补齐：「景山公园 → 南锣鼓巷」前面那一段路还没核实过，请量一次并告诉我几分钟；「前门大街/大栅栏晚餐」前面那一段路还没核实过，请量一次并告诉我几分钟；「八达岭长城」前面那一段路还没核实过，请量一次并告诉我几分钟；「回城休整（不安排远途景点）」还没有确定地点，请在正式地点表里找一处定下来；「前门大街晚餐（21:00前收尾）」前面那一段路还没核实过，请量一次并告诉我几分钟。票价这一项我已经确认先不计入预算，不用再问。只改上面点名的这几处安排，其它日期和其它安排都保持不变。补完把查到的告诉我，我在这张卡片上再保存一次方案；哪项来源还是没有答案，就直接说哪项没有，不要把没答的当成确定的。 CityNexus Agent 已对照这张行程卡核对来源，按你点名的五项逐一汇报： 1. 景山公园 → 南锣鼓巷（前一段步行时间）：来源未提供，无法测量。 2. 前门大街/大栅栏晚餐（前一段步行时间）：来源未提供，无法测量。 3. 八达岭长城（出发前那一段路/市区到八达岭的车程）：来源未提供，无法测量。 4. 回城休整（不安排远途景点）地点：尚未确定。我建议直接用正式地点表里已有的「汉庭酒店(北京天安门广场店)」作为休整点（已在地点表内，且紧挨前门晚餐区，适合回城休整）；若你想就近逛，也可定为「前门大街」。这是我的建议，不是来源测量值，你拍板用哪个。 5. 前门大街晚餐(21:00前收尾)（前一段步行时间）：来源未提供，无法测量。 说明：本会话目前只能读取行程卡，没有可调用的测距/检索工具，所以上面四段路的步行分钟数我无法从来源取得。按你的要求，这些我没有当作确定值，标记为「未查到」。 其余安排（12/3 上午天安门→故宫、下午景山、12/4 上午八达岭，及三版差异里的颐和园/簋街/南锣胡同等）全部保持不变；票价你也确认不计入，未动。 等你那边能接入测距来源，我再把这四段分钟数补上；第 4 项你定下地点后，我据此更新卡片。 这条回复没有改动日程（版本 2） 按讨论的方向开始研究 旅行研究 · 已有阶段成果 本轮研究摘要 Agent 真实工作过程 · 已记录 75 条事件 工具结果 · 14 次 高德转场路线（1） 八达岭长城 → 颐和园 步行 · 52.2 公里 · 约 11 小时 36 分 在高德地图查看路线 ↗ 已核对的正式地点（64） 公开来源发现的地点（64）
+SHOT walk108-12d-reply.png bytes=224169
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_12E_DEPARTURE_VISIBLE=true
+STEP_12E_CARD_AFTER_ASK 从这份安排继续 6 项安排已保存，刷新也能找回。 已确认时间 · 查看或调整 当天的转场还没有向高德核实过。 核实并冻结今天的转场 另有 1 段时间还没有确定地点，没有算进转场核实。 天安门广场 → 故宫博物院 来源写这天开放（来源写的时段 08:30—16:30）；来源另写「以官方通知为准」 景山公园 → 南锣鼓巷 来源写这天开放（来源写的时段 06:30—20:00） 前门大街/大栅栏晚餐 来源写这天开放（来源写的时段 00:00—24:00） 八达岭长城 来源写这天开放（来源写的时段 06:00—17:30） 前门大街晚餐（21:00前收尾） 来源写这天开放（来源写的时段 00:00—24:00） 按你的确认保存：这 4 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。 出发待办 天安门广场 → 故宫博物院 票价：没有来源给出这一项的价格 景山公园 → 南锣鼓巷 票价：没有来源给出这一项的价格 转场路线：让 Agent 量这一段路 前门大街/大栅栏晚餐 票价：没有来源给出这一项的价格 转场路线：让 Agent 量这一段路 八达岭长城 票价：没有来源给出这一项的价格 转
+STEP_12E_ASK_COUNT_AFTER_ASK 还有 5 项要主动向来源要，按下面这一个按钮逐项去补。
+STEP_12E_ASK_HOW_AFTER_SETTLE 按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。
+STEP_13_WORKBENCH TRAVEL PLAN 你的行程方案 刷新方案 等待正式计划 1 份正式候选方案 方案 1 2 天 · 6 项安排 费用待确认 6 项费用待确认，尚未计入完整预算。 12月03日 09:00—10:00 天安门广场 → 故宫博物院 费用待确认 查看地点来源 ↗ 10:00—15:00 景山公园 → 南锣鼓巷 费用待确认 查看地点来源 ↗ 19:00—20:00 前门大街/大栅栏晚餐 费用待确认 查看地点来源 ↗ 12月04日 09:00—10:00 八达岭长城 费用待确认 查看地点来源 ↗ 14:00—15:00 回城休整（不安排远途景点） 费用待确认 地点待定 · 没有算进转场 19:00—20:00 前门大街晚餐（21:00前收尾） 费用待确认 查看地点来源 ↗ 另有 1 段时间还没有确定地点，没有算进转场核实。 这版方案还缺：具体地点（回城休整（不安排远途景点））、转场路线。出发待办逐处写着找谁要。这份候选里还没有冻结的步行时间，出发待办下方可以核实并冻结今天的转场。票价这一项你已经确认先不计入预算（4 处没有来源）。
+STEP_13_SELECT_BUTTONS=0 VISIBLE=false
+SHOT walk108-13-workbench.png bytes=544500
+GOAL_TASK_CALLS [{"at":"2026-10-23T20:58:21.027Z","kind":"run","task":"2995277a","status":200,"ended_at":"2026-10-23T20:59:09.847Z"},{"at":"2026-10-23T20:59:11.810Z","kind":"resume","task":"2995277a","status":200,"ended_at":"2026-10-23T21:00:31.456Z"},{"at":"2026-10-23T21:00:37.369Z","kind":"resume","task":"2995277a","status":200,"ended_at":"2026-10-23T21:01:32.612Z"},{"at":"2026-10-23T21:06:23.107Z","kind":"resume","task":"2995277a","status":200,"ended_at":"2026-10-23T21:07:44.812Z"}]
+WALK_END 2026-10-23T21:07:58.402Z
+NOTE tab left open for first_tap_layers_r1; nothing was closed, reset or written to storage

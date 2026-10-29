@@ -1,0 +1,9 @@
+fixture red triage — 2026-10-24, base tip 0058649c98, local Windows run
+1) shape=fold count=3 fixtures=frontend/e2e/revolution-place-card-facts.spec.ts:99,frontend/e2e/revolution-place-card-facts.spec.ts:212,frontend/e2e/revolution-mobile-hermes-transparency.spec.ts:315 product_change=2ac535e19c product=frontend/src/trial/mobile/CityPicker.tsx:261,frontend/src/trial/RevolutionQuickExplore.tsx:929
+2) shape=two-buttons count=3 fixture=frontend/e2e/revolution-source-media.spec.ts:3 product=frontend/src/trial/mobile/PlacePhotoGallery.tsx:102,frontend/src/trial/mobile/PlacePhotoGallery.tsx:111
+3) shape=copy count=1 fixture=frontend/e2e/revolution-amap-research-ui.spec.ts:11 product_change=7225b36f07 product=frontend/src/trial/mobile/WorkspaceActions.tsx:183,frontend/src/trial/mobile/WorkspaceActions.tsx:186
+4) shape=commit-door count=2 fixture=frontend/e2e/revolution-mobile-plan-workbench.spec.ts:169,frontend/e2e/revolution-mobile-plan-workbench.spec.ts:176 product=frontend/src/trial/mobile/MobilePlanWorkbench.tsx:234,frontend/src/trial/mobile/MobilePlanWorkbench.tsx:241
+defect=invitation_button_unpressable before_h=16 after_h=44 before_hit=STRONG after_hit=BUTTON widths=390,430,1566
+suite_before=41 passed 9 failed suite_after=50 passed 0 failed duration=8.4m rc=0
+typecheck_rc=0 negative_control_rc=1 expected=44 received=16 restored_rc=0
+screenshot=trial/results/20261022_v3_human_chrome/media-invitation-390-after.png

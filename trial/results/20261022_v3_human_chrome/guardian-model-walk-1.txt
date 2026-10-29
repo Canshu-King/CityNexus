@@ -1,0 +1,13 @@
+SESSION journey=2e9cd67d-10ca-4ecd-920b-76c81a350c71
+START status=RUNNING seq=0
+SCENE stop=故宫博物院 status=PAUSED_FOR_GUARDIAN seq=1
+GUARDIAN_CALL status_before=PAUSED_FOR_GUARDIAN seq=1 timeout=480s
+GUARDIAN_HTTP http=200 elapsed=218.0s
+GUARDIAN_RUN status=PAUSED_FOR_ACCEPTANCE seq=2
+HISTORY {"environment_provenance": "SIMULATED", "event": "SIM_SCENE_INJECTED", "event_id": "c4b98da3-fa0c-4a71-a123-60ebe208586a", "recorded_at": "2026-10-25T08:27:26.389193+00:00", "scene_id": "model-closure-d1e2", "sequence": 1, "virtual_now": "2026-12-03T09:00:00+08:00"}
+HISTORY {"event": "GUARDIAN_REQUESTED", "model_consent": true, "recorded_at": "2026-10-25T08:27:26.407049+00:00", "sequence": 2, "virtual_now": "2026-12-03T09:00:00+08:00"}
+HISTORY {"event": "GUARDIAN_RESULT", "execution_mode": "SERVER_GUARDIAN_EXECUTED", "guardian": {"action_status": "PROPOSAL_PRESENTED", "agent_run_id": "ef5c41f6-98b0-4d02-bd56-7493c2845716", "id": "e0e6bfb7-492e-4a3b-84d0-52172f90571c", "proposal_id": "8eab72f7-bb97-4860-8a61-388fbc63514c", "status": "PARTIAL"}, "model_execution": "RUN_REFERENCE", "recorded_at": "2026-10-25T08:31:04.425756+00:00", "sequence": 2, "virtual_now": "2026-12-03T09:00:00+08:00"}
+STATE suggested_scene=WEATHER
+STATE pending_event_id=c4b98da3-fa0c-4a71-a123-60ebe208586a
+STATE guardian_lease_expires_at=2026-10-25T08:57:26.407049+00:00
+EXECUTION_TRUTH "SIMULATED_STATE_TRANSITION"

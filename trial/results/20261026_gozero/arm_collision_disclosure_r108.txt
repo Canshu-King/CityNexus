@@ -1,0 +1,57 @@
+Arm collision repair and disclosure -- 2026-10-29, ruler trial/human_walk/_arm_collision_ruler_r108.py
+
+WHY THIS EXISTS
+Three payments in one session, all from deriving a new walk arm by copying an old one and renaming only
+part of it:
+  1. _ba_arm_switch_on_draft_430_r103.mjs and the first _bb_arm_three_labels_430_r104.mjs were cp-derived
+     from _az_arm_layer_switch_430_r102.mjs, which left them opening the profile _chrome_gozero_az102.
+     bb104 died on the profile lock; ba103 produced readings from a second page inside a browser az102 was
+     still driving.  Those readings looked like an independent walk and were not.
+  2. _aq_arm_clean_430_r92.mjs's own profile was renamed to _chrome_gozero_aq99, but five later arms in the
+     same chain still declared _chrome_gozero_aq92.
+  3. Three receipt names were written by two arms each, so whichever ran second overwrote the first.
+
+WHAT CHANGED (one profile directory and one receipt file per arm, no exemptions)
+  _dinner_r43.mjs   profile _chrome_gozero_1032 -> _chrome_gozero_r43
+  _my_trips_r39.mjs profile _chrome_gozero_1032 -> _chrome_gozero_r39
+  _ar_arm_resume_430_r93.mjs       profile _chrome_gozero_aq92 -> _chrome_gozero_ar93
+  _as_probe_roles_r94.mjs          profile _chrome_gozero_aq92 -> _chrome_gozero_as94
+  _at_arm_same_tick_430_r95.mjs    profile _chrome_gozero_aq92 -> _chrome_gozero_at95
+  _au_probe_trips_doors_r96.mjs    profile _chrome_gozero_aq92 -> _chrome_gozero_au96
+  _av_probe_disclosure_r97.mjs     profile _chrome_gozero_aq92 -> _chrome_gozero_av97
+  _ba_arm_switch_on_draft_430_r103.mjs    profile _chrome_gozero_az102 -> _chrome_gozero_ba103
+  _bd_arm_confirm_then_press_430_r106.mjs profile _chrome_gozero_bc105 -> _chrome_gozero_bd106
+  _go_to_active_chrome_r10.mjs  receipt go-active-${TAG}-full.txt -> go-active-${TAG}-full-r10.txt
+  _go_continue_chrome_r9.mjs    receipt go-active-${TAG}.txt      -> go-active-${TAG}-r9.txt
+  _half_day_r34.mjs             receipt half-day-430.txt          -> half-day-430-r34.txt
+The earlier arm in each pair keeps the original name and is therefore the only arm that will write it from
+now on.  Nothing on disk was moved, renamed or deleted by this change.
+
+WHAT IS NOT RECOVERABLE (disclosed, not fixed)
+These three files already sit in trial/results/20261026_gozero and each one holds the bytes of whichever
+of the two arms ran last.  The overwritten run cannot be reconstructed and no copy was made under a new
+name, because a fresh-named copy would read as an independently produced receipt when it is not.
+  go-active-390-full.txt  7079 bytes sha1 333b83508711  <- _go_to_active_chrome_r7.mjs and _go_to_active_chrome_r10.mjs
+  go-active-390.txt       1968 bytes sha1 782512970a67  <- _go_to_active_chrome_r6.mjs and _go_continue_chrome_r9.mjs
+  half-day-430.txt        1913 bytes sha1 fbf20bb34c13  <- _half_day_r33.mjs and _half_day_r34.mjs
+Any claim in the ledger that rests on one of those three files should be read as "one of two runs", not as
+a single run's receipt.
+
+RULER VERDICT AT COMMIT TIME (read from the run, not from memory)
+  SELFTEST_OK synthetic pair sharing profile+receipt was caught by the same scan()
+  ARMS files=306 declaring_profile_or_receipt=86 profiles=33 receipts=85
+  COLLISIONS 0
+  RULER_RC=0
+Before the repair the same ruler reported COLLISIONS 7 groups and RULER_RC=1; the 7 groups are the ones
+listed above.  The control writes two synthetic arms into a temporary directory and runs the real scan()
+over them, so a ruler that lost the ability to see a collision exits 2 instead of reporting the tree clean.
+
+SAME DEFECT ON SCREENSHOTS (closed in the same ruler, second leg)
+The ruler now also reads literal screenshot names (shot("x") / path: "${DIR}/x.png"), skipping names
+built from a variable or a ${TAG} prefix because those resolve per run and would bury the real ones under
+false red: measured 218 literal names and 2 clash groups before the rename, both from _half_day_r33.mjs and _half_day_r34.mjs writing
+half-day-430-before and half-day-430-after.  _half_day_r34.mjs now writes half-day-430-r34-before and
+half-day-430-r34-after, so from this generation each arm owns its own frames.  The ruler now counts 220 literal names and reports COLLISIONS 0.
+The two png files already on disk (142727 and 141757 bytes, stamped 10-26 15:24 and 15:25) hold whichever
+arm ran last, and their receipt half-day-430.txt is the same merged pair, so the frame content cannot be
+re-attributed to one run either.  Nothing was copied or renamed on disk.

@@ -1,0 +1,20 @@
+amap_drawer_readers run_at=2026-10-23T04:04:49.345Z rows=8
+READ 天安门广场 → 故宫博物院 :: 原样=3385 米 / 2708 秒 :: 屏上=3.4 公里 / 约 45 分钟
+READ 八达岭长城 → 颐和园 :: 原样=52185 米 / 41748 秒 :: 屏上=52.2 公里 / 约 11 小时 36 分
+READ 颐和园 → 前门大街 :: 原样=20260 米 / 16208 秒 :: 屏上=20.3 公里 / 约 4 小时 30 分
+READ 故宫博物院 → 景山公园 :: 原样=1445 米 / 1156 秒 :: 屏上=1.4 公里 / 约 19 分钟
+READ 景山公园 → 前门大街 :: 原样=4322 米 / 3458 秒 :: 屏上=4.3 公里 / 约 58 分钟
+READ 前门大街 → 八达岭长城 (transit) :: 原样=69700 米 / 11580 秒 :: 屏上=69.7 公里 / 约 3 小时 13 分
+READ 短段 :: 原样=500 米 / 45 秒 :: 屏上=500 米 / 约 1 分钟
+READ 零 :: 原样=0 米 / 0 秒 :: 屏上=0 米 / 不到 1 分钟
+GATE walk link on a WALK row :: allowed=true expected=true OK
+GATE bus link on a TRANSIT row :: allowed=true expected=true OK
+GATE bus link on a WALK row :: allowed=false expected=false OK
+GATE walk link on a TRANSIT row :: allowed=false expected=false OK
+GATE row with no mode recorded :: allowed=true expected=true OK
+GATE car link :: allowed=false expected=false OK
+GATE other host :: allowed=false expected=false OK
+GATE credentials in the url :: allowed=false expected=false OK
+GATE missing coordinate param :: allowed=false expected=false OK
+GATE no url at all :: allowed=false expected=false OK
+GATE unknown mode on the row :: allowed=false expected=false OK

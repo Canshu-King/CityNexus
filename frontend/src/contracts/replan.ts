@@ -48,6 +48,7 @@ export interface ReplanProposal {
   score_breakdown: Record<string, number>;
   locked_commitments_preserved: boolean;
   hard_constraints_passed: boolean;
+  source_agent_run_id?: string | null;
   diff: ReplanDiff;
   explanation: Record<string, unknown>;
 }

@@ -1,0 +1,33 @@
+import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_modules/playwright/index.mjs";
+import fs from "node:fs";
+const BASE = "http://127.0.0.1:14492";
+const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome";
+const NL = String.fromCharCode(10);
+const lines = [];
+const note = (v) => { lines.push(v); fs.writeFileSync(OUT + "/classroom-desktop-1280-20.txt", lines.join(NL) + NL, "utf8"); };
+const browser = await chromium.launch({ headless: true });
+const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+await ctx.addInitScript(() => {
+  if (!sessionStorage.getItem("__probe_booted")) { localStorage.clear(); sessionStorage.clear(); sessionStorage.setItem("__probe_booted", "1"); }
+});
+const page = await ctx.newPage();
+const errors = [];
+page.on("pageerror", (e) => errors.push(String(e).slice(0, 160)));
+await page.goto(BASE + "/revolution", { waitUntil: "networkidle", timeout: 45000 }).catch(() => {});
+await page.waitForTimeout(1500);
+await page.locator('[data-testid="rev-mobile-tab-trips"]').click(); await page.waitForTimeout(1200);
+await page.locator('[data-testid="rev-demo-session"]').click(); await page.waitForTimeout(3600);
+await page.getByRole("button", { name: /行程守护/ }).first().click(); await page.waitForTimeout(2600);
+const card = page.locator('[data-testid="rev-guardian-proposal"]');
+const box = await card.boundingBox().catch(() => null);
+note("PROPOSAL_BOX " + JSON.stringify(box));
+note("PROPOSAL_IN_VIEW " + JSON.stringify(box ? box.y >= 0 && box.y + box.height <= 900 : false));
+const strip = page.locator('[data-testid="rev-classroom-clock"]');
+note("CLOCK_VISIBLE " + JSON.stringify(await strip.isVisible().catch(() => false)));
+note("CLOCK_TEXT " + JSON.stringify(await strip.innerText().catch(() => "")));
+const body = await page.evaluate(() => document.body.innerText);
+note("SIM_LABEL " + JSON.stringify(/模拟供应商信号/.test(body)));
+note("ORIGIN_LABEL " + JSON.stringify(/规则引擎生成/.test(body)));
+note("ERRORS " + JSON.stringify(errors.slice(0, 4)));
+await page.screenshot({ path: OUT + "/rehearsal20-desktop.png" });
+await browser.close();

@@ -1,0 +1,13 @@
+Attribute the KeyError family rather than leave it as an unmade claim.
+
+Section 14.10 deliberately stopped at "this answer did not carry the key" for the ten KeyError reds.
+Two live readings close it.  Per-file counts of any credential-attaching marker, plus the failing
+call as written, put nine of the ten in the same bearer-less private-read family the read-only probe
+already measured -- the reply is a 401 body, so subscripting it for a success-shaped field raises
+KeyError.  The tenth is not about credentials at all: the product only sets `error_type` on an
+exception path, so a CAPTURED classification legitimately carries no such key, which is the same
+cell as the guard that saw an over-budget matrix come back CAPTURED.
+
+No product byte and no test changed.  The section also names the one reading that would settle the
+residual ambiguity -- attaching a bearer to those two clients and re-running -- and marks it as a
+fixture edit awaiting an order, not something this shift did on its own.

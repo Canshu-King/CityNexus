@@ -1,0 +1,157 @@
+BLOCKS THIS SESSION REPORTED AS INSERTED - RE-READ AGAINST THE LEDGER bw301 | STABLE_ANCHOR line 1 | TALLY_LINE 154 | checked 48 green 48 red 0
+LEDGER D:\moodle\CITYNEXUS_AGENT_CONTROL.md
+SESSION 494abfd7 | window = today and the 1 day(s) before it, 10-29 08:55:20 .. 10-30 01:16:01 = 48 blocks
+  stretch 1: 10-29 23:34:00 .. 10-30 01:16:01 = 7 blocks
+  stretch 2: 10-29 21:45:12 .. 10-29 22:17:05 = 4 blocks
+  stretch 3: 10-29 14:50:37 .. 10-29 15:37:04 = 5 blocks
+  stretch 4: 10-29 08:55:20 .. 10-29 13:47:31 = 32 blocks
+WINDOW_EDGE first block excluded: 494abfd7_2002.md.inserted_201740  (10-25 20:17:23)
+  494abfd7_0116.md.inserted_011621  (archived 10-30 01:16:01)
+      heading '494abfd7 交课堂代次换卷起栈的三档冷首屏屏证，与「403 被说成没读到」这一格（本块接上两格）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0116.md.inserted_011621'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0100.md.inserted_010054  (archived 10-30 01:00:27)
+      heading '494abfd7 交「坐标门只认形制」的四档实测与一张三档待点单（本块接上一格）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0100.md.inserted_010054'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0048.md.inserted_004911  (archived 10-30 00:48:50)
+      heading '494abfd7 勘误：把「普查回执与尺」那几枚会漂的坐标逐枚现读，并交出第 1 行的自指锚（本块接上一格）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0048.md.inserted_004911'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0029.md.inserted_002944  (archived 10-30 00:29:23)
+      heading '494abfd7 交「管落地的普查自己跨零点数不到全」这第五处量具错的对照与改法（本块接前两格）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0029.md.inserted_002944'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0014.md.inserted_001434  (archived 10-30 00:14:08)
+      heading '494abfd7 交「读到的字段各去了哪」的逐枚靶面：十三处 handler 四档归置，并补一次次轴改口（本块接前两格勘误）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0014.md.inserted_001434'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2354.md.inserted_235528  (archived 10-29 23:54:59)
+      heading '494abfd7 勘误：前两格交靶面与闭链时用的「十九处」读数作废，改口为廿六处（本块源于三把我自己的尺量错过）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2354.md.inserted_235528'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2334.md.inserted_233424  (archived 10-29 23:34:00)
+      heading '494abfd7 交「面板自造的话句句被标记读到」的逐枚闭链：十九处 catch 各自的 state 与渲染行（#372，接 #370）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2334.md.inserted_233424'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2217.md.inserted_221722  (archived 10-29 22:17:05)
+      heading '494abfd7 勘误：把「屏上改写成什么话」那格的正文坐标从 §14.35 挪到 §14.36（#371）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2217.md.inserted_221722'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2213.md.inserted_221414  (archived 10-29 22:13:50)
+      heading '494abfd7 交「屏上改写成什么话」的逐枚靶面：十九处自造句子的 catch（#370，接 #369）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2213.md.inserted_221414'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2203.md.inserted_220343  (archived 10-29 22:03:14)
+      heading '494abfd7 交「旅客面英文拒绝句到不了屏：面板层把话换掉了」的逐枚读数（#369，接 §14.35）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2203.md.inserted_220343'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2145.md.inserted_214617  (archived 10-29 21:45:12)
+      heading '494abfd7 交「会问的那二十处里哪几处真挂在面板上」的逐枚归属（#368，接 §14.34）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2145.md.inserted_214617'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1537.md.inserted_153724  (archived 10-29 15:37:04)
+      heading '494abfd7 复算「本班报过的 36 笔插入」账账相符 36/36，并自报一格我自己造成的假红灯（#367）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1537.md.inserted_153724'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1528.md.inserted_152839  (archived 10-29 15:28:02)
+      heading '494abfd7 交「21 处里哪几处前端会问」的逐枚映射（#366，接 §14.33）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1528.md.inserted_152839'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1516.md.inserted_151731  (archived 10-29 15:16:58)
+      heading '494abfd7 交「旅客面 ∩ 内部词汇」= 21 处的逐枚清单（#365，接 §14.32）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1516.md.inserted_151731'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1500.md.inserted_150109  (archived 10-29 15:00:45)
+      heading '494abfd7 交「45 处内部词汇」的逐词分布与各自坐标（#364，接 §14.31 那条待裁）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1500.md.inserted_150109'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1450.md.inserted_145101  (archived 10-29 14:50:37)
+      heading '494abfd7 交「221 处里旅客最先撞到的头几条」可点单清单（#363，接 §14.29 那条待裁）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1450.md.inserted_145101'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0549.md.inserted_134817  (archived 10-29 13:47:31)
+      heading '494abfd7 交「17 枚取不回引用」的逐枚清单与四档修法（#362，#347 的续）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0549.md.inserted_134817'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0537.md.inserted_133500  (archived 10-29 13:34:46)
+      heading '494abfd7 交「旅客真能撞到的英文句是 221 处」的分面读数（#361，接 §14.28 那条待裁）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0537.md.inserted_133500'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0452.md.inserted_125303  (archived 10-29 12:48:31)
+      heading '494abfd7 交「屏上拿到英文原句」的分母与那条键的真实产地（#360，附一条撤回）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0452.md.inserted_125303'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0439.md.inserted_125257  (archived 10-29 12:37:10)
+      heading '494abfd7 交「接受那一按全程没问共享门」的现场读数与三件待裁（#359）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0439.md.inserted_125257'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0424.md.inserted_122246  (archived 10-29 12:22:24)
+      heading '494abfd7 只关尾行的一块（读数不动）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0424.md.inserted_122246'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0419.md.inserted_122112  (archived 10-29 12:19:28)
+      heading '提交门加了一格「引用落空即拒」，同型漏洞在另一条腿也当场补上'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0419.md.inserted_122112'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0415.md.inserted_121528  (archived 10-29 12:15:13)
+      heading '本班引用过却没入库的工件已交进去：未入库从叁拾叁降到叁'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0415.md.inserted_121528'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0409.md.inserted_120958  (archived 10-29 12:09:39)
+      heading '并发写者交了一半：玖 处已暂存的前端组件引用着 git 不认识的模块（提交门已加闸）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0409.md.inserted_120958'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0358.md.inserted_115848  (archived 10-29 11:58:23)
+      heading '住下带出的那一版，相邻换序八次全拿 503，句子里带着内部异常名（三件待裁）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0358.md.inserted_115848'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0351.md.inserted_115156  (archived 10-29 11:51:35)
+      heading '拾陆行「推成出发态」的写者与那扇门的读者排成一张表（两枚已知锚自检通过）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0351.md.inserted_115156'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0348.md.inserted_114807  (archived 10-29 11:47:46)
+      heading '一按「选这家酒店」就出发，而那扇门从头到尾没被问过（读数已落，等裁不代裁）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0348.md.inserted_114807'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0331.md.inserted_113246  (archived 10-29 11:31:05)
+      heading '三十九枚「方案不是权威」的红落到某一臂（观察-only），待点的是一格夹具声明'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0331.md.inserted_113246'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1111.md.inserted_111152  (archived 10-29 11:11:35)
+      heading '八枚「答复被验口拒绝」并成一句：缺的是同一枚必填字段；顺带查出契约对六枚字段一言不发（494abfd7 · 2026-10-29 11:11）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1111.md.inserted_111152'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1108.md.inserted_110851  (archived 10-29 11:08:37)
+      heading '两把尺并成一说话：node id 账里「未定性」桶归零，缺侧别的桶改名叫 side not measured（494abfd7 · 2026-10-29 11:08）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1108.md.inserted_110851'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1106.md.inserted_110700  (archived 10-29 11:06:26)
+      heading '勘误：那本 node id 账的侧别改成三份，未定性的三十九枚不再算成产品侧（494abfd7 · 2026-10-29 11:06）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1106.md.inserted_110700'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1104.md.inserted_110445  (archived 10-29 11:04:27)
+      heading '整套红合成一本按 node id 的账：夹具侧一百三十枚、产品与种子侧一百零一枚，一次裁能罩多少第一次有了数（494abfd7 · 2026-10-29 11:04）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1104.md.inserted_110445'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1101.md.inserted_110135  (archived 10-29 11:01:05)
+      heading '「假设置缺字段」十六枚摊成五枚属性的刀口表：一刀能全罩，最窄的一枚属性罩住九枚（494abfd7 · 2026-10-29 11:01）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1101.md.inserted_110135'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1058.md.inserted_105853  (archived 10-29 10:58:35)
+      heading '演示门七枚做了三臂对照：环境能把拒绝往前挪一格，挪不出一枚绿色（494abfd7 · 2026-10-29 10:58）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1058.md.inserted_105853'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1047.md.inserted_104740  (archived 10-29 10:47:24)
+      heading '课堂那栈自己说 amap 已 READY：零事实是「还没捕」而不是「捕不到」（494abfd7 · 2026-10-29 10:47）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1047.md.inserted_104740'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1044.md.inserted_104502  (archived 10-29 10:44:42)
+      heading '课堂栈只读预检：出发门先决条件已在库上成立，但冻好的移动事实读数为零（494abfd7 · 2026-10-29 10:44）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1044.md.inserted_104502'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1040.md.inserted_104127  (archived 10-29 10:40:55)
+      heading '两条悬着的裁语各带一个实测数：越界矩阵是前提被产品能力取代，种子时钟的修面先量了尺度（494abfd7 · 2026-10-29 10:40）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1040.md.inserted_104127'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1038.md.inserted_103830  (archived 10-29 10:38:09)
+      heading 'KeyError 一族分家完毕：九枚并入凭证族、一枚是产品异常支路，证据落成可取回工件（494abfd7 · 2026-10-29 10:38）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1038.md.inserted_103830'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1034.md.inserted_103448  (archived 10-29 10:34:21)
+      heading '交付件对齐本班实测：那条「整套后端没重跑」的旧说法已被取代（494abfd7 · 2026-10-29 10:34）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1034.md.inserted_103448'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1031.md.inserted_103158  (archived 10-29 10:31:30)
+      heading '护壁句最后两枚含糊的判掉了：回执不落库站得住、凭据门那格是环境依赖，另把「永不打印」装进写门（494abfd7 · 2026-10-29 10:31）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1031.md.inserted_103158'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1028.md.inserted_102834  (archived 10-29 10:28:11)
+      heading '护壁句那九枚现尖重跑：每一枚点名它撞到了什么，其中一格用第二把尺独立复算（494abfd7 · 2026-10-29 10:27）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1028.md.inserted_102834'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1021.md.inserted_102257  (archived 10-29 10:22:01)
+      heading '整套红的「未定性」桶清零：五十四枚要么有具名因类，要么有逐例读过的断言（494abfd7 · 2026-10-29 10:21）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1021.md.inserted_102257'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1013.md.inserted_101450  (archived 10-29 10:14:14)
+      heading '课堂栈定档、全量类型门已在 CI 跑过一代、引用件可取回普查在册（494abfd7 · 2026-10-29 10:13）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1013.md.inserted_101450'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0151.md.inserted_095258  (archived 10-29 09:52:35)
+      heading '号令者 · 文中引用的取回普查：卅三枚工件没入库，另有十九个名是尺自己认不出'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0151.md.inserted_095258'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0146.md.inserted_094730  (archived 10-29 09:47:09)
+      heading '号令者 · 宽面类型检查上闸并在 runner 自证成功，成因表第二遍与量具边界一并记清'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0146.md.inserted_094730'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0135.md.inserted_093555  (archived 10-29 09:35:26)
+      heading '号令者 · 整套红第一次成成因表：廿三十一枚里九十七枚属凭证族，并自报两处量具瞎过'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0135.md.inserted_093555'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0117.md.inserted_091715  (archived 10-29 09:16:59)
+      heading '号令者 · 十六枚红归到一族夹具裸读（带分辨对照，零产品字节）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0117.md.inserted_091715'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0055.md.inserted_085947  (archived 10-29 08:55:20)
+      heading '号令者 · 第二刀 2a 交齐、提交门装闸、本班后端证书与最大红块归因'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0055.md.inserted_085947'] | STILL_IN_INBOX none | VERDICT GREEN
+NEGATIVE_CONTROL unseen title reads RED as required (LEDGER_HITS 0 | ARCHIVED none | STILL_IN_INBOX none | VERDICT RED HINT the title matched nothing in the ledger; these are the 5 most recent landed blocks (a wrong --title reads as a typo, not as an accident): ### 494abfd7 交课堂代次换卷起栈的三档冷首屏屏证，与「403 被说成没读到」这一格（本块接上两格） <- 494abfd7_0116.md.inserted_011621 ### 494abfd7 交「坐标门只认形制」的四档实测与一张三档待点单（本块接上一格） <- 494abfd7_0100.md.inserted_010054 ### 494abfd7 勘误：把「普查回执与尺」那几枚会漂的坐标逐枚现读，并交出第 1 行的自指锚（本块接上一格） <- 494abfd7_0048.md.inserted_004911 ### 494abfd7 交「管落地的普查自己跨零点数不到全」这第五处量具错的对照与改法（本块接前两格） <- 494abfd7_0029.md.inserted_002944 ### 494abfd7 交「读到的字段各去了哪」的逐枚靶面：十三处 handler 四档归置，并补一次次轴改口（本块接前两格勘误） <- 494abfd7_0014.md.inserted_001434)
+TALLY checked=48 green=48 red=0
+BLOCKS_THAT_DID_NOT_LAND none
+VERDICT every block this session claimed as delivered is in the ledger, and the gate can still see a red
+INSTRUMENT_FAULT no - 0 of 48 blocks read RED, nothing to chase

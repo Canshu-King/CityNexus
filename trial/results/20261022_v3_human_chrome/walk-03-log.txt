@@ -1,0 +1,13 @@
+WALK3_START 2026-10-22T08:51:51.620Z url=http://127.0.0.1:14333/revolution browser=real Chrome (visible, isolated profile)
+FIRST_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+NOVELTY_LINE_GONE=true
+DUPLICATE_DISCLAIMER_COUNT_ON_PAGE=1
+SHOT human-13-first-screen-clean.png
+SHOT human-11-agent-leads.png
+FOLD_PRESENT=true
+FIND_CITY_BUTTON_VISIBLE_UNTIL_OPENED=false
+AGENT_ACTION 改这句，然后交给 Agent → class=rev-quick-primary
+AGENT_ACTION_BOX 14,937,212x49
+SCREEN_TOP_TEXT C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待第一个目标 地图 日程 对话 现实地图 0 处地点 地点研究会在这里汇合 找到有坐标的地点后，点击图钉查看来源。 手动探索地点 旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。 CITYNEXUS / EXPLORE 想去哪儿逛逛？ 你的想法已经写好了，可以改，改完交给 Agent。 改这句，然后交给 Agent → 1. 选地方 2. 选兴趣 3. 看结果 4. 去散步 我想自己先挑地点（可选） 技术信息 高级功能：地图坐标、分享与技术详情 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认 ⚙ 告诉 CityNexus 你的旅行目标 发送 ↑
+AFTER_PRESS_FOCUS {"id":"rev-mission-chat-input","in_viewport":true,"value":"想慢慢逛北京的古迹和胡同小吃，两个人，人均预算 500，一天别太赶。\n节奏：轻松少走"}
+SHOT human-12-after-pressing-agent-action.png

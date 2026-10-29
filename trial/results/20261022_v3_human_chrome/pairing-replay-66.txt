@@ -1,0 +1,27 @@
+{
+  "source": "read-only copy of the live classroom DB",
+  "issue": {
+    "http": 201,
+    "has_ticket": true
+  },
+  "first_redeem": {
+    "http": 200,
+    "error": "",
+    "has_token": true
+  },
+  "second_redeem": {
+    "http": 401,
+    "error": "DEMO_PAIRING_INVALID_OR_EXPIRED",
+    "has_token": false
+  },
+  "bogus_ticket": {
+    "http": 401,
+    "error": "DEMO_PAIRING_INVALID_OR_EXPIRED",
+    "has_token": false
+  },
+  "pairing_without_key": {
+    "http": 403,
+    "error": "DEMO_PRESENTER_REQUIRED",
+    "has_token": false
+  }
+}

@@ -1,0 +1,67 @@
+SHOT 390-g7-cold t=5.2
+HIT continue true t=6.1
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.7
+HIT open-settings true t=12.0
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.8
+HIT send true t=15.3
+HTTP POST 201 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/run
+HIT skip-questions true t=25.4
+SKIP t=26.1
+SKIPPED true
+DRAFT t=50.2
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=50.3
+HIT tab-chat true t=50.6
+HTTP POST 200 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/resume
+COMPOSER_ENABLED true t=144.7
+HIT send-fix true t=145.1
+FIX_SENT t=145.8
+HTTP POST 200 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/resume
+FIX_IDLE true t=195.9
+SHOT 390-g7-after-fix t=196.0
+HIT journey-tab true t=196.3
+DRAFT_SLOTS 7
+NO_OPTIONAL_SLOT
+HIT save-1-0 true t=201.2
+HTTP POST 201 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/prepare-plan
+HIT price-1-1 true t=208.2
+HTTP POST 200 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/plans/52137f60-a76f-4fd3-a728-84bdcc74b585/accept-unknown-price
+HIT refresh-after-price-1 true t=213.3
+HIT freeze-1-2 true t=218.4
+HTTP POST 200 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/plans/52137f60-a76f-4fd3-a728-84bdcc74b585/freeze-routes
+HIT refresh-after-freeze-1 true t=225.4
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=230.2
+SHOT 390-g7-plans-1 t=230.3
+HIT select-1 true t=230.6
+HTTP POST 422 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/departure/commit
+SELECT_REFUSAL ["这版方案排不下：午餐：天坛福宴（天坛西门）在你排的这段时间不开放；晚餐：山西驻京办餐厅（景山西街）在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+SHOT 390-g7-selected-1 t=236.4
+HIT refresh-after-select-1 true t=236.7
+HIT replan-1 true t=241.7
+HTTP POST 200 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/plans/52137f60-a76f-4fd3-a728-84bdcc74b585/freeze-routes
+HIT refresh-start-2 true t=245.3
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=249.6
+SHOT 390-g7-plans-2 t=249.6
+HIT select-2 true t=249.9
+HTTP POST 422 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/departure/commit
+SELECT_REFUSAL ["这版方案排不下：午餐：天坛福宴（天坛西门）在你排的这段时间不开放；晚餐：山西驻京办餐厅（景山西街）在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+SHOT 390-g7-selected-2 t=255.7
+HIT refresh-after-select-2 true t=256.0
+HIT replan-2 true t=261.1
+HTTP POST 200 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/plans/52137f60-a76f-4fd3-a728-84bdcc74b585/freeze-routes
+HIT refresh-start-3 true t=264.7
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=268.9
+SHOT 390-g7-plans-3 t=269.0
+HIT select-3 true t=269.3
+HTTP POST 422 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/departure/commit
+SELECT_REFUSAL ["这版方案排不下：午餐：天坛福宴（天坛西门）在你排的这段时间不开放；晚餐：山西驻京办餐厅（景山西街）在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+SHOT 390-g7-selected-3 t=275.1
+HIT refresh-after-select-3 true t=275.4
+HIT replan-3 true t=280.5
+HTTP POST 200 /api/v1/journeys/42930bbf-e522-4d44-b7fd-26a4e04c9d88/agent/goal-tasks/87139013-dd79-4fbb-8958-cbbb6ab95243/plans/52137f60-a76f-4fd3-a728-84bdcc74b585/freeze-routes
+STATE t=283.7 {"inUse":false,"next":null}

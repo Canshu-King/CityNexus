@@ -50,6 +50,19 @@
 .rev-v3-departure ul { list-style: none; padding: 0; }
 .rev-v3-departure li { display: grid; gap: 5px; padding: 10px 0; border-bottom: 1px solid #dcebe1; }
 .rev-v3-departure li span { color: #6d8274; font-size: 12px; }
+.rev-v3-route-state { display: grid; gap: 8px; margin: 10px 0; padding: 10px 12px; border-left: 3px solid #0e6a55; background: #f2f8f5; font-size: 13px; line-height: 1.6; color: #214c3b; }
+.rev-v3-band-note { margin: 8px 0; font-size: 12px; line-height: 1.6; color: #6d8274; }
+.rev-v3-opening { list-style: none; margin: 10px 0; padding: 10px 12px; border-left: 3px solid #2f6f8f; background: #f1f7fa; display: grid; gap: 8px; }
+.rev-v3-opening li { display: grid; gap: 3px; font-size: 13px; line-height: 1.6; color: #1d3d4d; }
+.rev-v3-opening li span { color: #1d3d4d; }
+.rev-v3-travel-gaps { margin: 10px 0; padding: 10px 12px; border-left: 3px solid #8a5a17; background: #fbf6ec; display: grid; gap: 8px; }
+.rev-v3-travel-gaps h4 { margin: 0; font-size: 13px; color: #6a4412; }
+.rev-v3-travel-gaps li { font-size: 13px; line-height: 1.6; color: #4a3410; border-bottom: 1px solid #eadfc9; padding: 6px 0; }
+.rev-v3-travel-gaps button { min-height: 44px; padding: 8px 12px; border: 1px solid #8a5a17; border-radius: 11px; background: #fff; color: #6a4412; font: inherit; font-weight: 740; font-size: 13px; cursor: pointer; }
+.rev-v3-travel-gaps button:disabled { opacity: .48; cursor: default; }
+.rev-v3-travel-gaps p { margin: 0; font-size: 12px; line-height: 1.6; color: #6a4412; }
+.rev-v3-opening li small { color: #52707d; font-size: 12px; line-height: 1.6; }
+.rev-v3-price-state { display: grid; gap: 8px; margin: 10px 0; padding: 10px 12px; border-left: 3px solid #a56a12; background: #fdf6ea; font-size: 13px; line-height: 1.6; color: #5b3d0b; }
 .rev-v3-active-dock { display: flex; align-items: stretch; gap: 8px; }
 .rev-v3-active-dock > label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .rev-v3-active-dock > textarea { flex: 1; min-width: 0; box-sizing: border-box; min-height: 48px; max-height: 132px; resize: vertical; padding: 11px; border: 1px solid #d3e2d9; border-radius: 12px; color: #214c3b; background: white; font: inherit; font-size: 14px; }

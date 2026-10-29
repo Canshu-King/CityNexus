@@ -32,10 +32,14 @@ from app.agent.goal_artifacts import (
 )
 from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, domain_result, compare_stored_routes, route_tool_definition
 from app.agent.goal_amap import route_public_places, route_definition
-from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
+from app.agent.goal_draft_patch import (
+    draft_patch_definition,
+    reconcile_user_draft,
+    replace_draft_slots,
+)
 from app.agent.guardian_stream import guardian_stream, guardian_stream_definition
 from app.agent.goal_variants import save_draft_variants, variant_definition
-from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question
+from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question, plain_traveller_text, claims_written_change, asks_for_schedule_change, asks_for_plan_versions, asks_to_end_questions, latest_traveller_request
 from app.agent.goal_media import read_source_media, media_tool_definition, source_lead
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
@@ -179,6 +183,8 @@ def _emit_event(
     reason_code: str | None = None,
     consent: dict[str, bool] | None = None,
     budget: dict[str, int] | None = None,
+    reuse_source_task_id: str | None = None,
+    reused_place_ids: list[str] | None = None,
 ) -> dict[str, Any]:
     task = intent[_TASK_KEY]
     sequence = int(task.get("event_sequence") or 0) + 1
@@ -195,6 +201,9 @@ def _emit_event(
         "consent": consent,
         "budget": budget,
     }
+    if reuse_source_task_id is not None:
+        event["reuse_source_task_id"] = reuse_source_task_id
+        event["reused_place_ids"] = list(reused_place_ids or [])
     record_audit(
         session,
         action=_EVENT_ACTION,
@@ -421,17 +430,79 @@ def read_goal_task(
     return result
 
 
-def update_goal_draft(session, journey, member, mission_id, *, days, expected_revision):
+DRAFT_RESEARCH_RUNNING = "DRAFT_RESEARCH_RUNNING"
+DRAFT_CHANGED_RELOAD = "DRAFT_CHANGED_RELOAD"
+
+
+def refuse_draft_edit(reason: str) -> HTTPException:
+    """A 409 on the draft says only CONFLICT, which cannot tell a traveller what to do next.
+
+    Two different doors answer with it -- the turn is still running, and someone else's save moved
+    the version -- so the reason is carried as `reason_code` in the same envelope the client already
+    reads (ORD-0101).  Both doors raise through here, so the words and the name come from one place.
+    """
+    refused = HTTPException(409, reason)
+    refused.reason_code = reason  # type: ignore[attr-defined]
+    return refused
+
+
+def update_goal_draft(
+    session,
+    journey,
+    member,
+    mission_id,
+    *,
+    days,
+    expected_revision,
+    reuse_source_task_id=None,
+):
     journey, member, mission, intent, task = _require_task(session, journey, member, mission_id, require_draft=True)
     if task.get("status") == "WORKING":
-        raise HTTPException(409, "DRAFT_RESEARCH_RUNNING")
+        raise refuse_draft_edit(DRAFT_RESEARCH_RUNNING)
     current = task.get("draft_artifact") or empty_draft(journey)
     if current["revision"] != expected_revision:
-        raise HTTPException(409, "DRAFT_CHANGED_RELOAD")
-    task["draft_artifact"] = normalize_draft(journey, task, days, author="USER")
+        raise refuse_draft_edit(DRAFT_CHANGED_RELOAD)
+
+    draft_task = task
+    reused_place_ids: list[str] = []
+    if reuse_source_task_id is not None:
+        from app.agent.goal_place_reuse import validate_source_task_place_reuse
+
+        reused_place_ids = validate_source_task_place_reuse(
+            session,
+            journey,
+            member,
+            mission.id,
+            reuse_source_task_id,
+            days,
+        )
+        candidate_place_ids = list(task.get("candidate_place_ids") or [])
+        for place_id in reused_place_ids:
+            if place_id not in candidate_place_ids:
+                candidate_place_ids.append(place_id)
+        if len(candidate_place_ids) > 80:
+            raise HTTPException(422, "GOAL_TASK_PLACE_LIMIT_EXCEEDED")
+        # Keep the not-yet-committed scope expansion off the persisted task until
+        # the ordinary full-draft normalizer has accepted every supplied day/slot.
+        draft_task = {**task, "candidate_place_ids": candidate_place_ids}
+
+    updated_draft = reconcile_user_draft(journey, draft_task, days)
+    if reused_place_ids:
+        task["candidate_place_ids"] = list(draft_task["candidate_place_ids"])
+    task["draft_artifact"] = updated_draft
     task["updated_at"] = _now()
     mission.intent_json = _json_dump(intent)
-    _emit_event(session, journey, member, mission, intent, event_type="TASK_DRAFT_UPDATED", status=task["status"])
+    _emit_event(
+        session,
+        journey,
+        member,
+        mission,
+        intent,
+        event_type="TASK_DRAFT_UPDATED",
+        status=task["status"],
+        reuse_source_task_id=(str(reuse_source_task_id) if reused_place_ids else None),
+        reused_place_ids=reused_place_ids if reused_place_ids else None,
+    )
     session.commit()
     return read_goal_task(session, journey, member, mission.id)
 
@@ -678,6 +749,8 @@ def _initial_messages(
         "the server resolves the destination administrative code. Nearby searches around an Amap ID use Amap. "
         "Use route_public_places for actual walking distance/time between task-owned public research IDs. "
         "For an existing draft, use replace_draft_slots with exactly the requested date/time block. "
+        "If the traveller specifies an earliest start time, send start_not_before as HH:MM on that exact block; do not leave the time rule only in notes. "
+        "If a structured protected activity conflicts with that time, name its time and ask what the traveller wants changed; do not assume consent. "
         "Do not update a different period, meal, or research todo unless asked. All other blocks are retained by the server. "
         "Existing research routes can answer traffic questions without another external request. A verbal suggestion is not a saved edit. "
         "read_guardian_stream reads existing Journey observations, impacts and recovery epochs only; "
@@ -737,9 +810,16 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if name in DOMAIN_TOOLS:
         return domain_args(name, raw, task)
     if name == "replace_draft_slots":
-        if set(raw) != {"date", "time_of_day", "slots"}:
+        required = {"date", "time_of_day", "slots"}
+        allowed = required | {"start_not_before"}
+        if not required.issubset(raw) or set(raw) - allowed:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
-        return {"date": raw["date"], "time_of_day": raw["time_of_day"], "slots": raw["slots"]}
+        arguments = {"date": raw["date"], "time_of_day": raw["time_of_day"], "slots": raw["slots"]}
+        if "start_not_before" in raw:
+            if not isinstance(raw["start_not_before"], str):
+                raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+            arguments["start_not_before"] = raw["start_not_before"]
+        return arguments
     if name == "route_public_places":
         if set(raw) - {"from_place_id", "to_place_id", "public_action"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -923,7 +1003,12 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
     if name == "save_draft_variants":
         return {"variant_count": len(args.get("variants") or [])}
     if name == "replace_draft_slots":
-        return {"date": args.get("date"), "time_of_day": args.get("time_of_day"), "slot_count": len(args.get("slots") or [])}
+        return {
+            "date": args.get("date"),
+            "time_of_day": args.get("time_of_day"),
+            "start_not_before": args.get("start_not_before"),
+            "slot_count": len(args.get("slots") or []),
+        }
     if name == "route_public_places":
         return {key: args.get(key) for key in ("from_place_id", "to_place_id", "public_action")}
 
@@ -983,6 +1068,15 @@ def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
                 "http_status": result.get("http_status"),
                 "public_action": result.get("public_action"), "provider": result.get("provider"),
                 "provider_provenance": result.get("provider_provenance") }
+    if name == "replace_draft_slots" and result.get("status") == "NEEDS_USER_CHOICE":
+        return {
+            "status": result.get("status"),
+            "reason_code": result.get("reason_code"),
+            "date": result.get("date"),
+            "time_of_day": result.get("time_of_day"),
+            "start_not_before": result.get("start_not_before"),
+            "conflicts": result.get("conflicts") or [],
+        }
     if name in {"save_draft_itinerary", "replace_draft_slots"}:
         draft = result.get("draft_artifact")
         if not isinstance(draft, dict):
@@ -1208,7 +1302,36 @@ def resume_goal_task(
     if interaction_mode is not None:
         if interaction_mode not in {"DISCUSS", "RESEARCH"}:
             raise HTTPException(422, "INTERACTION_MODE_INVALID")
-        task["interaction_mode"] = interaction_mode
+        # The chat dock labels every typed follow-up as DISCUSS, and discussion is not allowed to change
+        # or save an itinerary. A traveller who types 「下午改成咖啡馆坐着，其他都别动」 into that box is
+        # giving an instruction about a schedule that already exists, so the round runs as an execution
+        # round. Left in DISCUSS the Agent can only talk -- which is exactly when it starts saying the
+        # change has been made.
+        # 「不用再问了，直接开始研究」 is the traveller ending the questions themselves. On a blank trip
+        # the draft has no slots yet, so the schedule-change arm below cannot fire; without this arm the
+        # request stays in DISCUSS, where the only tools are ask_traveler and inspect_journey, and the
+        # traveller gets a seventh question instead of a plan.
+        if (interaction_mode == "DISCUSS" and normalized_message and asks_to_end_questions(normalized_message)):
+            interaction_mode = "RESEARCH"
+        elif (interaction_mode == "DISCUSS" and normalized_message
+                and (asks_for_schedule_change(normalized_message) or asks_for_plan_versions(normalized_message))
+                and any(day.get("slots") for day in ((task.get("draft_artifact") or {}).get("days") or []))):
+            interaction_mode = "RESEARCH"
+        # The chat dock sends every typed follow-up as DISCUSS, including the one that supplies a missing
+        # place right after the traveller already ended the questions. Writing that value back turned a
+        # research round into a discussion round, whose only tools are ask_traveler and inspect_journey:
+        # measured on the 430 walk, the model's second discover_places call answered TOOL_NOT_ALLOWED and
+        # the trip stayed at a blank draft. A blank trip (no slots yet) has nothing to discuss, so typed
+        # text there stays a research round; once the draft has slots, a plain question may go back to
+        # discussion (tests/test_qoder_draft_revision_receipt_r1.py keeps that arm pinned).
+        draft_has_slots = any(day.get("slots") for day in ((task.get("draft_artifact") or {}).get("days") or []))
+        stick_to_research = (
+            interaction_mode == "DISCUSS"
+            and task.get("interaction_mode") == "RESEARCH"
+            and not draft_has_slots
+        )
+        if not stick_to_research:
+            task["interaction_mode"] = interaction_mode
     task["pending_question"] = None
     task["budget"] = budget
     task["usage"] = {
@@ -1305,10 +1428,13 @@ def resume_goal_task(
     editing_existing_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
     write_tool = "replace_draft_slots" if editing_existing_draft else "save_draft_itinerary"
     tool_allowlist = frozenset(tool_allowlist - ({"save_draft_itinerary"} if editing_existing_draft else {"replace_draft_slots"}))
+    stop_asking = bool(normalized_message) and asks_to_end_questions(normalized_message)
     if task.get("interaction_mode") == "DISCUSS":
         tool_allowlist = frozenset({"ask_traveler", "inspect_journey"})
     else:
         tool_allowlist = tool_allowlist | {"ask_traveler"}
+    if stop_asking:
+        tool_allowlist = frozenset(tool_allowlist - {"ask_traveler"})
     try:
         agent = _new_goal_agent(tool_allowlist)
     except AgentRuntimeUnavailable:
@@ -1379,12 +1505,50 @@ def resume_goal_task(
             "Compare preferences and experiences; do not promise free admission, zero walking, hours or ticket prices unless verified in the source fields. "
             "Do not search, change or save an itinerary in discussion mode. Explain briefly what you would research next; "
             "the traveler starts research using the separate action. Do not expose internal reasoning or tool mechanics."})
+    if stop_asking:
+        messages.append({"role": "system", "content":
+            "The traveller has ended the preference questions and asked you to start research. "
+            "ask_traveler is unavailable this turn: do not ask another question. Use what is already "
+            "decided, research the real places and routes, then save the itinerary with the write tool. "
+            "Leave every unverified price, opening hour and walking distance unknown."})
     if task["budget"].get("unlimited"):
         messages.append({"role": "system", "content": "There is no cumulative model/tool quota for this task. Finish the requested result naturally; ask_traveler when a meaningful choice is needed. Respect pause/cancel and do not repeat failed identical queries."})
     gateway = AgentToolGateway(session, bound_run_id=run.id, allow_live_discovery=False)
+    # The draft revision at the moment this round starts. An assistant sentence can claim anything;
+    # the pair stored with it below is what the screen shows, so a reply that did not move the
+    # schedule cannot be read as one that did.
+    draft_revision_before_round = (task.get("draft_artifact") or {}).get("revision")
+
+    def unfinished_request_note(current_task: dict, claim_text: str = "") -> str | None:
+        """What the traveller asked for that this round has not actually done, or None.
+
+        Two shapes were measured on real browsers. A sentence asking to move a half-day, answered with
+        words while the saved schedule stayed put; and a sentence asking for versions to compare,
+        answered with paragraphs while the task held no versions at all. The second one has no cards to
+        pick, so the comparison screen the traveller was promised simply is not there.
+        """
+        if current_task.get("interaction_mode") == "DISCUSS":
+            return None
+        artifact = current_task.get("draft_artifact") or {}
+        if not any(day.get("slots") for day in artifact.get("days") or []):
+            return None
+        request = normalized_message or latest_traveller_request(current_task)
+        if asks_for_plan_versions(request) and not (current_task.get("draft_variants") or []):
+            return ("The traveller asked for versions to choose between, and this task has none saved. "
+                    "Call save_draft_variants now using only the places, areas and routes owned by this task, "
+                    "leave every unverified price and hour unknown, then let the traveller pick one.")
+        revision_still = artifact.get("revision") == draft_revision_before_round
+        if revision_still and (asks_for_schedule_change(request) or claims_written_change(claim_text)):
+            return ("The traveller's message asked for a change to the saved schedule, and this round has not "
+                    "moved it. Do not report the change as already made. Either call replace_draft_slots now "
+                    "with exactly the requested day or half-day and keep every other slot, or ask one concrete "
+                    "question about that change and say plainly that nothing has been altered yet.")
+        return None
+
     research_failed = False
     assistant_summary: str | None = None
     draft_delivery_reminded = False
+    edit_write_reminded = False
     try:
         while task["budget"].get("unlimited") or int(task["usage"]["model_turns"]) < int(task["budget"]["max_model_turns"]):
             journey, member = _require_owner_scope(session, journey, member, require_draft=True)
@@ -1427,7 +1591,9 @@ def resume_goal_task(
                         ("Use replace_draft_slots only for requested changes to a date/time block; use save_draft_variants for requested comparisons. " if editing_existing_draft else "Use save_draft_itinerary if no useful partial draft has been saved yet. ") +
                         "If the requested result is already saved, summarize it without rewriting unrelated arrangements. " +
                         "With no verified places, save specific research todos or generic activity suggestions without Place IDs. "
-                        "Leave all missing facts unknown. Do not request another external search."})
+                        "Leave all missing facts unknown. Do not request another external search. "
+                        "Write the closing message for a traveller: plain sentences, no markdown symbols, and never paste an "
+                        "internal code name such as a status or reason code — name the missing fact instead."})
                 message = agent._complete(messages)
             except Exception as exc:
                 # Do not persist provider messages, URLs, tokens, or exception text.
@@ -1496,13 +1662,29 @@ def resume_goal_task(
                         "Use save_draft_itinerary now for a useful partial draft from those task-owned IDs. "
                         "Keep missing prices/hours unknown. Do not ask the traveler to click again."})
                     continue
-                assistant_summary = str(message.get("content") or "").strip()[:2000] or None
+                # Two shapes were measured on real browsers: a reply that only *describes* a change to a
+                # saved schedule, and a reply that answers a request for versions to compare with prose.
+                # Both leave the traveller with words and nothing to act on, so one already-approved turn
+                # is spent putting the request back in front of the Agent before the round may end.
+                note = unfinished_request_note(task)
+                if note and remaining and tool_remaining and not edit_write_reminded:
+                    edit_write_reminded = True
+                    messages.append({"role": "system", "content": note})
+                    continue
+                assistant_summary = plain_traveller_text(message.get("content"))[:2000] or None
                 mission = session.get(JourneyMission, mission.id)
                 intent = _task_state(mission)
                 intent[_TASK_KEY]["assistant_summary"] = assistant_summary
                 if assistant_summary:
                     transcript = list(intent[_TASK_KEY].get("conversation") or [])
-                    transcript.append({"role": "assistant", "text": assistant_summary, "message_id": str(uuid4()), "at": _now()})
+                    transcript.append({
+                        "role": "assistant",
+                        "text": assistant_summary,
+                        "message_id": str(uuid4()),
+                        "at": _now(),
+                        "draft_revision_before": draft_revision_before_round,
+                        "draft_revision_after": (intent[_TASK_KEY].get("draft_artifact") or {}).get("revision"),
+                    })
                     intent[_TASK_KEY]["conversation"] = transcript
                 _finish_run(
                     session,
@@ -1546,6 +1728,16 @@ def resume_goal_task(
                     args_raw = function.get("arguments") or "{}"
                     args_value = json.loads(args_raw) if isinstance(args_raw, str) else args_raw
                     args = _safe_args(tool_name, args_value, task)
+                    # The most common false promise on the screen is a question that begins by reporting
+                    # a change ("收到，按你说的改…其余原封不动") while this very round moved nothing.
+                    # One already-approved turn is spent asking for the write or for a question that does
+                    # not claim work; the request is not started as a tool call, so the ledger stays clean.
+                    ask_traveler_note = (unfinished_request_note(task, str(args.get("question") or ""))
+                                         if tool_name == "ask_traveler" and not edit_write_reminded else None)
+                    if ask_traveler_note:
+                        edit_write_reminded = True
+                        messages.append({"role": "system", "content": ask_traveler_note})
+                        continue
                     if tool_name not in {"ask_traveler", "inspect_journey", "save_draft_variants", "read_guardian_stream", "save_draft_itinerary", "replace_draft_slots"} and not task["consent"]["online_research"]:
                         raise HTTPException(403, "ONLINE_CONSENT_REQUIRED")
                     if not task["budget"].get("unlimited") and int(task["usage"]["tool_calls"]) >= int(task["budget"]["max_tool_calls"]):
@@ -1582,7 +1774,7 @@ def resume_goal_task(
                     session.commit()
                     try:
                         if tool_name == "ask_traveler":
-                            raw_result = ask_question(task, args)
+                            raw_result = ask_question(task, args, draft_revision_before_round)
                             pause_for_decision = "TRAVELER_INPUT_REQUIRED"
                             mission.intent_json = _json_dump(intent)
                             session.commit()
@@ -1607,10 +1799,14 @@ def resume_goal_task(
                             mission.intent_json = _json_dump(intent)
                             session.commit()
                         elif tool_name == "replace_draft_slots":
-                            task["draft_artifact"] = replace_draft_slots(journey, task, **args)
-                            raw_result = {"tool": tool_name, "status": "DRAFT_SAVED", "draft_artifact": task["draft_artifact"]}
-                            mission.intent_json = _json_dump(intent)
-                            session.commit()
+                            patch_result = replace_draft_slots(journey, task, **args)
+                            if patch_result.get("status") == "NEEDS_USER_CHOICE":
+                                raw_result = {"tool": tool_name, **patch_result}
+                            else:
+                                task["draft_artifact"] = patch_result
+                                raw_result = {"tool": tool_name, "status": "DRAFT_SAVED", "draft_artifact": task["draft_artifact"]}
+                                mission.intent_json = _json_dump(intent)
+                                session.commit()
                         elif tool_name == "save_draft_itinerary":
                             task["draft_artifact"] = normalize_draft(journey, task, args["days"], author="MODEL_SUGGESTION")
                             raw_result = {"tool": tool_name, "status": "DRAFT_SAVED", "draft_artifact": task["draft_artifact"]}

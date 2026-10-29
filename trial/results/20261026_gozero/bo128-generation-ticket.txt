@@ -1,0 +1,7 @@
+TIP_WORKTREE dea0328e0bf072f737a70dc91cf8fe869b7160dc
+DIRTY_LINES 0
+WORKSPACE_ACTIONS_BLOB 74019c5573ab4abe431ec6b6b281f9cb048010a0
+NOTE this round runs the tree exactly as it stands: the disclosure blob 82a158d91bf0 was restored away
+     before it, so the source_rows printed by this arm measure the dea0328e0b generation, which never
+     had the disclosure line at all.  What this round is for is the geometry -- where the step
+     timeline summary sits, and whether it can still be pressed, once the page above it is long.

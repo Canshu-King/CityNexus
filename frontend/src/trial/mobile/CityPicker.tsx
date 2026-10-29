@@ -18,6 +18,8 @@ type CityPickerProps = {
   mapLink: string;
   aiGoal: string;
   showAiPrompt?: boolean;
+  leadWithAgent: boolean;
+  secondary?: boolean;
   agentConfigured: boolean;
   agentChecking?: boolean;
   aiAdvice: MobileAiAdvice | null;
@@ -52,6 +54,8 @@ export function CityPicker({
   mapLink,
   aiGoal,
   showAiPrompt = true,
+  leadWithAgent,
+  secondary = false,
   agentConfigured,
   agentChecking = false,
   aiAdvice,
@@ -85,7 +89,21 @@ export function CityPicker({
     return () => window.cancelAnimationFrame(frame);
   }, [mapFallbackOpen]);
 
-  return (
+  const agentPrompt = showAiPrompt ? <MobileAiPrompt
+    value={aiGoal}
+    busy={busy}
+    requestPending={aiRequestPending}
+    configured={agentConfigured}
+    checking={agentChecking}
+    advice={aiAdvice}
+    onChange={onAiGoalChange}
+    onSubmit={() => {
+      setPendingAction("ai-request");
+      onAskAi();
+    }}
+  /> : null;
+
+  const pane = (
     <div className="rev-quick-pane" data-testid="rev-quick-area">
       <h3 className="rev-quick-area-title">先选一个地区</h3>
       <p className="rev-quick-area-intro">使用所选区域搜索附近地点。</p>
@@ -111,17 +129,17 @@ export function CityPicker({
           {cityLookupPending ? "查询中…" : "查找位置 →"}
         </button>
       </div>
-      <p className="rev-quick-disclosure">
-        {cityProviderKey === "nominatim"
-          ? "本次地名搜索服务：Nominatim。"
-          : cityProviderKey === "photon"
-            ? "本次地名搜索服务：Photon。"
-            : cityProviderKey === null
-              ? "本次查询未调用地名服务。"
-              : sampleProviderMode
-                ? "点击后使用演示地点数据。"
-                : "点击后将地名发送至服务器当前选择的公开地名服务。"}
-      </p>
+      {cityProviderKey !== undefined && (
+        <p className="rev-quick-disclosure">
+          {cityProviderKey === "nominatim"
+            ? "刚才的地名来自 Nominatim。"
+            : cityProviderKey === "photon"
+              ? "刚才的地名来自 Photon。"
+              : cityProviderKey === null
+                ? "这次没有调用地名服务。"
+                : "刚才用的是演示地点数据。"}
+        </p>
+      )}
       {photonFallbackAvailable && !sampleProviderMode && (
         <div className="rev-quick-photon-fallback" data-testid="rev-quick-photon-fallback">
           <p className="rev-quick-disclosure">
@@ -229,19 +247,25 @@ export function CityPicker({
         />
         <button type="button" onClick={onApplyMapLink} data-testid="rev-quick-apply-map-link">使用这个公开地图位置</button>
       </details>
-      {showAiPrompt && <MobileAiPrompt
-        value={aiGoal}
-        busy={busy}
-        requestPending={aiRequestPending}
-        configured={agentConfigured}
-        checking={agentChecking}
-        advice={aiAdvice}
-        onChange={onAiGoalChange}
-        onSubmit={() => {
-          setPendingAction("ai-request");
-          onAskAi();
-        }}
-      />}
     </div>
+  );
+
+  // Folding the manual area search away must never fold the Agent prompt away with it: the prompt is
+  // the main road, so it always stays outside the <details>.
+  const promptFirst = leadWithAgent ? agentPrompt : null;
+  const promptLast = leadWithAgent ? null : agentPrompt;
+  if (!secondary) return <>{promptFirst}{pane}{promptLast}</>;
+  return (
+    <>
+      {promptFirst}
+      {/* The screen's own sentence says 这里可以手动查找地点, so the query key must not wait behind a
+          closed layer -- measured on the clean tip: after the plan screen's 补上没排地点的那段时间 hand,
+          rev-quick-find-city reported isVisible=false even when scrolled to centre. */}
+      <details className="rev-quick-secondary" data-testid="rev-quick-area-secondary" open>
+        <summary>我想自己先挑地点（可选）</summary>
+        {pane}
+      </details>
+      {promptLast}
+    </>
   );
 }

@@ -1,0 +1,1 @@
+STATE {"session":{"status":200,"traveler":"b0ecd141-31c4-44c7-b52e-ea75b0320531","journey_id":"2d9cda98-f506-478d-94ee-1def684ad5f9"},"journey":{"status":200,"journey_status":"DRAFT","active_plan":null},"twin":{"status":200,"active_plan":null}}

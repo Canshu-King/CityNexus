@@ -1,0 +1,18 @@
+snapshot_id_column=ad4a4346-080f-4df8-b0a1-5270a1e103e2
+evidence_top_keys=['captured_at', 'degraded', 'facts', 'operation_key', 'provider_capabilities', 'snapshot_id', 'source_provider']
+fact_keys=['captured_at', 'cost_provenance', 'degraded', 'destination_key', 'distance_m', 'fact_quality', 'fallback_reason', 'geometry_provider', 'minutes', 'mode', 'origin_key', 'provider', 'route_geometry', 'route_provenance', 'time_basis', 'walking_distance_m', 'walking_min']
+  origin=real-place-00d9e27cd4cc6c7b28b6509e dest=real-place-62c2e60619da82efebfdea8c minutes=46 mode=None provenance=LIVE_PROVIDER_CAPTURE quality=LIVE_PROVIDER_CAPTURE
+fact_keys=['captured_at', 'cost_provenance', 'degraded', 'destination_key', 'distance_m', 'fact_quality', 'fallback_reason', 'geometry_provider', 'minutes', 'mode', 'origin_key', 'provider', 'route_geometry', 'route_provenance', 'time_basis', 'walking_distance_m', 'walking_min']
+  origin=real-place-519a9aa24230d0710177c399 dest=real-place-f0886f6808934f9535a0f01f minutes=9 mode=None provenance=LIVE_PROVIDER_CAPTURE quality=LIVE_PROVIDER_CAPTURE
+fact_keys=['captured_at', 'cost_provenance', 'degraded', 'destination_key', 'distance_m', 'fact_quality', 'fallback_reason', 'geometry_provider', 'minutes', 'mode', 'origin_key', 'provider', 'route_geometry', 'route_provenance', 'time_basis', 'walking_distance_m', 'walking_min']
+  origin=real-place-62c2e60619da82efebfdea8c dest=real-place-71156f2f76c005e3d88802c2 minutes=18 mode=None provenance=LIVE_PROVIDER_CAPTURE quality=LIVE_PROVIDER_CAPTURE
+
+--- activities in plan order ---
+seq=1 place=real-place-00d9e27cd4cc6c7b28b6509e semantic=None candidate=amap:B000A83C1S start=2026-12-03T09:00:00+08:00 title=天安门广场
+seq=2 place=real-place-62c2e60619da82efebfdea8c semantic=None candidate=amap:B000A8UIN8 start=2026-12-03T11:00:00+08:00 title=故宫博物院
+seq=3 place=real-place-71156f2f76c005e3d88802c2 semantic=None candidate=amap:B0FFHELWET start=2026-12-03T14:00:00+08:00 title=午餐·四季民福烤鸭店(王府井东安门店)
+seq=4 place=None semantic=None candidate=None start=2026-12-03T16:00:00+08:00 title=王府井步行街逛街小吃
+seq=5 place=None semantic=None candidate=None start=2026-12-03T19:00:00+08:00 title=晚餐及自由活动
+seq=6 place=real-place-519a9aa24230d0710177c399 semantic=None candidate=amap:B000A7O1CU start=2026-12-04T09:00:00+08:00 title=颐和园
+seq=7 place=real-place-f0886f6808934f9535a0f01f semantic=None candidate=amap:B000A9PJ20 start=2026-12-04T14:00:00+08:00 title=颐和园·佛香阁/画中游等园中园
+seq=8 place=None semantic=None candidate=None start=2026-12-04T19:00:00+08:00 title=晚餐及返程

@@ -1,0 +1,64 @@
+ATTACHED page_index=0 photos=4 bearer=present
+WALK41_START 2026-10-22T16:21:21.974Z one tap on the tile the client never looked up
+STRIP_BEFORE [{"name":"故宫博物院 来源实景 · 封面裁切 user:kallgan · CC BY-SA 3.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/F","placeholder":false,"is_button":false,"aria":""},{"name":"南锣鼓巷 来源实景 · 封面裁切 Francisco Anzola · CC BY 2.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/N","placeholder":false,"is_button":false,"aria":""},{"name":"什刹海 来源实景 · 封面裁切 FANG Chen · CC BY-SA 2.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/B","placeholder":false,"is_button":false,"aria":""},{"name":"先看看这个地点 天坛公园 查看对应安排","has_img":false,"src":"","placeholder":true,"is_button":false,"aria":""}]
+SHOT human-214-tile-before-tap.png bytes=759021
+TAPPED 天坛公园 tile
+POLL_3s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_6s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_9s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_12s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_15s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_18s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_21s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_24s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_27s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_30s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_33s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_36s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_39s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_42s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_45s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_48s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_51s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_54s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_57s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_60s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_63s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_66s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_69s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+POLL_72s tianTan={"has_img":false,"src":"","name":"先看看这个地点 天坛公园 查看对应安排"}
+STRIP_AFTER [{"name":"故宫博物院 来源实景 · 封面裁切 user:kallgan · CC BY-SA 3.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/F","placeholder":false,"is_button":false,"aria":""},{"name":"南锣鼓巷 来源实景 · 封面裁切 Francisco Anzola · CC BY 2.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/N","placeholder":false,"is_button":false,"aria":""},{"name":"什刹海 来源实景 · 封面裁切 FANG Chen · CC BY-SA 2.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/B","placeholder":false,"is_button":false,"aria":""},{"name":"先看看这个地点 天坛公园 查看对应安排","has_img":false,"src":"","placeholder":true,"is_button":false,"aria":""}]
+SHOT human-215-tile-after-tap-nothing.png bytes=522814
+TILE_TAP_FETCHED_PHOTO=false
+WALK41_END 2026-10-22T16:22:34.921Z
+WALK41B_START 2026-10-22T16:24:33.949Z press the card's real control, not the dead picture area
+BEFORE [{"name":"故宫博物院 来源实景 · 封面裁切 user:kallgan · CC BY-SA 3.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/","control":"查看对应安排"},{"name":"南锣鼓巷 来源实景 · 封面裁切 Francisco Anzola · CC BY 2.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/","control":"查看对应安排"},{"name":"什刹海 来源实景 · 封面裁切 FANG Chen · CC BY-SA 2.0 查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/","control":"查看对应安排"},{"name":"先看看这个地点 天坛公园 查看对应安排","has_img":false,"src":"","control":"查看对应安排"}]
+PRESSED_CONTROL 查看对应安排
+POLL_3s tianTan={"has_img":false,"src":""}
+POLL_6s tianTan={"has_img":false,"src":""}
+POLL_9s tianTan={"has_img":false,"src":""}
+POLL_12s tianTan={"has_img":false,"src":""}
+POLL_15s tianTan={"has_img":false,"src":""}
+POLL_18s tianTan={"has_img":false,"src":""}
+POLL_21s tianTan={"has_img":false,"src":""}
+POLL_24s tianTan={"has_img":false,"src":""}
+POLL_27s tianTan={"has_img":false,"src":""}
+POLL_30s tianTan={"has_img":false,"src":""}
+POLL_33s tianTan={"has_img":false,"src":""}
+POLL_36s tianTan={"has_img":false,"src":""}
+POLL_39s tianTan={"has_img":false,"src":""}
+POLL_42s tianTan={"has_img":false,"src":""}
+POLL_45s tianTan={"has_img":false,"src":""}
+POLL_48s tianTan={"has_img":false,"src":""}
+POLL_51s tianTan={"has_img":false,"src":""}
+POLL_54s tianTan={"has_img":false,"src":""}
+POLL_57s tianTan={"has_img":false,"src":""}
+POLL_60s tianTan={"has_img":false,"src":""}
+POLL_63s tianTan={"has_img":false,"src":""}
+POLL_66s tianTan={"has_img":false,"src":""}
+POLL_69s tianTan={"has_img":false,"src":""}
+POLL_72s tianTan={"has_img":false,"src":""}
+AFTER [{"name":"故宫博物院来源实景 · 封面裁切user:kallgan · CC BY-SA 3.0查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/","control":"查看对应安排"},{"name":"南锣鼓巷来源实景 · 封面裁切Francisco Anzola · CC BY 2.0查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/","control":"查看对应安排"},{"name":"什刹海来源实景 · 封面裁切FANG Chen · CC BY-SA 2.0查看对应安排","has_img":true,"src":"https://thumb.wikimedia.org/wikipedia/commons/thumb/","control":"查看对应安排"},{"name":"先看看这个地点天坛公园正在查看","has_img":false,"src":"","control":"正在查看"}]
+SHOT human-216-tile-still-empty-after-control.png bytes=161739
+CONTROL_PRESS_FETCHED_PHOTO=false
+WALK41B_END 2026-10-22T16:25:46.682Z

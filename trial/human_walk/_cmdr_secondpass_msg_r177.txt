@@ -1,0 +1,10 @@
+Second pass on the red cause table, and the new gate step proven from the runner side.
+
+The census ruler had two of its own blind spots. It cut every assertion message at the first brace,
+which is exactly where a JSON error body begins, so fifteen refusals read as an empty assertion; and
+once the body was kept, the identifiers inside it split twelve copies of one refusal into twelve
+groups, hiding the size of the cause. With both fixed the unattributed tail falls from seventy-six to
+fifty-four and the credential family stays the largest block at ninety-seven of two hundred thirty-one.
+The remaining tail is one-off shapes that need a reader per group, which is not this shift's to take.
+The broad typecheck step is recorded as the runner stated it: one step, conclusion success, on the
+generation that added it, with the narrow five-file step untouched ahead of it.

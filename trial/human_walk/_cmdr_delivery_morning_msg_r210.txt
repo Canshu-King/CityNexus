@@ -1,0 +1,9 @@
+Bring the delivery document in line with what this shift actually measured.
+
+Its "what was not done" list said the backend suite had never been re-run for this document.  That is
+no longer true: the generation certificate, the per-line log, the emptied unexplained-red bucket and
+the nine named guard readings all exist as tracked artifacts, so a dated section now points at them
+and supersedes that one line, while every other line of the list -- city pool still not measurable
+without the key, the unknown-cost ruling, the un-pushed ledger mirror, the operator's own tablet
+verification -- is restated as still standing.  The old text is kept verbatim, and the appender
+refuses to run unless the document is LF-only and stays that way after the write.

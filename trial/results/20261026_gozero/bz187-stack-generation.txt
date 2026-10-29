@@ -1,0 +1,8 @@
+STACK GENERATION bz187
+AUTHORITATIVE_TIP 88b891d22c401f2b13b3825b4ed8bd042c1310e7
+CLASSROOM_WORKTREE 88b891d22c porcelain=0
+TIP_WORKTREE dea0328e0b
+VITE 14462 classroom vite (worktree E:/_cmdr_clean_1028) module_status=200 bytes=215557 serves_disclosure=True
+VITE 14464 tip vite (worktree E:/_cmdr_tip_113) module_status=200 bytes=209977 serves_disclosure=False
+API 60362 classroom api health_status=200 body={"status":"ok","database":"ok","ai":"enabled","ai_state":"CONFIGURED_UNVERIFIED","e2e_run_id":"","e2e_database_id":""}
+API 60364 tip api health_status=200 body={"status":"ok","database":"ok","ai":"enabled","ai_state":"CONFIGURED_UNVERIFIED","e2e_run_id":"","e2e_database_id":""}

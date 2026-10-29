@@ -1,0 +1,13 @@
+#319 residual measurements — isolated stack page 14522, DB citynexus_v3_cap2_1024.db, 2026-10-24
+read_1 channel=raw CDP ws, page 0, after the replan had been applied earlier today
+read_1a the cap sentence still exists in the DOM but renders 0x0, inside "高德转场路线（2）" whose own height is 0 => trial/results/20261022_v3_human_chrome/replan-disclosure-read-1.txt:2
+read_1b the departure card text says "已按路线把 1 处往后排，这是一份新的候选方案；生效的那一份没有变。" + "新的一版还没有核实转场，下面可以再按一次「核实并冻结今天的转场」。" => :1 of replan-select-freeze-read-1.txt
+read_1c in that state, of 135 clickable elements (button/[role=button]/a/input) zero matched /冻结|核实转场/ => replan-select-freeze-read-1.txt S0 freeze=[]
+read_1d "已换成公共交通核实" appears nowhere in body text => replan-band-read-1.txt:1-2
+read_2 after the dev server served the edited module, the same trip view exposes one control "重新核实转场" 361x44, centre hit true => replan-freeze-controls-scan-1.txt and /tmp/press_freeze P1
+read_3 pressing it returned HTTP 401 on .../plans/59b0c5e9-.../freeze-route; screen says "当前账号无法读取这份行程，请重新进入行程。" and "当前展示的是已保存版本。" => replan-refreeze-read-1.txt P3 (session expired on a stack started 03:08; not a product verdict)
+read_4 diff vocabulary is time shifts only: replanDiffSentence emits "<title>：<start>–<end> 改成 ... 往后 N 分钟" (frontend/src/trial/mobile/departureGaps.ts:490-493); the refusal for DAY_WOULD_RUN_PAST_22:00 tells the traveller to change how many places that day (:497). Changing a place or cutting an item is not in this action's vocabulary.
+fix the post-apply sentence no longer quotes an absent label and names the guaranteed missing step (select the new revision first): frontend/src/trial/mobile/departureGaps.ts:510
+fix_proof served_module=http://127.0.0.1:14522/src/trial/mobile/departureGaps.ts contains the new sentence; screen proof of the new sentence still pending because the message is state set at press time and the stack's token has since expired
+suite_after=50 passed 0 failed duration=8.5m rc=0 => fixture-rerun-3.log
+typecheck_after=rc=0 => typecheck-replan-copy-1.log

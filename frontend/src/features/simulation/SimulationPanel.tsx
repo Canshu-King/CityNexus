@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "../../i18n/LocaleContext";
+import { SimulationClockCard } from "./SimulationClockCard";
 import { cityNexusApi } from "../../api/citynexus";
 import { formatMinorMoney } from "../../lib/money";
 import { useAuthoritativeTwin } from "../../api/v12Authoritative";
@@ -530,7 +531,7 @@ export function SimulationPanel({
               }
             : null),
       run: async () => {
-        const report = await runStageAction("start-scenario");
+        const report = await runStageAction("start-scenario", journeyId);
         handOverStage(report.journeyId);
         const refused = Boolean(report.code);
         return {
@@ -780,6 +781,7 @@ export function SimulationPanel({
           {zh ? "收起舞台" : "Close the stage"}
         </button>
       )}
+      <SimulationClockCard journeyId={journeyId} zh={zh} />
       <p
         className="cn-sim-banner"
         id="sim-banner"

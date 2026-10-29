@@ -1,0 +1,15 @@
+NO_TICKET banner_count=0 visible=false in_viewport=false box=null root=1
+NO_TICKET_TEXT ""
+NO_TICKET_OLD_SPOT 0
+NO_TICKET_PRESS rev-mobile-tab-trips:1 rev-demo-session:1 banner_count=1 box={"x":0,"y":0,"width":430,"height":69}
+NO_TICKET_PRESS_TEXT "课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。"
+NO_TICKET_AFTER_RELOAD banner_count=0
+BAD_TICKET banner_count=1 visible=true in_viewport=true box={"x":0,"y":0,"width":430,"height":69} root=1
+BAD_TICKET_TEXT "这张课堂配对票已过期或已用过；请重新双击启动器，用窗口里新打印的地址打开。"
+BAD_TICKET_OLD_SPOT 0
+BAD_TICKET_AFTER_RELOAD banner_count=1
+SEALED_TRIP banner_count=1 visible=true in_viewport=true box={"x":0,"y":0,"width":430,"height":69} root=1
+SEALED_TRIP_TEXT "这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。"
+SEALED_TRIP_OLD_SPOT 0
+SEALED_TRIP_AFTER_RELOAD banner_count=0
+ERRORS []

@@ -1,0 +1,16 @@
+WALK55_START 2026-10-23T17:42:04.569Z http://127.0.0.1:14496/revolution
+STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我
+STEP_02 days=2
+STEP_02A_PREFILLED party=1 budget=800
+STEP_02 party=2 budget=600
+ASK GET /journeys/f9de088d-fad2-4bc5-8062-aaed06dddb65/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+STEP_03 sent_at 2026-10-23T17:42:19.842Z
+SETTLED ticks=6 elapsed_s=60
+STEP_04 choices=3 first=长城必去（慕田峪） 第2天去慕田峪长城+颐和园，行程饱满、经典但较累（默认）
+SETTLED ticks=2 elapsed_s=20
+START_RESEARCH_ERR locator.click: Timeout 8000ms exceeded. Call log: 
+WAIT_60s busy=false
+WAIT_120s busy=false
+WAIT_180s busy=false
+WAIT_240s busy=false
+WAIT_300s busy=false

@@ -1,0 +1,10 @@
+The whole backend red set gets a cause table: 231 failures, 97 of them one credential family.
+
+A --tb=line run of the whole suite was folded back onto its own continuation lines before grouping,
+because an unfolded parser reads a multi-line assertion as a bare AssertionError and had already
+reported a hundred and twenty reds as unexplained. Groups are keyed by file, line and reason, and
+the instrument refuses to print a table whose rows do not add up to pytest's own failed count.
+The largest block is the family this shift measured: reads against private journey doors that carry
+no traveler bearer. Counts also reconcile across generations: 255 failed became 231 with passed
+rising by the same twenty-four, which is exactly the fixture signature repair and nothing else,
+since app/ and contracts/ still carry no write from this shift.

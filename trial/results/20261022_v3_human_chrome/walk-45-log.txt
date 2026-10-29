@@ -1,0 +1,24 @@
+WALK45_START 2026-10-22T16:50:16.221Z press once, reload, is the answer still on screen
+OVERLAY absent
+AFTER_CLEAR {"missing":true}
+SHOT human-224-tile-cleared-invitation.png bytes=212436
+PRESS_ERR locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+POLL_3s {"missing":true}
+POLL_6s {"missing":true}
+POLL_9s {"missing":true}
+POLL_12s {"missing":true}
+POLL_15s {"missing":true}
+POLL_18s {"missing":true}
+POLL_21s {"missing":true}
+POLL_24s {"missing":true}
+POLL_27s {"missing":true}
+POLL_30s {"missing":true}
+POLL_33s {"missing":true}
+POLL_36s {"missing":true}
+AFTER_PRESS null
+SHOT human-225-tile-answer-after-press.png bytes=212436
+AFTER_RELOAD {"missing":true}
+SHOT human-226-tile-answer-after-reload.png bytes=212436
+ANSWER_SURVIVES_RELOAD=false
+WALK45_END 2026-10-22T16:51:15.529Z
+NO_LIVE_TAB with a bearer

@@ -405,7 +405,7 @@ export function MobileHermesRun({ journeyId, visible, globalComposer = false }: 
           <CircleDashed size={15} aria-hidden="true" />
           {restoreState === "checking"
             ? "正在读取行程助手记录。"
-            : "暂无助手运行记录。"}
+            : "暂无助手运行记录。现场模型可能要几分钟，赶时间请直接用上面的调整卡。"}
         </p>
       )}
 

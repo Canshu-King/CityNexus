@@ -1,0 +1,11 @@
+Convert the fake-settings reds into a five-attribute repair table a single knife can cover.
+
+Sixteen reds read as an undifferentiated pile.  Joining pytest's crash lines to its FAILED summary --
+both lists required to equal the run's own failed count, with the ruler reporting any row it could not
+parse as a defect of itself -- yields which test produced which missing attribute, and the answer
+compresses to five attributes across nine files, with one attribute covering nine of the sixteen rows.
+That is the same root the blocker-6 group had: fixture SimpleNamespace objects that never learned the
+setting names the product added.
+
+The fix was not taken.  It edits fixtures, not product, and it belongs with the other three pending
+fixture-side orders so the commander rules once instead of four times.

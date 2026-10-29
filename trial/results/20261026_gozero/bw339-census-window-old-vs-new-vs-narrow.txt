@@ -1,0 +1,27 @@
+CENSUS WINDOW CONTROL bw339 - old ruler vs new ruler vs the new ruler narrowed back
+one archive, one ledger, one process; the two sheets below are the same files read twice
+rulers: old generation e5530e8386a5f7180bb5998f5f161a0f6cf92781, current generation fa11b9c450761f50f05954a90499b8247ea5ed3c (both commits, retrievable with git cat-file -t)
+
+OLD SHAPE (mtime date == today)
+  SESSION 494abfd7 | archive files dated 2026-10-30: 1
+  TALLY checked=1 green=1 red=0 rc=0
+  it names no excluded block: true - no WINDOW_EDGE line exists in its output
+  it prints no stretch line either: 0
+  instrument-fault line: no - 0 of 1 blocks read RED, nothing to chase
+  so it closed the sheet green while counting 1 block(s) of the shift
+
+NEW SHAPE (today plus the day before)
+  SESSION 494abfd7 | window = today and the 1 day(s) before it, 10-29 08:55:20 .. 10-30 00:14:08 = 44 blocks
+  TALLY checked=44 green=44 red=0 rc=0
+  WINDOW_EDGE first block excluded: 494abfd7_2002.md.inserted_201740  (10-25 20:17:23)
+  stretches printed inside the window: 4
+  instrument-fault line: no - 0 of 44 blocks read RED, nothing to chase
+
+NARROW (new code, DAYS_BACK forced to 0 - the old shape expressed in the new code)
+  refused, verbatim: ABORT the block just outside the window (494abfd7_2354.md.inserted_235528, 2026-10-29) sits a day away from the oldest kept block (2026-10-30) - that reads like a shift cut in half, widen DAYS_BACK before trusting this count
+
+WHAT THIS PROVES: the short sheet is a property of the filter, not of the ledger. The same archive read 1 blocks under the day filter and 44 under the two-day one, against D:\moodle\CITYNEXUS_AGENT_CONTROL.md, in one process - so nothing between the two counts was caused by a ledger that changed.
+WHAT IT DOES NOT PROVE: the 00:1x printout itself. That run wrote the shipped receipt and was overwritten by the fixed one, so its only surviving trace is this session's transcript; the OLD SHAPE rows above are the same filter re-run against the same archive, which is why they can be quoted as a measurement and the 00:1x printout cannot.
+
+TALLY old_checked=1 new_checked=44 delta=43 narrow_refusals=1
+GENERATION fa11b9c450761f50f05954a90499b8247ea5ed3c

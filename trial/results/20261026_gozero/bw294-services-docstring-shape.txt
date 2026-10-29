@@ -1,0 +1,33 @@
+SHAPE CHECK OF backend/app/services.py bw294
+BYTES 126757 sha256 8de56c8e981ffefc
+MTIME 2026-10-22T11:16:12
+GIT_porcelain ''
+GIT_last_commit d796a731e0 10-20 14:25 feat(revolution): preserve selected draft as signed departure candidate
+AST_parse OK
+REFUSAL_LINES (stripped text equals 'return UNRESOLVED_ACTIVITY_FACTS'): [746, 782, 787, 789, 799]
+FUNCTION def at line 689, docstring spans lines 690-690
+DOCSTRING_CONTAINS_REFUSAL NO (0 times)
+DOCSTRING_BODY:
+       690| 
+VERBATIM_LINES_136_156
+       136|         "journey_missions",
+       137|         "member_place_group_share_consents",
+       138|         "member_place_promotions",
+       139|         "member_place_invitation_progress",
+       140|         "member_place_invitation_recipients",
+       141|         "member_place_invitations",
+       142|         "member_side_quest_return_reports",
+       143|         "member_side_quests",
+       144|         "member_live_moment_scout_receipts",
+       145|         "planned_split_meetup_handshakes",
+       146|         "collective_authority_receipts",
+       147|         "guardian_pulses",
+       148|         "provider_observations",
+       149|         "journey_outcome_events",
+       150|         "traveler_preference_evidence",
+       151|         "traveler_capabilities",
+       152|         "traveler_twin_snapshots",
+       153|         "city_signal_fixtures",
+       154|         "autopilot_enrollments",
+       155|         "real_place_candidates",
+       156|         "mobility_facts",

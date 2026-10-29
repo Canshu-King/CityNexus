@@ -1,0 +1,9 @@
+PHONE_START_BUTTON 1
+PHONE_AFTER_START {"virtual":"模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中","run":"模拟进行中 · 12-03 09:00"}
+PROJECTOR_INITIAL {"virtual":"模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中","run":"模拟进行中 · 12-03 09:00"}
+PHONE_PLUS30 1 disabled=false
+PHONE_AFTER_PLUS {"virtual":"模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中","run":"模拟进行中 · 12-03 09:30"}
+PROJECTOR_POLL 0 {"virtual":"模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中","run":"模拟进行中 · 12-03 09:30"}
+PROJECTOR_SYNCED {"virtual":"模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中","run":"模拟进行中 · 12-03 09:30"}
+PHONE_ERRORS []
+PROJECTOR_ERRORS []

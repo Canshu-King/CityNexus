@@ -1,0 +1,15 @@
+COLD-SCREEN REQUESTS AS THE BACKEND ACTUALLY ANSWERED THEM  bw346
+log D:/_cmdr_clean_1030_data/clean_backend.log (the classroom generation, booted from a
+zero-dirty worktree on D, brand-new database, no traveller token and no presenter ticket)
+
+  GET    /api/v1/demo/scene                                         -> 403   x5
+  GET    /api/v1/health                                             -> 200   x3
+  GET    /api/v1/travelers/me/journey-membership-invitations        -> 401   x5
+
+WHAT THE SCREEN SAYS ABOUT THOSE: the only place the cold first screen discloses any of this is the
+aria-label of the bottom-right circle, which reads 模拟舞台（暂无场景）：场景状态没读到：REQUEST_ERROR.
+The transport answer for that same request is 403 (counted above), and 401 for the invitation poll -
+both carry a reason a traveller could act on (no ticket / not signed in), and both arrive on screen
+as the same undifferentiated REQUEST_ERROR.
+
+TALLY distinct_routes=3 scene_403=5 invitations_401=5

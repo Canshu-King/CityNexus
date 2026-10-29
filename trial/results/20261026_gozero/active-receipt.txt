@@ -1,0 +1,6 @@
+JOURNEY {"id": "693a693a-6289-422c-9ca4-b2a860db5ef5", "status": "ACTIVE", "title": "北京 · 2日行程", "city_code": "CN-RV-799040DA42F5", "start_at": "2026-12-03T09:00:00+08:00", "end_at": "2026-12-04T21:00:00+08:00", "active_plan_version_id": "4cab4148-3295-4a27-8ca9-699d62b59d87", "current_activity_id": "789f2183-46c0-4a29-b9bf-b7d96b56bf25", "created_at": "2026-10-26T04:38:42.777978+00:00"}
+  MISSION {"id": "49a999d6-dcf5-4c98-85a8-9055be068a18", "status": "PARTIAL_READY", "failure": null, "created_at": "2026-10-26T04:38:51.876612+00:00", "completed_at": "2026-10-26T04:42:24.679883+00:00"}
+  TASK {"status": "PARTIAL_READY", "failure_code": null, "mode": "RESEARCH", "usage": {"model_turns": 15, "tool_calls": 13}, "draft_revision": 3, "days": 2, "slots": 6, "pending_question": false, "pending_options": [], "conversation": 6, "research_places": 64}
+  TOOLS {"discover_places": 6, "route_public_places": 1, "save_draft_itinerary": 1, "ask_traveler": 1, "discover_nearby_places": 2, "replace_draft_slots": 2} steps 13
+  PLAN {"id": "4cab4148-3295-4a27-8ca9-699d62b59d87", "version_no": 1, "status": "ACTIVE", "lifecycle": "ACTIVE", "source": "MANUAL", "cost_minor": 0, "currency": "CNY", "mobility_snapshot": "f092b552-1d01-41a0-a3cc-e6cfbe7813e6", "unresolved": 6, "created_at": "2026-10-26T04:42:32.200714+00:00"}
+    ACTIVITIES -1

@@ -1,0 +1,3 @@
+SAVE_GATE {"found":true,"disabled":true,"centre_hit":true}
+CARD_DISCLOSURE 2026-10-24T11:02:09.539Z {"sentence":"已按路线把 1 处往后排，这是一份新的候选方案；生效的那一份没有变。新的一版还没有核实转场，下面可以再按一次「核实并冻结今天的转场」。 按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。 和 Agent ","save_disabled":true,"times":["故宫博物院开始时间=11:18","故宫博物院结束时间=13:18"]}
+PREPARE_GATE {"found":false}

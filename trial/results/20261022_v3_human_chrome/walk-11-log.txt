@@ -1,0 +1,125 @@
+WALK10A_START 2026-10-22T10:44:34.216Z url=http://127.0.0.1:14371/revolution viewport=414x900 tool=real Chrome 155 over CDP (fresh session, new code)
+STORAGE_RESET leftover_journey={"id":"76f73f26-6e3b-420e-9bbc-7d7863b785e6","cityCode":"CN- leftover_bearer=absent
+FIRST_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+DAYS_READBACK 2
+PARTY_READBACK 2 BUDGET_READBACK 1000
+AFTER_CONTINUE C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待第一个目标 地图 日程 对话 现实地图 0 处地点 地点研究会在这里汇合 找到有坐标的地点后，点击图钉查看来源。 手动探索地点 旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。 CITYNEXUS / EXPLORE 想去哪儿逛逛？ 你的想法已经写好了，可以改，改完交给 Agent。 改这句，然后交给 Agent → 1. 选地方 2. 选兴趣 3. 看结果 4. 去散步 我想自己先挑地点（可选） 技术信息 高级功能：地图坐标、分享与技术详情 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认 ⚙ 告诉 CityNexus 你的旅行目标 本次允许 AI 处理旅行目标（可能产生费用） 本次允许查询公开地图和地点来源 发送 ↑
+JOURNEY_ID 7cd5dda8-fca7-4a5a-ad39-87ce651ec7af bearer=present
+CONSENT_STRIP_INLINE_ON_FIRST_VISIT=true
+SEND_DISABLED_BEFORE_CONSENT=true
+STRIP_BOX 9,681,381,134
+SHOT human-50-consent-inline-on-first-visit.png
+STRIP_COLLAPSED_AFTER_GRANTING=true
+SEND_ENABLED_AFTER_GRANTING=true
+SENT_FIRST_GOAL_AT 2026-10-22T10:45:22.339Z
+POLL_1 t=10s busy=true choices=0
+POLL_2 t=20s busy=true choices=0
+POLL_3 t=30s busy=false choices=3
+FIRST_REPLY_PANE 你的旅行搭档 等待你的决定 告诉我想去哪儿，其余交给 Agent 地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。 一起商量安排 刷新任务 2 天 · 2 人 · 旅行需求已从服务器读取 你 11 月 2 日到 11 月 3 日在北京玩两天，人均预算 500，想看古迹和胡同小吃，不要太赶，第二天下午想在湖边轻松散步。 CityNexus Agent 第二天下午的湖边轻松散步，你更想选哪片水域？"}] 这条回复没有改动日程（版本 0） 什刹海（后海） 后海/前海一带，胡同环绕、岸边有小吃和酒吧，散步+小吃最顺，离南锣鼓巷近 北海公园 皇家园林湖景，可逛白塔、琼华岛，登城看景，门票制、更安静 颐和园昆明湖 昆明湖开阔，颐和园本身就是大古迹，但离市区远、步行量大 也可以在下方直接说你的想法。 按讨论的方向开始研究 旅行研究 · 等你决定 本轮研究摘要 Agent 真实工作过程 · 已记录 11 条事件 工具结果 · 2 次
+SHOT human-51-first-agent-reply.png
+TAPPED_FIRST_CHOICE_AT 2026-10-22T10:45:52.505Z
+START_RESEARCH 按讨论的方向开始研究 disabled=false
+PRESSED_START_AT 2026-10-22T10:46:12.553Z
+RESEARCH_POLL_4 t=40s working=true draftSlots=0
+RESEARCH_POLL_6 t=60s working=false draftSlots=6
+FINAL_PANE 你的旅行搭档 等待你的决定 已整理 2 天 · 6 项安排 地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。 一起商量安排 刷新任务 2 天 · 2 人 · 旅行需求已从服务器读取 你 11 月 2 日到 11 月 3 日在北京玩两天，人均预算 500，想看古迹和胡同小吃，不要太赶，第二天下午想在湖边轻松散步。 CityNexus Agent 第二天下午的湖边轻松散步，你更想选哪片水域？"}] 这条回复没有改动日程（版本 0） 你 什刹海（后海） CityNexus Agent 第一天（11月2日）你更想要哪种节奏？这会影响后面我帮你查哪些古迹和胡同小吃点。 这条回复没有改动日程（版本 0） 你 按我们讨论的方向开始研究，遇到重要取舍先给我选择。 CityNexus Agent 第一天上午的主古迹你想优先哪个方向？（这决定下午胡同小吃片区怎么就近安排）" 这条回复没有改动日程（版本 1） 故宫+南锣鼓巷 第一天上午选【故宫+景山】，下午逛【南锣鼓巷/北锣鼓巷】胡同小吃，最经典但故宫步行量大。 天坛+前门 第一天上午【天坛】（园林式、较省力），下午【前门大街/杨梅竹斜街】小吃，节奏更轻松。 颐和园+西郊 第一天上午【颐和园】（湖园结合），下午【圆明园或西郊小吃】，景点偏西、稍远。 也可以在下方直接说你的想法。 按讨论的方向开始研究 旅行研究 · 等你决定 本轮研究摘要 Agent 真实工作过程 · 已记录 53 条事件 工具结果 · 11 次
+RECEIPT_LINES=["这条回复没有改动日程（版本 0）","这条回复没有改动日程（版本 0）","这条回复没有改动日程（版本 1）"]
+SHOT human-52-draft-and-receipt-on-screen.png
+  API_1 201 POST /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks
+  API_2 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_5 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_7 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_10 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_11 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_14 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_15 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_18 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_21 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_24 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_26 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_27 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_31 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_32 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_35 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_38 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_40 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_42 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_43 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_47 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_48 200 POST /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd/run
+  API_50 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_52 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_54 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_55 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_57 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_60 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_63 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_64 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_68 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_70 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_72 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_75 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_77 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_80 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_82 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_84 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_86 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_89 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_90 200 POST /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd/resume
+  API_91 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_94 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_96 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_97 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_100 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_102 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_104 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_106 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_109 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_112 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_113 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_116 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_118 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_120 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_124 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_126 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_128 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_130 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_133 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_135 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_137 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_140 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_141 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_145 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_146 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_149 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_151 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_154 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_156 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_158 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_160 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_162 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_164 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_167 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_169 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_171 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_174 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_177 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_179 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_181 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_184 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_185 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_189 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_190 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_192 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_195 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_197 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_200 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_203 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_205 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_206 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_209 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_211 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+  API_213 200 POST /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd/resume
+  API_214 200 GET /journeys/7cd5dda8-fca7-4a5a-ad39-87ce651ec7af/agent/goal-tasks/74f495a1-46b0-48bb-9bd1-70c7eb0e39fd
+API_ROWS_TOTAL=236
+WALK10A_END 2026-10-22T10:47:12.712Z

@@ -1,0 +1,8 @@
+ENTRY {"run":null,"acceptanceNote":false,"message":null,"proposal":null,"proposalNote":null}
+ENTRY_PROGRESS {"error":"no_identity","hasToken":false,"jid":null}
+GUARDIAN_TAB 0
+BEFORE_ACCEPT {"run":null,"acceptanceNote":false,"message":null,"proposal":null,"proposalNote":null}
+ACCEPT_BUTTON 0 disabled=null
+RESUME_BUTTON 0
+RESPONSES [{"status":200,"url":"/src/trial/mobile/simulationClient.ts"}]
+ERRORS []

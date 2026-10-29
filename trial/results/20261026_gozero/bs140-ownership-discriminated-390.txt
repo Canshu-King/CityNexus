@@ -1,0 +1,12 @@
+S1_HTTP POST 201 /api/v1/travelers
+S1_HTTP POST 201 /api/v1/journeys
+S1_POINTER before={"city":"","same":false} after_city="广州" id_shape=uuid owner_shape=uuid t=13.7
+S2_HTTP POST 201 /api/v1/travelers
+S2_HTTP POST 201 /api/v1/journeys
+S2_POINTER before={"city":"广州","same":false} after_city="上海" id_shape=uuid owner_shape=uuid t=29.7
+C_TWO_SESSIONS different_owner=true own_id_shape=uuid other_id_shape=uuid t=29.9
+A_OWN_JOURNEY {"head":"用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 ","bouncedToCreate":true,"refuses":false,"articles":0,"hasPlanWords":false} shape=REDIRECTED_TO_CREATE t=37.4
+B_OTHER_SESSION_JOURNEY {"head":"用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 ","bouncedToCreate":true,"refuses":false,"articles":0,"hasPlanWords":false} shape=REDIRECTED_TO_CREATE t=44.4
+PAIR own=REDIRECTED_TO_CREATE other=REDIRECTED_TO_CREATE
+VERDICT ROUTE_BOUNCES_EVERYONE_control_failed_REDIRECTED_TO_CREATE t=44.4
+DONE t=44.4

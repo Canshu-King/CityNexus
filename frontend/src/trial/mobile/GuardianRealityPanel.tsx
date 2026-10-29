@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Activity, Clock3, RefreshCw, ShieldCheck } from "lucide-react";
 import { cityNexusApi, type GuardianStream } from "../../api/citynexus";
+import type { ReplanProposal } from "../../contracts/replan";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import "./GuardianRealityPanel.css";
 
@@ -128,7 +129,13 @@ function recoveryStatusLabel(status: string): string {
   return label(labels, status, "恢复状态已记录");
 }
 
+/** A fixture signal is a classroom injection, never a venue's own closure notice. */
+const SCENARIO_PROVIDER = /fixture|city-signal/i;
+
 function sourceLabel(provider: string, provenance: string): string {
+  if (SCENARIO_PROVIDER.test(provider)) {
+    return "模拟供应商信号 · 课堂注入，非景区官方公告";
+  }
   const safeProvider = providerLabels[provider.toLowerCase()] ?? "行程记录";
   const safeProvenance = label(provenanceLabels, provenance, "来源已记录");
   return `${safeProvider} · ${safeProvenance}`;
@@ -137,6 +144,39 @@ function sourceLabel(provider: string, provenance: string): string {
 function triggerEntries(snapshot: GuardianStream): StreamEntry[] {
   const ids = new Set(snapshot.recovery_epoch?.triggering_event_ids ?? []);
   return snapshot.stream.filter(({ observation }) => ids.has(observation.id));
+}
+
+/** What this proposal changes, in the traveller's own words; counts stand in for missing names. */
+function pendingProposalSentence(proposal: ReplanProposal, titles: Record<string, string>): string {
+  const parts: string[] = [];
+  const removed = proposal.diff.removed.map((key) => titles[key]).filter((value): value is string => Boolean(value));
+  if (proposal.diff.removed.length > 0) {
+    parts.push(removed.length > 0 ? `移除${removed.join("、")}` : `移除 ${proposal.diff.removed.length} 站`);
+  }
+  const added = proposal.diff.added.map((key) => titles[key]).filter((value): value is string => Boolean(value));
+  if (proposal.diff.added.length > 0) {
+    parts.push(added.length > 0 ? `加入${added.join("、")}` : `加入 ${proposal.diff.added.length} 站`);
+  }
+  for (const item of proposal.diff.moved) {
+    const title = titles[item.semantic_key] ?? "一处安排";
+    const from = timeLabel(item.old_start_at);
+    const to = timeLabel(item.new_start_at);
+    const direction = item.delta_minutes >= 0 ? "晚" : "早";
+    parts.push(from && to
+      ? `时间：${title} 从 ${from} 挪到 ${to}（${direction} ${Math.abs(item.delta_minutes)} 分钟）`
+      : `时间：${title} ${direction} ${Math.abs(item.delta_minutes)} 分钟`);
+  }
+  const cost = proposal.diff.cost_delta_minor;
+  if (typeof cost === "number") {
+    parts.push(cost === 0 ? "费用：不变" : `费用：${cost > 0 ? "多" : "省"} ¥${(Math.abs(cost) / 100).toFixed(0)}`);
+  } else {
+    parts.push("费用：未知");
+  }
+  const travel = proposal.diff.travel_delta_min;
+  if (typeof travel === "number" && travel !== 0) {
+    parts.push(travel < 0 ? `路上少 ${Math.abs(travel)} 分钟` : `路上多 ${travel} 分钟`);
+  }
+  return parts.length > 0 ? `${parts.join("；")}。` : "这一版调整了行程安排。";
 }
 
 export function GuardianRealityPanel({
@@ -201,6 +241,143 @@ export function GuardianRealityPanel({
     const timer = window.setTimeout(() => setIdentityRevision((revision) => revision + 1), 10_000);
     return () => window.clearTimeout(timer);
   }, [visible, active, requestState, identityRevision]);
+
+  const [proposal, setProposal] = useState<{ value: ReplanProposal; titles: Record<string, string> } | null>(null);
+  const [proposalState, setProposalState] = useState<"idle" | "loading" | "ready" | "acting" | "done" | "error">("idle");
+  const [proposalNote, setProposalNote] = useState("");
+  const proposalRef = useRef<HTMLElement | null>(null);
+  const loadingRef = useRef<HTMLParagraphElement | null>(null);
+
+  useEffect(() => {
+    if (!visible || requestState !== "ready" || !readTravelerBearer()) return;
+    if (proposal !== null || proposalState === "acting" || proposalState === "done") return;
+    let cancelled = false;
+    setProposalState("loading");
+    void cityNexusApi.listReplans(journeyId).then(async (items) => {
+      // The list can hold a node from an older trip change. When a simulation run
+      // is paused on an event, prefer the proposal bound to that event; otherwise
+      // fall back to the newest PRESENTED node.
+      type PausedRun = { run_id?: string; state?: { pending_event_id?: string | null } | null };
+      const current = await fetch(
+        `/api/v1/journeys/${journeyId}/simulation/runs/current`,
+        {
+          headers: { Accept: "application/json", Authorization: `Bearer ${readTravelerBearer()}` },
+          cache: "no-store",
+        },
+      ).then((response) => (response.ok ? response.json() : null)).catch(() => null) as
+        | (PausedRun & { run?: PausedRun | null })
+        | null;
+      // This endpoint answers with the bare run row, not a wrapper; accept both.
+      const run = current ? (current.run ?? current) : null;
+      const pendingEventId = run?.state?.pending_event_id ?? null;
+      let pausedProposalId: string | null = null;
+      if (run?.run_id) {
+        const progress = await fetch(
+          `/api/v1/journeys/${journeyId}/simulation/runs/${run.run_id}/progress`,
+          {
+            headers: { Accept: "application/json", Authorization: `Bearer ${readTravelerBearer()}` },
+            cache: "no-store",
+          },
+        ).then((response) => (response.ok ? response.json() : null)).catch(() => null) as
+          | { proposals?: Array<{ id?: string; status?: string }> }
+          | null;
+        pausedProposalId = (progress?.proposals ?? []).find(
+          (item) => item.status === "PRESENTED" && typeof item.id === "string",
+        )?.id ?? null;
+      }
+      const presented = items.filter((item) => item.status === "PRESENTED");
+      const candidate =
+        (pausedProposalId ? presented.find((item) => item.id === pausedProposalId) : undefined)
+        ?? (pendingEventId ? presented.find((item) => item.trigger_event_id === pendingEventId) : undefined)
+        ?? presented[0];
+      // When the paused run's own proposal is not in this list, offering another
+      // event's node would move the wrong plan. Say where the adjustment lives.
+      if (pendingEventId && !presented.some(
+        (item) => item.id === pausedProposalId || item.trigger_event_id === pendingEventId,
+      )) {
+        if (!cancelled) {
+          setProposalState("idle");
+          setProposalNote("当前模拟事件的调整在课堂控制台接受；这里没有与它对应的建议。");
+        }
+        return;
+      }
+      if (!candidate) {
+        if (!cancelled) setProposalState("idle");
+        return;
+      }
+      let titles: Record<string, string> = {};
+      try {
+        const plan = await cityNexusApi.getPlan(candidate.base_plan_version_id);
+        titles = Object.fromEntries(plan.activities.map((activity) => [
+          activity.place_id ?? activity.city_service_id ?? activity.title,
+          activity.title,
+        ]));
+      } catch {
+        titles = {};
+      }
+      if (!cancelled) {
+        setProposal({ value: candidate, titles });
+        setProposalState("ready");
+        // The card can sit below the fold on a phone; bring it into view once so
+        // pressing 行程守护 actually shows the decision instead of its heading.
+        window.requestAnimationFrame(() => {
+          // Measured on a 1280×900 projector: the card lands a hundred pixels below the fold,
+          // and the fixed composer covers its buttons once it only just enters view. Centre it
+          // on every shape, then re-centre while the plan titles and map settle: pressing the
+          // guardian button three seconds after entry used to scroll against a shorter page.
+          const bring = () => proposalRef.current?.scrollIntoView({ block: "center" });
+          bring();
+          window.setTimeout(bring, 400);
+          window.setTimeout(bring, 1000);
+        });
+      }
+    }).catch(() => {
+      if (!cancelled) {
+        setProposalState("error");
+        setProposalNote("这次没能读到调整方案，可以稍后刷新。");
+      }
+    });
+    return () => { cancelled = true; };
+  }, [journeyId, visible, requestState, proposal, proposalState]);
+
+  useEffect(() => {
+    // The panel opens low in the page; without this the "reading" line sits under the composer
+    // and a slow /replans looks like a press that did nothing.
+    if (proposalState !== "loading" || proposal) return;
+    window.requestAnimationFrame(() => loadingRef.current?.scrollIntoView({ block: "center" }));
+  }, [proposalState, proposal]);
+
+  const settleProposal = async (decision: "accept" | "reject") => {
+    if (!proposal || proposalState === "acting") return;
+    setProposalState("acting");
+    setProposalNote("");
+    try {
+      if (decision === "accept") {
+        await cityNexusApi.acceptReplan(proposal.value.id, `guardian-accept-${proposal.value.id.slice(0, 8)}`);
+        // The accepted plan replaces the page; without this the viewport stays near where the
+        // card sat and the first-stop change happens thousands of pixels above the screen.
+        window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
+      } else {
+        await cityNexusApi.rejectReplan(proposal.value.id, `guardian-reject-${proposal.value.id.slice(0, 8)}`);
+      }
+      setProposal(null);
+      setProposalState("done");
+      setProposalNote(decision === "accept" ? "行程已按这份调整更新。" : "已保留原来的安排。");
+      window.dispatchEvent(new CustomEvent("citynexus:mission-refresh"));
+      setIdentityRevision((revision) => revision + 1);
+      if (decision === "accept") {
+        // The plan this screen was built from no longer exists; reload so every
+        // panel (including LiveRecovery's itinerary line) reads the new active
+        // plan instead of leaving the traveller on a stale first stop.
+        window.setTimeout(() => window.location.reload(), 1200);
+      }
+    } catch {
+      setProposalState("error");
+      setProposalNote(decision === "accept"
+        ? "这次没能更新行程，可以再试一次。"
+        : "这次没能记下你的选择，可以再试一次。");
+    }
+  };
 
   if (!visible) return null;
 
@@ -281,6 +458,34 @@ export function GuardianRealityPanel({
                 )}
               </div>
             </section>
+          )}
+
+          {proposalState === "loading" && !proposal && (
+            <p ref={loadingRef} className="rev-guardian-proposal-loading" role="status" data-testid="rev-guardian-proposal-loading">
+              正在读取调整建议…
+            </p>
+          )}
+          {proposal && (
+            <section ref={proposalRef} className="rev-guardian-proposal" data-testid="rev-guardian-proposal" aria-label="调整建议">
+              <strong>找到一份可行的调整</strong>
+              <p data-testid="rev-guardian-proposal-diff">{pendingProposalSentence(proposal.value, proposal.titles)}</p>
+              <small className="rev-guardian-proposal-origin" data-testid="rev-guardian-proposal-origin">
+                {proposal.value.source_agent_run_id
+                  ? "Agent 生成 · 服务器留有运行记录"
+                  : "规则引擎生成 · 不是大模型现场推理"}
+              </small>
+              <div className="rev-guardian-proposal-actions">
+                <button type="button" data-testid="rev-guardian-accept-replan"
+                  disabled={proposalState === "acting"} onClick={() => void settleProposal("accept")}>
+                  {proposalState === "acting" ? "正在更新行程…" : "接受这份调整"}
+                </button>
+                <button type="button" data-testid="rev-guardian-reject-replan"
+                  disabled={proposalState === "acting"} onClick={() => void settleProposal("reject")}>暂不调整</button>
+              </div>
+            </section>
+          )}
+          {proposalNote && (
+            <p className="rev-guardian-proposal-note" role="status" data-testid="rev-guardian-proposal-note">{proposalNote}</p>
           )}
 
           {hasRecords && (

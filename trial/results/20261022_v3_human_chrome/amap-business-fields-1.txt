@@ -1,0 +1,50 @@
+QUERY 天坛公园 http= 200 error= None
+  POIS 3
+   POI name=天坛公园 id=B000A81CB2 business_keys=['alias', 'keytag', 'opentime_week', 'rating', 'rectag']
+      keytag=5A景区
+      rating=4.9
+   POI name=天坛公园售票处 id=B0FFI0TMCV business_keys=['keytag', 'opentime_today', 'opentime_week', 'rectag', 'tel']
+      keytag=售票处
+   POI name=天坛公园-月季园 id=B000A83C9Y business_keys=['keytag', 'opentime_today', 'opentime_week', 'rating', 'rectag', 'tel']
+      keytag=植物园
+      rating=4.1
+QUERY 故宮博物院 http= 200 error= None
+  POIS 3
+   POI name=故宫博物院 id=B000A8UIN8 business_keys=['alias', 'keytag', 'opentime_week', 'rating', 'rectag', 'tel']
+      keytag=5A景区
+      rating=4.9
+   POI name=故宫博物院检票处 id=B0FFKL520U business_keys=['keytag', 'opentime_today', 'opentime_week', 'rectag']
+      keytag=售票处
+   POI name=故宫博物院-午门 id=B000A84GDN business_keys=['keytag', 'opentime_week', 'rating', 'tel']
+      keytag=风景名胜,风景名胜,风景名胜
+      rating=3.8
+QUERY 故宫博物院 http= 200 error= None
+  POIS 3
+   POI name=故宫博物院 id=B000A8UIN8 business_keys=['alias', 'keytag', 'opentime_week', 'rating', 'rectag', 'tel']
+      keytag=5A景区
+      rating=4.9
+   POI name=故宫博物院检票处 id=B0FFKL520U business_keys=['keytag', 'opentime_today', 'opentime_week', 'rectag']
+      keytag=售票处
+   POI name=故宫博物院-午门 id=B000A84GDN business_keys=['keytag', 'opentime_week', 'rating', 'tel']
+      keytag=风景名胜,风景名胜,风景名胜
+      rating=3.8
+QUERY 南门涮肉 http= 200 error= None
+  POIS 3
+   POI name=南门涮肉(东单店) id=B0FFFPGBW3 business_keys=['business_area', 'cost', 'keytag', 'opentime_today', 'opentime_week', 'rating', 'rectag', 'tag', 'tel']
+      business_area=东单
+      keytag=涮羊肉
+      tag=鲜羊肉,肥牛,烤烧饼,鲜虾滑,面条拼盘,春华秋实,麻酱小料,糖蒜,鲜羊上脑,太阳肉,鲜百叶,蔬菜大拼,鮮羊肉,麻饼,羊腹肉,涮肉,牛羊肉,麻酱,牛肉,羊肉
+      rating=4.8
+      cost=119.00
+   POI name=南门涮肉(国贸商城店) id=B0FFKQ3LIT business_keys=['business_area', 'cost', 'keytag', 'opentime_today', 'opentime_week', 'rating', 'rectag', 'tag', 'tel']
+      business_area=国贸
+      keytag=涮羊肉
+      tag=太阳肉,鲜切羊腱,羊腹肉,羊肉片,鲜百叶,鲜羊肉,肥牛,羊肉,麻酱,牛肉,豆腐,鲜切元宝肉,炒麻豆腐,涮羊肉
+      rating=4.8
+      cost=125.00
+   POI name=南门涮肉(河边店) id=B0I1P5OK9W business_keys=['business_area', 'cost', 'keytag', 'opentime_today', 'opentime_week', 'rating', 'rectag', 'tag', 'tel']
+      business_area=安定门
+      keytag=涮羊肉
+      tag=鲜羊肉,太阳肉,鲜切羊腱,羊腹肉,羊肉片,鲜百叶,羊肉,麻酱,牛肉,爆肚
+      rating=4.8
+      cost=95.00

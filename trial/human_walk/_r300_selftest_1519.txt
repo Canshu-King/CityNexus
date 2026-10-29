@@ -1,0 +1,11 @@
+SELFTEST known='交「屏上拿到英文原句」的分母与那条键的真实产地'
+LEDGER_HITS 1 | ARCHIVED ['494abfd7_0452.md.inserted_125303'] | STILL_IN_INBOX none | VERDICT GREEN
+SELFTEST bogus='这块标题在本机任何账本里都不存在_zzz_selftest' (expected RED)
+LEDGER_HITS 0 | ARCHIVED none | STILL_IN_INBOX none | VERDICT RED
+HINT the title matched nothing in the ledger; these are the 5 most recent landed blocks (a wrong --title reads as a typo, not as an accident):
+     ### 494abfd7 交「旅客面 ∩ 内部词汇」= 21 处的逐枚清单（#365，接 §14.32）  <- 494abfd7_1516.md.inserted_151731
+     ### 494abfd7 交「45 处内部词汇」的逐词分布与各自坐标（#364，接 §14.31 那条待裁）  <- 494abfd7_1500.md.inserted_150109
+     ### 494abfd7 交「221 处里旅客最先撞到的头几条」可点单清单（#363，接 §14.29 那条待裁）  <- 494abfd7_1450.md.inserted_145101
+     ### 494abfd7 交「17 枚取不回引用」的逐枚清单与四档修法（#362，#347 的续）  <- 494abfd7_0549.md.inserted_134817
+     ### 494abfd7 交「旅客真能撞到的英文句是 221 处」的分面读数（#361，接 §14.28 那条待裁）  <- 494abfd7_0537.md.inserted_133500
+SELFTEST_OK known block reads GREEN, an unseen title reads RED and lists what did land

@@ -274,7 +274,7 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
 async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetchWithReadDeadline(path, {
     ...init,
-    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
+    headers: { "Content-Type": "application/json", ...travelerAuthHeaders(), ...(init?.headers ?? {}) },
   });
   /* Parsed by hand rather than `response.json().catch(() => null)`: that one line turned three
      different answers -- zero bytes, an HTML document, a plain sentence -- into the same `null`, and

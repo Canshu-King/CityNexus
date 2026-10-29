@@ -1,0 +1,5 @@
+STRIP_VISIBLE true
+BEFORE "模拟时间：12/03 09:00 · 服务器第 0 版"
+AFTER "模拟时间：12/03 10:00 · 服务器第 1 版"
+RELOADED "模拟时间：12/03 10:00 · 服务器第 1 版"
+ERRORS []

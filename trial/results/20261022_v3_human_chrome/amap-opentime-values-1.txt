@@ -1,0 +1,18 @@
+POI 天坛公园 | id=B000A81CB2
+   opentime_week=1月至3月,11月至12月 周一至周日 06:30-22:00 最晚进入21:00 园中园08:00-17:00(16:30停止入园)；4月至10月 周一至周日 06:00-22:00 最晚进入21:00 园中园08:00-18:00(17:30停止入园)
+   opentime_today=None | cost=None | rectag=春节游园
+POI 天坛公园售票处 | id=B0FFI0TMCV
+   opentime_week=周一至周日 08:30-20:30
+   opentime_today=08:30-20:30 | cost=None | rectag=售票处
+POI 故宫博物院 | id=B000A8UIN8
+   opentime_week=旺季4月1日至10月31日 周二至周日 08:30-17:00 16:00停止检票，淡季11月1日至3月31日 周二至周日 08:30-16:30 15:30停止检票，周一全天关闭，节假日营业时间以官方通知为准
+   opentime_today=None | cost=None | rectag=沧桑紫禁城
+POI 故宫博物院检票处 | id=B0FFKL520U
+   opentime_week=周一至周日 09:00-21:00
+   opentime_today=09:00-21:00 | cost=None | rectag=售票处
+POI 颐和园 | id=B000A7O1CU
+   opentime_week=1月至3月,11月至12月 周一至周日 06:30-19:00 最晚进入18:00；4月至10月 周一至周日 06:00-20:00 最晚进入19:00
+   opentime_today=None | cost=None | rectag=保存完整的皇家御苑
+POI 颐和园博物馆 | id=B000A7J3H1
+   opentime_week=4月1日-10月31日 周二-周日 08:00-18:00开放（17:30停止入园）；11月1日-次年3月31日 周二-周日 08:30-17:00开放（16:30停止入园）；全年 周一 不开放（法定节假日除外）；元旦节,清明节,劳动节,端午节,中秋节,国庆节 08:00-18:00开放（17:30停止入园）；特殊营业时间:7月7日-8月31日 08:00-18:00开放（17:30停止入园）；具
+   opentime_today=None | cost=None | rectag=博物馆

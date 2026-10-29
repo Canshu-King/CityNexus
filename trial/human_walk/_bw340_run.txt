@@ -1,0 +1,4 @@
+PROVENANCE 4 of 4 text-handling bodies sit in a try whose own text calls the api layer; that layer builds its message at frontend/src/api/citynexus.ts:2892
+CONTROLS text reaches state: frontend/src/features/discovery/DestinationPreparationPanel.tsx:132 read as HANDS_SERVER_TEXT_TO_STATE (132) | prose dropped, facts kept: frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:242 read as HANDS_SERVER_STRUCTURE_TO_STATE (242) | nothing bound: frontend/src/features/execution/LiveRecovery.tsx:418 read as NEVER_READS_A_SERVER_FIELD (418)
+LIVE TALLY {'HANDS_SERVER_TEXT_TO_STATE': 4, 'HANDS_SERVER_STRUCTURE_TO_STATE': 8, 'COMPARES_ONLY': 1, 'READS_AND_LEAVES_IT_UNUSED': 0, 'NEVER_READS_A_SERVER_FIELD': 50}
+WROTE D:\moodle\_cmdr_rescue_v3_1022\trial\results\20261026_gozero\bw338-where-a-read-field-actually-goes.txt lines=29

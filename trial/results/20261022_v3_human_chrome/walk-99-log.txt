@@ -1,0 +1,15 @@
+WALK55_START 2026-10-23T18:13:09.211Z http://127.0.0.1:14496/revolution
+STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我
+STEP_02 days=2
+STEP_02A_PREFILLED party=1 budget=800
+STEP_02 party=2 budget=600
+ASK GET /journeys/8d8d596d-f28d-47bd-9def-5a58cf7d9bbf/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+STEP_03 sent_at 2026-10-23T18:13:25.591Z
+SETTLED ticks=5 elapsed_s=50
+STEP_04B_START_RESEARCH pressed=true
+WAIT_60s busy=false
+WAIT_120s busy=false
+WAIT_180s busy=false
+WAIT_240s busy=false
+WAIT_300s busy=false
+WAIT_360s busy=false

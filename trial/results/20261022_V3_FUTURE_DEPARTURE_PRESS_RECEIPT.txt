@@ -1,0 +1,19 @@
+BACKEND_READY :: port 60098 db=D:/moodle/_cmdr_v3_live_1022\citynexus_v3_future_1022.db
+DEMO_RESET_FOR_CATALOGUE :: {"status": 200, "traveler_id": "11111111-1111-4111-8111-111111111111"}
+JOURNEY_CREATED :: {"status": 201, "id": "e75200fd-5f7c-4cb8-9d0e-e23a44117727", "start_at": "2026-11-02T09:00:00+08:00", "status_field": "DRAFT", "body_if_refused": null}
+GENERATE :: {"status": 201, "plans": 1, "selectable": [true], "body_if_refused": null}
+VITE_READY :: http_status=200
+BROWSER :: SAVED_TRIPS_ROWS :: 2
+BROWSER :: GATE_BEFORE :: 等待正式计划 /  / 1 份正式候选方案
+BROWSER :: GATE_AFTER_COMMIT :: 可以确认出发 /  / 6 项正式安排
+BROWSER :: START_BUTTON_COUNT :: 1
+BROWSER :: START_LABEL :: 确认方案，开始行程
+BROWSER :: GATE_AFTER_START :: 旅程已开始 /  / 6 项正式安排
+BROWSER :: BODY_AFTER_START :: C CityNexus 你的智能旅行伙伴 AI 暂未开启 十一月双城 · 2日行程 旅途正在继续。 换地区 › 旅行插画 行程执行中 地图 执行与待办 执行与待办 CITYNEXUS · 工作动态 行程照看未开启 未启用 开启后会留意行程变化。 查看最近工作记录 WB2API · 行程助手 AI 暂未开启 暂无助手运行记录。 CITYNEXUS · AI 助手 让助手检查当前行程 暂无助手运行记录。 正在进行 现在的行程 下一站：Old Town Gate JOURNEY OPERATOR Journey Operator is off. 今天的行程 现在：Old Town Gate 接下来：
+BROWSER :: HTTP_WRITES :: [{"url":"/api/v1/journeys/e75200fd-5f7c-4cb8-9d0e-e23a44117727/departure/commit","key":"0722714d-772c-440c-9a38-0c4e5b8140c0","body":"{\"plan_version_id\":\"72112e03-9a4c-5e32-a0fe-4bd7ea70b74f\"}"},{"url":"/api/v1/journeys/e75200fd-5f7c-4cb8-9d0e-e23a44117727/start","key":null,"body":null}]
+BROWSER :: HTTP_4XX_READS :: ["409 /api/v1/journeys/e75200fd-5f7c-4cb8-9d0e-e23a44117727/bootstrap-shortlist"]
+BROWSER :: SCREENSHOT :: D:/moodle/_cmdr_v3_port_1022\v3_future_departure_after_press.png
+DB_JOURNEY_AFTER_PRESS :: {"status": "ACTIVE", "active_plan": "72112e03-9a4c-5e32-a0fe-4bd7ea70b74f", "start_at": "2026-11-02T09:00:00+08:00", "current_activity_id": "f1d84548-2425-561a-8d37-f5402bb6e7ed"}
+DB_PLANS_AFTER_PRESS :: [[1, "ACTIVE"]]
+DB_AUDITS_AFTER_PRESS :: [["journey.created", "system", null], ["strategy.value_of_information", "strategy_engine", "r14-autonomous-strategy"], ["plans.generated", "system", null], ["plan.selected", "system", null], ["plan.committed_by_traveler", "traveler", "11111111-1111-4111-8111-111111111111"], ["journey.outcome.recorded", "SYSTEM", "11111111-1111-4111-8111-111111111111"], ["journey.started", "system", null]]
+JOURNEY_ID :: e75200fd-5f7c-4cb8-9d0e-e23a44117727

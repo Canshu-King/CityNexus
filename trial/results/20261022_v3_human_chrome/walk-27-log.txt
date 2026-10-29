@@ -1,0 +1,4 @@
+DEPART_START 2026-10-22T12:33:42.814Z journey=4987634b-6f3d-4a24-8ab3-4d6c1a5bad13 local_status=DRAFT bearer=present
+DEPART_FATAL locator.evaluateAll: TypeError: nodes.map(...).catch is not a function at eval (eval at evaluate (:311:30), <anonymous>:5:14) at UtilityScript.evaluate (<anonymous>:313:16) at UtilityScript.<anonymous> (<anonymous>:1:44)
+SHOT human-179-depart-fatal.png
+DEPART_END 2026-10-22T12:37:18.851Z

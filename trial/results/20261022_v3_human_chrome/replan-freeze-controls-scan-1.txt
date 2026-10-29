@@ -1,0 +1,7 @@
+read_at=2026-10-24T12:14:52.189Z stack=http://127.0.0.1:14522/revolution
+{
+ "total": 66,
+ "freeze_like": 1,
+ "cap_nodes": [],
+ "served_message": null
+}

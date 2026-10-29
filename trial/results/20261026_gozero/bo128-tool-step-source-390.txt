@@ -1,0 +1,27 @@
+PROFILE_USED _chrome_gozero_bo128 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=13.6
+HTTP POST 201 /api/v1/journeys/a85d0444-0f0a-46ca-b0a3-f68ec4d6c418/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/a85d0444-0f0a-46ca-b0a3-f68ec4d6c418/agent/goal-tasks/eea480f6-eed6-4cfb-8a9e-db68861d388f/run
+SKIP t=25.7
+DRAFT_WAIT 1 state=null t=25.7
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" t=43.7
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" t=61.7
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" t=79.7
+DRAFT_WAIT 13 state="已整理 2 天 · 5 项安排" t=97.8
+DRAFT_READY "已整理 2 天 · 5 项安排" t=97.8
+JOURNEY_URL /revolution
+HIT layer-agent true t=98.1
+AGENT_LAYER_OPENED true t=99.3
+STEPS_BEFORE {"present":true,"open":false,"summary":"Agent 工具时间线 · 8 步","rows":8,"row_texts":["","","",""],"source_rows":0,"source_texts":[],"vendors":{"amap":0,"public_lists":0,"not_recorded":0,"checked":0,"unchecked":0},"private_markers":[],"uuid_in_source":false} t=101.8
+HIT events-summary-first true t=102.3
+EVENTS_OPENED_FIRST true t=103.6
+HTTP POST 200 /api/v1/journeys/a85d0444-0f0a-46ca-b0a3-f68ec4d6c418/agent/goal-tasks/eea480f6-eed6-4cfb-8a9e-db68861d388f/resume
+LONG_PAGE_GEOMETRY {"viewport":844,"summary":{"top":924,"bottom":968,"h":44},"head":{"top":0,"bottom":65,"h":65},"open":false} t=104.8
+HIT steps-summary true t=105.1
+STEPS_SUMMARY_PRESSED true t=106.3
+STEPS_AFTER {"present":true,"open":true,"summary":"Agent 工具时间线 · 8 步","rows":8,"row_texts":["1 与你商量安排 完成 4 条已有路线 03:35:04 · 0.0 秒","2 查找公开地点 完成 搜索北京故宫博物院 8 处地点 03:35:13 · 0.4 秒","3 查找公开地点 完成 搜索北京天安门广场 8 处地点 03:35:17 · 0.3 秒","4 查找公开地点 完成 搜索北京景山公园 8 处地点 03:35:22 · 0.2 秒"],"source_rows":0,"source_texts":[],"vendors":{"amap":0,"public_lists":0,"not_recorded":0,"checked":0,"unchecked":0},"private_markers":[],"uuid_in_source":false} t=108.2
+VERDICT DISCLOSURE_MISSING_ON_SCREEN rows=8
+SOURCE_HIT_PROOF null
+FINAL_CLEAN true
+DONE t=108.2

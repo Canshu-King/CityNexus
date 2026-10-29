@@ -1,0 +1,17 @@
+BLOCKER 6 ATTRIBUTION r159
+TIP 228e8db50ab8dafac035b367efcc57a4e2323c3c
+INTERPRETER 3.12.14
+COMMAND python -m pytest -q tests/test_sol_concurrency_and_remap.py tests/test_qoder_live_replans_endpoint.py tests/test_dsh_list_replans_bound.py --tb=line -p no:warnings
+PYTEST_EXIT 1
+SUMMARY_LINE 15 failed, 12 passed in 6.08s
+STACK_TAIL_RECORDS 15
+GROUPS
+  9 x tests/test_sol_concurrency_and_remap.py:1005 KeyError: 'active_plan'
+  5 x app/integrations/mobility/runtime.py:174 AttributeError: 'types.SimpleNamespace' object has no attrib
+  1 x tests/test_dsh_list_replans_bound.py:124 AssertionError: ordinary reads must keep the 12-field contra
+CONTRACT_FIELDS_PARSED 12 from tests/test_dsh_list_replans_bound.py:28
+PAYLOAD_FIELDS_PARSED 16 from app/main.py:22294
+EXTRA_KEYS_IN_PAYLOAD 4 canonical_proposal_id@main.py:22302, recovery_epoch_id@main.py:22299, semantic_identity@main.py:22301, source_agent_run_id@main.py:22300
+KEYS_MISSING_FROM_PAYLOAD 0 none
+FAKE_SETTINGS_LINE tests/test_qoder_live_replans_endpoint.py:65 SimpleNamespace(live_valhalla_url=...) only
+REAL_SETTING app/core/config.py:62 live_valhalla_test_provider exists on the product settings object

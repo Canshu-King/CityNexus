@@ -1,0 +1,23 @@
+block 369 generator: what the catch layer does with a refusal, per request and per panel
+
+trial/human_walk/_cmdr_write_block_369_r328.py emitted the block that landed as
+_qoder_ledger_inbox/_processed/494abfd7_2203.md.inserted_220343. Rows come out of the bw325 and bw326
+receipts and are reconciled before a byte is written: parsed verdicts against each receipt's own TALLY,
+the per-file panel table against the panel and catch counts, the reads column summed against the TALLY, the
+loose pattern against the strict one, and the denominator's imported/rendered pair against the panel count.
+
+The first draft is kept in the tree as _superseded_2201_block369.md rather than deleted, and it is the
+honest reason this commit exists: Q43 read it RED on line 1 because "#369" sat within a window that
+contained no file:line coordinate - my first bullet named both rulers by file name without line numbers,
+and the gate has told me before that a heading has nowhere to put an anchor unless the text right below it
+carries one. Reordering bullet one to lead with the ruler coordinates cleared it (104 claims, 0 findings)
+without touching a single reading. The superseded draft also went through the inbox-then-landing sequence
+cleanly: moved out before regenerating, so nothing un-inserted remains that would falsify the landing gate.
+
+Landing verified by reading the ledger back (LEDGER_HITS 1, archived copy present, nothing pending) rather
+than trusting the applier's INSERTED line. One further fact this beat settles about #331: the mirror leg's
+rc=0 does NOT mean the ledger reached GitHub - CNX_MIRROR_LIVE is empty in User, Machine and Process scope,
+so merge_ledger_then_mirror_r2.py ran its DRY arm (trial/human_walk lives outside that script, but the
+switch is read at its line 129). What improved since 15:37 is only that the read-side guard no longer dies
+on SSL EOF. The switch itself is read at live_checks/merge_ledger_then_mirror_r2.py:129 and its gear is
+printed at :134, so the next pass can be judged from the log instead of guessed. 0 product bytes.

@@ -1,0 +1,185 @@
+SHOT 390-g7-cold t=5.1
+HIT continue true t=6.0
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.5
+HIT open-settings true t=11.8
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.6
+HIT send true t=15.0
+HTTP POST 201 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/run
+HIT skip-questions true t=34.2
+SKIP t=34.9
+SKIPPED true
+DRAFT t=185.2
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=185.2
+HIT tab-chat true t=185.6
+HTTP POST 200 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/resume
+COMPOSER_ENABLED true t=203.5
+HIT send-fix true t=203.9
+FIX_SENT t=204.6
+HTTP POST 200 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/resume
+FIX_IDLE true t=324.8
+SHOT 390-g7-after-fix t=324.9
+HIT journey-tab true t=325.2
+DRAFT_SLOTS 7
+NO_OPTIONAL_SLOT
+DRIFT_FOLD true TIME_COUNT 14 BEFORE [{"label":"天安门广场开始时间","value":"09:00"},{"label":"天安门广场结束时间","value":"10:00"},{"label":"故宫博物院（午门进·神武门出）开始时间","value":"11:00"},{"label":"故宫博物院（午门进·神武门出）结束时间","value":"12:00"},{"label":"景山公园开始时间","value":"14:00"},{"label":"景山公园结束时间","value":"15:00"},{"label":"前门·京晟小馆烤鸭（晚餐）开始时间","value":"19:00"},{"label":"前门·京晟小馆烤鸭（晚餐）结束时间","value":"20:00"},{"label":"颐和园开始时间","value":"09:00"},{"label":"颐和园结束时间","value":"10:00"},{"label":"天坛公园开始时间","value":"14:00"},{"label":"天坛公园结束时间","value":"15:00"},{"label":"天坛·雨花村餐厅（晚餐）开始时间","value":"19:00"},{"label":"天坛·雨花村餐厅（晚餐）结束时间","value":"20:00"}] t=331.3
+TIME_EDITED "天坛·雨花村餐厅（晚餐）结束时间" 20:00 -> 20:30 t=331.3
+HIT save-drift false t=331.6
+DRIFT_SAVE_NOT_PRESSED
+HIT save-1-0 true t=331.9
+HTTP POST 201 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/prepare-plan
+SAVE_ALERT 1/0 ["当前展示的是已保存版本。","已保存 7 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+HIT price-1-1 true t=339.0
+HTTP POST 200 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/plans/5a86a154-9d2b-48ec-ae1e-d8cd4f7a4c9c/accept-unknown-price
+HIT refresh-after-price-1 true t=344.1
+HIT freeze-1-2 true t=349.1
+HTTP POST 200 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/plans/5a86a154-9d2b-48ec-ae1e-d8cd4f7a4c9c/freeze-routes
+HIT refresh-after-freeze-1 true t=356.2
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=360.9
+SHOT 390-g7-plans-1 t=361.0
+HIT select-1 true t=361.3
+HTTP POST 422 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion 5a86a154-9d2b-48ec-ae1e-d8cd4f7a4c9c is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","message_key":"request.invalid","trace_id":"9c1c6f1e-0092-4deb-9c3b-ca39917de25b","details":{"detail":"PlanVersion 5a86a154-9d2b-48ec-ae1e-d8cd4f7a4c9c is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","failures":["INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-K5V4KB7H"}}
+SELECT_REFUSAL ["这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+HIT ask-refusal-1 true t=367.4
+ASK_REFUSAL_SENT 1 t=368.1
+GAP_REPAIR 1 ["天安门广场结束时间 10:00->09:45","故宫博物院（午门进·神武门出）结束时间 12:00->11:45","景山公园结束时间 15:00->14:45","前门·京晟小馆烤鸭（晚餐）结束时间 20:00->19:45","颐和园结束时间 10:00->09:45","天坛公园结束时间 15:00->14:45","天坛·雨花村餐厅（晚餐）结束时间 20:30->20:15"] t=368.1
+HTTP POST 200 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/resume
+SHOT 390-g7-selected-1 t=424.8
+HIT journey-tab true t=425.1
+HIT save-2-0 true t=428.4
+HTTP POST 201 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/prepare-plan
+SAVE_ALERT 2/0 ["当前展示的是已保存版本。","已保存 7 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+HIT price-2-1 true t=435.5
+HTTP POST 200 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/plans/14fba4d4-42b3-48a9-822e-1d3940f9bd66/accept-unknown-price
+HIT refresh-after-price-2 true t=440.5
+HIT freeze-2-2 true t=445.6
+HTTP POST 200 /api/v1/journeys/4d1e7907-f6d8-46fa-ae9d-7a683366668e/agent/goal-tasks/38373fb4-ba14-4a14-98ca-163585ac0972/plans/14fba4d4-42b3-48a9-822e-1d3940f9bd66/freeze-routes
+HIT refresh-after-freeze-2 true t=452.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=457.4
+HIT refresh-for-disabled-2-3 true t=457.8
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=461.1
+HIT refresh-for-disabled-2-4 true t=461.4
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=464.7
+HIT refresh-for-disabled-2-5 true t=465.0
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=468.2
+HIT refresh-for-disabled-2-6 true t=468.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=471.8
+HIT refresh-for-disabled-2-7 true t=472.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=475.4
+HIT refresh-for-disabled-2-8 true t=475.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=479.0
+HIT refresh-for-disabled-2-9 true t=479.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=482.6
+HIT refresh-for-disabled-2-10 true t=482.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=486.2
+HIT refresh-for-disabled-2-11 true t=486.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=489.7
+HIT refresh-for-disabled-2-12 true t=490.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=493.3
+HIT refresh-for-disabled-2-13 true t=493.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=497.0
+HIT refresh-for-disabled-2-14 true t=497.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=500.6
+HIT refresh-for-disabled-2-15 true t=500.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=504.2
+HIT refresh-for-disabled-2-16 true t=504.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=507.8
+HIT refresh-for-disabled-2-17 true t=508.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=511.4
+HIT refresh-for-disabled-2-18 true t=511.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=515.0
+HIT refresh-for-disabled-2-19 true t=515.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=518.5
+HIT refresh-for-disabled-2-20 true t=518.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=522.1
+HIT refresh-for-disabled-2-21 true t=522.4
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=525.7
+HIT refresh-for-disabled-2-22 true t=526.0
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=529.3
+HIT refresh-for-disabled-2-23 true t=529.6
+HIT refresh-start-3 true t=533.2
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=537.4
+HIT refresh-for-disabled-3-0 true t=537.8
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=541.0
+HIT refresh-for-disabled-3-1 true t=541.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=544.6
+HIT refresh-for-disabled-3-2 true t=544.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=548.2
+HIT refresh-for-disabled-3-3 true t=548.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=551.8
+HIT refresh-for-disabled-3-4 true t=552.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=555.4
+HIT refresh-for-disabled-3-5 true t=555.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=558.9
+HIT refresh-for-disabled-3-6 true t=559.3
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=562.5
+HIT refresh-for-disabled-3-7 true t=562.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=566.1
+HIT refresh-for-disabled-3-8 true t=566.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=569.7
+HIT refresh-for-disabled-3-9 true t=570.0
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=573.3
+HIT refresh-for-disabled-3-10 true t=573.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=576.9
+HIT refresh-for-disabled-3-11 true t=577.2
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=580.5
+HIT refresh-for-disabled-3-12 true t=580.8
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=584.1
+HIT refresh-for-disabled-3-13 true t=584.4
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=587.7
+HIT refresh-for-disabled-3-14 true t=588.0
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=591.3
+HIT refresh-for-disabled-3-15 true t=591.6
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=594.9
+HIT refresh-for-disabled-3-16 true t=595.2
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=598.5
+HIT refresh-for-disabled-3-17 true t=598.8
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=602.0
+HIT refresh-for-disabled-3-18 true t=602.4
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=605.6
+HIT refresh-for-disabled-3-19 true t=605.9
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=609.2
+HIT refresh-for-disabled-3-20 true t=609.5
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=612.8
+HIT refresh-for-disabled-3-21 true t=613.1
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=616.4
+HIT refresh-for-disabled-3-22 true t=616.7
+SELECT_STATE count=2 visible=true enabled=false {"disabled":false,"cls":"","parent":"rev-plan-option"} t=619.9
+HIT refresh-for-disabled-3-23 true t=620.3
+STATE t=623.5 {"inUse":false,"next":null}
+SHOT 390-g7-final t=713.8
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0\n等待你的决定\n地图\n日程\n对话\n按天调整行程\n\n7 项安排 · 2 天\n\n你的旅行草案\n\n草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。\n\nDay 1\n12-03\nDay 2\n12-04\n2026-12-03 · 4 项安排\n天安门广场\nN509FZ · CC BY-SA 4.0\n故宫博物院（午门进·神武门出）\nuser:kallgan · CC BY-SA 3.0\n景山公园\nN509FZ · CC BY-SA 4.0\n上午\n· 天安门广场\n点击编辑\n上午\n· 故宫博物院（午门进·神武门出）\n点击编辑\n下午\n· 景山公园\n点击编辑\n晚上\n· 前门·京晟小馆烤鸭（晚餐）\n点击编辑\n＋ 添加安排\n检查草案保存状态\n\n当前展示的是已保存版本。\n\n准备出发 · 正式计划与待办\n从这份安排继续\n\n7 项安排已保存，刷新也能找回。\n\n已确认时间 · 查看或调整\n12-03 · 天安门广场\n开始\n结束\n12-03 · 故宫博物院（午门进·神武门出）\n开始\n结束\n12-03 · 景山公园\n开始\n结束\n12-03 · 前门·京晟小馆烤鸭（晚餐）\n开始\n结束\n12-04 · 颐和园\n开始\n结束\n12-04 · 天坛公园\n开始\n结束\n12-04 · 天坛·雨花村餐厅（晚餐）\n开始\n结束\n按以上时间准备方案\n安排已保存\n生成正式候选方案\n\n转场已核实 6/6（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实，另有 1 段公共交通没有答案，仍按步行核实，超过1 公里） · 已冻结进这版方案\n重新核实转场\n\n量回来的路上时间\n天安门广场 → 故宫博物院（午门进·神武门出）：这一段路上要 78 分钟，中间只留了 75 分钟。\n颐和园 → 天坛公园：这一段路上要 300 分钟，中间只留了 255 分钟。\n根据路线重新安排\n天安门广场\n来源写这天开放（来源写的时段 05:00—20:30）\n故宫博物院（午门进·神武门出）\n来源写这天开放（来源写的时段 08:30—16:30）；来源另写「以官方通知为准」\n景山公园\n来源写这天开放（来源写的时段 06:30—20:00）\n前门·京晟小馆烤鸭（晚餐）\n来源写这天开放（来源写的时段 10:30—22:00）\n颐和园\n来源写这天开放（来源写的时段 06:30—19:00）\n天坛公园\n来源写这天开放（来源写的时段 06:30—22:00）\n天坛·雨花村餐厅（晚餐）\n来源写这天开放（来源写的时段 10:00—23:00）\n\n按你的确认保存：这 7 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。这一版还需要把待办逐项补完才能选用。\n\n出发待办\n天安门广场\n票价：没有来源给出这一项的价格\n故宫博物院（午门进·神武门出）\n票价：没有来源给出这一项的价格\n景山公园\n票价：没有来源给出这一项的价格\n前门·京晟小馆烤鸭（晚餐）\n票价：没有来源给出这一项的价格\n颐和园\n票价：没有来源给出这一项的价格\n天坛公园\n票价：没有来源给出这一项的价格\n天坛·雨花村餐厅（晚餐）\n票价：没有来源给出这一项的价格\n\n屏上的出发待办都问过了；能不能选用，以方案卡上的按钮为准。\n\nTRAVEL PLAN\n你的行程方案\n刷新方案\n等待正式计划\n\n2 份正式候选方案\n\n根据路线重新安排\n方案 1\n2 天 · 7 项安排\n费用待确认\n\n这 7 项费用你已经确认先不计入预算（总价不含这些项）。\n\n12月03日\n09:00—10:00\n天安门广场\n费用待确认\n查看地点来源 ↗\n11:00—12:00\n故宫博物院（午门进·神武门出）\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n景山公园\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n前门·京晟小馆烤鸭（晚餐）\n费用待确认\n查看地点来源 ↗\n12月04日\n09:00—10:00\n颐和园\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n天坛公园\n费用待确认\n查看地点来源 ↗\n19:00—20:30\n天坛·雨花村餐厅（晚餐）\n费用待确认\n查看地点来源 ↗\n选用这份方案\n方案 2\n2 天 · 7 项安排\n费用待确认\n\n这 7 项费用你已经确认先不计入预算（总价不含这些项）。\n\n12月03日\n09:00—09:45\n天安门广场\n费用待确认\n查看地点来源 ↗\n11:00—11:45\n故宫博物院（午门进·神武门出）\n费用待确认\n查看地点来源 ↗\n14:00—14:45\n景山公园\n费用待确认\n查看地点来源 ↗\n19:00—19:45\n前门·京晟小馆烤鸭（晚餐）\n费用待确认\n查看地点来源 ↗\n12月04日\n09:00—09:45\n颐和园\n费用待确认\n查看地点来源 ↗\n14:00—14:45\n天坛公园\n费用待确认\n查看地点来源 ↗\n19:00—20:15\n天坛·雨花村餐厅（晚餐）\n费用待确认\n查看地点来源 ↗\n选用这份方案\n准备出发\n行程守护\n同行决策\nYOUR TRIP\n我的行程\n\n还没有保存的私人路线。探索时挑选两个真实地点"
+ERRORS []
+PLAN_GAPS_ALL ["这 7 项费用你已经确认先不计入预算（总价不含这些项）。","这 7 项费用你已经确认先不计入预算（总价不含这些项）。"] t=713.8
+PLAN_SELECT 2
+PLAN_START 0
+PLAN_HAND 0 t=713.8
+SHOT 390-r54-plan-blocked t=713.8
+HIT map-layer true t=714.1
+MAP_PANE 1
+MAP_CALLS []
+MAP_READS_EVERY ["{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}"]
+MAP_HEAD "地图"
+MAP_PLANNED_TAGS 0
+MAP_LIST_ITEMS 0
+MAP_COUNT_LINE "地图地点 0 处 · 高德地点 7 处"
+MAP_AMAP_LINKS 71
+SHOT 390-g8-map-preview t=718.0
+MISS load-map
+MAP_CANVAS 0
+MAP_PINS 0
+MAP_AFTER_CONSENT "地图"
+SHOT 390-g8-map-loaded t=737.0
+MAP_CALLS_AFTER []
+ERRORS_MAP []
+HIT map-layer-after-reload true t=749.6
+RELOAD_MAP_COUNT_LINE "地图地点 0 处 · 高德地点 7 处"
+RELOAD_PLANNED_TAGS 0
+RELOAD_LIST_ITEMS 0
+RELOAD_MAP_READS ["{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}"]
+SHOT 390-g8-map-reloaded t=753.4

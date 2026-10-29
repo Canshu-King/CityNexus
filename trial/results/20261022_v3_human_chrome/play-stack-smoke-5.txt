@@ -1,0 +1,9 @@
+COLD {"h1":"你的下一趟旅行，从一句话开始。","hint":"还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。","city":"","party":"1","budget":"1000","submit":"继续规划 →","submitCentre":[188,728]}
+AFTER_GOAL {"h1":"你的下一趟旅行，从一句话开始。","hint":"还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。","city":"","party":"1","budget":"800","submit":"继续规划 →","submitCentre":[188,728]}
+SHOT play-stack3-1-goal-typed.png
+PRESS_WITH_EMPTY_CITY pointer={"id":"924aebd0-eccb form={"h1":"你的下一趟旅行，从一句话开始。","hint":"还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。","city":"","party":"1","budget":"800","submit":"继续规划 →","submitCentre":[188,728]}
+SHOT play-stack3-2-empty-city-press.png
+AFTER_CITY {"h1":"你的下一趟旅行，从一句话开始。","hint":"(no hint node)","city":"北京","party":"1","budget":"800","submit":"继续规划 →","submitCentre":[188,728]}
+AFTER_CITY_PRESS {"heading":"北京把想去变成出发。","tabs":3,"dock":true,"cards":0,"body":"C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待第一个目标 地图 日程 对话 现实地图 0 处地点 地点研究会在这里汇合 找到有坐标的地点后，点击图钉查看来源。 手动探索地点 旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。 CITYNEXUS / EXPLORE 想去哪儿逛逛？ 你的想法已经写好了，可以改，改完交给 Agent。 改这句，然后交给 Agent → 1. 选地方 2. 选兴趣 3. 看结果 4. 去散步 我想自己先挑地点（可选） 技术信息 高级功能：地图坐标、分享与技术详情 探索 我的旅程 我的","pointer":"{\"id\":\"3fdacac0-00aa-4640-8bc1-4b50bfe8d12b\",\"","bearer":"present_in_sessionStorage(value not printed)"}
+SHOT play-stack3-3-after-journey.png
+NOTE 冷开一个标签页、输入一句话与城市名、按屏上那枚提交键两次；凭证只报在不在，值没有打印

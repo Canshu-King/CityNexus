@@ -1,0 +1,13 @@
+BALL {"found":true,"x":443.8705711364746,"y":488.05053329467773,"disabled":false,"aria_disabled":null}
+BEFORE {"clock":"课堂时空模拟｜不是实际定位或真实灾情 模拟旅行时间：12/03 11:00 现实演示时间：06:08:28 · 服务器记在第 2 版 · 刷新仍在 当前站：尚未开始执行 +30 分钟 +1 小时 刷新时间","value":"模拟旅行时间：12/03 11:00","traveller":null,"outcome":null,"stage":"教学模拟 · 场景时间 2026-12-03 09:00 +08:00","panel":true}
+START {"found":true,"x":225.1730136871338,"y":276.50481033325195,"disabled":false,"aria_disabled":null}
+AFTER_START {"clock":"课堂时空模拟｜不是实际定位或真实灾情 模拟旅行时间：12/03 11:00 现实演示时间：06:08:36 · 服务器记在第 2 版 · 刷新仍在 当前站：尚未开始执行 +30 分钟 +1 小时 刷新时间","value":"模拟旅行时间：12/03 11:00","traveller":null,"outcome":"行程已开始 · 状态 ACTIVE · 用时 0ms。","stage":"教学模拟 · 场景时间 2026-12-03 09:00 +08:00","panel":true}
+SHOT_STARTED {"bytes":80445}
+STEP0 {"pressed":{"found":true,"x":225.1730136871338,"y":276.24264907836914,"disabled":false,"aria_disabled":null},"before":"模拟旅行时间：12/03 11:00","after":"模拟旅行时间：12/03 11:00","outcome":"服务器接了「出发」这一转移（原来这项活动是 ACTIVE）：游标 50240807，投影 READY。新状态由它说，不由我说。"}
+STEP1 {"pressed":{"found":true,"x":225.1730136871338,"y":276.24264907836914,"disabled":false,"aria_disabled":null},"before":"模拟旅行时间：12/03 11:00","after":"模拟旅行时间：12/03 11:00","outcome":"服务器接了「到达」这一转移（原来这项活动是 EN_ROUTE）：游标 50240807，投影 READY。新状态由它说，不由我说。"}
+STEP2 {"pressed":{"found":true,"x":225.1730136871338,"y":276.24264907836914,"disabled":false,"aria_disabled":null},"before":"模拟旅行时间：12/03 11:00","after":"模拟旅行时间：12/03 11:00","outcome":"服务器接了「开始这项活动」这一转移（原来这项活动是 ARRIVED）：游标 50240807，投影 READY。新状态由它说，不由我说。"}
+STEP3 {"pressed":{"found":true,"x":225.1730136871338,"y":276.24264907836914,"disabled":false,"aria_disabled":null},"before":"模拟旅行时间：12/03 11:00","after":"模拟旅行时间：12/03 11:00","outcome":"服务器接了「完成这项活动」这一转移（原来这项活动是 IN_PROGRESS）：游标 5b60b374，投影 READY。新状态由它说，不由我说。"}
+AFTER_STEPS {"clock":"课堂时空模拟｜不是实际定位或真实灾情 模拟旅行时间：12/03 11:00 现实演示时间：06:08:52 · 服务器记在第 2 版 · 刷新仍在 当前站：尚未开始执行 +30 分钟 +1 小时 刷新时间","value":"模拟旅行时间：12/03 11:00","traveller":null,"outcome":"服务器接了「完成这项活动」这一转移（原来这项活动是 IN_PROGRESS）：游标 5b60b374，投影 READY。新状态由它说，不由我说。","stage":"教学模拟 · 场景时间 2026-12-03 14:00 +08:00","panel":true}
+SHOT_NEXT {"bytes":73460}
+AFTER_RELOAD {"clock":"课堂时空模拟｜不是实际定位或真实灾情 模拟旅行时间：12/03 11:00 现实演示时间：06:09:03 · 服务器记在第 2 版 · 刷新仍在 当前站：故宫博物院（ACTIVE） 模拟旅客：故宫博物院 · 39.9164, 116.3908（WGS84，模拟位置） +30 分钟 +1 小时 刷新时间","value":"模拟旅行时间：12/03 11:00","traveller":"模拟旅客：故宫博物院 · 39.9164, 116.3908（WGS84，模拟位置）","outcome":null,"stage":"教学模拟 · 场景时间 2026-12-03 14:00 +08:00","panel":true}
+SHOT_RELOAD {"bytes":93969}

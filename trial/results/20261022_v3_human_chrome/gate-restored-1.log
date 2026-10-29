@@ -1,0 +1,5 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 390
+  1 passed (5.1s)

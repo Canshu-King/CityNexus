@@ -1,0 +1,101 @@
+BARE ENGLISH REFUSALS HANDED TO A TRAVELLER bw293
+SCOPE every module under backend/app (files=238), parsed with ast, read-only
+HTTPException RAISES FOUND 1187 (this is the denominator)
+BUCKETS CODE_ONLY=738, ENGLISH_SENTENCE=333, MIXED=32, NOT_LITERAL=77, OTHER=7
+PAYLOAD SHAPES DICT_NO_MESSAGE_KEY=6, PLAIN_STRING=1110, UNKNOWN_SHAPE=71
+ENGLISH SENTENCE BY PAYLOAD SHAPE plain-string=333 with-message-key=0 dict-no-message-key=0 (a plain string is what the screen has to show verbatim)
+CONCLUSION of these 1187 raises, none carries its own message_key; the key a client sees is synthesised by the response wrapper (backend/app/main.py:784 `message_key or f"error.{code.lower()}"`), so its granularity is the HTTP status rather than the refusal - different sentences under one status share one key
+NAMED CONTROLS
+  'Trip Studio requires an active plan' -> ENGLISH_SENTENCE at backend/app/main.py:18394
+  'TRIP_STUDIO_BASE_PLAN_STALE' -> CODE_ONLY at backend/app/main.py:18400
+ENGLISH SENTENCES BY FILE (every row carries its own coordinate)
+  backend/app/main.py  223 sentences
+      backend/app/main.py:17856  agent idempotency record is incomplete
+      backend/app/main.py:17866  agent idempotency record is incomplete
+      backend/app/main.py:1054  f'{label} {identifier} was not found'
+      backend/app/main.py:1446  native Hermes run is not available to this Journey member
+      backend/app/main.py:1457  native Hermes run is not available to this Journey member
+      backend/app/main.py:1460  native Hermes run is not available to this Journey member
+  backend/app/agent/gateway.py  56 sentences
+      backend/app/agent/gateway.py:126  same agent request id used for a different request
+      backend/app/agent/gateway.py:129  agent idempotency record is incomplete
+      backend/app/agent/gateway.py:399  journey_id is required for this Agent tool
+      backend/app/agent/gateway.py:402  f'Journey {journey_id} was not found'
+      backend/app/agent/gateway.py:814  Agent tool is not in the CityNexus allowlist
+      backend/app/agent/gateway.py:1232  outcome must be a supported recovery conclusion
+  backend/app/traveler_principal.py  13 sentences
+      backend/app/traveler_principal.py:44  CityNexus traveler principal verifier is not configured
+      backend/app/traveler_principal.py:46  CityNexus traveler principal secret is too short
+      backend/app/traveler_principal.py:101  authenticated traveler credentials are required
+      backend/app/traveler_principal.py:103  traveler credentials are invalid
+      backend/app/traveler_principal.py:110  traveler credentials are invalid
+      backend/app/traveler_principal.py:117  traveler credentials are invalid
+  backend/app/agent/approval.py  11 sentences
+      backend/app/agent/approval.py:173  agent approval has expired
+      backend/app/agent/approval.py:177  agent approval is no longer usable
+      backend/app/agent/approval.py:229  agent approval does not match this action
+      backend/app/agent/approval.py:231  agent approval was issued for a different action
+      backend/app/agent/approval.py:240  agent approval scope does not match this action
+      backend/app/agent/approval.py:244  agent approval has expired
+  backend/app/agent/goal_tasks.py  11 sentences
+      backend/app/agent/goal_tasks.py:106  goal task Journey or member was not found
+      backend/app/agent/goal_tasks.py:117  goal tasks require the in-force Journey owner
+      backend/app/agent/goal_tasks.py:134  DRAFT goal task was not found
+      backend/app/agent/goal_tasks.py:164  DRAFT goal task was not found
+      backend/app/agent/goal_tasks.py:257  f'{name} must be explicitly true or false'
+      backend/app/agent/goal_tasks.py:263  f'{name} must be between {minimum} and {maximum}'
+  backend/app/agent/principal.py  4 sentences
+      backend/app/agent/principal.py:56  valid CityNexus Agent credentials are required
+      backend/app/agent/principal.py:60  CityNexus Agent principal is not configured
+      backend/app/agent/principal.py:66  f'Journey {journey_id} was not found'
+      backend/app/agent/principal.py:68  Agent principal is not scoped to this Journey
+  backend/app/agent/goal_preparation.py  2 sentences
+      backend/app/agent/goal_preparation.py:230  Journey not found
+      backend/app/agent/goal_preparation.py:232  Journey owner update required
+  backend/app/agent/goal_price_consent.py  2 sentences
+      backend/app/agent/goal_price_consent.py:162  Journey not found
+      backend/app/agent/goal_price_consent.py:164  Journey owner update required
+  backend/app/agent/goal_route_freeze.py  2 sentences
+      backend/app/agent/goal_route_freeze.py:807  Journey not found
+      backend/app/agent/goal_route_freeze.py:809  Journey owner update required
+  backend/app/agent/goal_travel_gaps.py  2 sentences
+      backend/app/agent/goal_travel_gaps.py:200  Journey not found
+      backend/app/agent/goal_travel_gaps.py:202  Journey owner update required
+  backend/app/execution/activity_state.py  2 sentences
+      backend/app/execution/activity_state.py:14  activity is not on the active plan
+      backend/app/execution/activity_state.py:16  activity is not the current activity
+  backend/app/agent/goal_place_research.py  1 sentences
+      backend/app/agent/goal_place_research.py:51  Journey not found
+  backend/app/departure_read.py  1 sentences
+      backend/app/departure_read.py:136  f'Journey {journey_id} was not found'
+  backend/app/execution/member_place_invitation.py  1 sentences
+      backend/app/execution/member_place_invitation.py:935  f'PLACE_INVITATION_{invitation.state}'
+  backend/app/execution/rendezvous_buddy_handoff.py  1 sentences
+      backend/app/execution/rendezvous_buddy_handoff.py:853  f'RENDEZVOUS_HANDOFF_{stale_status}'
+  backend/app/simulation/api.py  1 sentences
+      backend/app/simulation/api.py:113  Journey not found
+MIXED CODE-PLUS-SENTENCE ROWS
+  backend/app/main.py:1650  Journey member role does not have JOURNEY_READ authority
+  backend/app/main.py:9551  Journey member role does not have MEMBER_MANAGE authority
+  backend/app/main.py:11521  only a captured RESERVATION_TIME replay may enter this route
+  backend/app/main.py:13886  Journey member role does not have JOURNEY_UPDATE authority
+  backend/app/main.py:13953  Journey member role does not have MEMBER_MANAGE authority
+  backend/app/main.py:13955  Journey member role does not have JOURNEY_UPDATE authority
+  backend/app/main.py:14412  Journey member role does not have JOURNEY_UPDATE authority
+  backend/app/main.py:15714  f"GROUP_RECOVERY_NOT_ACTIONABLE:{recovery.get('state')}"
+  backend/app/main.py:16881  Journey member role does not have JOURNEY_UPDATE authority
+  backend/app/main.py:18231  STALE_RECOMPOSE_REQUIRED: PlanVersion has no frozen provider evidence
+  backend/app/main.py:18241  STALE_RECOMPOSE_REQUIRED: PlanVersion evidence reference is inconsistent
+  backend/app/main.py:20821  f'INVALID_ACTIVITY_TRANSITION:{activity.status}->SKIPPED'
+NOT_LITERAL (message built at runtime, invisible to a static census)
+  backend/app/departure_read.py:65
+  backend/app/main.py:955
+  backend/app/main.py:4218
+  backend/app/main.py:7842
+  backend/app/main.py:16392
+  backend/app/main.py:10741
+  backend/app/main.py:13624
+  backend/app/main.py:14848
+  backend/app/main.py:17960
+  backend/app/main.py:20066
+COVERAGE_LIMIT the census reads the raise site only; it cannot say which of these a traveller can actually reach, and it does not see messages built by a helper.

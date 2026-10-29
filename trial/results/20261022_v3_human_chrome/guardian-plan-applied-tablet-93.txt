@@ -1,0 +1,24 @@
+START {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"RUNNING","sequence":0,"plan_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","activity_id":"5b60b374-8d3b-40fb-be9f-ada33e650bb8","pending":null,"proposals":[]}
+SCENE {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"PAUSED_FOR_GUARDIAN","sequence":1,"plan_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","activity_id":"5b60b374-8d3b-40fb-be9f-ada33e650bb8","pending":{"id":"d42b2a61-642f-4ed1-8ae8-63263c124c8c","event_type":"CLOSURE","status":"DETECTED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[]}
+GUARDIAN_BUTTON 1
+POLL 0 elapsed_s=6 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 5 elapsed_s=36 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 10 elapsed_s=66 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 15 elapsed_s=96 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 20 elapsed_s=127 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 25 elapsed_s=157 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 30 elapsed_s=187 status=PAUSED_FOR_ACCEPTANCE seq=2 proposals=[{"id":"93d894c8-2df4-4b37-8907-90bb6d25591f","status":"PRESENTED"}]
+BEFORE_ACCEPT {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"plan_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","activity_id":"5b60b374-8d3b-40fb-be9f-ada33e650bb8","pending":{"id":"d42b2a61-642f-4ed1-8ae8-63263c124c8c","event_type":"CLOSURE","status":"DETECTED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"93d894c8-2df4-4b37-8907-90bb6d25591f","status":"PRESENTED"}]}
+EVENT_ACCEPT_BUTTON 1
+ACCEPT_POLL 0 status=PAUSED_FOR_ACCEPTANCE pending=RESOLVED plan=1bc9f885-3910-4202-b4f1-0aad94f13271
+AFTER_ACCEPT {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"plan_id":"1bc9f885-3910-4202-b4f1-0aad94f13271","activity_id":"caa31a3c-7284-479f-bbe7-f8d5b042d2a4","pending":{"id":"d42b2a61-642f-4ed1-8ae8-63263c124c8c","event_type":"CLOSURE","status":"RESOLVED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"93d894c8-2df4-4b37-8907-90bb6d25591f","status":"ACCEPTED"}]}
+RESUME_BUTTON 1
+AFTER_RESUME {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"RUNNING","sequence":3,"plan_id":"1bc9f885-3910-4202-b4f1-0aad94f13271","activity_id":"caa31a3c-7284-479f-bbe7-f8d5b042d2a4","pending":{"id":"d42b2a61-642f-4ed1-8ae8-63263c124c8c","event_type":"CLOSURE","status":"RESOLVED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"93d894c8-2df4-4b37-8907-90bb6d25591f","status":"ACCEPTED"}]}
+PLAN_BEFORE_NEXT [{"id":"9efc8729-ddd0-4339-a245-4a363d0d6281","title":"天安门广场","start":"2026-12-03T09:00:00+08:00","status":"COMPLETED"},{"id":"caa31a3c-7284-479f-bbe7-f8d5b042d2a4","title":"天坛公园","start":"2026-12-04T09:00:00+08:00","status":"ACTIVE"}]
+SCREEN_BEFORE_NEXT {"virtual":"模拟时间：12/03 09:00 · 执行第 3 步 · 模拟进行中","run":"模拟进行中 · 12-03 09:00","message":null,"history":"守护已接手 · 12-03 09:00守护已接手 · 12-03 09:00推进 · 12-03 09:00推进 · 12-03 09:00"}
+NEXT_BUTTON 1 disabled=false
+AFTER_NEXT {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"SIMULATED_COMPLETED","sequence":7,"plan_id":"1bc9f885-3910-4202-b4f1-0aad94f13271","activity_id":null,"pending":{"id":"d42b2a61-642f-4ed1-8ae8-63263c124c8c","event_type":"CLOSURE","status":"RESOLVED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"93d894c8-2df4-4b37-8907-90bb6d25591f","status":"ACCEPTED"}]}
+SCREEN_AFTER_NEXT {"virtual":"模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成","run":"模拟行程已完成 · 12-04 10:00","message":null,"history":"守护已接手 · 12-03 09:00守护已接手 · 12-03 09:00推进 · 12-03 09:00游览 · 12-04 09:00完成一站 · 12-04 10:00两日走完 · 12-04 10:00"}
+PLAN_AFTER_NEXT [{"id":"9efc8729-ddd0-4339-a245-4a363d0d6281","title":"天安门广场","start":"2026-12-03T09:00:00+08:00","status":"COMPLETED"},{"id":"caa31a3c-7284-479f-bbe7-f8d5b042d2a4","title":"天坛公园","start":"2026-12-04T09:00:00+08:00","status":"COMPLETED"}]
+ELAPSED_S 227
+ERRORS []

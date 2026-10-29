@@ -1,0 +1,8 @@
+block 374: where each read server field goes, thirteen handlers at a time, landed at 00:14
+
+Landed as 494abfd7_0014.md.inserted_001434 with the Q43 gate reading 64 claims and 0 findings. The generator
+parses the thirteen rows out of the bw338 receipt, reconciles them against its own bucket counts, against
+bw326's denominator and against the bw327/bw328 counts #373 published, and refuses to write if the
+provenance line and the TALLY disagree about the text bucket. It also carries the second, smaller
+correction: catch 64 -> 63 and reads-the-refusal 1 -> 5, while 26 and 26 hold. Two counts in the first draft
+were literals typed from memory rather than read from bw337; they are parsed now. 0 product bytes.

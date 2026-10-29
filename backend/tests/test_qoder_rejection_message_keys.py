@@ -31,6 +31,8 @@ from fastapi.testclient import TestClient
 
 from app.core.temporal import MAX_JOURNEY_DAYS
 from app.main import (
+    PLAN_FIT_MESSAGE_KEYS,
+    PLAN_FIT_REJECTIONS,
     TEMPORAL_MESSAGE_KEYS,
     TEMPORAL_REJECTIONS,
     VALIDATION_MESSAGE_KEYS,
@@ -235,3 +237,72 @@ def test_an_unexpected_failure_is_still_a_500_and_not_given_a_tidy_key() -> None
         assert "OUT_OF_BOUNDSX" in str(exc), exc
     else:
         raise AssertionError("a near-miss rejection code was laundered into a 422")
+
+
+# ------------------------------------------------------------------ planner refusals
+#
+# The compose doors caught every ValueError the planner raised and answered
+# `HTTPException(422, str(exc))`.  On a phone that rendered the internal string --
+# `V13_PLACE_CLOSED:6f0c2f…` -- as the traveller's sentence, with a place id nobody can read and
+# no key a screen could look up.  The refusals themselves stay refusals; only who has to read them
+# changes.  The raise sites are pinned in `tests/test_day_rhythm.py:151` and `:156`; the planner
+# call is stubbed in these two arms so this door's *answer* is measured without rebuilding a whole
+# closed-place fixture.
+
+def _compose_journey() -> str:
+    created = client.post("/api/v1/journeys", json=_body(traveler_id=_traveler()))
+    assert created.status_code == 201, created.text
+    return created.json()["id"]
+
+
+def _planner_raises(message: str):
+    def _stub(*_args, **_kwargs):
+        raise ValueError(message)
+
+    return _stub
+
+
+def test_a_planner_refusal_is_answered_with_a_sentence_and_its_own_key(monkeypatch) -> None:
+    journey_id = _compose_journey()
+    place_id = str(uuid4())
+    for code, key in (
+        ("V13_PLACE_CLOSED", "plan.place_closed"),
+        ("V13_OPENING_STATUS_UNKNOWN", "plan.opening_hours_not_recorded"),
+    ):
+        monkeypatch.setattr("app.main.compose_authoritative_multiday", _planner_raises(f"{code}:{place_id}"))
+        body = _error_of(client.post(f"/api/v1/journeys/{journey_id}/authoritative-compose",
+                                     json={"place_ids": [str(uuid4()), str(uuid4())]}))
+        assert body["reason_code"] == code, body
+        assert body["message_key"] == key, body
+        assert body["message"] == PLAN_FIT_REJECTIONS[code], body
+        assert body["details"] == {"reason": code}, body
+        # The leak this order exists to close: neither the internal name nor the place id may be
+        # what the traveller is told.  `reason_code` is the sanctioned slot for the name.
+        assert "V13_" not in body["message"], body["message"]
+        assert place_id not in json.dumps(body, ensure_ascii=False), body
+
+
+def test_an_unnamed_planner_failure_keeps_its_server_error(monkeypatch) -> None:
+    """A bug in the planner must not start arriving as "client error"."""
+
+    journey_id = _compose_journey()
+    monkeypatch.setattr("app.main.compose_authoritative_multiday", _planner_raises("solver met a None"))
+    loud = TestClient(app, raise_server_exceptions=False)
+    answer = loud.post(f"/api/v1/journeys/{journey_id}/authoritative-compose",
+                       json={"place_ids": [str(uuid4()), str(uuid4())]})
+    assert answer.status_code == 500, f"{answer.status_code} {answer.text[:200]}"
+    assert "solver met a None" not in answer.text, answer.text[:200]
+
+
+def test_the_plan_fit_maps_describe_one_domain() -> None:
+    """Same rule as the temporal pair: nothing named for HTTP stays untranslatable."""
+
+    assert set(PLAN_FIT_MESSAGE_KEYS) == set(PLAN_FIT_REJECTIONS), (
+        sorted(PLAN_FIT_MESSAGE_KEYS),
+        sorted(PLAN_FIT_REJECTIONS),
+    )
+    keys = list(PLAN_FIT_MESSAGE_KEYS.values())
+    assert len(set(keys)) == len(keys), keys
+    assert not set(keys) & set(TEMPORAL_MESSAGE_KEYS.values()), (keys, list(TEMPORAL_MESSAGE_KEYS.values()))
+    for key in keys:
+        assert KEY_SHAPE.match(key), key

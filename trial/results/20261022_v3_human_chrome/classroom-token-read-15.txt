@@ -1,0 +1,5 @@
+CLOCK "模拟时间：12/03 10:00 · 服务器第 1 版"
+CLOCK_AFTER "模拟时间：12/03 11:00 · 服务器第 2 版"
+PROPOSAL "移除故宫博物院；路上少 66 分钟。"
+CALLS ["demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71 200 auth=true","demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71 200 auth=true","journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/twin 200 auth=true","demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71/advance 200 auth=true","plans/e74a5edb-3f6d-40c3-910c-52e449619d40 200 auth=true","plans/e74a5edb-3f6d-40c3-910c-52e449619d40 200 auth=true"]
+ERRORS []

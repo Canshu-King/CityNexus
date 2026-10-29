@@ -7,6 +7,8 @@ from typing import Any
 
 import httpx
 
+from app.core.config import settings
+
 AMAP_BASE_URL = "https://restapi.amap.com"
 MODE_PATHS = {
     "WALK": "walking",
@@ -43,8 +45,22 @@ class NormalizedRoute:
     provider_key: str = "amap-web-service"
 
 
+def _amap_key() -> str | None:
+    """One secret, read the way the Agent's own research leg reads it.
+
+    Two spellings have been live at once: ``settings.amap_web_key`` (CITYNEXUS_AMAP_WEB_KEY, the name
+    config.py defines and backend/app/agent/goal_amap.py calls with) and the bare ``AMAP_WEB_KEY``.
+    Measured consequence: ``/api/v1/providers/v9`` answered ``NOT_CONFIGURED`` for a stack whose Agent
+    door was configured and really did route -- a status screen that contradicts the work happening
+    underneath it.  The raw name stays as a fallback so existing deployments keep working; neither
+    name is ever printed.
+    """
+
+    return settings.amap_web_key or os.getenv("AMAP_WEB_KEY") or None
+
+
 def amap_status() -> ProviderStatus:
-    configured = bool(os.getenv("AMAP_WEB_KEY"))
+    configured = bool(_amap_key())
     return ProviderStatus(
         provider_key="amap-web-service",
         status="READY" if configured else "NOT_CONFIGURED",
@@ -119,7 +135,7 @@ class AmapPoiProvider:
     provider_key = "amap-web-service"
 
     async def search(self, query: str, city: str, *, limit: int = 10) -> list[dict[str, Any]]:
-        key = os.getenv("AMAP_WEB_KEY")
+        key = _amap_key()
         if not key:
             raise RuntimeError("AMAP_WEB_KEY is not configured")
         params = {
@@ -167,7 +183,7 @@ class AmapMobilityProvider:
     ) -> NormalizedRoute:
         normalized_mode = mode.upper()
         path = MODE_PATHS.get(normalized_mode)
-        key = os.getenv("AMAP_WEB_KEY")
+        key = _amap_key()
         if not key:
             raise RuntimeError("AMAP_WEB_KEY is not configured")
         if not path:

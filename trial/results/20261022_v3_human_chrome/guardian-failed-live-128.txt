@@ -1,0 +1,6 @@
+START {"status":"RUNNING","sequence":0,"outcome":{"code":"UNKNOWN"},"proposals":[],"pending":null}
+CLOSURE {"status":"PAUSED_FOR_GUARDIAN","sequence":1,"outcome":{"code":"UNKNOWN"},"proposals":[],"pending":"fbee730e-445b-4f5c-8347-01b28b96752b"}
+GUARDIAN_REQUESTED
+GUARDIAN_RESULT elapsed_s=215.0 {"status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"outcome":{"code":"PROPOSAL_READY"},"proposals":[{"id":"7044ef3e-fc09-44d6-b0b2-4422014c4570","status":"PRESENTED"}],"pending":"fbee730e-445b-4f5c-8347-01b28b96752b"}
+FINAL {"status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"outcome":{"code":"PROPOSAL_READY"},"proposals":[{"id":"7044ef3e-fc09-44d6-b0b2-4422014c4570","status":"PRESENTED"}],"pending":"fbee730e-445b-4f5c-8347-01b28b96752b"}
+ERRORS []

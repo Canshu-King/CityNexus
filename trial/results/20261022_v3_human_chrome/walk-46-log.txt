@@ -1,0 +1,18 @@
+WALK46_START 2026-10-22T16:58:00.703Z the expired-credential screen, after the copy fix
+OVERLAY absent
+SCREEN {"map_empty":"这次登录已经过期重新登录后，这趟行程的地点还会回到这里。","activity_lines":["这次登录已经过期，读不到工作记录。"],"tiles":0,"screen":"C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待第一个目标 地图 日程 对话 按天调整行程 0 项安排 · 0 天 Agent 会把暂定安排和待查事项逐步保存到这里。 准备出发 · 正式计划与待办 TRAVEL PLAN 你的行程方案 刷新方案 当前账号无法读取这份行程，请重新进入行程。 准备出发 行程守护 同行决策 YOUR TRIP "}
+SHOT human-227-expired-credential-honest-state.png bytes=325009
+MAP_PLACES_HTTP_STATUS 401
+WALK46_END 2026-10-22T16:58:08.658Z
+WALK46_START 2026-10-22T16:58:39.026Z the expired-credential screen, after the copy fix
+OVERLAY absent
+SCREEN {"map_empty":"这次登录已经过期重新登录后，这趟行程的地点还会回到这里。","activity_lines":["这次登录已经过期，读不到工作记录。"],"tiles":0,"screen":"C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 登录已过期 地图 日程 对话 按天调整行程 0 项安排 · 0 天 Agent 会把暂定安排和待查事项逐步保存到这里。 准备出发 · 正式计划与待办 TRAVEL PLAN 你的行程方案 刷新方案 当前账号无法读取这份行程，请重新进入行程。 准备出发 行程守护 同行决策 YOUR TRIP 我的"}
+SHOT human-227-expired-credential-honest-state.png bytes=325322
+MAP_PLACES_HTTP_STATUS 401
+WALK46_END 2026-10-22T16:58:46.971Z
+WALK46_START 2026-10-22T16:59:20.005Z the expired-credential screen, after the copy fix
+OVERLAY absent
+SCREEN {"map_empty":"这次登录已经过期这趟行程还在，只是这台设备当前读不到它。","activity_lines":["这次登录已经过期，读不到工作记录。"],"tiles":0,"screen":"C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 登录已过期 地图 日程 对话 按天调整行程 0 项安排 · 0 天 Agent 会把暂定安排和待查事项逐步保存到这里。 准备出发 · 正式计划与待办 TRAVEL PLAN 你的行程方案 刷新方案 当前账号无法读取这份行程，请重新进入行程。 准备出发 行程守护 同行决策 YOUR TRIP 我的"}
+SHOT human-227-expired-credential-honest-state.png bytes=325322
+MAP_PLACES_HTTP_STATUS 401
+WALK46_END 2026-10-22T16:59:27.793Z

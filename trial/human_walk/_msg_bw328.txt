@@ -1,0 +1,19 @@
+bw328: every one of the 19 panel sentences is stored in a state that markup reads - the chain is closed
+
+trial/human_walk/_cmdr_render_check_r328.py takes each of bw327's 19 sites, pulls the Chinese literals out
+of that catch body itself, finds the setXxx(...) call whose own arguments contain the literal, derives the
+state it writes, and looks for a render site for that name inside a {...} expression or in front of one.
+Readings: 19 rows, 19 rendered, 0 stored-but-unread, 0 with no setter.
+
+Both controls bite: the LiveRecovery handler resolves to state 'message' read at lines 661, 2136, 2138, and
+a state name nobody defines yields 0 render sites - the second one is what stops the first version of this
+test, which used an alternation without a group, from counting every bare occurrence of the word "message"
+and reporting 44 renders. That first version also read 2 rows as NO_SETTER_FOR_TEXT because it matched
+against bw327's *display* string, which joins several literals with " / "; matching the body's own
+literals instead turned those two into RENDERED, so the number that moved was my artifact, not the code.
+
+Verified by hand rather than trusting the pattern, on a non-LiveRecovery file: PlanComparison.tsx:270 is
+`{error && (<p className="plan-cmp-error" role="alert" data-testid="plan-cmp-error">{error}</p>)}` - a real
+render with an alert role. COVERAGE_LIMIT keeps the claim inside what static reading can say: the state is
+read by markup, which is not the same as a traveller having been on that panel when the failure happened,
+and a prop-passed render path is not followed. 0 product bytes.

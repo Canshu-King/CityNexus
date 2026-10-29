@@ -1,0 +1,7 @@
+URL http://127.0.0.1:14491/revolution
+TITLE CityNexus Trip Operations
+TEXT "C\nCityNexus\n你的智能旅行伙伴\nAI 建议可试\nCITYNEXUS / YOUR TRIP\n你的下一趟旅行，\n从一句话开始。\n\n说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。\n\n想怎么玩？\n目的地\n\n还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。\n\n日期与天数\n更多偏好\n同行 1 人 · 预算 ¥1,000\n继续规划 →\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认"
+BUTTONS ["继续规划 →","探索","我的旅程","我的","×"]
+STORAGE {}
+VIEWPORT {"w":390,"h":844,"dpr":1}
+ERRORS []

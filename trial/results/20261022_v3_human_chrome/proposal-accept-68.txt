@@ -1,0 +1,34 @@
+{
+  "source": "read-only copy of the live classroom DB",
+  "replans": {
+    "http": 200,
+    "count": 1,
+    "presented": 1
+  },
+  "proposal": {
+    "id": "b00c1d49-9b9f-430f-b5a3-7d64066a426c",
+    "status": "PRESENTED",
+    "proposed_plan_version_id": "f84adc05-fb3b-4721-9c21-4db3bab96c28"
+  },
+  "accept": {
+    "http": 200,
+    "status": null,
+    "error": null
+  },
+  "journey": {
+    "before": {
+      "plan": "e74a5edb-3f6d-40c3-910c-52e449619d40",
+      "status": "ACTIVE"
+    },
+    "after": {
+      "plan": "f84adc05-fb3b-4721-9c21-4db3bab96c28",
+      "status": "ACTIVE"
+    }
+  },
+  "replans_after": {
+    "http": 200,
+    "statuses": [
+      "ACCEPTED"
+    ]
+  }
+}

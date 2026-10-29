@@ -4,16 +4,29 @@ import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, typ
 import { TravelBriefPreview } from "./TravelBriefPreview";
 import { formatMinorMoney } from "../../lib/money";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
+import { bandSentence, infeasibleAtDepartureSentence, missingFactsSentence, priceConsentNote, unsettledFactRows } from "./departureGaps";
 import "./MobilePlanWorkbench.css";
 
 type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null; departure: JourneyDepartureRead | null; seat: JourneyMemberSeatRead | null };
 type WriteAction = "generate" | "select" | "start" | "brief" | "facts";
+type GapRow = { kind?: string; title?: string; resolution?: string };
 
-function failureText(error: unknown): string {
+function failureText(error: unknown, titleOf?: (placeId: string) => string | null): string {
   if (error instanceof CityNexusApiError) {
-    const body = error.body as { reason_code?: string; error?: { reason_code?: string }; detail?: { reason_code?: string } } | null;
+    const body = error.body as { reason_code?: string; error?: { reason_code?: string; details?: { unresolved_facts?: unknown; failures?: unknown } }; detail?: { reason_code?: string }; details?: { unresolved_facts?: unknown; failures?: unknown } } | null;
     const reason = body?.reason_code ?? body?.error?.reason_code ?? body?.detail?.reason_code;
-    if (reason === "UNRESOLVED_ACTIVITY_FACTS") return "地点的营业时间还没核实。回到探索，查看来源或换一个地点。";
+    // The last door before a journey goes live.  Its reason_code has been on the wire for a while, but
+    // nothing read it, so any refusal came out as the generic 422 sentence below and pointed at the
+    // exploration list.  Now the gate's own rows decide the wording, and an answer without rows still
+    // falls through to that generic sentence rather than inventing a cause (backend/app/departure_commit.py:114).
+    if (reason === "PLAN_INFEASIBLE") {
+      const named = infeasibleAtDepartureSentence(body?.error?.details?.failures ?? body?.details?.failures, titleOf);
+      if (named) return named;
+    }
+    if (reason === "UNRESOLVED_ACTIVITY_FACTS") {
+      const rows = Array.isArray(body?.details?.unresolved_facts) ? body.details.unresolved_facts as GapRow[] : [];
+      return rows.length ? `${missingFactsSentence(rows)}回到探索或出发待办处理它。` : "地点的营业时间、票价或转场资料还没核实。";
+    }
     if (reason === "PLACE_COST_UNVERIFIED") return "地点费用还没核实。回到探索查看来源后继续。";
     if (reason === "PLACES_NOT_IN_CATALOG") return "地点列表有更新，请重新选择地点。";
     if (error.status === 401 || error.status === 403) return "当前账号无法读取这份行程，请重新进入行程。";
@@ -23,8 +36,43 @@ function failureText(error: unknown): string {
   return "暂时没能读取最新结果，点击刷新方案再继续。";
 }
 
-function dateKey(value: string | undefined, timeZone: string): string | null {
-  if (!value || !Number.isFinite(Date.parse(value))) return null;
+// The feasibility gate names a place by id; the plans this screen already holds carry that same id next to
+// the title the traveller sees, so the refusal can say which place without asking the server again.
+function placeTitleFrom(snapshot: PlanSnapshot | null, placeId: string): string | null {
+  for (const plan of snapshot?.plans ?? []) {
+    const hit = (plan.activities ?? []).find((row) => row.place_id === placeId);
+    if (hit?.title) return String(hit.title);
+  }
+  return null;
+}
+
+// The server already names why a saved schedule cannot be chosen; the screen says that, and never a
+// hand-written guess at what could be missing.  A plan whose places were re-drawn since is a different
+// message, so it is chosen by the server's own `stale` flag rather than by which path wrote the plan.
+function selectionBlocker(plan: PlanVersion): string {
+  const rows = Array.isArray(plan.explanation?.unresolved_facts) ? plan.explanation.unresolved_facts as GapRow[] : [];
+  // A plan that has its walking evidence and merely needs re-drawing is the "regenerate" case.  A plan
+  // with no evidence is not out of date -- it was never given the facts selection asks for, and reading
+  // it as "地点信息有更新" sent the traveller to the wrong door (measured: every candidate saved from an
+  // Agent draft is stale for exactly this reason, app/services.py:584).
+  if (plan.stale && plan.mobility_snapshot_id) return "地点信息有更新，请重新生成方案。";
+  // A price the traveller already accepted is not something this plan still lacks: the server stopped
+  // blocking on it, so the screen must stop asking for it in the same breath that the card above says
+  // 按你的确认保存 (measured on walk-80, walk-82 and walk-83, where STEP_13 still read 还缺：票价).
+  // Every other gap stays named, and the 选用 button remains the server's to give.
+  return missingFactsSentence(unsettledFactRows(rows, plan.explanation), Boolean(plan.mobility_snapshot_id))
+    + priceConsentNote(plan.explanation);
+}
+
+// Which open rows the server's own selection gate reads as "a confirmed stretch of time still has no
+// place".  Same two kinds, same predicate (backend/app/services.py:742), so the hand the screen offers
+// cannot point somewhere the door will not accept.
+export function placeRowsStillOpen(plan: PlanVersion): boolean {
+  const rows = Array.isArray(plan.explanation?.unresolved_facts) ? plan.explanation.unresolved_facts as GapRow[] : [];
+  return rows.some((row) => row.kind === "PLACE_REQUIRED" || row.kind === "SOURCE_IDENTITY");
+}
+
+function dateKey(value: string | undefined, timeZone: string): string | null {  if (!value || !Number.isFinite(Date.parse(value))) return null;
   try {
     const parts = new Intl.DateTimeFormat("en", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(value));
     const part = (name: string) => parts.find((item) => item.type === name)?.value;
@@ -71,6 +119,17 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
   const scheduledDays = [...days.keys()].filter((day) => day !== "日期待确认").length;
   const missingDays = requestedDays && requestedDays > scheduledDays ? requestedDays - scheduledDays : 0;
   const unknownCosts = plan.activities.filter((item) => !["KNOWN_FREE", "KNOWN_PAID"].includes(item.cost_status ?? "")).length;
+  // The server records the traveller's "unknown price, not in budget" decision on the plan itself.
+  // Saying "7 项费用待确认" after that press read as an unmet gate on the 430 walk, right next to the
+  // card that already said the prices were confirmed; the remaining truth is that the total excludes them.
+  const costAccepted = String((plan.explanation as Record<string, unknown> | null)?.authority_state ?? "") === "COST_UNKNOWN_ACCEPTED";
+  // Times the traveller confirmed that have no venue yet.  The row stays on the plan -- it is part of
+  // the day they agreed to -- and declares itself unroutable (metadata.routing = NOT_ROUTED, written at
+  // backend/app/agent/goal_preparation.py), so the platform neither invents a route to it nor blames
+  // the traveller for a location it never had.  Measured on the walked candidate: as an ordinary
+  // location-less row it answered LOCATION_MISSING plus MOBILITY_CONTEXT_MISSING and no button could
+  // act on that (trial/results/20261022_v3_human_chrome/selection-gate-replay-1.txt).
+  const bands = plan.activities.filter((item) => item.activity_type === "FREE_TIME");
   const knownTotal = plan.total_cost_status === "KNOWN" && unknownCosts === 0;
   const total = plan.total_cost && Number.isFinite(plan.total_cost.amount_minor)
     ? formatMinorMoney(plan.total_cost.amount_minor, plan.total_cost.currency, "zh-CN") : null;
@@ -80,7 +139,9 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
       <span><CalendarDays size={16} aria-hidden="true" />{scheduledDays} 天 · {plan.activities.length} 项安排</span>
       <strong>{unknownCosts > 0 && unknownCosts === plan.activities.length ? "费用待确认" : total ? `${knownTotal ? "计划费用" : "已知费用"} ${total}` : "费用汇总待确认"}</strong>
     </div>
-    {unknownCosts > 0 && <p className="rev-plan-gap">{unknownCosts} 项费用待确认，尚未计入完整预算。</p>}
+    {unknownCosts > 0 && <p className="rev-plan-gap" data-testid="rev-plan-unknown-costs">{costAccepted
+      ? `这 ${unknownCosts} 项费用你已经确认先不计入预算（总价不含这些项）。`
+      : `${unknownCosts} 项费用待确认，尚未计入完整预算。`}</p>}
     {missingDays > 0 && <p className="rev-plan-gap" data-testid="rev-plan-day-gap">还有 {missingDays} 天未安排，可返回探索补充地点。</p>}
     {[...days].map(([day, activities]) => <section className="rev-plan-day" key={day}>
       <h4>{day === "日期待确认" ? day : `${day.slice(5).replace("-", "月")}日`}</h4>
@@ -88,11 +149,12 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
         {activities.map((activity) => <li key={activity.id}>
           <div className="rev-plan-time"><Clock3 size={14} aria-hidden="true" />{timeText(activity.start_at, timeZone)}—{timeText(activity.end_at, timeZone)}</div>
           <strong><MapPin size={15} aria-hidden="true" />{activity.title}</strong>
-          <div className="rev-plan-activity-facts"><span>{activityCost(activity)}</span>{activity.travel_from_prev_min > 0 && <span>转场预留 {activity.travel_from_prev_min} 分钟</span>}</div>
+          <div className="rev-plan-activity-facts"><span>{activityCost(activity)}</span>{activity.travel_from_prev_min > 0 && <span>转场预留 {activity.travel_from_prev_min} 分钟</span>}{!activity.place_id && <span data-testid="rev-plan-band-tag">地点待定 · 没有算进转场</span>}</div>
           {sourceLinks(activity).map((url, index) => <a key={url} href={url} target="_blank" rel="noreferrer">查看地点来源{index ? ` ${index + 1}` : ""} ↗</a>)}
         </li>)}
       </ol>
     </section>)}
+    {bands.length > 0 && <p className="rev-plan-gap" data-testid="rev-plan-band-note">{bandSentence(bands.length)}</p>}
     {plan.activities.length === 0 && <p>这份方案还没有活动安排。</p>}
   </>;
 }
@@ -113,9 +175,15 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
   const [message, setMessage] = useState<string | null>(null);
   const [costAck, setCostAck] = useState(false);
   const [needsRefresh, setNeedsRefresh] = useState(false);
+  const [selectBlocked, setSelectBlocked] = useState(false);
   const [candidateIds, setCandidateIds] = useState<string[]>([]);
   const epoch = useRef(0);
   const writeLock = useRef(false);
+  // One key per candidate version, held for as long as this screen holds the traveller's token.
+  // An accidental second press therefore replays the door's stored answer instead of asking for a
+  // second decision, and a press the door refused stored no receipt -- the retry on the same key is
+  // exactly what the traveller needs to be able to do (backend/app/departure_commit.py:261).
+  const commitKeys = useRef<Map<string, string>>(new Map());
   const current = snapshot?.bearer === readTravelerBearer() && snapshot?.journey.id === journeyId ? snapshot : null;
 
   const refresh = useCallback(async () => {
@@ -146,6 +214,12 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     setMessage(null);
     setCostAck(false);
     setCandidateIds([]);
+    // A different traveller is a different hand on the door, so the key a previous traveller
+    // pressed with is not offered up.  This is hygiene, not the safety boundary: the receipt row
+    // is keyed by operation plus the sent key (`backend/app/departure_commit.py:166`) while the
+    // signature guarding it carries the traveller (`backend/app/departure_commit.py:160`), and the
+    // seat is checked before either (`backend/app/departure_read.py:143`).
+    commitKeys.current = new Map();
     setBearer(token);
   }), []);
   useEffect(() => {
@@ -168,12 +242,28 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     writeLock.current = true;
     setBusy(action);
     setMessage(null);
+    setSelectBlocked(false);
     try {
       if (action === "generate") {
         if (current.input) await cityNexusApi.generateFromDiscovery(journeyId, candidateIds, crypto.randomUUID());
         else await cityNexusApi.generatePlans(journeyId, 1, { placeIds: [placeId!], allowSinglePlace: true, allowUnknownCost: true, idempotencyKey: crypto.randomUUID() });
       } else if (action === "select" && plan) {
-        await cityNexusApi.selectPlan(journeyId, plan.id);
+        // The commit door, not the bare select route: same transition (the door calls the shipped
+        // plan door in-process), but this press carries an `Idempotency-Key` and lets the server say
+        // who committed it -- so a traveller who taps twice gets one decision, and a screen never
+        // has to guess whether the plan actually moved.
+        const key = commitKeys.current.get(plan.id) ?? crypto.randomUUID();
+        commitKeys.current.set(plan.id, key);
+        const committed = await cityNexusApi.commitJourneyDeparture(journeyId, plan.id, key);
+        if (!stillCurrent()) return;
+        if (committed.journey_id !== journeyId || committed.plan_version_id !== plan.id) {
+          throw new Error("Departure commit response mismatch");
+        }
+        // The map reads the journey's places once per mount, so a commit that lands a new active plan
+        // leaves the journey screen drawing the pre-commit map -- measured on the 390 walk, where the
+        // ACTIVE journey's map still said 「0 处地点」 while the same plan's six stops sat in `places`.
+        // `refresh()` above only re-reads this workbench's own snapshot.
+        window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: journeyId }));
       } else if (action === "start") {
         const started = await cityNexusApi.startJourney(journeyId);
         if (!stillCurrent()) return;
@@ -184,7 +274,11 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     } catch (error) {
       if (!stillCurrent()) return;
       setNeedsRefresh(true);
-      setMessage(failureText(error));
+      // Only a refusal about this plan's layout gets the re-arrange handoff: an expired or
+      // unauthorised session (401/403) is not something 根据路线重新安排 can answer.
+      setSelectBlocked(action === "select" && error instanceof CityNexusApiError
+        && (error.status === 409 || error.status === 422));
+      setMessage(failureText(error, (placeId) => placeTitleFrom(snapshot, placeId)));
     } finally {
       writeLock.current = false;
       setBusy(null);
@@ -259,6 +353,8 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
       {current.seat?.may_confirm_departure === false && <small>请由行程发起人确认出发。</small>}
     </section>}
     {message && <p role="alert" className="rev-plan-message">{message}</p>}
+    {selectBlocked && <button type="button" className="rev-plan-replan" data-testid="rev-plan-replan"
+      onClick={() => window.dispatchEvent(new CustomEvent("citynexus:replan-requested", { detail: journeyId }))}>根据路线重新安排</button>}
     {loading && !current && <p role="status">正在读取你的行程方案…</p>}
     {!fromAgentDraft && current?.input && current.journey.status === "DRAFT" && <TravelBriefPreview key={`${journeyId}:${bearer}`} input={current.input} selected={candidateIds} onSelect={setCandidateIds} onSave={saveBrief} onRefreshFacts={refreshPlaceFacts} disabled={locked} />}
     {!fromAgentDraft && current && plans.length === 0 && <p>{current.input ? "从想去清单里挑选地点，再生成日程。" : "先选一个已核实的地点，再把它排进日程。"}</p>}
@@ -275,7 +371,10 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     {plans.map((plan) => <article key={plan.id} className="rev-plan-option" data-testid="rev-plan-option" data-current={plan.is_current === true}>
       <div className="rev-plan-option-heading"><h3>方案 {plan.version_no}</h3>{plan.is_current && <span><Check size={15} aria-hidden="true" />{current?.journey.status === "ACTIVE" ? "正在使用" : "已选用"}</span>}</div>
       {current && <PlanSchedule plan={plan} journey={current.journey} />}
-      {plan.stale ? <p className="rev-plan-gap">{plan.explanation?.compose_source === "SELECTED_GOAL_DRAFT" ? "安排已保存，完成地点资料和转场路线后即可选用。" : "地点信息有更新，请重新生成方案。"}</p> : plan.selectable !== false && plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
+      {plan.stale || plan.selectable === false ? <>
+        <p className="rev-plan-gap">{selectionBlocker(plan)}</p>
+        {placeRowsStillOpen(plan) && <button type="button" onClick={onExplore} data-testid="rev-plan-open-place-explore">补上没排地点的那段时间 →</button>}
+      </> : plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
     </article>)}
     {canStart && <div className="rev-plan-start"><p>已选好方案。确认后开始正式行程。</p><button type="button" disabled={locked} onClick={() => void write("start")} data-testid="rev-plan-start">{busy === "start" ? "正在启动…" : "确认方案，开始行程"}</button></div>}
   </section>;

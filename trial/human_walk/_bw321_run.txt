@@ -1,0 +1,4 @@
+LIVE ANCHORS {'tally': 119, 'fault_line': 122, 'negative': 112, 'selftest': 376, 'gate_tuple': 83, 'census_unpack': 63, 'census_bogus_unpack': 76, 'census_fault': 97, 'census_return': 109, 'section': 3765}
+LIVE NUMBERS checked=36 green=36 red=0 counted=36 archived_in_selftest=158
+PENDING_INBOX_BEFORE_WRITE 0
+WROTE D:/moodle/_qoder_ledger_inbox\494abfd7_1537.md bytes=1912

@@ -1,0 +1,63 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_____________ test_C07_what_the_working_tree_actually_holds_today _____________
+
+    def test_C07_what_the_working_tree_actually_holds_today() -> None:
+        """C07（要件 4 的正控）：今天扫"受版本控制的树"得到什么，就照实断言什么。
+    
+        量到的不是"该红"：树里那两处命中是同一枚**已申报**的 e2e 假样（两条形状各命中一次），
+        而 09-23 那把真 key 的位置现在是含 `redacted` 的脱敏桩 —— 被占位词表正当排除。
+        所以"只扫树"的门今天必然是 CLEAR；这不叫门失效，叫射程到此为止（环境档见 C08）。
+        """
+    
+        report = CL.scan(REPO)
+        e2e = "frontend/e2e/qoder-e2e-config-guard.spec.ts"
+        at_e2e = [h for h in report["hits"] if h["path"] == e2e]
+        assert len(at_e2e) >= 1, report["hits"]
+        assert {h["token_fp"] for h in at_e2e} == {CL.DECLARED_SAMPLES[0]["token_fp"]}, at_e2e
+        assert all(h["declared"] for h in at_e2e), at_e2e
+        assert report["hits_in_product_path"] == 0, report["hits_in_product_path"]
+        # 只断言与占位词表无关的事实；"那枚真 key 现在是脱敏桩"作为读数进收据，不作为断言
+        # （否则任何改动词表的反例都会顺带把这格拖红，要件 3(b) 就没法只红一格）
+        stub = [h for h in report["hits"] if h["path"].startswith("qoder-handoff/")]
+        assert all(not h["in_product_path"] for h in stub), stub
+        # verdict 由两档合成：套件环境里 conftest 会摘掉 AI key，所以这里只核对它与自己读数一致
+        expect = CL.CODE_LIVE_IN_ENVIRONMENT if report["env_undeclared"] else CL.CODE_OK
+>       assert report["verdict"] == expect, {"verdict": report["verdict"], "expect": expect,
+                                             "env_present": report["env_present"]}
+E       AssertionError: {'env_present': 0, 'expect': 'CREDENTIAL_GATE_CLEAR', 'verdict': 'CREDENTIAL_LITERAL_OUTSIDE_PRODUCT_PATH'}
+E       assert 'CREDENTIAL_L..._PRODUCT_PATH' == 'CREDENTIAL_GATE_CLEAR'
+E         
+E         - CREDENTIAL_GATE_CLEAR
+E         + CREDENTIAL_LITERAL_OUTSIDE_PRODUCT_PATH
+
+tests\test_qoder_ord0307_credential_gate.py:187: AssertionError
+_ test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table _
+
+caplog = <_pytest.logging.LogCaptureFixture object at 0x000001840C7F49E0>
+
+    def test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table(caplog) -> None:
+        jid = _journey_ids(1)[0]
+        with caplog.at_level(logging.WARNING, logger="app.main"):
+            mine = _envelope(_past_budget_503(jid))[FIELD_SENT]
+        assert any(mine in r.getMessage() for r in caplog.records), [r.getMessage() for r in caplog.records][-3:]
+        assert any("route=POST" in r.getMessage() and "status=503" in r.getMessage() for r in caplog.records)
+        probe = make_engine(settings.database_url)
+        try:
+            with probe.connect() as conn:
+                tables = int(conn.exec_driver_sql(
+                    "SELECT count(*) FROM sqlite_master WHERE type='table' AND name LIKE '%receipt%'"
+                ).scalar() or 0)
+        finally:
+            probe.dispose()
+>       assert tables == 0, "回执不落库是设计：失败的写会回滚，同事务存的号会跟着一起消失"
+E       AssertionError: 回执不落库是设计：失败的写会回滚，同事务存的号会跟着一起消失
+E       assert 3 == 0
+
+tests\test_qoder_ord0332_error_receipt.py:207: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  app.main:main.py:803 error_receipt_id=CNX-B5VTRH3W code=SERVER_WRITE_DEADLINE_EXCEEDED status=503 route=POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/outcomes trace_id=406654a9-57ce-41ec-a8dd-d2067369fb57
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today
+FAILED tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table
+2 failed in 3.74s

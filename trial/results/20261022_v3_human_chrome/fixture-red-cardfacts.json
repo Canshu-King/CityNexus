@@ -1,0 +1,282 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.mobile-trial.config.ts",
+      "e2e/revolution-place-card-facts.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\playwright.mobile-trial.config.ts",
+    "rootDir": "D:/moodle/_cmdr_rescue_v3_1022/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_cmdr_rescue_v3_1022/frontend/mobile-ui-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile-ui-chromium-fixture",
+        "name": "mobile-ui-chromium-fixture",
+        "testDir": "D:/moodle/_cmdr_rescue_v3_1022/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/revolution-(?:dialogue|source-media|visual-travel|draft-variants|draft-preparation|guardian-stream|amap-research-ui|mobile-shell|human-session-recovery|night-out-rest-preferences|place-card-facts|mobile-hermes-transparency|mobile-plan-workbench|workspace-actions)\\.spec\\.ts$/"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "mobile-ui-chromium-fixture",
+        "testDir": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e",
+        "snapshotDir": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 45000,
+        "use": {
+          "browserName": "chromium",
+          "baseURL": "http://127.0.0.1:14273",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "hasTouch": true,
+          "serviceWorkers": "block",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "mobile-ui-chromium-fixture"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev -- --host 127.0.0.1 --port 14273 --strictPort",
+      "cwd": ".",
+      "url": "http://127.0.0.1:14273",
+      "reuseExistingServer": false,
+      "timeout": 120000,
+      "env": {
+        "VITE_REV_TRIAL_MODE": "sample"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "revolution-place-card-facts.spec.ts",
+      "file": "revolution-place-card-facts.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "named place search waits for explicit submission and keeps the public area",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-ui-chromium-fixture",
+              "projectName": "mobile-ui-chromium-fixture",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 45133,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e\\revolution-place-card-facts.spec.ts",
+                        "column": 49,
+                        "line": 99
+                      },
+                      "message": "Error: locator.click: Test timeout of 45000ms exceeded.\nBrowser logs:\n\n<launching> C:\\Users\\仓鼠王\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1248\\chrome-headless-shell-win64\\chrome-headless-shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-YLYJAm --remote-debugging-pipe --no-startup-window\n<launched> pid=30288\n[pid=30288][err] [1024/194043.365:INFO:CONSOLE:733] \"[vite] connecting...\", source: http://127.0.0.1:14273/@vite/client (733)\n[pid=30288][err] [1024/194043.394:INFO:CONSOLE:827] \"[vite] connected.\", source: http://127.0.0.1:14273/@vite/client (827)\n[pid=30288][err] [1024/194043.655:INFO:CONSOLE:22165] \"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\", source: http://127.0.0.1:14273/node_modules/.vite/deps/react-dom_client.js?v=8953648d (22165)\n[pid=30288][err] [1024/194043.764:INFO:CONSOLE:3] \"Service Worker registration blocked by Playwright\", source:  (3)\n[pid=30288] <gracefully close start>\nCall log:\n\u001b[2m  - waiting for getByTestId('rev-quick-find-city')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" data-testid=\"rev-quick-find-city\">查找位置 →</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    83 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n   97 |   });\n   98 |   await page.goto(\"/revolution\");\n>  99 |   await page.getByTestId(\"rev-quick-find-city\").click();\n      |                                                 ^\n  100 |   await page.getByRole(\"button\", { name: /连城县.*2.5公里/ }).click();\n  101 |   await page.getByTestId(\"rev-quick-use-approx-center\").click();\n  102 |   await expect(page.getByRole(\"region\", { name: \"按关键词查找公开地点\" })).toBeVisible();\n    at D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e\\revolution-place-card-facts.spec.ts:99:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T11:40:42.133Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-place-card-fact-8689d-n-and-keeps-the-public-area-mobile-ui-chromium-fixture\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-place-card-fact-8689d-n-and-keeps-the-public-area-mobile-ui-chromium-fixture\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-place-card-fact-8689d-n-and-keeps-the-public-area-mobile-ui-chromium-fixture\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e590fba2a862d40d47f1-16aa08305c59db3b1c7f",
+          "file": "revolution-place-card-facts.spec.ts",
+          "line": 56,
+          "column": 1
+        },
+        {
+          "title": "place cards show grounded hours and costs while preserving provenance and OSM links",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-ui-chromium-fixture",
+              "projectName": "mobile-ui-chromium-fixture",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 45126,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T11:41:27.878Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-place-card-fact-761ad-ng-provenance-and-OSM-links-mobile-ui-chromium-fixture\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-place-card-fact-761ad-ng-provenance-and-OSM-links-mobile-ui-chromium-fixture\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-place-card-fact-761ad-ng-provenance-and-OSM-links-mobile-ui-chromium-fixture\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e590fba2a862d40d47f1-2af8dc1286b7501d4ece",
+          "file": "revolution-place-card-facts.spec.ts",
+          "line": 121,
+          "column": 1
+        },
+        {
+          "title": "trip place facts refresh requires one-time consent and never repeats a recorded attempt",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-ui-chromium-fixture",
+              "projectName": "mobile-ui-chromium-fixture",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1589,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T11:42:13.588Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e590fba2a862d40d47f1-d19dbd2bc0c0799f2c6d",
+          "file": "revolution-place-card-facts.spec.ts",
+          "line": 260,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-24T11:40:40.773Z",
+    "duration": 95289.28099999999,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

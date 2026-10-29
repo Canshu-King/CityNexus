@@ -1,0 +1,4 @@
+COMMIT SHAPE PROTECTION PROBE bw281
+BARE_COMMIT carried=['theirs.py'] foreign_swept=True
+PATHSPEC_COMMIT carried=['ours.py'] foreign_still_staged=True
+VERDICT PROTECTED

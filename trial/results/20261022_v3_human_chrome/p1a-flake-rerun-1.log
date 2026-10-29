@@ -1,0 +1,5 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 390, persists its trace, and does not run on open
+  1 passed (7.1s)

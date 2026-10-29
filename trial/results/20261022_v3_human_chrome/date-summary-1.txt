@@ -1,0 +1,6 @@
+date conflict on the play stack
+1 choose=trial/results/20261022_v3_human_chrome/play-v3-choose-1.txt:4 a second round of options after choosing 经典皇家地标
+2 text_question=trial/results/20261022_v3_human_chrome/play-v3-choose-1.txt:8 a plain-text question and the research control returned
+3 research=trial/results/20261022_v3_human_chrome/play-v3-research-1.txt:22 forty-five events, eight tool results, sixteen verified places, then stalled on two dates
+4 walkthrough=trial/results/20261022_V3_CHROME_USE_HUMAN_WALKTHROUGH.md:2364 section sixty-two records the whole reading
+5 quickstart=trial/results/20261025_V3_PLAY_QUICKSTART.md:18 step two now sets 日期与天数 to the same dates

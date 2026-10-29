@@ -1,0 +1,7 @@
+
+Running 2 tests using 1 worker
+
+  ok 1 [mobile-ui-chromium-fixture] › e2e\revolution-draft-preparation.spec.ts:4:33 › TEST_FIXTURE prepare selected draft dates and restore at 390 (5.2s)
+  ok 2 [mobile-ui-chromium-fixture] › e2e\revolution-draft-preparation.spec.ts:4:33 › TEST_FIXTURE prepare selected draft dates and restore at 430 (4.2s)
+
+  2 passed (12.1s)

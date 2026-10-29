@@ -1,0 +1,31 @@
+SHOT 430-aq-cold t=5.4
+HIT continue true t=6.2
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=10.0
+HIT open-settings true t=12.5
+CONSENT true
+CONSENT true
+HIT close-settings true t=14.5
+HIT send true t=16.1
+HTTP POST 201 /api/v1/journeys/7b15d652-5e8a-4f91-a891-d95bf0c77ac7/agent/goal-tasks
+SENT t=17.0
+HTTP POST 200 /api/v1/journeys/7b15d652-5e8a-4f91-a891-d95bf0c77ac7/agent/goal-tasks/48749a9a-5920-4fa8-8728-44da65f28a81/run
+HIT skip-questions true t=32.4
+SKIP t=33.3
+SKIPPED true
+DRAFT t=309.7
+DRAFT_SEEN true
+SHOT 430-aq-after-research t=309.8
+MISS tab-hand-0
+MISS tab-hand-1
+MISS tab-hand-2
+MISS tab-hand-3
+MISS tab-hand-4
+WAIT_KEY t=311.8 ["Agent 正在研究，等这一轮结束即可编辑保存。"]
+WAIT_KEY t=331.8 ["Agent 正在研究，等这一轮结束即可编辑保存。"]
+WAIT_KEY t=351.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=371.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=391.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=411.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=431.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=452.0 ["当前展示的是已保存版本。"]

@@ -55,3 +55,12 @@
 @media (max-width: 620px) {
   .rev-mobile-v1 .rev-workspace-map-preview { min-height: 240px; }
 }
+
+/* Classroom sandbox: the simulated traveller.  A hollow ring plus a solid centre, so it never
+   reads as one of the numbered research pins. */
+.rev-workspace-map-traveller {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #1f6feb; border: 3px solid #fff;
+  box-shadow: 0 0 0 4px rgba(31, 111, 235, 0.22), 0 2px 6px rgba(0, 0, 0, 0.35);
+  cursor: default;
+}

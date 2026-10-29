@@ -1,0 +1,14 @@
+Empty the census's unexplained bucket: every red now carries either a named cause or its own read.
+
+The whole-suite census left fifty-four failures labelled 'not yet attributed'.  This adds an
+inventory ruler that imports the census's own grouping (so the list cannot drift from the published
+table), a second ruler with extra cause classes, and a report section recording the nine residuals
+one by one after reading the assertion at each site.
+
+The extension is built so a label cannot be invented: every class must be earned by a string that
+appears verbatim in the failure message, the needle that matched is printed beside the label, the
+record count must still equal pytest's own failed number, the three destination piles must add back
+to the published fifty-four, and the old label must reach zero.  Nine guard assertions name the
+invariant they caught but not the upstream cause, so they sit in a visible bucket that is explicitly
+not counted as explained.  Nothing here changes product behaviour: no test was edited, no assertion
+was weakened, and the ruler only reads the run that was already on disk.

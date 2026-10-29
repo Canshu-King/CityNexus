@@ -1,0 +1,18 @@
+proxy guard: {'guard': 'cmdr_net_env_guard_r2', 'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7890', 'HTTP_PROXY': 'http://127.0.0.1:7890'}, 'proxy_endpoints': ['127.0.0.1:7890', '127.0.0.1:7890'], 'proxy_ok': True, 'direct_ok': True, 'refused': [], 'action': 'PROXY_OK', 'detail': {'direct': '200 166474 B', 'proxy': 'HTTP 403'}}
+inbox blocks: 1 (1 pending after dedupe) | mode=APPLY | at 15:37:17
+   INSERTED 494abfd7_1537.md
+tally {'inserted': 1, 'refused': 0, 'skipped': 0, 'dry': 0}
+NOTICE-NOTHING 这一轮没有新被拒的块
+mirror rc=0
+   mirror 尾行：mirror 档位：DRY（只到 guard 的完整读校验，不推；要推请号令者开 CNX_MIRROR_LIVE）
+   mirror 尾行：remote blob ad26c236eb99e28002b1f2882ad5a59191c46276 | size route 7382699 | fetched 7382699 B in 1 attempt(s) | git-blob sha1 ad26c236eb99e28002b1f2882ad5a59191c46276 | complete=True
+   mirror 尾行：remote ad26c236eb99e28002b1f2882ad5a59191c46276 51478 lines | local 53674 lines
+   mirror 尾行：remote-only lines: 0
+   mirror 尾行：nothing to merge - running the guarded mirror directly
+   mirror 尾行：remote blob sha (contents route) ad26c236eb99e28002b1f2882ad5a59191c46276 | size route 7382699
+   mirror 尾行：raw fetched 7382699 B in 1 attempt(s) | git-blob sha1(raw) ad26c236eb99e28002b1f2882ad5a59191c46276 | complete=True
+   mirror 尾行：local 7600148 B | local blob sha1 5320e90c42fef1a5a8451548fa8d35be0d0ad955
+   mirror 尾行：remote-only lines: 0 | local-only lines: 1311
+   mirror 尾行：DRY: guard passed, remote read complete, no mirror performed
+   mirror 尾行：
+   mirror 尾行：guard+mirror rc 0

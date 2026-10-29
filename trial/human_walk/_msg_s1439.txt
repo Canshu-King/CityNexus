@@ -1,0 +1,11 @@
+14.39: the fourth fault, the bucket ruler it fed, and the internal diagnostic that reaches the screen
+
+The fourth fault was the catch pattern matching a `catch {` quoted inside a doc comment, so one of bw326's
+64 handlers was a paragraph of prose. The block-comment state machine now gates the cutter and all three
+walkers: the mounted-panel denominator reads 64 -> 63 and the reading-the-refusal count 1 -> 5, while
+says_zh and the rendered count both still read 26, so the correction block from an hour ago holds. bw338's
+buckets: 4 bodies hand a text field to state, 8 hand only structured facts, 1 compares, 0 read-and-drop, 50
+never read. All four text sites sit in a try that names an api-layer call, and that layer assembles its
+message as "CityNexus API " + status + ": " + path at citynexus.ts:2892 - what those four panels show is a
+locally built diagnostic string, which is a fourth cut, not one of the three text options on the table.
+0 product bytes.

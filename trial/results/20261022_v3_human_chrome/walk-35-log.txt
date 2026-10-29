@@ -1,0 +1,28 @@
+BROWSER not listening; launching the isolated Edge test profile (no personal tabs)
+BROWSER_UP after 6s
+WALK20_START 2026-10-22T14:11:32.644Z real Edge over CDP 9335 fresh journey for the place-identity door
+FIRST_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+DAYS_READBACK 2
+PARTY_READBACK 2 BUDGET_READBACK 1000
+JOURNEY_ID d83014cb-06a1-4626-9162-dc519cca8bc7 bearer=present
+SENT_FIRST_GOAL_AT 2026-10-22T14:12:00.461Z
+POLL_1 t=10s busy=false choices=4
+RESEARCH_POLL_4 t=40s working=true draftSlots=0
+RESEARCH_POLL_8 t=80s working=true draftSlots=0
+RESEARCH_POLL_12 t=120s working=true draftSlots=0
+RESEARCH_POLL_16 t=160s working=false draftSlots=0
+RESEARCH_POLL_20 t=200s working=false draftSlots=0
+RESEARCH_POLL_24 t=240s working=false draftSlots=0
+RESEARCH_POLL_28 t=280s working=false draftSlots=0
+RESEARCH_POLL_32 t=320s working=false draftSlots=0
+DRAFT_SLOTS=0
+SLOT_PLACE_IDS []
+TICK_ERR locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+SAVE_ERR locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+SAVE_STATUS (none after 36s)
+DEPARTURE_CARD (unreadable)
+SHOT_FAILED human-199-candidate-and-todo-labels.png no frame within 10s
+WORKBENCH TRAVEL PLAN 你的行程方案 刷新方案 等待正式计划 0 份正式候选方案 这次想怎么玩 2 天 · 2 人 · 预算 ¥1,000.00 已保存到这份行程，重新登录后可恢复。 11 月 2 日到 11 月 3 日在北京玩两天，人均预算 500，想看古迹和胡同小吃，不要太赶，第二天下午想在湖边轻松散步。 规划器已接收：文化兴趣、美食兴趣、少走路偏好 开放式需求原文已保留，当前规则规划器仍不能完整执行这些要求。 修改旅行需求 把想去的地点放在一起 选择 2–6 处。先看想去清单，资料齐全后再生成正式方案。 还没有地点，去探索添加。 多日想去清单 · 未排定 地点先按天分组供你挑选。营业时间、票价及转场尚需核实。 2026-11-02 这一天还没有选地点。 2026-11-03 这一天还没有选地点。 从想去清单里挑选地点，再生成日程。 用所选地点生成正式方案 继续探索、补资料 →
+SELECT_BUTTONS=0 VISIBLE=false
+SHOT human-200-plan-workbench-after-identity-fix.png bytes=311327
+WALK20_END 2026-10-22T14:20:47.862Z

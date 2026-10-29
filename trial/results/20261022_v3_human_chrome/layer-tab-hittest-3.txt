@@ -1,0 +1,29 @@
+CANDIDATE_0 url=http://127.0.0.1:14496/revolution mark={"cockpit":3,"dock":true,"slots":7,"scrollY":843,"shape":"414x900","pointer":"{\"id\":\"6498b"}
+CANDIDATE_1 url=http://127.0.0.1:14496/revolution mark={"cockpit":0,"dock":false,"slots":0,"scrollY":0,"shape":"494x783","pointer":"{\"id\":\"6498b"}
+MODE as_is rev-mission-layer-map {"present":true,"box":{"x":14,"y":20,"w":120,"h":46},"point":[74,43],"covers_it":true,"topmost":"small <- div <- div.rev-firstlook-brand","scrollY":843}
+MODE as_is rev-mission-layer-timeline {"present":true,"box":{"x":140,"y":20,"w":120,"h":46},"point":[200,43],"covers_it":true,"topmost":"div.rev-firstlook-brand <- header.rev-firstlook-header <- div.rev-firstlook.rev-mobile-v1","scrollY":843}
+MODE as_is rev-mission-layer-agent {"present":true,"box":{"x":266,"y":20,"w":120,"h":46},"point":[326,43],"covers_it":true,"topmost":"summary <- details.rev-firstlook-agent <- header.rev-firstlook-header","scrollY":843}
+MODE after_scroll_into_view rev-mission-layer-map {"present":true,"box":{"x":14,"y":20,"w":120,"h":46},"point":[74,43],"covers_it":true,"topmost":"small <- div <- div.rev-firstlook-brand","scrollY":779}
+MODE after_scroll_into_view rev-mission-layer-timeline {"present":true,"box":{"x":140,"y":20,"w":120,"h":46},"point":[200,43],"covers_it":true,"topmost":"div.rev-firstlook-brand <- header.rev-firstlook-header <- div.rev-firstlook.rev-mobile-v1","scrollY":1358}
+MODE after_scroll_into_view rev-mission-layer-agent {"present":true,"box":{"x":266,"y":20,"w":120,"h":46},"point":[326,43],"covers_it":true,"topmost":"summary <- details.rev-firstlook-agent <- header.rev-firstlook-header","scrollY":1294}
+NOTE 全程只读：不改视口、不点击、不动 storage；唯一动作是 scrollIntoView（会移页面滚动条，走查自己也会滚）
+CANDIDATE_0 url=http://127.0.0.1:14496/revolution mark={"cockpit":3,"dock":true,"slots":7,"scrollY":279,"shape":"414x900","pointer":"{\"id\":\"6498b"}
+CANDIDATE_1 url=http://127.0.0.1:14496/revolution mark={"cockpit":0,"dock":false,"slots":0,"scrollY":0,"shape":"494x783","pointer":"{\"id\":\"6498b"}
+MODE as_is rev-mission-layer-map {"present":true,"box":{"x":14,"y":20,"w":120,"h":46},"point":[74,43],"covers_it":true,"topmost":"small <- div <- div.rev-firstlook-brand","scrollY":279}
+MODE as_is rev-mission-layer-timeline {"present":true,"box":{"x":140,"y":20,"w":120,"h":46},"point":[200,43],"covers_it":true,"topmost":"div.rev-firstlook-brand <- header.rev-firstlook-header <- div.rev-firstlook.rev-mobile-v1","scrollY":279}
+MODE as_is rev-mission-layer-agent {"present":true,"box":{"x":266,"y":20,"w":120,"h":46},"point":[326,43],"covers_it":true,"topmost":"summary <- details.rev-firstlook-agent <- header.rev-firstlook-header","scrollY":279}
+MODE after_scroll_into_view rev-mission-layer-map {"present":true,"box":{"x":14,"y":84,"w":120,"h":46},"point":[74,107],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":215}
+MODE after_scroll_into_view rev-mission-layer-timeline {"present":true,"box":{"x":140,"y":84,"w":120,"h":46},"point":[200,107],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":215}
+MODE after_scroll_into_view rev-mission-layer-agent {"present":true,"box":{"x":266,"y":84,"w":120,"h":46},"point":[326,107],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":215}
+NOTE 全程只读：不改视口、不点击、不动 storage；唯一动作是 scrollIntoView（会移页面滚动条，走查自己也会滚）
+CANDIDATE_0 url=http://127.0.0.1:14496/revolution mark={"cockpit":0,"dock":false,"slots":0,"scrollY":0,"shape":"494x783","pointer":"{\"id\":\"6498b"}
+REFUSE qualifying_tabs=0 -- localStorage 是按源的，两页同指针已经实测到（_tab_probe_r4），不能靠它猜哪一页
+CANDIDATE_0 url=http://127.0.0.1:14496/revolution mark={"cockpit":0,"dock":false,"slots":0,"scrollY":0,"shape":"494x783","pointer":"{\"id\":\"264f8"}
+CANDIDATE_1 url=http://127.0.0.1:14496/revolution mark={"cockpit":3,"dock":true,"slots":0,"scrollY":1191,"shape":"414x900","pointer":"{\"id\":\"264f8"}
+MODE as_is rev-mission-layer-map {"present":true,"box":{"x":14,"y":81,"w":120,"h":46},"point":[74,104],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":1191}
+MODE as_is rev-mission-layer-timeline {"present":true,"box":{"x":140,"y":81,"w":120,"h":46},"point":[200,104],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":1191}
+MODE as_is rev-mission-layer-agent {"present":true,"box":{"x":266,"y":81,"w":120,"h":46},"point":[326,104],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":1191}
+MODE after_scroll_into_view rev-mission-layer-map {"present":true,"box":{"x":14,"y":81,"w":120,"h":46},"point":[74,104],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":1188}
+MODE after_scroll_into_view rev-mission-layer-timeline {"present":true,"box":{"x":140,"y":81,"w":120,"h":46},"point":[200,104],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":1184}
+MODE after_scroll_into_view rev-mission-layer-agent {"present":true,"box":{"x":266,"y":81,"w":120,"h":46},"point":[326,104],"covers_it":false,"topmost":"button <- div.cn-mission-layer-tabs <- section.cn-mission-os","scrollY":1181}
+NOTE 全程只读：不改视口、不点击、不动 storage；唯一动作是 scrollIntoView（会移页面滚动条，走查自己也会滚）

@@ -1,0 +1,6 @@
+price_consent_readers run_at=2026-10-23T04:50:29.098Z gap_rows=4
+CASE 未确认 :: 列出的缺项=ADMISSION_PRICE/ADMISSION_PRICE/OPENING_HOURS/PLACE_REQUIRED 屏句=这版方案还缺：具体地点（晚餐/散步：王府井或前门）、营业时间、票价。出发待办逐处写着找谁要。这份候选里还没有冻结的步行时间，出发待办下方可以核实并冻结今天的转场。
+CASE 已确认 :: 列出的缺项=OPENING_HOURS/PLACE_REQUIRED 屏句=这版方案还缺：具体地点（晚餐/散步：王府井或前门）、营业时间。出发待办逐处写着找谁要。这份候选里还没有冻结的步行时间，出发待办下方可以核实并冻结今天的转场。票价这一项你已经确认先不计入预算（5 处没有来源）。
+CASE 没有 explanation :: 列出的缺项=ADMISSION_PRICE/ADMISSION_PRICE/OPENING_HOURS/PLACE_REQUIRED 屏句=这版方案还缺：具体地点（晚餐/散步：王府井或前门）、营业时间、票价。出发待办逐处写着找谁要。这份候选里还没有冻结的步行时间，出发待办下方可以核实并冻结今天的转场。
+CASE 计数缺失 :: 票价这一项你已经确认先不计入预算。
+CASE 计数不是数字 :: 票价这一项你已经确认先不计入预算。

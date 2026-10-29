@@ -1,0 +1,10 @@
+one date truth
+1 parse=frontend/src/trial/RevolutionFirstLook.tsx:100 reads an explicit two-ended range only
+2 source_line=frontend/src/trial/RevolutionFirstLook.tsx:1197 the chosen dates sit above the fold
+3 guard=frontend/src/trial/RevolutionFirstLook.tsx:763 a hand-edited form stops the submit once
+4 gate_auto=frontend/e2e/revolution-mobile-shell.spec.ts:133 form and POST carry 2026-12-03..04
+5 gate_conflict=frontend/e2e/revolution-mobile-shell.spec.ts:156 asks which dates win
+6 live= trial/results/20261022_v3_human_chrome/date-truth-live-1.txt:4 before/after read of the form, journey at :8
+7 shot=trial/results/20261022_v3_human_chrome/date-truth-live-form-390.png
+8 spec=trial/results/20261022_v3_human_chrome/date-truth-spec-8.log two cases passed
+9 typecheck=trial/results/20261022_v3_human_chrome/typecheck-datetruth-4.log rc zero

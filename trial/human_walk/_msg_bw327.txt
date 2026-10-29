@@ -1,0 +1,24 @@
+bw327: what the 64 panel catches say instead of the server - 24 different sentences, none of them the reason
+
+trial/human_walk/_cmdr_sentence_shape_r327.py reads the same 64 catch bodies bw326 counted (SAME-SOURCE
+CHECK asserts 64 == bw326's published catch=64 before it prints anything) and classifies each on three
+independent axes: whether it carries a Chinese literal / English only / nothing, whether the sentence is
+written in the `zh ? "…" : "…"` shape, and whether it is handed to a setXxx(...) call or a console call.
+
+Readings: 19 bodies say something in Chinese, 6 English only, 39 carry no literal at all; bilingual_shape
+is also 19, and both reverse sets (zh-without-shape, shape-without-zh) read 0, which is what makes those
+two equal numbers a finding rather than a coincidence - the product writes traveller-facing failure text
+in exactly one way. 40 bodies hand something to a state setter, 0 to console, 24 to neither. 9 are
+retry-shaped ("重试/再试/刷新").
+
+The useful surprise: this is not one stock phrase repeated. 24 distinct Chinese sentences across 25
+occurrences, with a single sentence ("连不上服务器，请重试。") reused twice - so the panel habit is to write
+its own plausible sentence per failure, not to spam one generic message. Which sharpens rather than softens
+the #369 finding: 24 different sentences, and exactly 0 of them can carry the reason the server gave.
+The 12 most-cited sentences are printed verbatim with their file:line so "does it name the blocker" can be
+answered by reading, not by a keyword proxy I invented - COVERAGE_LIMIT says so and says that into_state
+proves the sentence reaches component state, not that anything renders it.
+
+Refactored once after the first successful run (a dead path constant folded into the constant the reader
+uses) and re-ran: the TALLY line and the MOST_REUSED line read identically before and after that change.
+0 product bytes.

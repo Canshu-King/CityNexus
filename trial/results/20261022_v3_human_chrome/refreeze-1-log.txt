@@ -1,0 +1,14 @@
+REFREEZE_BEGIN 2026-10-23T00:01:02.369Z base=http://127.0.0.1:14416/revolution
+LANDING C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+LAYER_ABSENT rev-mission-layer-timeline
+OPENER_ERR locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+DEPARTURE_VISIBLE=false
+CARD_BEFORE (unreadable)
+ASK_COUNT_BEFORE (unreadable)
+ASK_BUTTON_BEFORE=0
+SHOT refreeze1-01-before.png bytes=157618
+ATTEMPT_1 FREEZE_BUTTON_NOT_SHOWN
+ASK_COMPOSER_NO_BUTTON (nothing left to ask; the stale sentence cannot be produced)
+CARD_END (unreadable)
+SHOT refreeze1-10-end.png bytes=157618
+REFREEZE_END 2026-10-23T00:01:37.212Z

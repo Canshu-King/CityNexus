@@ -1,0 +1,14 @@
+CONTRACT VS GENERATED CLIENT GAP bw201
+CONTRACT contracts\openapi.yaml
+GENERATED frontend\src\generated\api.ts
+CONTRACT_OPERATIONS 170
+REFERENCED_BY_CLIENT 164
+ABSENT_FROM_CLIENT 6 (enforced equal to the guard's own number)
+ARITHMETIC referenced+absent=contract, checked above
+ABSENT OPERATION IDS
+  - accept_unknown_price_route_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__accept_unknown_price_post
+  - answerJourneyClarification
+  - freeze_plan_routes_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__freeze_routes_post
+  - read_travel_gaps_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__travel_gaps_get
+  - research_goal_places
+  - resumeJourneyMission

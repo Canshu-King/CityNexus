@@ -166,7 +166,9 @@ for (const width of [390, 430, 1366]) {
     await dialog.getByRole("button", { name: "＋ 添加安排" }).first().click();
     await dialog.getByRole("button", { name: "保存草案", exact: true }).click();
     await expect(dialog).toContainText("草案已保存");
+    const reloadStarted = Date.now();
     await page.reload();
+    console.log(`RELOAD_MS width=${width} ms=${Date.now() - reloadStarted}`);
     await page.getByTestId("rev-mobile-tab-trips").click();
     await page.getByTestId("rev-mission-layer-agent").click();
     const restoredDialog = page.getByTestId("rev-mission-cockpit");
@@ -268,4 +270,73 @@ test("TEST_FIXTURE map focuses draft references and separates regions from venue
   await expect(map).toContainText("TEST_FIXTURE 博物馆");
   await expect(map).not.toContainText("TEST_FIXTURE 其他县同名结果");
   expect(writes).toEqual([]);
+});
+
+test("TEST_FIXTURE a 503-failed round is resumable from the fixed dock on the same task", async ({ page }, testInfo) => {
+  const jid = "00000000-0000-4000-8000-000000000931";
+  const tid = "00000000-0000-4000-8000-000000000932";
+  const owner = "DOCK_RECOVERY_OWNER";
+  const bearer = "DOCK_RECOVERY_TEST_TOKEN";
+  let resumeCalls = 0;
+  let resumedPath = "";
+  let newJourneys = 0;
+  const task = {
+    task_id: tid, journey_id: jid, mode: "GOAL_PLANNING", status: "FAILED_RECOVERABLE",
+    goal: "TEST_FIXTURE 少走路半日", consent: { model: true, online_research: true },
+    budget: { max_model_turns: 8, max_tool_calls: 16 }, usage: { model_turns: 1, tool_calls: 1 },
+    latest_run_id: "00000000-0000-4000-8000-000000000933",
+    failure_code: "MODEL_HTTP_503", assistant_summary: null, tool_steps: [],
+    draft_artifact: { revision: 1, status: "DRAFT", days: [{ date: "2026-10-21", slots: [] }] },
+    conversation: [],
+  };
+  await page.addInitScript(({ jid, tid, owner, bearer }) => {
+    sessionStorage.setItem("citynexus.traveler.bearer", bearer);
+    sessionStorage.setItem("citynexus.traveler.session-id", owner);
+    localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id: jid, ownerTravelerId: owner, cityCode: "TEST_FIXTURE", cityName: "TEST_FIXTURE", status: "DRAFT",
+    }));
+    localStorage.setItem(`citynexus.revolution.goal-task.${owner}.${jid}`, tid);
+  }, { jid, tid, owner, bearer });
+  const root = `/api/v1/journeys/${jid}`;
+  await page.route("**/api/v1/**", async (route) => {
+    const request = route.request();
+    const path = new URL(request.url()).pathname;
+    const reply = (data: unknown, status = 200) => route.fulfill({ status, contentType: "application/json", body: JSON.stringify(data) });
+    if (path === "/api/v1/travelers/session") return reply({ traveler_id: owner });
+    if (path === "/api/v1/agent/runtime-status") return reply({ ai_state: "CONFIGURED_UNVERIFIED", hermes_compat_configured: true });
+    if (path === "/api/v1/journeys" && request.method() === "POST") { newJourneys += 1; return reply({ id: jid }); }
+    if (path.startsWith(root)) expect(request.headers().authorization).toBe(`Bearer ${bearer}`);
+    if (path === root) return reply({ id: jid, title: "TEST_FIXTURE", status: "DRAFT", timezone: "Asia/Shanghai" });
+    if (path === `${root}/plans`) return reply([]);
+    if (path === `${root}/map-places`) return reply({ journey_id: jid, candidates: [] });
+    if (path === `${root}/planning-intent`) return reply({ journey_id: jid, intent: null, candidates: [], trip: { dates: ["2026-10-21"], party_size: 1, budget: { amount_minor: 50000, currency: "CNY" } } });
+    if (path === `${root}/bootstrap-shortlist`) return reply({ journey_id: jid, pocket_walk: null });
+    if (path === `${root}/bootstrap-discovery/current`) return reply({ journey_id: jid, receipt_id: null, candidates: [] });
+    if (path === `${root}/agent/goal-tasks/${tid}/resume` && request.method() === "POST") {
+      resumeCalls += 1; resumedPath = path;
+      expect(request.postDataJSON()).toMatchObject({ model_consent: true, interaction_mode: "RESEARCH", unlimited_research: true });
+      return reply({ ...task, status: "RESUMABLE" });
+    }
+    if (path === `${root}/agent/goal-tasks/${tid}`) return reply(task);
+    if (path === `${root}/agent/goal-tasks/${tid}/events`) return reply({ task_id: tid, events: [], next_cursor: null });
+    return reply({});
+  });
+  await page.goto("/revolution");
+  await page.getByTestId("rev-mobile-tab-trips").click();
+  await page.getByTestId("rev-mission-layer-agent").click();
+  await expect(page.getByTestId("rev-mission-cockpit")).toBeVisible();
+  const retry = page.getByTestId("rev-dock-retry-round");
+  await expect(retry).toBeVisible();
+  // The loaded task already carries model consent, so the dock offers the action directly.
+  await expect(retry).toBeEnabled();
+  await page.screenshot({ path: testInfo.outputPath("dock-recovery-503-390.png") });
+  await retry.click();
+  await expect.poll(() => resumeCalls).toBe(1);
+  expect(resumedPath).toBe(`/api/v1/journeys/${jid}/agent/goal-tasks/${tid}/resume`);
+  expect(newJourneys).toBe(0);
+  // The other offered path keeps the trip visible without waiting for the model.
+  const browse = page.getByTestId("rev-dock-browse-found");
+  await expect(browse).toBeVisible();
+  await browse.click();
+  await expect(page.getByTestId("rev-mission-map-pane")).toBeVisible();
 });

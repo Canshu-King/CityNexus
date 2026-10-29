@@ -1,0 +1,12 @@
+CONTEXTS=1 PAGES=1 URLS=["http://127.0.0.1:14496/revolution"]
+USING=existing-revolution-tab
+READ_START 2026-10-23T11:05:47.857Z http://127.0.0.1:14496/revolution
+LANDING C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+TRIP_TAB_VISIBLE=true
+OPEN_TRIP_BUTTON=false
+LIVE_CARD_VISIBLE=false
+LIVE_KICKER 
+LIVE_TITLE 
+LIVE_NEXT 
+SHOT 01-live-card.png bytes=33293
+LIVE_WHOLE 

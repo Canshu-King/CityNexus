@@ -361,8 +361,9 @@ export type StageReport = {
   advance: { steps: AdvanceStep[]; totalMs: number | null } | null;
 };
 
-export async function runStageAction(action: StageAction): Promise<StageReport> {
-  const response = await fetch(`/api/v1/demo/${action}`, {
+export async function runStageAction(action: StageAction, journeyId?: string | null): Promise<StageReport> {
+  const query = journeyId ? `?journey_id=${encodeURIComponent(journeyId)}` : "";
+  const response = await fetch(`/api/v1/demo/${action}${query}`, {
     method: "POST",
     headers: { Accept: "application/json" },
   });

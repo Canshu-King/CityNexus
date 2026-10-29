@@ -1,0 +1,38 @@
+TAB_CANDIDATE journey=d83014cb-06a1-4626-9162-dc519cca8bc7 journey_read_http=200
+WALK22_START 2026-10-22T14:42:44.728Z the chosen-version label, same live journey
+AGENT_LAYER_ERR
+SEND_ERR locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+VARIANTS_POLL_4 t=40s busy=false tabs=0
+VARIANTS_POLL_8 t=80s busy=false tabs=0
+VARIANTS_POLL_12 t=120s busy=false tabs=0
+VARIANTS_POLL_16 t=160s busy=false tabs=0
+VARIANTS_POLL_20 t=200s busy=false tabs=0
+VARIANTS_POLL_24 t=240s busy=false tabs=0
+VARIANTS_POLL_28 t=280s busy=false tabs=0
+VARIANTS_POLL_32 t=320s busy=false tabs=0
+VARIANTS_POLL_36 t=360s busy=false tabs=0
+VARIANTS_POLL_40 t=400s busy=false tabs=0
+VARIANT_TABS=0 CARDS=0
+CHOOSE_LABELS_BEFORE []
+SCHEDULE_LINES=5
+CHOOSE_STEP=NOT_REACHED reason=no variant tabs
+WALK22_END 2026-10-22T14:49:52.463Z
+TAB_CANDIDATE journey=d83014cb-06a1-4626-9162-dc519cca8bc7 journey_read_http=200
+WALK22_START 2026-10-22T15:01:26.592Z the chosen-version label, same live journey
+VARIANTS_POLL_4 t=40s busy=true tabs=0
+VARIANTS_POLL_8 t=80s busy=true tabs=0
+VARIANTS_POLL_11 t=110s busy=false tabs=3
+VARIANT_TABS=3 CARDS=3
+CHOOSE_LABELS_BEFORE ["选用这份安排","选用这份安排","选用这份安排"]
+SCHEDULE_LINES=5
+CHOOSE_B_LABEL=选用这份安排 disabled=false
+CHOOSE_LABELS_AFTER ["选用这份安排","已选为当前行程","选用这份安排"]
+CARDS_MARKED_CHOSEN=1
+SCHEDULE_CHANGED=true
+  AFTER_1 上午 · 故宫博物院（中轴线·御花园） 点击编辑
+  AFTER_2 下午 · 南锣鼓巷·主街小吃散步 点击编辑
+  AFTER_3 晚上 · 什刹海·银锭桥胡同小吃 点击编辑
+  AFTER_4 上午 · 颐和园·古迹游览（佛香阁/长廊/德和园）点击编辑时段上午下午晚上时间灵活安排备注从容看核心古迹：佛香阁、长廊、
+  AFTER_5 下午 · 颐和园昆明湖·湖边轻松散步点击编辑时段上午下午晚上时间灵活安排备注沿昆明湖与长廊慢走，湖边放松，不赶行程。移除
+SHOT_FAILED human-204-chosen-version-marked-on-screen.png no frame within 10s
+WALK22_END 2026-10-22T15:03:44.797Z

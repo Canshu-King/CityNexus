@@ -1,0 +1,10 @@
+BEFORE {"route_state":{"text":"当天的转场还没有向高德核实过。 核实并冻结今天的转场","disabled":false},"price_state":{"text":"还没有来源给过确定的费用；另有 5 处门票没有来源，预算里没有把它们算作 0 元，实际花费可能超出预算。 票价没有来源，我接受先不计入预算 让 Agent 换成价格明确的地点","disabled":false},"accept_price":{"text":"票价没有来源，我接受先不计入预算","disabled":false},"plan_gap":null,"select":null,"generate":{"text":"生成正式候选方案","disabled":false},"status":["当前展示的是已保存版本。","这次没能生成正式候选，安排仍留在这里，可以重试。"],"gaps":[]}
+SHOT_BEFORE {"bytes":221299}
+FREEZE {"found":true,"x":241.27515411376953,"y":291.7208442687988,"disabled":false,"text":"核实并冻结今天的转场","hit_is_self":true}
+POLL0 {"route":"转场已核实 4/4（其中 1 段是跨夜衔接，4 段按公共交通核实，其中 4 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案 重新核实转场","accept":true,"gap":null,"select":false,"status":["当前展示的是已保存版本。"]}
+AFTER_FREEZE {"route_state":{"text":"转场已核实 4/4（其中 1 段是跨夜衔接，4 段按公共交通核实，其中 4 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案 重新核实转场","disabled":false},"price_state":{"text":"还没有来源给过确定的费用；另有 5 处门票没有来源，预算里没有把它们算作 0 元，实际花费可能超出预算。 票价没有来源，我接受先不计入预算 让 Agent 换成价格明确的地点","disabled":false},"accept_price":{"text":"票价没有来源，我接受先不计入预算","disabled":false},"plan_gap":null,"select":null,"generate":{"text":"生成正式候选方案","disabled":false},"status":["当前展示的是已保存版本。"],"gaps":[]}
+SHOT_AFTER_FREEZE {"bytes":96161}
+ACCEPT {"found":true,"x":241.27515411376953,"y":291.8571662902832,"disabled":false,"text":"票价没有来源，我接受先不计入预算","hit_is_self":true}
+AFTER_ACCEPT {"route_state":{"text":"转场已核实 4/4（其中 1 段是跨夜衔接，4 段按公共交通核实，其中 4 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案 重新核实转场","disabled":false},"price_state":{"text":"按你的确认保存：这 5 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。这一版还需要把待办逐项补完才能选用。","disabled":false},"accept_price":null,"plan_gap":null,"select":null,"generate":{"text":"生成正式候选方案","disabled":false},"status":["当前展示的是已保存版本。"],"gaps":[]}
+SHOT_AFTER_ACCEPT {"bytes":95969}
+END 2026-10-24T21:01:35.452Z

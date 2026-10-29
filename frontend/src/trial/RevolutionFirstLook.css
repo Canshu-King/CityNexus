@@ -133,6 +133,8 @@
 .rev-trip-interest-options label { display: inline-flex; align-items: center; gap: 7px; margin: 0; padding: 9px 11px; border: 1px solid #527767; border-radius: 999px; color: #e8ffeb; font-size: 13px; cursor: pointer; }
 .rev-trip-interest-options input { accent-color: #c8f56e; width: 17px; height: 17px; margin: 0; }
 .rev-trip-ai-line { margin: -8px 0 0; color: #496458; font-size: 12px; line-height: 1.6; }
+/* The destination is a required field the browser blocks silently, so the form says what is still missing. */
+.rev-trip-destination-hint { margin: 6px 0 0; color: #7a4a12; font-size: 12px; line-height: 1.6; }
 .rev-trip-submit { min-height: 56px; padding: 14px 22px; border: 1px solid #d9ff97; border-radius: 16px; background: var(--rev-accent); color: #082318; font-size: 16px; font-weight: 800; cursor: pointer; }
 .rev-trip-submit:disabled { cursor: wait; opacity: .66; }
 .rev-firstlook-error {
@@ -142,6 +144,16 @@
   border-radius: 10px;
   color: #fff;
   max-width: 780px;
+}
+.rev-firstlook-entry-error {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  max-width: 1160px;
+  margin: 0 auto 8px;
+  padding: 14px clamp(18px, 5vw, 56px);
+  border-width: 0 0 1px;
+  border-radius: 0;
 }
 .rev-firstlook-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); max-width: 930px; gap: 13px; margin-top: 58px; }
 .rev-firstlook-cards article {
@@ -252,3 +264,42 @@
 }
 .rev-firstlook-operator-intro a { color: #135b35; font-weight: 700; }
 .rev-firstlook-operator-intro p { line-height: 1.7; }
+
+/* Phone geometry (measured 390×844, 2026-10-23): the submit button sat 55px under the
+   fixed bottom nav, and the chat dock covered the primary action in the quick-explore
+   pane. Keep the submit above the nav and let the page scroll clear of the dock. */
+@media (max-width: 640px) {
+  .rev-mobile-v1 .rev-firstlook-content {
+    padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  /* keep the first screen's main action above the fixed nav without covering the
+     date card: tighten the hero rhythm so the button lands above 768px */
+  .rev-mobile-v1 .rev-firstlook-hero {
+    padding-top: 18px !important;
+  }
+  .rev-mobile-v1 .rev-firstlook-hero h1 {
+    margin: 4px 0 4px !important;
+  }
+  .rev-mobile-v1 .rev-firstlook-hero form {
+    margin-top: 14px !important;
+  }
+  .rev-mobile-v1 .rev-trip-request-form {
+    gap: 10px;
+  }
+  .rev-mobile-v1 .rev-trip-request-form > textarea {
+    min-height: 76px !important;
+  }
+  .rev-mobile-v1 .rev-trip-request-form .rev-trip-submit {
+    position: sticky;
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    z-index: 31;
+    box-shadow: 0 8px 24px rgba(2, 16, 10, 0.45);
+  }
+}
+@supports selector(:has(*)) {
+  @media (max-width: 640px) {
+    body:has(.rev-mission-chat-dock) .rev-firstlook-content {
+      padding-bottom: calc(340px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+  }
+}

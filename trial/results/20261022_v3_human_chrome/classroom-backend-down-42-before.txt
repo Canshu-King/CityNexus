@@ -1,0 +1,6 @@
+ENTRY_BUTTON 1 DISABLED false
+BANNER_COUNT 1
+BANNER_TEXT "课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。"
+BANNER_BOX {"x":0,"y":0,"width":430,"height":69}
+STILL_ON_TRIPS true
+ERRORS []

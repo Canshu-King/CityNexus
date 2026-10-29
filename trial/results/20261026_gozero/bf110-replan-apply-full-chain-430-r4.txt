@@ -1,0 +1,94 @@
+PROFILE_USED _chrome_gozero_bf110 after 0 failed
+SKIP_SENTENCE false t=8.3
+HTTP POST 201 /api/v1/journeys
+SENT t=14.0
+HTTP POST 201 /api/v1/journeys/56eddd8f-14e0-43f5-94cf-90eab6f2caf2/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/56eddd8f-14e0-43f5-94cf-90eab6f2caf2/agent/goal-tasks/548ee174-0242-4896-b585-71a57a66247b/run
+SKIP t=29.1
+DRAFT_WAIT 1 state=null promote=null t=29.1
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" promote=null t=47.1
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" promote=null t=65.2
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" promote=null t=83.2
+DRAFT_WAIT 13 state="旅行研究 · 正在研究" promote=null t=101.2
+DRAFT_WAIT 16 state="旅行研究 · 正在研究" promote=null t=119.3
+DRAFT_READY "已整理 2 天 · 8 项安排" promote=null t=131.3
+HIT bottom-nav true t=131.7
+HIT trips-tab true t=133.4
+HTTP POST 200 /api/v1/journeys/56eddd8f-14e0-43f5-94cf-90eab6f2caf2/agent/goal-tasks/548ee174-0242-4896-b585-71a57a66247b/resume
+CARDS 8
+MISS card-0
+MISS card-1
+MISS card-2
+MISS card-3
+MISS card-4
+MISS card-5
+HIT layer-timeline true t=179.0
+ON_TIMELINE state="当前展示的是已保存版本。" freeze=null promote="保存为正式候选方案"
+ON_TIMELINE KEY {"id":"rev-v3-travel-gaps","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfalls","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfall","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-refusal","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-diff","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-apply","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-reverify","count":0}
+CONFIRM_KEY found=1 t=183.6
+CONFIRMED true was=false t=186.2
+HIT promote true t=186.5
+HTTP POST 201 /api/v1/journeys/56eddd8f-14e0-43f5-94cf-90eab6f2caf2/agent/goal-tasks/548ee174-0242-4896-b585-71a57a66247b/prepare-plan
+AFTER_PROMOTE state="当前展示的是已保存版本。" freeze="核实并冻结今天的转场" promote="按以上时间重新准备方案"
+AFTER_PROMOTE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-gap-shortfalls","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_PROMOTE TEXTS ["当前展示的是已保存版本。","已保存 8 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_PROMOTE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+HIT freeze-routes true t=204.2
+FREEZE_PRESSED true t=205.5
+FREEZE_WAIT 1 busy=true gaps=0 t=205.5
+HTTP POST 200 /api/v1/journeys/56eddd8f-14e0-43f5-94cf-90eab6f2caf2/agent/goal-tasks/548ee174-0242-4896-b585-71a57a66247b/plans/1fc18127-3dd1-489f-9376-5341e8231840/freeze-routes
+FREEZE_WAIT 2 busy=false gaps=1 t=209.5
+AFTER_FREEZE state="当前展示的是已保存版本。" freeze="重新核实转场" promote="按以上时间重新准备方案"
+AFTER_FREEZE KEY {"id":"rev-v3-travel-gaps","count":1,"visible":true,"disabled":null,"box":"323x216@271","hitSelf":true,"label":"量回来的路上时间 天安门广场 · 看广场与城楼外观 → 故宫博物院 "}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfalls","count":1,"visible":true,"disabled":null,"box":"296x75@323","hitSelf":true,"label":"天安门广场 · 看广场与城楼外观 → 故宫博物院 · 午门入、神武门"}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfall","count":1,"visible":true,"disabled":null,"box":"296x75@323","hitSelf":true,"label":"天安门广场 · 看广场与城楼外观 → 故宫博物院 · 午门入、神武门"}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan","count":1,"visible":true,"disabled":false,"box":"296x44@434","hitSelf":true,"label":"根据路线重新安排"}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_FREEZE TEXTS ["当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_FREEZE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+REPLAN_DOOR replan=1 hit=true box=296x44@434 reverify=0 t=209.6
+HIT rev-v3-replan true t=209.9
+AFTER_REPLAN state="当前展示的是已保存版本。" freeze="重新核实转场" promote="按以上时间重新准备方案"
+AFTER_REPLAN KEY {"id":"rev-v3-travel-gaps","count":1,"visible":true,"disabled":null,"box":"323x474@14","hitSelf":true,"label":"量回来的路上时间 天安门广场 · 看广场与城楼外观 → 故宫博物院 "}
+AFTER_REPLAN KEY {"id":"rev-v3-gap-shortfalls","count":1,"visible":true,"disabled":null,"box":"296x75@66","hitSelf":false,"label":"天安门广场 · 看广场与城楼外观 → 故宫博物院 · 午门入、神武门"}
+AFTER_REPLAN KEY {"id":"rev-v3-gap-shortfall","count":1,"visible":true,"disabled":null,"box":"296x75@66","hitSelf":false,"label":"天安门广场 · 看广场与城楼外观 → 故宫博物院 · 午门入、神武门"}
+AFTER_REPLAN KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_REPLAN KEY {"id":"rev-v3-replan","count":0}
+AFTER_REPLAN KEY {"id":"rev-v3-replan-diff","count":1,"visible":true,"disabled":null,"box":"296x217@181","hitSelf":true,"label":"故宫博物院 · 午门入、神武门出：11:00–12:00 改成 11"}
+AFTER_REPLAN KEY {"id":"rev-v3-replan-apply","count":1,"visible":true,"disabled":false,"box":"296x44@434","hitSelf":true,"label":"按这一版安排"}
+AFTER_REPLAN KEY {"id":"rev-v3-replan-reverify","count":0}
+APPLY_DOOR count=1 visible=true hit=true disabled=false box=296x44@434 label="按这一版安排" t=213.7
+HIT rev-v3-replan-apply true t=214.1
+HTTP POST 201 /api/v1/journeys/56eddd8f-14e0-43f5-94cf-90eab6f2caf2/agent/goal-tasks/548ee174-0242-4896-b585-71a57a66247b/prepare-plan
+APPLY_PRESSED true t=215.3
+AFTER_APPLY TEXTS ["当前展示的是已保存版本。","已按路线把 4 处往后排，这是一份新的候选方案；生效的那一份没有变。新的一版还没有核实转场；先选用这一版，再核实并冻结转场。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_APPLY LEAK api_in_body=false api_in_band=false uuid_in_band=false
+AFTER_APPLY state="当前展示的是已保存版本。" freeze="核实并冻结今天的转场" promote="按以上时间重新准备方案"
+AFTER_APPLY KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-gap-shortfalls","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_APPLY KEY {"id":"rev-v3-replan-reverify","count":0}
+FINAL_HAS_SAVED_AGAIN false
+FINAL_CLEAN true
+DONE t=231.4

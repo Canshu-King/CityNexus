@@ -1,0 +1,4 @@
+INJECT INJECTED 1
+MISSION_NOTE 1 {"text":"这起事件需要一条守护任务才能继续；课堂里没有建任务的入口，请重启课堂演示（双击启动器）。","visible":true,"inViewport":true}
+RESTORED_RUNNING
+ERRORS []

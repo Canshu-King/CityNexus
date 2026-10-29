@@ -1,0 +1,199 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.mobile-trial.config.ts",
+      "-g",
+      "non-Liancheng source media, fallback and day/map focus at 390",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\playwright.mobile-trial.config.ts",
+    "rootDir": "D:/moodle/_cmdr_rescue_v3_1022/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_cmdr_rescue_v3_1022/frontend/mobile-ui-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile-ui-chromium-fixture",
+        "name": "mobile-ui-chromium-fixture",
+        "testDir": "D:/moodle/_cmdr_rescue_v3_1022/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/revolution-(?:dialogue|source-media|visual-travel|draft-variants|draft-preparation|guardian-stream|amap-research-ui|mobile-shell|human-session-recovery|night-out-rest-preferences|place-card-facts|mobile-hermes-transparency|mobile-plan-workbench|workspace-actions)\\.spec\\.ts$/"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "mobile-ui-chromium-fixture",
+        "testDir": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e",
+        "snapshotDir": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 45000,
+        "use": {
+          "browserName": "chromium",
+          "baseURL": "http://127.0.0.1:14273",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "hasTouch": true,
+          "serviceWorkers": "block",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "mobile-ui-chromium-fixture"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev -- --host 127.0.0.1 --port 14273 --strictPort",
+      "cwd": ".",
+      "url": "http://127.0.0.1:14273",
+      "reuseExistingServer": false,
+      "timeout": 120000,
+      "env": {
+        "VITE_REV_TRIAL_MODE": "sample"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "revolution-source-media.spec.ts",
+      "file": "revolution-source-media.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 390",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-ui-chromium-fixture",
+              "projectName": "mobile-ui-chromium-fixture",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4346,
+                  "error": {
+                    "message": "Error: locator.click: Error: strict mode violation: getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id=\"photon:W/12344\"]').getByRole('button') resolved to 2 elements:\n    1) <button type=\"button\">先看看这个地点</button> aka getByRole('button', { name: '先看看这个地点' })\n    2) <button type=\"button\" aria-pressed=\"false\">在地图中查看</button> aka getByRole('button', { name: '在地图中查看' }).nth(2)\n\nCall log:\n\u001b[2m  - waiting for getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id=\"photon:W/12344\"]').getByRole('button')\u001b[22m\n",
+                    "stack": "Error: locator.click: Error: strict mode violation: getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id=\"photon:W/12344\"]').getByRole('button') resolved to 2 elements:\n    1) <button type=\"button\">先看看这个地点</button> aka getByRole('button', { name: '先看看这个地点' })\n    2) <button type=\"button\" aria-pressed=\"false\">在地图中查看</button> aka getByRole('button', { name: '在地图中查看' }).nth(2)\n\nCall log:\n\u001b[2m  - waiting for getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id=\"photon:W/12344\"]').getByRole('button')\u001b[22m\n\n    at D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e\\revolution-source-media.spec.ts:85:97",
+                    "location": {
+                      "file": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e\\revolution-source-media.spec.ts",
+                      "column": 97,
+                      "line": 85
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 83 |\u001b[39m   }\n \u001b[90m 84 |\u001b[39m   expect(reads)\u001b[33m.\u001b[39mtoHaveLength(\u001b[35m3\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 85 |\u001b[39m   \u001b[36mawait\u001b[39m cockpit\u001b[33m.\u001b[39mlocator(\u001b[32m`.cn-place-photo[data-place-id=\"${points[3].id}\"]`\u001b[39m)\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 86 |\u001b[39m   \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(() \u001b[33m=>\u001b[39m reads\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39mtoBe(\u001b[35m4\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 87 |\u001b[39m   expect(writes)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 88 |\u001b[39m   expect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m document\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth))\u001b[33m.\u001b[39mtoBeLessThanOrEqual(width)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e\\revolution-source-media.spec.ts",
+                        "column": 97,
+                        "line": 85
+                      },
+                      "message": "Error: locator.click: Error: strict mode violation: getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id=\"photon:W/12344\"]').getByRole('button') resolved to 2 elements:\n    1) <button type=\"button\">先看看这个地点</button> aka getByRole('button', { name: '先看看这个地点' })\n    2) <button type=\"button\" aria-pressed=\"false\">在地图中查看</button> aka getByRole('button', { name: '在地图中查看' }).nth(2)\n\nCall log:\n\u001b[2m  - waiting for getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id=\"photon:W/12344\"]').getByRole('button')\u001b[22m\n\n\n  83 |   }\n  84 |   expect(reads).toHaveLength(3);\n> 85 |   await cockpit.locator(`.cn-place-photo[data-place-id=\"${points[3].id}\"]`).getByRole(\"button\").click();\n     |                                                                                                 ^\n  86 |   await expect.poll(() => reads.length).toBe(4);\n  87 |   expect(writes).toEqual([]);\n  88 |   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);\n    at D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e\\revolution-source-media.spec.ts:85:97"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T11:40:18.266Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-source-media-TE-d8e2d-ck-and-day-map-focus-at-390-mobile-ui-chromium-fixture\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-source-media-TE-d8e2d-ck-and-day-map-focus-at-390-mobile-ui-chromium-fixture\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\mobile-ui-results\\revolution-source-media-TE-d8e2d-ck-and-day-map-focus-at-390-mobile-ui-chromium-fixture\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_cmdr_rescue_v3_1022\\frontend\\e2e\\revolution-source-media.spec.ts",
+                    "column": 97,
+                    "line": 85
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "2bbcb7bd6f6459c73bec-1523fce08dcaec5102fe",
+          "file": "revolution-source-media.spec.ts",
+          "line": 3,
+          "column": 39
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-24T11:40:16.703Z",
+    "duration": 6889.283,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

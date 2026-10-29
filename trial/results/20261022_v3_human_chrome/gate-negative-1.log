@@ -1,0 +1,37 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 390
+  1) [mobile-ui-chromium-fixture] › e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 390 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 44
+    Received:    16
+
+      87 |   await page.evaluate(() => new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done()))));
+      88 |   const invitationBox = await invitation.boundingBox();
+    > 89 |   expect(invitationBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+         |                                      ^
+      90 |   const invitationHit = await invitation.evaluate((button) => {
+      91 |     const box = button.getBoundingClientRect();
+      92 |     return document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2) === button;
+        at D:\moodle\_cmdr_rescue_v3_1022\frontend\e2e\revolution-source-media.spec.ts:89:38
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-source-media-TE-d8e2d-ck-and-day-map-focus-at-390-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-source-media-TE-d8e2d-ck-and-day-map-focus-at-390-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-source-media-TE-d8e2d-ck-and-day-map-focus-at-390-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-source-media-TE-d8e2d-ck-and-day-map-focus-at-390-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [mobile-ui-chromium-fixture] › e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 390 

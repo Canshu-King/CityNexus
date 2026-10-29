@@ -1,0 +1,7 @@
+PAIR_TRY 0 entered=true
+ENTER "课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。\nC\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\nTRIPS\n行程\n北京 · 2日行程继续这趟\n\n开始探索一个地区后，你保存的路线和出发进度会显示在这里。"
+HIT journey-tab true t=10.8
+MISS day-tab
+EDITOR 0
+NO_EDITOR
+BODY "课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。\nC\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\nTRIPS\n行程\n北京 · 2日行程继续这趟\n\n开始探索一个地区后，你保存的路线和出发进度会显示在这里。\n\n开始探索 →\nAI 服务\nAI 已配置 · 未验证\n\n选好地点并确认行程后，Agent 就会开始工作。\n\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认"

@@ -1,0 +1,36 @@
+ACCEPT DOOR VERSUS THE SHARED AUTHORITY BLOCKER bw285
+DATABASE sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_r285_5h_1b6y5/probe.db (temporary, produced only through the product's own POST routes)
+GATE_ANSWERS_RECORDING 4 rows (this is the denominator: refusals alone are not)
+  accept context             asked=2 refused=0
+  accept's own gate          asked=1 refused=1
+  shared authority blocker   asked=1 refused=1
+EVERY ANSWER BY STEP
+  arm1: accept on a journey with no active plan accept context             line=18394  used=0   content=0   returned 
+  arm2: accept with a swapped order  accept context             line=18483  used=0   content=0   returned 
+  control: shared blocker asked directly shared authority blocker   line=799    used=9   content=9   REFUSED  UNRESOLVED_ACTIVITY_FACTS
+  control: accept's own gate asked directly accept's own gate          line=18776  used=9   content=0   FAILED   MOBILITY_DATA_UNAVAILABLE:160022ba-d830-53ca-970a-f38b0e42fb1c|4569fcff-5e78-5b9c-809c-68e3756cf439,MOBILITY_DATA_UNAVAI
+STEPS
+  POST /api/v1/demo/reset -> http_status=200
+  POST /api/v1/journeys -> http_status=201
+  POST /api/v1/journeys/3c239238-b0e6-431e-b75b-ed63a6ec6549/trip-studio/accept -> http_status=409
+  ARM1 http_status=409 body={"error":{"code":"CONFLICT","message":"Trip Studio requires an active plan","message_key":"request.conflict","trace_id":"9377220e-6462-42a6-b5d4-d0653b77f354","details":null,"error_receipt_id":"CNX-R53FXPX5"}}
+  POST /api/v1/demo/reset -> http_status=200
+  POST /api/v1/journeys -> http_status=201
+  POST /api/v1/journeys/ee85d10c-eac7-4aed-bc47-234846cb0eae/stays/offers/capture -> http_status=200
+  POST /api/v1/journeys/ee85d10c-eac7-4aed-bc47-234846cb0eae/stay-options/generate -> http_status=200
+  POST /api/v1/journeys/ee85d10c-eac7-4aed-bc47-234846cb0eae/stay-options/a56a259f-e625-41e4-826e-0da00cced3d0/select -> http_status=200
+  ARM2 JOURNEY_STATUS=ACTIVE plan_version_id=88e72b55-e4b7-4b44-b1d5-f79575d66e7b
+  ARM2 ACTIVITIES ON THE PLAN 9
+  POST /api/v1/journeys/ee85d10c-eac7-4aed-bc47-234846cb0eae/trip-studio/accept -> http_status=503
+  ARM2 ACCEPT http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for c5618550-65c9-5409-aaab-fabc05631c43|dbb49439-3e63-5fba-a59e-41ef6b5c2076: KeyError","message_key":"error.request_error","trace_id":"2f19b83d-bdbd-4ffb-85a1-7b6cda3d21e9","details":null,"error_receipt_id":"CNX-99S8FRZK"}}
+CONTROLS
+  journey_status = ACTIVE
+  own_answer = MOBILITY_DATA_UNAVAILABLE:160022ba-d830-53ca-970a-f38b0e42fb1c|4569fcff-5e78-5b9c-809c-68e3756cf439,MOBILITY_DATA_UNAVAILABLE:4569fcff-5e78-5b9c-809c-68e3756cf439|e0192143-838e-51fa-a1f5-88f97f3d8eef,MOBILITY_DATA_UNAVAI
+  own_mentions_place_facts = False
+  own_seen = True
+  plan_status = ACTIVE
+  shared_answer = UNRESOLVED_ACTIVITY_FACTS
+  shared_seen = True
+  used_place_ids = 9
+SHARED_BLOCKER_ASKED_DURING_ACCEPT NO (0 times)
+SHARED_BLOCKER_REFUSES_THE_SAME_PLAN YES (answer=UNRESOLVED_ACTIVITY_FACTS)

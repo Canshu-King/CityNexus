@@ -1,0 +1,9 @@
+Record the classroom tree's newest generation in the handoff, from a fresh run of the same ruler.
+
+The handoff's fourth section still named the generation the classroom worktree sat on before this
+shift's last commit, which is exactly the stale-static-value trap the section itself warns about.
+Re-ran _cmdr_stack_generation_r187.py: classroom worktree now at the tip with a clean porcelain
+read, its vite still compiling the module that carries the disclosure string, while the second
+vite on the older generation still answers without it. Added the dated read, the receipt line
+coordinates, and the instruction that the reader must re-read HEAD instead of trusting the
+document — because this very line ages the moment it is committed.

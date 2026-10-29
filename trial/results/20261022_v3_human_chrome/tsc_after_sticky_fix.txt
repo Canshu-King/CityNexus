@@ -1,0 +1,2 @@
+# npm run typecheck (tsc -p tsconfig.check.json --noEmit)，在改完 sticky 之后现读
+TYPECHECK_EXIT=0（npm 的 echo 行不算输出；无 error 行）

@@ -60,7 +60,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         self._allow_budget_retry = allow_budget_retry
         self._tool_allowlist = tool_allowlist
         self._extra_tool_definitions = extra_tool_definitions
-        bounded_timeout = max(5.0, float(settings.impact_timeout_seconds))
+        bounded_timeout = max(5.0, float(settings.agent_model_timeout_seconds))
         self._client = client or httpx.Client(
             timeout=httpx.Timeout(
                 connect=min(10.0, bounded_timeout),

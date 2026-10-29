@@ -1,0 +1,9 @@
+MODEL_FAILED rows read from citynexus_v3_human12_1022.db: 6
+   sequence=69 event_type=MODEL_FAILED status=FAILED_RECOVERABLE reason_code=MODEL_TIMEOUT model_turn_no=None at 2026-10-22T23:10:48.413506+00:00 task=0fd185cf actor=hermes-goal-planning
+   sequence=65 event_type=MODEL_FAILED status=FAILED_RECOVERABLE reason_code=MODEL_TIMEOUT model_turn_no=None at 2026-10-22T23:08:26.728461+00:00 task=0fd185cf actor=hermes-goal-planning
+   sequence=79 event_type=MODEL_FAILED status=FAILED_RECOVERABLE reason_code=MODEL_TIMEOUT model_turn_no=None at 2026-10-22T22:59:11.616618+00:00 task=44c18576 actor=hermes-goal-planning
+   sequence=75 event_type=MODEL_FAILED status=FAILED_RECOVERABLE reason_code=MODEL_TIMEOUT model_turn_no=None at 2026-10-22T22:56:41.206059+00:00 task=44c18576 actor=hermes-goal-planning
+   sequence=76 event_type=MODEL_FAILED status=FAILED_RECOVERABLE reason_code=MODEL_TIMEOUT model_turn_no=None at 2026-10-22T22:31:22.439774+00:00 task=2fe6c8af actor=hermes-goal-planning
+   sequence=71 event_type=MODEL_FAILED status=FAILED_RECOVERABLE reason_code=MODEL_TIMEOUT model_turn_no=None at 2026-10-22T21:51:02.795657+00:00 task=35c3d2e1 actor=hermes-goal-planning
+tasks seen (newest first): 0fd185cf seq=69 rows=69, 44c18576 seq=79 rows=79, 28c134f9 seq=83 rows=83, 2fe6c8af seq=76 rows=76, c6ca23de seq=69 rows=69, 4a1bd841 seq=71 rows=71, 35c3d2e1 seq=71 rows=71, 3eabf425 seq=61 rows=61
+event types in this database: TASK_ACCEPTED, RUN_STARTED, MODEL_TURN_STARTED, MODEL_TURN_COMPLETED, TOOL_STARTED, TOOL_COMPLETED, TASK_NEEDS_DECISION, USER_MESSAGE_ADDED, TASK_PARTIAL_READY, TASK_DRAFT_UPDATED, TOOL_FAILED, MODEL_FAILED

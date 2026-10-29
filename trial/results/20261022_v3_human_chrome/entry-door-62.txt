@@ -1,0 +1,11 @@
+{
+  "session_no_key": {
+    "status": 403,
+    "body": "{\"error\":{\"code\":\"REQUEST_ERROR\",\"message\":\"DEMO_PRESENTER_REQUIRED\",\"message_key\":\"request.forbidden\",\"trace_id\":\"7279e"
+  },
+  "health": {
+    "status": 200,
+    "body": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"enabled\",\"ai_state\":\"CONFIGURED_UNVERIFIED\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+  },
+  "ENTRY_DOOR": "PAIRING"
+}

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Iterable, Protocol
+from typing import Any, Iterable, Mapping, Protocol
 from uuid import uuid4
 
 from app.replanning.provider_snapshots import (
@@ -18,6 +18,23 @@ class MinuteEstimator(Protocol):
     provider_key: str
 
     def estimate_minutes(self, origin_key: str, destination_key: str) -> int: ...
+
+
+def _pair_details(provider: Any, origin: str, destination: str) -> dict:
+    """The per-hop detail a provider may offer: which door answered, how far, how much on foot.
+
+    Providers written before this existed offer nothing and stay exactly as they were -- the fields
+    remain None and `app/replanning/feasibility.py:497` reads a missing walking distance as "not
+    evidenced", never as zero footsteps.  The stored-measurement adapter does answer
+    (`app/agent/goal_mobility.py`), because a frozen hop that cannot say whether it was walked or
+    ridden leaves the traveller's own walking limit unjudgeable at the feasibility door.
+    """
+
+    getter = getattr(provider, "pair_details", None)
+    if not callable(getter):
+        return {}
+    value = getter(str(origin), str(destination))
+    return dict(value) if isinstance(value, Mapping) else {}
 
 
 def _estimate_with_optional_geometry(
@@ -186,6 +203,7 @@ def capture_mobility_snapshot(
                 )
             )
 
+        details = _pair_details(active_provider, origin, destination)
         facts[(origin, destination)] = TravelEstimateFact(
             origin_key=origin,
             destination_key=destination,
@@ -199,11 +217,12 @@ def capture_mobility_snapshot(
             route_provenance=route_provenance,
             cost_provenance="CITYNEXUS_COST_ESTIMATE",
             time_basis=time_basis,
-            mode=str(
-                getattr(active_provider, "mode", None)
-                or ""
-            ).upper()
-            or None,
+            # A hop's own answer wins over whatever mode the provider object advertises: one door can
+            # answer this pair on a bus and the next on foot.
+            mode=str(details.get("mode") or getattr(active_provider, "mode", None) or "").upper() or None,
+            distance_m=details.get("distance_m"),
+            walking_distance_m=details.get("walking_distance_m"),
+            walking_min=details.get("walking_min"),
             fact_quality=_resolve_fact_quality(
                 active_provider, origin, destination, provider_key
             ),

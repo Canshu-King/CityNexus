@@ -1,0 +1,65 @@
+SHOT 390-g7-cold t=5.1
+HIT continue true t=6.0
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.5
+HIT open-settings true t=11.8
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.6
+HIT send true t=15.1
+HTTP POST 201 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/agent/goal-tasks/19d3cbe8-0e3f-4c43-a27a-6aaf30645811/run
+HIT skip-questions true t=28.2
+SKIP t=28.9
+SKIPPED true
+DRAFT t=149.1
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=149.2
+HIT tab-chat true t=149.5
+HTTP POST 200 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/agent/goal-tasks/19d3cbe8-0e3f-4c43-a27a-6aaf30645811/resume
+COMPOSER_ENABLED true t=191.6
+HIT send-fix true t=191.9
+FIX_SENT t=192.6
+FIX_IDLE true t=378.0
+SHOT 390-g7-after-fix t=378.1
+HIT journey-tab true t=378.4
+DRAFT_SLOTS 5
+NO_REMOVE_BUTTON
+HIT save-1-0 true t=391.9
+HTTP POST 201 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/agent/goal-tasks/19d3cbe8-0e3f-4c43-a27a-6aaf30645811/prepare-plan
+HIT price-1-1 true t=398.9
+HTTP POST 200 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/agent/goal-tasks/19d3cbe8-0e3f-4c43-a27a-6aaf30645811/plans/24a70a0a-b8c0-42b0-993d-35a092ca8ead/accept-unknown-price
+HIT refresh-after-price-1 true t=404.0
+HIT freeze-1-2 true t=409.1
+HTTP POST 200 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/agent/goal-tasks/19d3cbe8-0e3f-4c43-a27a-6aaf30645811/plans/24a70a0a-b8c0-42b0-993d-35a092ca8ead/freeze-routes
+HIT refresh-after-freeze-1 true t=416.1
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=420.9
+SHOT 390-g7-plans-1 t=420.9
+HIT select-1 true t=421.3
+HTTP POST 200 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/departure/commit
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。"]
+SHOT 390-g7-selected-1 t=427.1
+HIT start-journey true t=427.4
+HTTP POST 200 /api/v1/journeys/064ff631-bc60-45ab-b68c-ffdc2ca86f70/start
+SHOT 390-g7-started t=438.2
+STATE t=438.2 {"inUse":false,"next":"下一站准备情况"}
+SHOT 390-g7-final t=528.5
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n旅途正在继续。\n换地区 ›\n故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0\n行程执行中\n地图\n执行与待办\n课堂演示 · 模拟时间与推进都在课堂控制台里\n去课堂控制台 ↓\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：故宫博物院（深度游览） · 12月3日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：故宫博物院（深度游览）\n接下来：景山公园（登顶俯瞰故宫）\n路线还需要检查。\n检查路线\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员。\n附近有什么可以顺路玩？\n点击后读取一次当前位置。推荐仅你可见，距离以直线计算。\n个人时间偏好\n15 分钟\n30 分钟\n45 分钟\n兴趣（可选）\n随便看看\n咖啡 / 美食\n文化\n自然\n查找附近体验\n直接搜索真实附近地点（需同意）\n你: 尚未分享位置\n集合点：故宫博物院（深度游览）（来自当前行程安排）\n显示同行者的粗略位置；浏览器定位供路线参考。\n同时看着后面的行程\nI’m watching the rest of your journey.\n未来 0 个行程点 · 看到 11:18\nAGENT 计划\n高级信息\nPlanning AI is ready.\n照看这趟行程\n你将从哪里出发？\nCityNexus 需要一个明确的起点，才能估算何时出发。\n也可以选择一个已验证的地点作为计划起点。\n下一站准备情况\n故宫博物院（深度游览）\n基本准备好了 · 仍有实时信息未确认。\n路线尚未准备好。\n\n当前没有需要你决定的调整。\n\nCITYNEXUS · 工作动态\n行程照看未开启\n未启用\n\n开启后会留意行程变化。\n\n查看最近工作记录\n行程助手\nAI 当前没有执行中的任务\n点击后把这趟行程的信息交给助手\n检查行程\n高级信息\nCITYNEXUS · AI 助手\n让助手检查当前行程\n\n暂无助手运行记录。现场模型可能要几分钟，赶时间请直接用上面的调整卡。\n\n行程进行中\n行程守护\n添加同行者后使用\n\n行程已开始，可以在「我的旅程」继续调整。\n\n行程已经启动\n\n实时进度、变更建议和 Agent 审批现在都在「行程」里。\n\n查看当前行程 →\n当前行程\n\n这里显示行程监测、助手运行记录和待确认操作。\n\n回到行程工作台\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认\n你希望它检查什么\n发送 ↑"
+ERRORS []
+HIT map-layer true t=528.8
+MAP_PANE 1
+MAP_CALLS []
+MAP_HEAD "地图"
+MAP_PLANNED_TAGS 0
+MAP_LIST_ITEMS 0
+MAP_COUNT_LINE "地图地点 0 处 · 高德地点 5 处"
+MAP_AMAP_LINKS 5
+SHOT 390-g8-map-preview t=532.6
+MISS load-map
+MAP_CANVAS 0
+MAP_PINS 0
+MAP_AFTER_CONSENT "地图"
+SHOT 390-g8-map-loaded t=551.7
+MAP_CALLS_AFTER []
+ERRORS_MAP []

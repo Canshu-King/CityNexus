@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
 import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
 import { MobilePlanWorkbench } from "./mobile/MobilePlanWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
-import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse } from "../api/citynexus";
+import { CityNexusApiError, cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse, type SessionDraftJourney } from "../api/citynexus";
 import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
 import { MissionCockpit } from "./mobile/MissionCockpit";
 import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
 import { MobileHermesRun } from "./mobile/MobileHermesRun";
 import { MobileCompatAgentActivity } from "./mobile/MobileCompatAgentActivity";
 import { fetchWithReadDeadline, READ_DEADLINE_MS, ReadDeadlineMissed } from "../lib/readDeadline";
+import { cityNamedIn } from "../features/setup/JourneyTrialSetup";
 import {
   CLIENT_WRITE_DEADLINE_MS,
   CLIENT_WRITE_DEADLINE_SECONDS,
@@ -73,6 +74,80 @@ function addDaysToDateInput(value: string, days: number): string {
   const [year, month, day] = value.split("-").map(Number);
   const next = new Date(Date.UTC(year, month - 1, day + days));
   return `${next.getUTCFullYear()}-${String(next.getUTCMonth() + 1).padStart(2, "0")}-${String(next.getUTCDate()).padStart(2, "0")}`;
+}
+
+export type GoalDateRange = { startDate: string; days: number; phrase: string; past: boolean };
+
+function twoDigits(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+function isoDate(year: number, month: number, day: number): string | null {
+  if (!Number.isInteger(month) || month < 1 || month > 12 || !Number.isInteger(day) || day < 1 || day > 31) return null;
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+  return `${year}-${twoDigits(month)}-${twoDigits(day)}`;
+}
+
+/**
+ * Read an explicit two-ended date range out of the traveller's own sentence.
+ *
+ * Only ranges are read (12月3日到12月4日 / 12/3-12/4 / 2026年12月3日至4日): a sentence that
+ * names one day, a weekday, or 下周末 is left alone, because guessing there would write dates
+ * the person never said. A range that already passed is reported as past so the screen can ask
+ * instead of silently moving it into next year.
+ */
+export function readDateRangeFromGoal(text: string, now = new Date()): GoalDateRange | null {
+  const source = String(text ?? "").replace(/\s+/g, " ").trim();
+  if (!source) return null;
+  let startParts: { year: number | null; month: number; day: number } | null = null;
+  let endParts: { year: number | null; month: number | null; day: number } | null = null;
+  let phrase = "";
+  const cn = source.match(/(?:(\d{4})\s*年\s*)?(\d{1,2})\s*月\s*(\d{1,2})\s*[日号]?\s*(?:到|至|—|–|-|~|～)\s*(?:(\d{4})\s*年\s*)?(?:(\d{1,2})\s*月\s*)?(\d{1,2})\s*[日号]?/);
+  if (cn) {
+    startParts = { year: cn[1] ? Number(cn[1]) : null, month: Number(cn[2]), day: Number(cn[3]) };
+    endParts = { year: cn[4] ? Number(cn[4]) : null, month: cn[5] ? Number(cn[5]) : null, day: Number(cn[6]) };
+    phrase = cn[0].trim();
+  } else {
+    const slash = source.match(/(?:(\d{4})[/.])?(\d{1,2})[/.](\d{1,2})\s*(?:到|至|—|–|-|~|～)\s*(?:(\d{4})[/.])?(\d{1,2})[/.](\d{1,2})/);
+    if (slash) {
+      startParts = { year: slash[1] ? Number(slash[1]) : null, month: Number(slash[2]), day: Number(slash[3]) };
+      endParts = { year: slash[4] ? Number(slash[4]) : null, month: Number(slash[5]), day: Number(slash[6]) };
+      phrase = slash[0].trim();
+    }
+  }
+  if (!startParts || !endParts) return null;
+  const today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+  let startYear = startParts.year ?? now.getFullYear();
+  let startIso = isoDate(startYear, startParts.month, startParts.day);
+  if (!startIso) return null;
+  if (startParts.year === null && Date.parse(startIso + "T00:00:00Z") < today.getTime()) {
+    startYear += 1;
+    startIso = isoDate(startYear, startParts.month, startParts.day);
+    if (!startIso) return null;
+  }
+  let endMonth = endParts.month ?? startParts.month;
+  let endYear = endParts.year ?? startYear;
+  let endIso = isoDate(endYear, endMonth, endParts.day);
+  if (!endIso && endParts.month === null && endParts.day < startParts.day) {
+    endMonth = startParts.month + 1;
+    if (endMonth > 12) { endMonth -= 12; endYear += 1; }
+    endIso = isoDate(endYear, endMonth, endParts.day);
+  }
+  if (!endIso) return null;
+  if (endIso < startIso && endParts.year === null) {
+    endIso = isoDate(endYear + 1, endMonth, endParts.day);
+    if (!endIso) return null;
+  }
+  if (endIso < startIso) return null;
+  const days = Math.round((Date.parse(endIso + "T00:00:00Z") - Date.parse(startIso + "T00:00:00Z")) / 86_400_000) + 1;
+  if (days < 1 || days > 14) return null;
+  return {
+    startDate: startIso,
+    days,
+    phrase: phrase || `${startParts.month}月${startParts.day}日 至 ${endParts.day}日`,
+    past: Date.parse(endIso + "T00:00:00Z") < today.getTime(),
+  };
 }
 
 function tripBriefGoal(goal: string, interests: string[], energy: TripEnergy): string {
@@ -334,6 +409,23 @@ function freshCityCode(): string {
   return "CN-RV-" + crypto.randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase();
 }
 
+type PairingTicket = { ticket: string };
+let pairingAttempted = false;
+
+function readPairingTicket(): PairingTicket | null {
+  // The launcher prints a link with the single-use ticket in the fragment: fragments are
+  // never sent to the server, and the ticket dies after one redemption or two minutes.
+  const hash = window.location.hash.replace(/^#/, "");
+  if (!hash) return null;
+  const ticket = (new URLSearchParams(hash).get("pair") ?? "").trim();
+  return ticket.length >= 32 ? { ticket } : null;
+}
+
+function clearPairingTicket(): void {
+  const { pathname, search } = window.location;
+  window.history.replaceState(null, "", pathname + search);
+}
+
 function DraftAgentActivity({
   status,
   hasSelectedPlace,
@@ -365,7 +457,51 @@ function DraftAgentActivity({
   );
 }
 
+const GOAL_CN_NUM: Record<string, number> = {
+  一: 1,
+  二: 2,
+  两: 2,
+  三: 3,
+  四: 4,
+  五: 5,
+  六: 6,
+  七: 7,
+  八: 8,
+  九: 9,
+  十: 10,
+};
+
+function readPartyFromGoal(text: string): number | null {
+  const match = text.match(/([一二两三四五六七八九十\d]+)\s*(?:个)?人/);
+  if (!match) return null;
+  const raw = match[1];
+  const value = /^\d+$/.test(raw) ? Number(raw) : GOAL_CN_NUM[raw];
+  if (!value) return null;
+  return Math.min(20, Math.max(1, value));
+}
+
+function readPerPersonBudgetFromGoal(text: string): number | null {
+  const match = text.match(/(?:人均|每人|平均每人)[^\d]{0,4}(\d{2,6})/);
+  if (!match) return null;
+  const value = Number(match[1]);
+  return Number.isFinite(value) ? value : null;
+}
+
+function demoEntryFailureText(caught: unknown, forTicket: boolean): string {
+  const status = caught instanceof CityNexusApiError ? caught.status : 0;
+  // A dead or unreachable demo machine used to read as "you need a pairing link", which sends
+  // the teacher looking for the wrong thing. Only a real 403 means the ticket door is closed.
+  if (status === 0) return "演示机没有回应：请回电脑看启动器窗口，必要时重跑启动器再来。";
+  if (forTicket) return "这张课堂配对票已过期或已用过；请重新双击启动器，用窗口里新打印的地址打开。";
+  if (status === 403) return "课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。";
+  return "示例行程还没准备好，请让演示机先启动。";
+}
+
 export function RevolutionFirstLook() {
+  const [collective, setCollective] = useState<{ state?: string; required_count?: number; response_count?: number } | null>(null);
+  const receiveOperator = useCallback((operator: { collective?: { state?: string; required_count?: number; response_count?: number } } | null) => {
+    setCollective(operator?.collective ?? null);
+  }, []);
   const [cityName, setCityName] = useState(() => readStartWriteState()?.cityName ?? "");
   const [startDate, setStartDate] = useState(() => localDateAfter(1));
   const [durationDays, setDurationDays] = useState(2);
@@ -373,9 +509,52 @@ export function RevolutionFirstLook() {
   const [budgetYuan, setBudgetYuan] = useState("1000");
   const [planningMode, setPlanningMode] = useState<TripPlanningMode>("balanced");
   const [tripGoal, setTripGoal] = useState("");
+  // The sentence and the form must not carry two different sets of dates: an unedited form takes
+  // the dates the sentence names, and a hand-edited form stops the submit until the person picks.
+  const [datesEdited, setDatesEdited] = useState(false);
+  const [dateChoice, setDateChoice] = useState<"text" | "form" | null>(null);
+  const goalDateRange = useMemo(() => readDateRangeFromGoal(tripGoal), [tripGoal]);
+  const formEndDate = addDaysToDateInput(startDate, Math.max(1, durationDays) - 1);
+  const goalEndDate = goalDateRange ? addDaysToDateInput(goalDateRange.startDate, goalDateRange.days - 1) : null;
+  const goalDatesConflict = Boolean(goalDateRange && !goalDateRange.past &&
+    (startDate !== goalDateRange.startDate || formEndDate !== goalEndDate));
+  const partyEdited = useRef(false);
+  const budgetEdited = useRef(false);
+  // Which city this screen put there by itself, so the next sentence may replace that value but never a
+  // city the traveller typed; a box the person wrote in is theirs from then on.
+  const cityEdited = useRef(false);
+  const autoFilledCity = useRef<string | null>(null);
+  const applyNumbersFromGoal = (text: string) => {
+    const party = readPartyFromGoal(text);
+    const perPerson = readPerPersonBudgetFromGoal(text);
+    if (party !== null && !partyEdited.current) setPartySize(party);
+    if (perPerson !== null && !budgetEdited.current) {
+      const people = party ?? partySize;
+      setBudgetYuan(String(perPerson * Math.max(1, people)));
+    }
+    const city = cityNamedIn(text);
+    if (cityEdited.current) return;
+    if (city && (cityName.trim() === "" || cityName === autoFilledCity.current)) {
+      autoFilledCity.current = city;
+      setCityName(city);
+    } else if (!city && cityName === autoFilledCity.current && autoFilledCity.current !== null) {
+      // The sentence stopped naming exactly one place (「北京玩两天」 grew a 「…再去厦门」), so the box this
+      // screen filled by itself goes back to being the traveller's to write -- leaving the earlier guess
+      // standing would be a value the sentence no longer says.
+      autoFilledCity.current = null;
+      setCityName("");
+    }
+  };
   const [tripInterests, setTripInterests] = useState<string[]>([]);
   const [tripEnergy, setTripEnergy] = useState<TripEnergy>("easy");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
+  // The trips the server says this traveller has, for the cases a locally kept pointer cannot
+  // cover: a new device, a cleared browser, or the same person coming back a week later.  Until
+  // this existed, 我的旅程 could only ever show a journey this very browser had opened, and a
+  // traveller with a real saved trip was told to go and explore again.
+  const [savedTrips, setSavedTrips] = useState<SessionDraftJourney[]>([]);
+  const [demoBusy, setDemoBusy] = useState(false);
+  const tripLookup = useRef(0);
   const [recentJourneys, setRecentJourneys] = useState<TrialJourney[]>(loadRecentJourneys);
   const [explorationTitle, setExplorationTitle] = useState<{ journeyId: string; label: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -388,6 +567,9 @@ export function RevolutionFirstLook() {
   const startRequestInFlightRef = useRef(false);
   const startWriteBlockedRef = useRef(startWriteStatus !== null);
   const [error, setError] = useState<string | null>(null);
+  // Entry failures (expired ticket, sealed trip, unprepared scene) must survive the
+  // tab switch they trigger, so they live above the per-tab content.
+  const [demoEntryError, setDemoEntryError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [legacyRestoreFailed, setLegacyRestoreFailed] = useState(false);
   const [candidateForJourney, setCandidateForJourney] = useState<string | null>(null);
@@ -403,6 +585,12 @@ export function RevolutionFirstLook() {
   const startWriteBlocked = startWriteStatus !== null;
   const canCheckCurrentStartDrafts = startWriteStatus?.phase === "journey" &&
     Boolean(startWriteStatus.cityCode && (startRecoveryIdentity?.bearer || readTravelerBearer()));
+
+  // A local pointer is not proof that this session owns the Journey, so it never navigates and never
+  // claims progress.  It only stops the trips panel from saying "you have nothing" while the device
+  // still names a trip: measured 2026-10-22, localStorage held 北京's pointer, sessionStorage held no
+  // bearer, and the panel told the traveller to go and start exploring.
+  const deviceJourneyHint = briefBearer ? null : (readLegacyJourneyPointer()?.cityName ?? null);
 
   useEffect(() => subscribeTravelerBearer((token) => { setServerBrief(null); setBriefBearer(token); }), []);
   useEffect(() => {
@@ -444,9 +632,10 @@ export function RevolutionFirstLook() {
         if (!session.traveler_id || (pointer.ownerTravelerId && pointer.ownerTravelerId !== session.traveler_id)) {
           throw new Error("Journey owner does not match the signed traveler");
         }
-        // A pointer is only a local navigation hint. The authenticated server
-        // read proves the current signed traveler is a member before restoring it.
-        await cityNexusApi.getBootstrapShortlist(pointer.id);
+        // A pointer is only a local navigation hint. The authenticated operator read proves the
+        // current signed traveler is a member before restoring it; bootstrap-shortlist cannot serve
+        // as that proof because it answers 409 once a PlanVersion already exists.
+        await cityNexusApi.getJourneyOperator(pointer.id);
         if (cancelled || readTravelerBearer() !== bearer) return;
         const restored: TrialJourney = { ...pointer, ownerTravelerId: session.traveler_id };
         storeTravelerIdentity(bearer, session.traveler_id);
@@ -494,7 +683,9 @@ export function RevolutionFirstLook() {
               ? "AI 尚未连接"
               : runtimeAiState === "PROVIDER_REFUSED"
                 ? "AI 暂时没响应"
-                : "AI 建议可试";
+                : runtimeAiState === "CONFIGURED_UNVERIFIED"
+                  ? "AI 已配置 · 未验证"
+                  : "AI 建议可试";
   const agentStatusDetail = agentStatusChecking
     ? "正在准备 AI。"
     : agentCheckError
@@ -572,6 +763,13 @@ export function RevolutionFirstLook() {
     }
   };
 
+  useEffect(() => {
+    if (!goalDateRange || goalDateRange.past) return;
+    if (datesEdited || dateChoice === "form") return;
+    setStartDate(goalDateRange.startDate);
+    setDurationDays(goalDateRange.days);
+  }, [goalDateRange, datesEdited, dateChoice]);
+
   const start = async (cityNameOverride?: string, options: { freshSession?: boolean } = {}) => {
     const savedWrite = readStartWriteState();
     if (startRequestInFlightRef.current || startWriteBlockedRef.current || savedWrite) {
@@ -593,6 +791,10 @@ export function RevolutionFirstLook() {
     }
     if (!Number.isInteger(durationDays) || durationDays < 1 || durationDays > 14) {
       setError("游玩天数请选 1 至 14 天。");
+      return;
+    }
+    if (goalDateRange && !goalDateRange.past && goalDatesConflict && dateChoice === null) {
+      setError(`你写的是 ${goalDateRange.phrase}，表单里是 ${startDate} 起 ${durationDays} 天。先选一个日期再提交。`);
       return;
     }
     if (!Number.isInteger(partySize) || partySize < 1 || partySize > 20) {
@@ -879,7 +1081,108 @@ export function RevolutionFirstLook() {
     setCandidateForJourney(null);
     setJourney(next);
     setActiveTab("trips");
-    setNotice("Journey 已启动。前往「行程」提交需求或查看动态。");
+    setNotice("行程已开始，可以在「我的旅程」继续调整。");
+  };
+
+  useEffect(() => {
+    const bearer = readTravelerBearer();
+    if (activeTab !== "trips" || journey || !bearer) { setSavedTrips([]); return; }
+    const serial = ++tripLookup.current;
+    cityNexusApi.listSessionDraftJourneys()
+      .then((rows) => {
+        if (serial !== tripLookup.current || readTravelerBearer() !== bearer) return;
+        setSavedTrips(Array.isArray(rows) ? rows.filter((row) => row && typeof row.id === "string") : []);
+      })
+      .catch(() => { if (serial === tripLookup.current) setSavedTrips([]); });
+  }, [activeTab, journey]);
+
+  const resumeSavedTrip = async (tripId: string) => {
+    const bearer = readTravelerBearer(), identity = readTravelerIdentity();
+    if (!bearer || !identity || startWriteBlockedRef.current) return;
+    const serial = ++tripLookup.current;
+    try {
+      const saved = await cityNexusApi.getJourney(tripId);
+      if (serial !== tripLookup.current || readTravelerBearer() !== bearer) return;
+      // The server already authorizes this read for the bearer; the check here keeps a list that
+      // went stale between two taps from opening somebody else's trip under this traveller's nose.
+      if (saved.id !== tripId || saved.traveler_id !== identity.travelerId) return;
+      const next: TrialJourney = {
+        id: saved.id, cityCode: saved.city_code, cityName: saved.title,
+        status: saved.status === "ACTIVE" ? "ACTIVE" : "DRAFT", ownerTravelerId: identity.travelerId,
+      };
+      setRecentJourneys(rememberJourney(next));
+      localStorage.setItem("citynexus.v8.journey_id", next.id);
+      setCandidateForJourney(null);
+      setError(null);
+      setJourney(next);
+    } catch {
+      if (serial === tripLookup.current && readTravelerBearer() === bearer) setError("这趟行程暂时打不开，稍后再试一次。");
+    }
+  };
+
+  const showEntryError = (message: string) => {
+    setDemoEntryError(message);
+    setError(null);
+    setActiveTab("trips");
+  };
+
+  const enterDemoJourney = async () => {
+    if (demoBusy) return;
+    setDemoBusy(true);
+    try {
+      const pairing = readPairingTicket();
+      let accessToken: string;
+      let travelerId: string;
+      let journeyId: string;
+      if (pairing) {
+        try {
+          const answer = await cityNexusApi.redeemDemoPairing(pairing.ticket);
+          accessToken = answer.access_token;
+          travelerId = answer.traveler_id;
+          journeyId = answer.journey_id;
+        } catch (caught) {
+          showEntryError(demoEntryFailureText(caught, true));
+          return;
+        }
+        clearPairingTicket();
+        // A classroom link opens straight onto the trip workspace, where the clock
+        // and presenter live. Landing on "explore" hides the console behind a tab.
+        setActiveTab("trips");
+        try { sessionStorage.setItem("citynexus.revolution.v3.space", "trips"); } catch { /* In-memory navigation remains usable. */ }
+      } else {
+        try {
+          const answer = await cityNexusApi.demoSession();
+          accessToken = answer.access_token;
+          travelerId = answer.traveler_id;
+          journeyId = answer.journey_id;
+        } catch (caught) {
+          showEntryError(demoEntryFailureText(caught, false));
+          return;
+        }
+      }
+      storeTravelerIdentity(accessToken, travelerId);
+      // A finished classroom trip is sealed; reopening it lands on an empty explore
+      // page that reads as data loss. Say what happened and point at the launcher.
+      const journey = await cityNexusApi.getJourney(journeyId);
+      if (journey.status === "COMPLETED") {
+        showEntryError("这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。");
+        return;
+      }
+      // After the classroom trip is walked to the end, the entry falls back to a seed
+      // draft with no plan; entering it shows "0 项安排" and looks broken. Keep the
+      // teacher on the entry screen with the real reason instead.
+      const twin = await cityNexusApi.getTwin(journeyId);
+      if (!twin.active_plan_version_id) {
+        showEntryError("课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。");
+        return;
+      }
+      setDemoEntryError(null);
+      await resumeSavedTrip(journeyId);
+    } catch {
+      showEntryError("示例行程还没准备好，请让演示机先启动。");
+    } finally {
+      setDemoBusy(false);
+    }
   };
 
   const goSummary = (state: string) => {
@@ -900,6 +1203,16 @@ export function RevolutionFirstLook() {
     return () => window.removeEventListener("citynexus:mission-panel", revealAgent);
   }, [activeTab]);
 
+  useEffect(() => {
+    // A classroom link carries the ticket; redeem it on arrival so the teacher only
+    // has to open the address the launcher printed.
+    if (pairingAttempted || !readPairingTicket()) return;
+    pairingAttempted = true;
+    void enterDemoJourney();
+    // The entry function closes over the first render's state; one attempt per page is intended.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const navigateMobile = (tab: RevolutionMobileTab) => {
     setActiveTab(tab);
     if (tab !== "me") requestAnimationFrame(() => window.dispatchEvent(new CustomEvent("citynexus:mission-panel", { detail: tab === "trips" ? "timeline" : "map" })));
@@ -909,6 +1222,11 @@ export function RevolutionFirstLook() {
 
   return (
     <div className="rev-firstlook rev-mobile-v1 rev-v3" data-testid="revolution-first-look">
+      {demoEntryError && (
+        <div className="rev-firstlook-error rev-firstlook-entry-error" role="alert" data-testid="rev-demo-error-banner">
+          {demoEntryError}
+        </div>
+      )}
       <header className="rev-firstlook-header">
         <div className="rev-firstlook-brand">
           <span className="rev-firstlook-mark" aria-hidden="true">C</span>
@@ -980,10 +1298,37 @@ export function RevolutionFirstLook() {
                       maxLength={240}
                       rows={3}
                       disabled={busy || startWriteBlocked}
-                      onChange={(event) => setTripGoal(event.target.value)}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        setTripGoal(value);
+                        applyNumbersFromGoal(value);
+                      }}
                       placeholder="例如：带爸妈轻松逛两天，少走路，晚上想吃当地特色。"
                       data-testid="rev-trip-goal"
                     />
+                  {goalDateRange && !goalDateRange.past && !goalDatesConflict && (
+                    <p className="rev-trip-date-source" data-testid="rev-firstlook-dates-source">
+                      按你写的日期：{goalDateRange.startDate} 至 {goalEndDate}（{goalDateRange.days} 天，可在下面改）
+                    </p>
+                  )}
+                  {goalDateRange?.past && (
+                    <p className="rev-trip-date-source" role="alert" data-testid="rev-firstlook-dates-past">
+                      你写的日期已经过去：{goalDateRange.phrase}。请把出发日期改成今天或之后。
+                    </p>
+                  )}
+                  {goalDatesConflict && (
+                    <div className="rev-trip-date-choice" data-testid="rev-firstlook-dates-conflict">
+                      <p>你写的是 {goalDateRange?.phrase}，表单里是 {startDate} 起 {durationDays} 天。以哪一个为准？</p>
+                      <button type="button" data-testid="rev-firstlook-dates-use-text" onClick={() => {
+                        if (!goalDateRange) return;
+                        setDatesEdited(false); setDateChoice("text"); setStartDate(goalDateRange.startDate);
+                        setDurationDays(goalDateRange.days); setError(null);
+                      }}>以文字日期为准（{goalDateRange?.startDate} 起 {goalDateRange?.days} 天）</button>
+                      <button type="button" data-testid="rev-firstlook-dates-use-form" onClick={() => {
+                        setDatesEdited(true); setDateChoice("form"); setError(null);
+                      }}>以手选日期为准（{startDate} 起 {durationDays} 天）</button>
+                    </div>
+                  )}
                 <label className="rev-trip-destination-label" htmlFor="rev-firstlook-city">目的地</label>
                 <div className="rev-firstlook-form-row">
                   <input
@@ -994,11 +1339,18 @@ export function RevolutionFirstLook() {
                       required
                     disabled={busy || startWriteBlocked}
                     placeholder="例如：连城、厦门、杭州"
-                    onChange={(event) => setCityName(event.target.value)}
+                    onChange={(event) => {
+                      cityEdited.current = true;
+                      setCityName(event.target.value);
+                    }}
                     data-testid="rev-firstlook-city"
                   />
                 </div>
-                <details className="rev-v3-trip-dates"><summary>日期与天数</summary><div className="rev-trip-request-grid">
+                {!cityName.trim() && <p className="rev-trip-destination-hint" role="status" data-testid="rev-trip-destination-hint">
+                  还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。
+                </p>}
+                <details className="rev-v3-trip-dates" open={goalDatesConflict || undefined}><summary>日期与天数</summary>
+                  <div className="rev-trip-request-grid">
                   <label>
                     出发日期
                     <input
@@ -1007,7 +1359,7 @@ export function RevolutionFirstLook() {
                       value={startDate}
                       required
                       disabled={busy || startWriteBlocked}
-                      onChange={(event) => setStartDate(event.target.value)}
+                      onChange={(event) => { setDatesEdited(true); setDateChoice(null); setStartDate(event.target.value); }}
                       data-testid="rev-trip-start-date"
                     />
                   </label>
@@ -1020,7 +1372,7 @@ export function RevolutionFirstLook() {
                       value={durationDays}
                       required
                       disabled={busy || startWriteBlocked}
-                      onChange={(event) => setDurationDays(Number(event.target.value))}
+                      onChange={(event) => { setDatesEdited(true); setDateChoice(null); setDurationDays(Number(event.target.value)); }}
                       data-testid="rev-trip-duration"
                     />
                   </label>
@@ -1042,7 +1394,10 @@ export function RevolutionFirstLook() {
                           value={partySize}
                           required
                           disabled={busy || startWriteBlocked}
-                          onChange={(event) => setPartySize(Number(event.target.value))}
+                          onChange={(event) => {
+                            partyEdited.current = true;
+                            setPartySize(Number(event.target.value));
+                          }}
                           data-testid="rev-trip-party-size"
                         />
                       </label>
@@ -1056,7 +1411,10 @@ export function RevolutionFirstLook() {
                           value={budgetYuan}
                           required
                           disabled={busy || startWriteBlocked}
-                          onChange={(event) => setBudgetYuan(event.target.value)}
+                          onChange={(event) => {
+                            budgetEdited.current = true;
+                            setBudgetYuan(event.target.value);
+                          }}
                           data-testid="rev-trip-budget"
                         />
                       </label>
@@ -1145,13 +1503,32 @@ export function RevolutionFirstLook() {
                   用新行程继续
                 </button>
               )}
-              <p className="rev-mobile-truth">下一步：挑选真实地点。</p>
             </section>
           ) : activeTab === "trips" ? (
             <section className="rev-mobile-panel" data-testid="rev-mobile-empty-trips">
               <span className="rev-firstlook-eyebrow">TRIPS</span>
               <h2>行程</h2>
-              <p>开始探索一个地区后，你保存的路线和出发进度会显示在这里。</p>
+              {savedTrips.length > 0 && (
+                <ul className="rev-saved-trips" data-testid="rev-saved-trips">
+                  {savedTrips.map((item) => (
+                    <li key={item.id}>
+                      <span>{item.title ?? (item.status === "ACTIVE" ? "在路上" : "还没出发")}</span>
+                      <button type="button" data-testid="rev-trip-resume"
+                        onClick={() => void resumeSavedTrip(item.id)}>继续这趟</button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p>{deviceJourneyHint
+                ? `这台设备上还留着「${deviceJourneyHint}」这趟行程，这次打开没有登录到它，所以读不到进度。`
+                : "开始探索一个地区后，你保存的路线和出发进度会显示在这里。"}</p>
+              {!briefBearer && (
+                <button type="button" data-testid="rev-demo-session" disabled={demoBusy}
+                  onClick={() => void enterDemoJourney()}>
+                  {demoBusy ? "正在进入示例行程…" : "课堂演示：进入示例行程"}
+                </button>
+              )}
+              {error && <p className="rev-firstlook-error" role="alert" data-testid="rev-demo-error">{error}</p>}
               <button type="button" data-testid="rev-mobile-empty-start" onClick={() => navigateMobile("explore")}>
                 开始探索 →
               </button>
@@ -1194,7 +1571,8 @@ export function RevolutionFirstLook() {
                   <MobileHermesRun globalComposer journeyId={journey.id} visible={activeTab !== "me"} />
                 </section> : null}
                 executionDecisions={journey.status === "ACTIVE"
-                  ? <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" /> : null}
+                  ? <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" onOperator={receiveOperator} /> : null}
+                collective={collective}
                 onExplore={() => {
                   if (journey.status === "ACTIVE") { navigateMobile("trips"); return; }
                   document.querySelector(".rev-firstlook-real-ui")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1342,7 +1720,6 @@ export function RevolutionFirstLook() {
                 <div className="rev-mobile-account-line">
                   <span>行程状态</span><strong>{journey.status === "ACTIVE" ? "已正式启动" : "私人探索草稿"}</strong>
                 </div>
-                <p>进度属于当前行程；地点来源见卡片，到达由你确认。</p>
                 <button type="button" className="rev-mobile-secondary" onClick={() => switchCity()}>探索其他地区</button>
                 <details className="rev-discovery-details">
                   <summary>关于技术来源与旧版界面</summary>

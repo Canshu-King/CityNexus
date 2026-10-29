@@ -1,0 +1,25 @@
+SESSION_SET task=deeb9691
+ENTER "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京 · 2日行程\n把想去变成出发。\n换地区 ›\n旅行插画\n已有阶段性成果\n地图\n日程\n对话\n现实地图\n6 处地点\n查看其他研究（56）\n先看看这些地方\n地点相册\n先看看这"
+HIT journey-tab true t=9.4
+MISS continue-trip
+MISS day-tab
+EDITOR 1
+HIT day-0 true t=44.4
+HIT day-1 true t=46.1
+BEFORE_DAY1 ["上午 · 故宫博物院（午门进·神武门出） 点击编辑","下午 · 景山公园（登万春亭看全景） 点击编辑","晚上 · 王府井步行街（晚餐+逛街） 点击编辑"]
+BEFORE_DAY2 ["上午 · 天坛公园（祈年殿·回音壁·圜丘） 点击编辑","下午 · 天坛园内慢走/园中园细看·休息 点击编辑","晚上 · 前门大街（老字号晚餐+逛街） 点击编辑","时间灵活 · 南锣鼓巷（可选·胡同漫步） 点击编辑"]
+SHOT_CDP half-day-430-before t=47.5
+TYPED day2 slot=1 old="天坛园内慢走/园中园细看·休息"
+HIT save-draft true t=48.8
+SAVE_RESULT "草案已保存到这趟旅行"
+HIT journey-tab true t=51.1
+MISS continue-trip
+MISS day-tab
+HIT day-0 true t=85.9
+HIT day-1 true t=87.7
+AFTER_DAY1 ["上午 · 故宫博物院（午门进·神武门出） 点击编辑","下午 · 景山公园（登万春亭看全景） 点击编辑","晚上 · 王府井步行街（晚餐+逛街） 点击编辑"]
+AFTER_DAY2 ["上午 · 天坛公园（祈年殿·回音壁·圜丘） 点击编辑","下午 · 天坛园内慢走/园中园细看·休息（只改这一段） 点击编辑","晚上 · 前门大街（老字号晚餐+逛街） 点击编辑","时间灵活 · 南锣鼓巷（可选·胡同漫步） 点击编辑"]
+DAY1_UNCHANGED true
+DAY2_CHANGED ["下午 · 天坛园内慢走/园中园细看·休息（只改这一段） 点击编辑"]
+SHOT_CDP half-day-430-after t=89.1
+ERRORS []

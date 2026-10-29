@@ -1,0 +1,73 @@
+ENTRY {"run":"尚未开演","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null}
+STARTED {"run":"模拟进行中 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null}
+START_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":{"id":"7a20a58e-6604-40b3-aa55-63cbe2ba83f3","status":"RUNNING","sequence":0,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40"},"proposals":[],"guardian_runs":[],"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":null,"missing":["OPEN_SCENE_EVENT_REQUIRED","RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false},"outcome":{"code":"UNKNOWN"}}
+CLOSURE_BUTTON 1
+AFTER_SCENE {"run":"等待守护决策 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null}
+AFTER_SCENE_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":{"id":"7a20a58e-6604-40b3-aa55-63cbe2ba83f3","status":"PAUSED_FOR_GUARDIAN","sequence":1,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","event":"155d3f40-5912-4366-abe6-d71ebf7ea522"},"proposals":[],"guardian_runs":[],"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"155d3f40-5912-4366-abe6-d71ebf7ea522","missing":[],"model_consent_required":true,"network_checked":false},"outcome":{"code":"UNKNOWN"}}
+GUARDIAN_BUTTON 1
+POLL 0 elapsed_s=6 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 1 elapsed_s=12 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 2 elapsed_s=18 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 3 elapsed_s=24 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 4 elapsed_s=30 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 5 elapsed_s=36 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 6 elapsed_s=42 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 7 elapsed_s=48 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 8 elapsed_s=54 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 9 elapsed_s=60 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 10 elapsed_s=66 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 11 elapsed_s=72 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 12 elapsed_s=78 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 13 elapsed_s=84 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 14 elapsed_s=90 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 15 elapsed_s=96 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 16 elapsed_s=103 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 17 elapsed_s=109 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 18 elapsed_s=115 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 19 elapsed_s=121 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 20 elapsed_s=127 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 21 elapsed_s=133 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 22 elapsed_s=139 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 23 elapsed_s=145 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 24 elapsed_s=151 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 25 elapsed_s=157 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 26 elapsed_s=163 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 27 elapsed_s=169 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 28 elapsed_s=175 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 29 elapsed_s=181 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 30 elapsed_s=187 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 31 elapsed_s=193 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 32 elapsed_s=199 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 33 elapsed_s=205 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 34 elapsed_s=211 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 35 elapsed_s=217 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 36 elapsed_s=223 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 37 elapsed_s=229 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 38 elapsed_s=235 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 39 elapsed_s=241 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 40 elapsed_s=247 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 41 elapsed_s=253 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 42 elapsed_s=259 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 43 elapsed_s=265 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 44 elapsed_s=271 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 45 elapsed_s=277 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 46 elapsed_s=283 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 47 elapsed_s=289 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 48 elapsed_s=295 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 49 elapsed_s=301 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 50 elapsed_s=308 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 51 elapsed_s=314 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 52 elapsed_s=320 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 53 elapsed_s=326 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 54 elapsed_s=332 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+POLL 55 elapsed_s=338 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}
+AFTER_GUARDIAN {"run":"守护正在分析 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null}
+AFTER_GUARDIAN_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":{"id":"7a20a58e-6604-40b3-aa55-63cbe2ba83f3","status":"GUARDIAN_RUNNING","sequence":2,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","event":"155d3f40-5912-4366-abe6-d71ebf7ea522"},"proposals":[],"guardian_runs":[{"status":"RUNNING","proposal_id":null}],"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"155d3f40-5912-4366-abe6-d71ebf7ea522","missing":["RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false},"outcome":{"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}}
+GUARDIAN_TAB 1
+BEFORE_ACCEPT {"run":"守护正在分析 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":"移除故宫博物院；路上少 66 分钟。","origin":"规则引擎生成 · 不是大模型现场推理","proposalNote":null}
+ACCEPT_BUTTON 1 disabled=false
+AFTER_ACCEPT {"run":"守护正在分析 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":"移除故宫博物院；路上少 66 分钟。","origin":"规则引擎生成 · 不是大模型现场推理","proposalNote":null}
+AFTER_ACCEPT_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":{"id":"7a20a58e-6604-40b3-aa55-63cbe2ba83f3","status":"GUARDIAN_RUNNING","sequence":2,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","event":"155d3f40-5912-4366-abe6-d71ebf7ea522"},"proposals":[],"guardian_runs":[{"status":"RUNNING","proposal_id":null}],"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"155d3f40-5912-4366-abe6-d71ebf7ea522","missing":["RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false},"outcome":{"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}}
+RESUME_BUTTON 0
+RESPONSES [{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/cities?seed=17"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/7a20a58e-6604-40b3-aa55-63cbe2ba83f3/progress"},{"status":200,"url":"/api/v1/plans/e74a5edb-3f6d-40c3-910c-52e449619d40"},{"status":200,"url":"/api/v1/demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/cities?seed=17"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/7a20a58e-6604-40b3-aa55-63cbe2ba83f3/progress"},{"status":200,"url":"/api/v1/plans/e74a5edb-3f6d-40c3-910c-52e449619d40"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/7a20a58e-6604-40b3-aa55-63cbe2ba83f3/progress"}]
+ERRORS []

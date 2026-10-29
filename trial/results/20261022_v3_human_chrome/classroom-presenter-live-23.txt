@@ -1,0 +1,10 @@
+PHONE_PRESENTER count=1 visible=true
+STATUS 现场模型不可用，已暂停 · 12-03 09:00
+CITIES 随机城市池：可用 0 座，需要 3 座 · 城市身份未核实、真捕获路线不足三条
+BUTTONS ["事件处理完了，继续模拟","刷新读数"]
+MODEL_NOTE count=1 现场模型没有接上；同一起事件要在下方守护屏上处理，处理完再按上面的继续。
+HISTORY ["注入事件 · 12-03 09:00","守护已接手 · 12-03 09:00","守护模型不可用 · 12-03 09:00"]
+AFTER_REFRESH_STATUS 现场模型不可用，已暂停 · 12-03 09:00
+RESUME_WITHOUT_RESOLUTION message="这件事要在守护屏上按原生产品流程解决，再继续。"
+SIM_HTTP ["GET 200","GET 200","GET 200","GET 200","GET 200","GET 200","GET 200","GET 200","POST 409"]
+ERRORS []

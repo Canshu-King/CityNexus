@@ -1,0 +1,5 @@
+CANDIDATE_0 url=http://127.0.0.1:14462/revolution mark={"tabs":3,"dock":true,"recovery":true,"status":"Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。","shape":"493x604","pointer":"{\"id\":\"2"}
+CANDIDATE_1 url=http://127.0.0.1:14436/revolution mark={"tabs":0,"dock":false,"recovery":false,"status":"","shape":"494x783","pointer":"{\"id\":\"0"}
+CANDIDATE_2 url=http://127.0.0.1:14436/revolution mark={"tabs":3,"dock":true,"recovery":false,"status":"","shape":"494x783","pointer":"{\"id\":\"0"}
+CANDIDATE_3 url=http://127.0.0.1:14436/revolution mark={"tabs":0,"dock":false,"recovery":false,"status":"","shape":"493x604","pointer":"{\"id\":\"0"}
+REFUSE qualifying_tabs=2 -- 两页都自称这一趟时按错就是污染别人的走查，也不许用新标签页假装成它

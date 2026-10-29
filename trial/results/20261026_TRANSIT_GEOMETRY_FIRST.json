@@ -1,0 +1,32 @@
+{
+  "evidence_kind": "REAL_AMAP_HTTP_SINGLE_REQUEST_WITH_PERSISTED_PROVIDER_RECEIPT",
+  "provider_requests": 1,
+  "status": "ROUTE_READY",
+  "reason_code": null,
+  "http_status": 200,
+  "provider_call_id": "cf822bd9-3170-4f20-9328-e31c5b28e4de",
+  "places": [
+    {
+      "id": "real-place-00d9e27cd4cc6c7b28b6509e",
+      "name": "天安门广场"
+    },
+    {
+      "id": "real-place-dc53719dde41c9cb48b7b9b6",
+      "name": "天坛公园"
+    }
+  ],
+  "mode": "TRANSIT",
+  "duration_seconds": 3237,
+  "distance_m": 4179,
+  "geometry_status": "BLOCKED_GEOMETRY_UNAVAILABLE",
+  "provider_segment_count": 0,
+  "geometry_provenance": {
+    "source_provider": "amap-web-service",
+    "endpoint": "/v5/direction/transit/integrated",
+    "source_coordinate_system": "GCJ02",
+    "source_fields": [],
+    "conversion": null
+  },
+  "city_preflight_eligible_not_tested": true,
+  "captured_geometry_point_count": 0
+}

@@ -1,0 +1,8 @@
+EXPLORE_BUTTON 1
+AFTER_EXPLORE_TITLE "你的下一趟旅行， 从一句话开始。"
+AFTER_EXPLORE_HAS_FORM 0
+TRIPS_DEMO_BUTTON 1
+TRIPS_TEXT "C CityNexus 你的智能旅行伙伴 AI 建议可试 TRIPS 行程 开始探索一个地区后，你保存的路线和出发进度会显示在这里。 课堂演示：进入示例行程开始探索 → AI 服务 AI 建议可试 选好地点并确认行程后，Agent 就会开始工作。 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认"
+RECOVERED_PRESENTER 0
+RECOVERED_CLOCK "模拟时间：12/03 09:00 · 服务器第 0 版"
+ERRORS []

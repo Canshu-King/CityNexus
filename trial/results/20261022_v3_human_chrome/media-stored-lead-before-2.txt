@@ -1,0 +1,14 @@
+HIT journey_missions.intent_json
+HIT journey_missions.intent_json
+TABLES_SCANNED 93
+LEADS_FOUND 12
+LEAD {"id": "amap:B000A8UIN8", "name": "故宫博物院", "provider": "amap", "system": "GCJ02", "point": [39.917839, 116.397029], "provenance": "LIVE_PROVIDER", "consent_online_research": "MATCHED"}
+CASE {"place": "故宫博物院", "status": "REAL_POI_PHOTO", "reason": null, "identity": "BOUND_SOURCE_COORDINATE_MATCH", "qid": null, "file": "Shenwumen Gate (神武门) of Forbidden City, Beijing", "author": "user:kallgan", "license": "CC BY-SA 3.0", "thumb_host": "thumb.wikimedia.org", "gate_keeps": true}
+LEAD {"id": "amap:B0FFFAH7I9", "name": "南锣鼓巷", "provider": "amap", "system": "GCJ02", "point": [39.937182, 116.402394], "provenance": "LIVE_PROVIDER", "consent_online_research": "MATCHED"}
+CASE {"place": "南锣鼓巷", "status": "REAL_POI_PHOTO", "reason": null, "identity": "BOUND_SOURCE_COORDINATE_MATCH", "qid": null, "file": "Nanluogu Xiang", "author": "Francisco Anzola", "license": "CC BY 2.0", "thumb_host": "thumb.wikimedia.org", "gate_keeps": true}
+LEAD {"id": "amap:B000A7O5PK", "name": "什刹海", "provider": "amap", "system": "GCJ02", "point": [39.941893, 116.385121], "provenance": "LIVE_PROVIDER", "consent_online_research": "MATCHED"}
+CASE {"place": "什刹海", "status": "REAL_POI_PHOTO", "reason": null, "identity": "BOUND_SOURCE_COORDINATE_MATCH", "qid": null, "file": "The Shichahai lake area in Beijing", "author": "FANG Chen", "license": "CC BY-SA 2.0", "thumb_host": "thumb.wikimedia.org", "gate_keeps": true}
+LEAD {"id": "amap:B000A81CB2", "name": "天坛公园", "provider": "amap", "system": "GCJ02", "point": [39.881913, 116.410829], "provenance": "LIVE_PROVIDER", "consent_online_research": "MATCHED"}
+CASE {"place": "天坛公园", "status": "NO_IMAGE", "reason": "MEDIA_IDENTITY_UNBOUND", "identity": "UNBOUND", "qid": null, "file": null, "author": "", "license": null, "thumb_host": "", "gate_keeps": false}
+LEAD {"id": "amap:B000A45467", "name": "八达岭长城", "provider": "amap", "system": "GCJ02", "point": [40.356188, 116.016802], "provenance": "LIVE_PROVIDER", "consent_online_research": "MATCHED"}
+CASE {"place": "八达岭长城", "status": "NO_IMAGE", "reason": "MEDIA_IDENTITY_UNBOUND", "identity": "UNBOUND", "qid": null, "file": null, "author": "", "license": null, "thumb_host": "", "gate_keeps": false}

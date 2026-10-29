@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useT } from "../../i18n/LocaleContext";
+import { travelerAuthHeaders } from "../../lib/travelerSession";
 
 /* V14 · PREVENTIVE owner (pass-16 D/E).
  *
@@ -75,9 +76,9 @@ type Props = { journeyId: string; refreshKey?: unknown };
 const PREVENTIVE = (run: GuardianRun) =>
   run.decision === "PREEMPTIVE_RECOVERY" && run.trigger_kind === "PREDICTIVE";
 
-async function readJson<T>(url: string): Promise<T | null> {
+async function readJson<T>(url: string, init?: RequestInit): Promise<T | null> {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, init);
     if (!response.ok) return null;
     return (await response.json()) as T;
   } catch {
@@ -114,7 +115,7 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
       setAvailable(preventive !== null);
       setRun(preventive);
       if (!preventive) return;
-      setExperience(await readJson<Experience>(`/api/v1/journeys/${journeyId}/experience`));
+      setExperience(await readJson<Experience>(`/api/v1/journeys/${journeyId}/experience`, travelerAuthHeaders()));
       /* A run is written as RUNNING / PLANNING before the recomposition lands and
          only later carries COMPLETED / EXECUTED, so "a run exists" is not "the
          story is finished".  Stopping here on mere existence would freeze a

@@ -1,0 +1,9 @@
+cold first-screen acceptance gate
+1 gate_spec=frontend/e2e/revolution-mobile-shell.spec.ts:98 (goal box + submit inside 390x844)
+2 tabs_spec=frontend/e2e/revolution-mobile-shell.spec.ts:104 (centre hit, one click, aria-current)
+3 suite_run14=49 passed 1 failed (10.9m) => fixture-rerun-14-accept1.log
+4 red_at=workspace-actions 1366 waiting for the trips tab after goto
+5 memory_then=free 1.6 GB of 15.6 GB (a dozen trial stacks running)
+6 isolated_rerun=1 passed 12.9s reload 633ms => accept1-1366-rerun.log
+7 typecheck_rc=0 => typecheck-accept1-1.log
+8 screenshot=trial/results/20261022_v3_human_chrome/acceptance-welcome-390.png

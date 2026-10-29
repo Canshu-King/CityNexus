@@ -1,0 +1,16 @@
+a fourth fault, and the three-bucket ruler that was promised with it
+
+Fourth fault in my own rulers: the catch pattern matched `catch {` quoted inside a doc comment, so one of the
+64 "handlers" in bw326 was a paragraph of prose (RecoveryRequiredPanel.tsx opens by quoting the shape it
+fixed). A block-comment state machine now gates the cutter and all three walkers, which moves the mounted-
+panel denominator 64 -> 63 and the reading-the-refusal count 6 -> 5; says_zh and the rendered count stay at
+26, so the headline of the correction block published an hour ago still holds and only its secondary axes
+move.
+
+bw338 then answers the question §14.38 promised to answer: of the 63 bodies, 4 hand a text field to state, 8
+hand only structured facts, 1 compares against a constant, 0 read and drop, 50 never read a field at all.
+Provenance is chased rather than assumed: all 4 text-handling bodies sit in a try whose own text names an
+api-layer call, and that layer throws at citynexus.ts:2892 with the message assembled as
+"CityNexus API " + response.status + ": " + path - so what reaches a traveller on those four panels is a
+locally built diagnostic string, not the server's refusal sentence. Showing the server's English is at zero
+across these 25 panels. Controls land in three different buckets or the ruler aborts. 0 product bytes.

@@ -1,0 +1,25 @@
+CONTRACT VS REQUIRED BODY FIELDS bw241
+SCHEMAS backend\app\schemas.py
+CONTRACT contracts\openapi.yaml
+CLASS BootstrapDiscoveryRequest fields=12
+  query                    required=no    in_contract=yes    source=backend/app/schemas.py:349
+  query_mode               required=no    in_contract=no     source=backend/app/schemas.py:350
+  radius_m                 required=no    in_contract=no     source=backend/app/schemas.py:351
+  limit                    required=no    in_contract=no     source=backend/app/schemas.py:353
+  source_kind              required=yes   in_contract=no     source=backend/app/schemas.py:354
+  provider_consent         required=no    in_contract=yes    source=backend/app/schemas.py:355
+  consented_provider       required=yes   in_contract=no     source=backend/app/schemas.py:356
+  latitude                 required=yes   in_contract=yes    source=backend/app/schemas.py:357
+  longitude                required=yes   in_contract=yes    source=backend/app/schemas.py:358
+  coordinate_system        required=no    in_contract=yes    source=backend/app/schemas.py:359
+  accuracy_m               required=no    in_contract=no     source=backend/app/schemas.py:360
+  mode                     required=no    in_contract=yes    source=backend/app/schemas.py:361
+CLASS RealCityDiscoveryRequest fields=4
+  query                    required=no    in_contract=yes    source=backend/app/schemas.py:340
+  radius_m                 required=no    in_contract=no     source=backend/app/schemas.py:341
+  limit                    required=no    in_contract=no     source=backend/app/schemas.py:342
+  mode                     required=no    in_contract=yes    source=backend/app/schemas.py:343
+FRONTEND_SENDS frontend/src/features/discovery/BootstrapDiscoveryPanel.tsx occurrences=1
+FRONTEND_SENDS frontend/src/trial/RevolutionQuickExplore.tsx occurrences=1
+FRONTEND_SENDS frontend/src/api/citynexus.ts occurrences=1
+REQUIRED_FIELDS_ABSENT_FROM_CONTRACT 2

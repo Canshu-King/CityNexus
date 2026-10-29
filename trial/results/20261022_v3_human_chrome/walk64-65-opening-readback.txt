@@ -1,0 +1,22 @@
+AFTER the season/24:00/comma fixes, read from the walked plan rows on stack r10
+database citynexus_v3_human12_1022.db, both journeys started 2026-12-03 (a Thursday)
+
+journey c50d1845-bd0d-4bcb-a596-b483f3e01b2a status DRAFT start 2026-12-03
+  plan ee53b452-a596-4601-8f2e-06e6d5e4e87f status CANDIDATE snapshot None
+    seq 1 天安门广场                        type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [300, 1230]
+    seq 2 故宫博物院（中轴线）                   type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [510, 990]
+    seq 3 景山公园（俯瞰宫城）                   type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [390, 1200]
+    seq 4 前门/王府井晚餐                     type FREE_TIME place none verdict None                  reason None                                   window None
+    seq 5 八达岭长城（直通车往返）                 type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [360, 1050]
+    seq 6 八达岭登城/缆车                     type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [360, 1050]
+    seq 7 从容返程市区                       type FREE_TIME place none verdict None                  reason None                                   window None
+
+journey 25dbd9b9-902a-425c-bf8a-08aa9cbe2f97 status DRAFT start 2026-12-03
+  plan e253536e-f8d4-415d-9eea-337dfe31d570 status CANDIDATE snapshot None
+    seq 1 天安门广场 + 故宫博物院                type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [510, 990]
+    seq 2 午餐简餐                         type FREE_TIME place none verdict None                  reason None                                   window None
+    seq 3 景山公园 + 北海公园                  type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [390, 1200]
+    seq 4 前门大街·大栅栏                     type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [0, 1440]
+    seq 5 八达岭长城（建议早出发）                 type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [360, 1050]
+    seq 6 天坛公园（祈年殿、回音壁）                type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [390, 1320]
+    seq 7 南锣鼓巷（胡同文化收尾）                 type SIGHTSEE  place yes verdict OPEN_ON_DATE          reason None                                   window [0, 1440]

@@ -1,0 +1,86 @@
+SHOT 390-g7-cold t=5.5
+HIT continue true t=6.4
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=10.0
+HIT open-settings true t=12.3
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=14.1
+HIT send true t=15.6
+HTTP POST 201 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks/214f5e61-8f82-4c4d-bd8d-ef503d125ee6/run
+HIT skip-questions true t=28.7
+SKIP t=29.5
+SKIPPED true
+DRAFT t=125.6
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=125.7
+HIT tab-chat true t=126.0
+HTTP POST 200 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks/214f5e61-8f82-4c4d-bd8d-ef503d125ee6/resume
+COMPOSER_ENABLED true t=132.0
+HIT send-fix true t=132.3
+FIX_SENT t=133.1
+HTTP POST 200 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks/214f5e61-8f82-4c4d-bd8d-ef503d125ee6/resume
+FIX_IDLE true t=223.2
+SHOT 390-g7-after-fix t=223.3
+HIT journey-tab true t=223.6
+DRAFT_SLOTS 6
+REMOVED "晚上\n· 南锣鼓巷·景秀餐厅（胡同漫步+晚餐）\n点击编辑"
+HTTP PUT 200 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks/214f5e61-8f82-4c4d-bd8d-ef503d125ee6/draft
+DRAFT_SAVE "草案已保存到这趟旅行"
+HIT save-1-0 true t=231.4
+HTTP POST 201 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks/214f5e61-8f82-4c4d-bd8d-ef503d125ee6/prepare-plan
+SAVE_ALERT 1/0 []
+HIT price-1-1 true t=238.4
+HTTP POST 200 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks/214f5e61-8f82-4c4d-bd8d-ef503d125ee6/plans/10cf2ebb-8837-456e-8e42-e3acf259a426/accept-unknown-price
+HIT refresh-after-price-1 true t=243.5
+HIT freeze-1-2 true t=248.6
+HTTP POST 200 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks/214f5e61-8f82-4c4d-bd8d-ef503d125ee6/plans/10cf2ebb-8837-456e-8e42-e3acf259a426/freeze-routes
+HIT refresh-after-freeze-1 true t=255.6
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=260.4
+SHOT 390-g7-plans-1 t=260.5
+HIT select-1 true t=260.8
+HTTP POST 200 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/departure/commit
+SELECT_REFUSAL []
+HIT ask-refusal-1 true t=266.9
+HTTP POST 409 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/agent/goal-tasks/214f5e61-8f82-4c4d-bd8d-ef503d125ee6/resume BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"96db7d34-a4d1-4492-afef-1cf829b16c0b","details":null,"error_receipt_id":"CNX-VDFV85JF"}}
+ASK_REFUSAL_SENT 1 t=267.8
+SHOT 390-g7-selected-1 t=313.0
+HIT journey-tab true t=313.3
+HIT refresh-start-2 true t=316.7
+HIT start-fallback-2-0 true t=321.2
+HTTP POST 200 /api/v1/journeys/5180b857-e1d2-47fb-b31c-f5b86023247a/start
+SHOT 390-g7-started-fallback t=331.2
+STATE t=331.2 {"inUse":false,"next":"下一站准备情况"}
+SHOT 390-g7-final t=421.4
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n旅途正在继续。\n换地区 ›\n旅行插画\n行程执行中\n地图\n执行与待办\n课堂演示 · 模拟时间与推进都在课堂控制台里\n去课堂控制台 ↓\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：故宫博物院（中轴线轻松游） · 12月3日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：故宫博物院（中轴线轻松游）\n接下来：景山公园（登万春亭俯瞰故宫）\n路线还需要检查。\n检查路线\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员。\n附近有什么可以顺路玩？\n点击后读取一次当前位置。推荐仅你可见，距离以直线计算。\n个人时间偏好\n15 分钟\n30 分钟\n45 分钟\n兴趣（可选）\n随便看看\n咖啡 / 美食\n文化\n自然\n查找附近体验\n直接搜索真实附近地点（需同意）\n你: 尚未分享位置\n集合点：故宫博物院（中轴线轻松游）（来自当前行程安排）\n显示同行者的粗略位置；浏览器定位供路线参考。\n同时看着后面的行程\nI’m watching the rest of your journey.\n未来 0 个行程点 · 看到 14:01\nAGENT 计划\n高级信息\nPlanning AI is ready.\n照看这趟行程\n你将从哪里出发？\nCityNexus 需要一个明确的起点，才能估算何时出发。\n也可以选择一个已验证的地点作为计划起点。\n下一站准备情况\n故宫博物院（中轴线轻松游）\n基本准备好了 · 仍有实时信息未确认。\n路线尚未准备好。\n\n当前没有需要你决定的调整。\n\nCITYNEXUS · 工作动态\n行程照看未开启\n未启用\n\n开启后会留意行程变化。\n\n查看最近工作记录\n行程助手\nAI 当前没有执行中的任务\n点击后把这趟行程的信息交给助手\n检查行程\n高级信息\nCITYNEXUS · AI 助手\n让助手检查当前行程\n\n暂无助手运行记录。现场模型可能要几分钟，赶时间请直接用上面的调整卡。\n\n行程进行中\n行程守护\n添加同行者后使用\n\n行程已开始，可以在「我的旅程」继续调整。\n\n行程已经启动\n\n实时进度、变更建议和 Agent 审批现在都在「行程」里。\n\n查看当前行程 →\n当前行程\n\n这里显示行程监测、助手运行记录和待确认操作。\n\n回到行程工作台\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认\n你希望它检查什么\n发送 ↑"
+ERRORS []
+PLAN_GAPS_ALL [] t=421.4
+PLAN_SELECT 0
+PLAN_START 0
+PLAN_HAND 0 t=421.4
+SHOT 390-r54-plan-blocked t=421.5
+HIT map-layer true t=421.8
+MAP_PANE 1
+MAP_CALLS []
+MAP_READS_EVERY ["{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":5,\"first\":{\"candidate_id\":\"real-place-62c2e60619d\",\"origin\":\"PLAN_ACTIVITY\",\"coordinate_system\":\"WGS84\",\"region_status\":\"MATCHED\",\"selection_state\":\"READY_FOR_NATIVE_PLAN\"}}"]
+MAP_HEAD "地图"
+MAP_PLANNED_TAGS 5
+MAP_LIST_ITEMS 5
+MAP_COUNT_LINE "地图地点 5 处 · 高德地点 0 处"
+MAP_AMAP_LINKS 5
+SHOT 390-g8-map-preview t=425.7
+HIT load-map true t=426.0
+MAP_CANVAS 1
+MAP_PINS 5
+MAP_AFTER_CONSENT "地图"
+SHOT 390-g8-map-loaded t=433.9
+MAP_CALLS_AFTER []
+ERRORS_MAP []
+HIT map-layer-after-reload true t=446.6
+RELOAD_MAP_COUNT_LINE "地图地点 5 处 · 高德地点 0 处"
+RELOAD_PLANNED_TAGS 5
+RELOAD_LIST_ITEMS 5
+RELOAD_MAP_READS ["{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":5,\"first\":{\"candidate_id\":\"real-place-62c2e60619d\",\"origin\":\"PLAN_ACTIVITY\",\"coordinate_system\":\"WGS84\",\"region_status\":\"MATCHED\",\"selection_state\":\"READY_FOR_NATIVE_PLAN\"}}","{\"http_status\":200,\"candidates\":5,\"first\":{\"candidate_id\":\"real-place-62c2e60619d\",\"origin\":\"PLAN_ACTIVITY\",\"coordinate_system\":\"WGS84\",\"region_status\":\"MATCHED\",\"selection_state\":\"READY_FOR_NATIVE_PLAN\"}}"]
+SHOT 390-g8-map-reloaded t=450.5

@@ -1,0 +1,44 @@
+REPLAN_WALK_START 2026-10-23T23:07:51.442Z http://127.0.0.1:14472/revolution
+STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。 日期与天数 更多偏好 同行 1 
+STEP_02 days=2
+STEP_03 sent_at 2026-10-23T23:08:06.264Z
+WAIT tick=1 dock=Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。
+WAIT tick=2 dock=(unreadable)
+WAIT tick=3 dock=(unreadable)
+WAIT tick=4 dock=(unreadable)
+WAIT tick=5 dock=(unreadable)
+STEP_04 choices=4 first=经典核心（故宫+天安门+景山） 天安门—故宫—景山三点连成一片，步行串联、打车进
+WAIT tick=1 dock=Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。
+WAIT tick=2 dock=Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。
+WAIT tick=3 dock=(unreadable)
+WAIT tick=4 dock=(unreadable)
+STEP_04B_START_RESEARCH pressed=true
+SETTLED ticks=1 dock=Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。
+STEP_05_DRAFT slots=0
+STEP_06_DEPARTURE_VISIBLE=false
+STEP_07_WINDOWS []
+STEP_08_AFTER_SAVE status=(unreadable)
+SHOT replan-walk-08-after-save.png bytes=110479
+STEP_09_ROUTE_BEFORE (unreadable)
+STEP_09_FREEZE_PRESS round=1 {"testId":"rev-v3-freeze-routes","present":false}
+STEP_09_ROUND_1 BAND (unreadable)
+STEP_09_FREEZE_PRESS round=2 {"testId":"rev-v3-freeze-routes","present":false}
+STEP_09_ROUND_2 BAND (unreadable)
+STEP_09_FREEZE_PRESS round=3 {"testId":"rev-v3-freeze-routes","present":false}
+STEP_09_ROUND_3 BAND (unreadable)
+STEP_10_GAPS_PRESENT=false
+STEP_10_SHORTFALLS []
+STEP_10_REFUSAL (unreadable)
+SHOT replan-walk-10-gaps.png bytes=107050
+STEP_11_REPLAN_TAP {"testId":"rev-v3-replan","present":false}
+STEP_11_DIFF []
+SHOT replan-walk-11-diff.png bytes=107050
+STEP_12_APPLY_TAP {"testId":"rev-v3-replan-apply","present":false}
+STEP_12_AFTER_APPLY status=(unreadable)
+SHOT replan-walk-12-after-apply.png bytes=107050
+STEP_13_AFTER_RELOAD_DEPARTURE_VISIBLE=true
+STEP_13_AFTER_RELOAD_ROUTE (unreadable)
+STEP_13_AFTER_RELOAD_GAPS_PRESENT=false
+STEP_13_WIRE []
+NOTE the only writes are the traveller's own saves and the two presses named above; nothing was seeded into storage and no endpoint was called by hand
+DONE -- the tab is left open on purpose so the next probe reads the same page state

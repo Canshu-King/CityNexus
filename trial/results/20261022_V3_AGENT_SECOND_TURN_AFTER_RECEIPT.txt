@@ -1,0 +1,5 @@
+PARTIAL :: stopped on purpose at 14:23: the driver read the wrong field for the Agent's question (`pending_question.text`; the server's shape is `pending_question.question`, backend/app/agent/goal_tasks.py:226), so it never pressed an answer. Fixed in the driver and re-run as agent4.
+MISSIONS :: [["4a8ce98d", "想慢慢逛北京的古迹和胡同小吃，一天别太赶，第二天下午想轻松一", "NEEDS_DECISION", "TRAVELER_INPUT_REQUIRED"]]
+RUNS :: [["9974e52d", "cn:hy3", "PARTIAL", "{\"code\":\"TRAVELER_INPUT_REQUIRED\",\"status\":\"NEEDS_DECISION\"}", 37.3]]
+STEPS :: [["inspect_journey", "COMPLETED"], ["ask_traveler", "COMPLETED"]]
+CLARIFICATION :: ["{}"]

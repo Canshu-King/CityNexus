@@ -1,0 +1,11 @@
+STEP PAIR elapsed_s=7.9 {"error":"no_run","current":{"run_id":null,"journey_id":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"NOT_STARTED"}}
+STEP START elapsed_s=12.8 {"status":"RUNNING","seq":0}
+STEP ADVANCE_30 elapsed_s=14.6 {"status":"RUNNING","sequence":1,"pending":null,"proposals":[],"outcome":{"code":"UNKNOWN"},"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":null,"missing":["OPEN_SCENE_EVENT_REQUIRED","RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false}}
+STEP CLOSURE elapsed_s=18.4 {"status":"PAUSED_FOR_GUARDIAN","sequence":2,"pending":{"id":"785f289c-40b7-4e8c-a93d-1b01a2b2c304","status":"DETECTED"},"proposals":[],"outcome":{"code":"UNKNOWN"},"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"785f289c-40b7-4e8c-a93d-1b01a2b2c304","missing":[],"model_consent_required":true,"network_checked":false}}
+GUARDIAN_REQUESTED
+STEP GUARDIAN_RESULT elapsed_s=379.4 {"status":"GUARDIAN_RUNNING","sequence":3,"pending":{"id":"785f289c-40b7-4e8c-a93d-1b01a2b2c304","status":"DETECTED"},"proposals":[],"outcome":{"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"},"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"785f289c-40b7-4e8c-a93d-1b01a2b2c304","missing":["RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false}}
+MISS_BUTTON 继续模拟
+BLOCKED_BUTTON 到下一站
+HOP_1_NO_BUTTON
+FINAL {"status":"PAUSED_FOR_ACCEPTANCE","sequence":3,"pending":{"id":"785f289c-40b7-4e8c-a93d-1b01a2b2c304","status":"DETECTED"},"proposals":[{"id":"69834d00-e71f-487a-94ad-8f15a8a22060","status":"PRESENTED"}],"outcome":{"code":"PROPOSAL_READY"},"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"785f289c-40b7-4e8c-a93d-1b01a2b2c304","missing":["RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false}}
+ERRORS []

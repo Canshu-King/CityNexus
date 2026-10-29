@@ -1,0 +1,101 @@
+SHOT 430-g4-cold t=5.0
+HIT continue true t=5.9
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.5
+HIT open-settings true t=11.7
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.7
+HIT send true t=15.2
+HTTP POST 201 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/run
+HIT skip-questions true t=34.3
+SKIP t=35.0
+SKIPPED true
+MISS recover-research
+DRAFT t=194.4
+DRAFT_SEEN true
+SHOT 430-g4-after-research t=194.5
+HIT tab-chat true t=194.8
+HTTP POST 200 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/resume
+COMPOSER_ENABLED true t=212.8
+HIT send-fix true t=213.2
+FIX_SENT t=213.9
+HTTP POST 200 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/resume
+FIX_IDLE true t=319.1
+SHOT 430-g4-after-fix t=319.2
+HIT journey-tab true t=319.5
+HIT save-1-0 true t=323.0
+HTTP POST 201 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/prepare-plan
+HIT price-1-1 true t=330.1
+HTTP POST 200 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/plans/ac8f81f9-a541-436d-a50a-4085a248bc53/accept-unknown-price
+HIT refresh-after-price-1 true t=335.2
+HIT freeze-1-2 true t=340.2
+HTTP POST 200 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/plans/ac8f81f9-a541-436d-a50a-4085a248bc53/freeze-routes
+HIT refresh-after-freeze-1 true t=347.3
+SHOT 430-g4-plans-1 t=352.1
+HIT select-1 true t=352.4
+HTTP POST 422 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/departure/commit
+SELECT_REFUSAL ["这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+SHOT 430-g4-selected-1 t=358.2
+HIT refresh-after-select-1 true t=358.5
+HIT replan-1 true t=363.6
+HIT replan-apply-1 true t=367.2
+HTTP POST 201 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/prepare-plan
+REPLAN_APPLIED 1
+HIT journey-tab true t=401.3
+HIT price-2-0 true t=404.6
+HTTP POST 200 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/plans/4203506a-2818-4ea8-92bd-70892e015745/accept-unknown-price
+HIT refresh-after-price-2 true t=409.6
+HIT freeze-2-1 true t=414.7
+HTTP POST 200 /api/v1/journeys/c1b77166-478c-411f-a729-3ded3378c7c6/agent/goal-tasks/598de1fd-e767-4aee-822d-2521ca6b0002/plans/4203506a-2818-4ea8-92bd-70892e015745/freeze-routes
+HIT refresh-after-freeze-2 true t=421.8
+LOOP 2/2 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/3 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/4 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/5 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/6 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/7 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/8 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/9 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/10 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/11 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/12 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/13 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/14 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/15 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/16 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/17 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/18 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/19 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/20 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/21 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/22 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 2/23 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+HIT refresh-start-3 true t=538.2
+LOOP 3/0 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/1 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/2 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/3 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/4 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/5 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/6 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/7 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/8 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/9 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/10 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/11 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/12 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/13 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/14 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/15 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/16 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/17 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/18 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/19 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/20 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/21 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/22 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+LOOP 3/23 GATE ["等待正式计划\n\n2 份正式候选方案"] BLOCK ["7 项费用待确认，尚未计入完整预算。","7 项费用待确认，尚未计入完整预算。"] ALERT []
+STATE t=664.7 {"inUse":false,"next":null}

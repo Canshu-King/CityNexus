@@ -1,4 +1,4 @@
-import { expect, test, type Route } from "@playwright/test";
+import { expect, test, type Page, type Route } from "@playwright/test";
 
 /**
  * UI consent / navigation flow with Playwright TEST_PROVIDER fixtures. Live OSM,
@@ -13,6 +13,16 @@ const secondId = "sample-spot-2";
 
 function json(route: Route, object: object) {
   return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(object) });
+}
+
+/**
+ * On the mission screen the manual city search is folded behind an explicit choice, so a test that
+ * wants the city box performs the same opening a traveller does. Where the pane is not folded this
+ * does nothing.
+ */
+async function openManualSearch(page: Page) {
+  const fold = page.getByTestId("rev-quick-area-secondary");
+  if (await fold.isVisible().catch(() => false)) await fold.locator("> summary").click();
 }
 
 test("TEST_FIXTURE city and AI pending labels preserve consent and disclose the server-selected source", async ({ page }) => {
@@ -85,11 +95,12 @@ test("TEST_FIXTURE city and AI pending labels preserve consent and disclose the 
 
   await page.goto("/revolution");
   await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
-  await expect(page.getByTestId("rev-quick-area")).toContainText(/服务器当前选择的公开地名服务|点击后使用演示地点数据/);
+  await expect(page.getByTestId("rev-quick-area")).not.toContainText(/服务器当前选择的公开地名服务|点击后使用演示地点数据/);
   await expect(page.getByTestId("rev-quick-area")).not.toContainText("TEST_PROVIDER");
   await expect(page.getByTestId("rev-quick-area")).not.toContainText("Nominatim");
   const cityButton = page.getByTestId("rev-quick-find-city");
   const aiButton = page.getByTestId("rev-quick-consult-ai");
+  await openManualSearch(page);
   await page.getByLabel("城市或地区").fill("连城");
   await cityButton.click();
   await citySearchStarted;
@@ -99,7 +110,7 @@ test("TEST_FIXTURE city and AI pending labels preserve consent and disclose the 
   await expect(aiButton).toHaveText("问问 AI →");
   releaseCitySearch();
   await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
-  await expect(page.getByTestId("rev-quick-area")).toContainText("本次地名搜索服务：Photon。");
+  await expect(page.getByTestId("rev-quick-area")).toContainText("刚才的地名来自 Photon。");
   await expect(cityButton).toBeEnabled();
   await expect(cityButton).toHaveText("查找位置 →");
 
@@ -354,6 +365,7 @@ test("plain Chinese first-user journey preserves separate intentional provider r
   expect(citySearchCalls).toBe(0);
   expect(poiSearchCalls).toBe(0);
 
+  await openManualSearch(page);
   await page.getByTestId("rev-quick-find-city").click();
   await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
   expect(citySearchCalls).toBe(1);
@@ -443,6 +455,7 @@ for (const outcome of [
     });
 
     await page.goto("/revolution");
+    await openManualSearch(page);
     await page.getByTestId("rev-quick-find-city").click();
     await expect(page.getByRole("status")).toContainText(outcome.message);
     await expect(page.getByRole("status")).not.toContainText(outcome.forbidden);
@@ -636,6 +649,7 @@ test("Overpass outage is distinguished from zero places and retries only on a cl
   });
 
   await page.goto("/revolution");
+  await openManualSearch(page);
   await page.getByTestId("rev-quick-find-city").click();
   await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
   expect(citySearchCalls).toBe(1);

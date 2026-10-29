@@ -1,0 +1,7 @@
+
+Running 3 tests using 1 worker
+
+[1/3] [mobile-ui-chromium-fixture] › e2e\revolution-dialogue.spec.ts:3:39 › TEST_FIXTURE discuss, choose, explicitly research without quotas at 390
+[2/3] [mobile-ui-chromium-fixture] › e2e\revolution-dialogue.spec.ts:3:39 › TEST_FIXTURE discuss, choose, explicitly research without quotas at 430
+[3/3] [mobile-ui-chromium-fixture] › e2e\revolution-dialogue.spec.ts:3:39 › TEST_FIXTURE discuss, choose, explicitly research without quotas at 1366
+  3 passed (16.5s)

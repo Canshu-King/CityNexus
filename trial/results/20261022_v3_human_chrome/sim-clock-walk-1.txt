@@ -1,0 +1,12 @@
+OPEN AA8A2C762C990C109AE2900A1040317D
+HOME {"clock":null,"clock_value":null,"error":null,"traveller":null,"has_ball":true,"has_panel":false,"path":"/"}
+BALL {"found":true,"x":443.8705711364746,"y":488.05053329467773,"disabled":false}
+OPENED {"clock":"课堂时空模拟｜不是实际定位或真实灾情 模拟旅行时间：12/03 10:00 现实演示时间：06:03:03 · 服务器记在第 1 版 · 刷新仍在 当前站：尚未开始执行 +30 分钟 +1 小时 刷新时间","clock_value":"模拟旅行时间：12/03 10:00","error":null,"traveller":null,"has_ball":true,"has_panel":true,"path":"/"}
+SHOT_BEFORE {"bytes":73796}
+ADVANCE {"found":true,"x":225.17826461791992,"y":276.5572395324707,"disabled":false}
+AFTER_ADVANCE {"clock":"课堂时空模拟｜不是实际定位或真实灾情 模拟旅行时间：12/03 11:00 现实演示时间：06:03:05 · 服务器记在第 2 版 · 刷新仍在 当前站：尚未开始执行 +30 分钟 +1 小时 刷新时间","clock_value":"模拟旅行时间：12/03 11:00","error":null,"traveller":null,"has_ball":true,"has_panel":true,"path":"/"}
+SHOT_AFTER {"bytes":79573}
+BALL2 {"found":true,"x":443.8705711364746,"y":488.05053329467773,"disabled":false}
+AFTER_RELOAD {"clock":"课堂时空模拟｜不是实际定位或真实灾情 模拟旅行时间：12/03 11:00 现实演示时间：06:03:16 · 服务器记在第 2 版 · 刷新仍在 当前站：尚未开始执行 +30 分钟 +1 小时 刷新时间","clock_value":"模拟旅行时间：12/03 11:00","error":null,"traveller":null,"has_ball":true,"has_panel":true,"path":"/"}
+SHOT_RELOAD {"bytes":73584}
+VERDICT {"before":"模拟旅行时间：12/03 10:00","after":"模拟旅行时间：12/03 11:00","reloaded":"模拟旅行时间：12/03 11:00"}

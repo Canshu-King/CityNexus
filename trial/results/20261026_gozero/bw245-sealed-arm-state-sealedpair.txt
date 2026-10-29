@@ -1,0 +1,41 @@
+SEALED-ARM STATE PROBE bw245
+TARGET app\services.py :: plan_authority_blocker  return line 799
+REFUSALS_RECORDED 4 (sealed arm 3, other arms 1)
+ARM_STATE SHAPE (sealed, coursework, cost_unknown, per-place dims) -> refusals
+  sealed=False coursework=False cost_unknown=False O?C  <- 3
+DISTINCT PLACE ROWS READ 18
+metadata authority_envelope: {"<absent>": 18}
+opening_hours_json status: {"NORMALIZED": 18}
+opening status key: {"status key present": 18}
+cost_evidence: {"cost_evidence present": 18}
+cost_evidence status: {"KNOWN": 18}
+cost amount_minor is None: {"False": 18}
+AUTHORITY_STATE ON THE PLAN
+  <absent>                         3
+PLAN authority_envelope: {"<absent>": 3}
+FIRST THREE REFUSALS IN FULL
+  tests/test_r28_execution_truth.py::test_r28_plain_http_execution_is_durably_simulation_labeled used=12 content=6 sealed=False
+    v12-test | Italian Gallery | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Five Avenues | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Design Library | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Water Park | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Tea House | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Riverside Eye | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+  tests/test_r28_execution_truth.py::test_r28_operator_confirmed_execution_requires_signed_member_and_explicit_confirmation used=12 content=6 sealed=False
+    v12-test | Italian Gallery | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Five Avenues | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Design Library | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Water Park | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Tea House | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Riverside Eye | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+  tests/test_r28_execution_truth.py::test_r28_foreground_web_location_cannot_claim_device_verified_execution used=12 content=6 sealed=False
+    v12-test | Italian Gallery | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Five Avenues | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Design Library | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Water Park | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Tea House | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Riverside Eye | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+BY_TEST distinct tests that refused from the sealed arm: 3
+  tests/test_r28_execution_truth.py::test_r28_foreground_web_location_cannot_claim_device_verified_execution
+  tests/test_r28_execution_truth.py::test_r28_operator_confirmed_execution_requires_signed_member_and_explicit_confirmation
+  tests/test_r28_execution_truth.py::test_r28_plain_http_execution_is_durably_simulation_labeled

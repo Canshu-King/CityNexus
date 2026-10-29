@@ -117,7 +117,13 @@ def _active_shared_journey() -> tuple[str, str, str]:
         f"/api/v1/journeys/{journey_id}/plans/{plan_id}/select",
         headers=_auth(str(reset.json()["traveler_id"])),
     ).status_code == 200
-    assert client.post(f"/api/v1/journeys/{journey_id}/start").status_code == 200
+    # /start is a write door like the select above it, so it has to sign as the same demo traveller.
+    # The 401 measured here came from the fixture dropping the header, not from the product refusing
+    # a member -- see the before/after counts printed by trial/human_walk/_fix_r64_start_header_r148.py.
+    assert client.post(
+        f"/api/v1/journeys/{journey_id}/start",
+        headers=_auth(str(reset.json()["traveler_id"])),
+    ).status_code == 200
     now = datetime.now(timezone.utc).isoformat()
     other_id = str(uuid4())
     with SessionLocal() as session:

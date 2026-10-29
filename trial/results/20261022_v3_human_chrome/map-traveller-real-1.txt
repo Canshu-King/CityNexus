@@ -1,0 +1,7 @@
+MAP_TAB 1
+LOAD_BUTTON 1
+MARKER_VISIBLE true
+MARKER_COUNT 1
+STATE_LINE "模拟旅客：故宫博物院 · 39.9164, 116.3908（WGS84，模拟位置，不是物理 GPS）"
+CAPTION "模拟旅客 1 位 · 暂无研究地点"
+ERRORS []

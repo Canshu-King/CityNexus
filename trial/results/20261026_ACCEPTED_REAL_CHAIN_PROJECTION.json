@@ -1,0 +1,20 @@
+{
+  "product_sha": "96ffe4649463e64f878706380f147339ecfe86a7",
+  "evidence_kind": "READ_ONLY_PROJECTION_OF_PRIOR_REAL_CLASSROOM_MODEL_AND_SIGNED_ACCEPTANCE",
+  "database_open_mode": "ro",
+  "model_calls_this_check": 0,
+  "credentials_or_network_checked": false,
+  "run_id": "5625ed72-9aff-4c87-8bb3-68d9291775e1",
+  "run_status": "SIMULATED_COMPLETED",
+  "sequence": 9,
+  "event_id": "7cf6f587-cec6-4c30-823a-b7cab6891c6f",
+  "event_status": "RESOLVED",
+  "proposal_id": "88571de6-d416-43fb-a0d6-a264db797552",
+  "proposal_status": "ACCEPTED",
+  "guardian_id": "5a31ffd4-c771-4b36-9fbd-b78d540e20a5",
+  "agent_run_id": "59d8ef94-976b-4ab8-a8c7-bc194c48773b",
+  "agent_status": "PARTIAL",
+  "guardian_outcome": {"code": "PROPOSAL_ACCEPTED"},
+  "steps_count": 10,
+  "progress_source_sha256": "e49e345fe0c5cfab9afbab9b7cb2c734b89976d47976798ce92527073164d967"
+}

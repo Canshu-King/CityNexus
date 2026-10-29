@@ -1,0 +1,12 @@
+copied citynexus_v3_human15_1022.db-wal bytes=4120032
+copied citynexus_v3_human15_1022.db-shm bytes=32768
+journey title=北京 · 2日行程 start_at=2026-12-03T09:00:00+08:00 end_at=2026-12-04T21:00:00+08:00 timezone=Asia/Shanghai
+mission=e054196a-8507-4a58-8742-b05fa3e42d33 status=PARTIAL_READY draft_revision=1 prepared_plan_present=False failure_code=None
+row 1 2026-12-03T09:00 -> 2026-12-03T10:00 [morning] 天安门广场（看升旗/广场，步行至故宫午门 :: ok
+row 2 2026-12-03T11:00 -> 2026-12-03T12:00 [morning] 故宫博物院（午门进、神武门出） :: ok
+row 3 2026-12-03T14:00 -> 2026-12-03T15:00 [afternoon] 景山公园（俯瞰故宫全景） :: ok
+row 4 2026-12-03T19:00 -> 2026-12-03T20:00 [evening] 什刹海/后海（老城胡同风貌） :: ok
+row 5 2026-12-04T09:00 -> 2026-12-04T10:00 [morning] 八达岭长城 :: ok
+row 6 2026-12-04T14:00 -> 2026-12-04T15:00 [afternoon] 颐和园（皇家园林） :: ok
+row 7 2026-12-04T11:00 -> 2026-12-04T12:00 [flexible] 天坛公园（礼制建筑收尾） :: REFUSES overlaps_previous
+refusing_rows=[7] of 7 rows; draft revision=1

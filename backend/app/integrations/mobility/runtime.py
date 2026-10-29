@@ -16,6 +16,8 @@ from app.integrations.mobility.snapshot_capture import (
     MobilitySnapshotCaptureResult,
     capture_mobility_snapshot,
 )
+from app.integrations.china.amap_provider import AmapClient
+from app.integrations.mobility.amap_http import AmapWalkingMobilityProvider
 from app.integrations.mobility.valhalla_http import (
     ValhallaHTTPMobilityProvider,
     ValhallaProviderError,
@@ -25,7 +27,7 @@ from app.integrations.mock.providers import MockMobilityProvider
 
 def _place_lookup(
     session: Session, key: str, *, journey_id: str | None = None
-) -> dict[str, float]:
+) -> dict[str, object]:
     """Resolve a routing key to coordinates.
 
     Two key spaces are in play and they must agree, or every leg reports
@@ -49,6 +51,7 @@ def _place_lookup(
         return {
             "latitude": float(observation.latitude),
             "longitude": float(observation.longitude),
+            "provider_key": "location-observation",
         }
 
     candidates = [key]
@@ -86,7 +89,11 @@ def _place_lookup(
                 break
     if place is None:
         raise KeyError(f"no routable coordinates for {key}")
-    return {"latitude": float(place.latitude), "longitude": float(place.longitude)}
+    return {
+        "latitude": float(place.latitude),
+        "longitude": float(place.longitude),
+        "provider_key": str(place.provider_key or ""),
+    }
 
 
 def capture_runtime_mobility_snapshot(
@@ -124,6 +131,24 @@ def capture_runtime_mobility_snapshot(
         strict=require_explicit_facts,
     )
     if not settings.live_valhalla_url:
+        requested = str(requested_mode or "WALK").upper()
+        if settings.amap_web_key and requested == "WALK":
+            # A hard capture must come from a real provider.  This deployment has no Valhalla, but
+            # the traveller's own AMap key can measure the same walking hop and the goal chain
+            # already uses it.  Soft captures keep the mock as a pair-level fallback; hard ones
+            # stay fail-closed, so a leg AMap cannot measure remains unavailable instead of
+            # inheriting the fixture's blanket constant.
+            with AmapClient(api_key=settings.amap_web_key) as client:
+                return capture_mobility_snapshot(
+                    normalized_pairs,
+                    primary=AmapWalkingMobilityProvider(
+                        client=client,
+                        place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
+                    ),
+                    fallback=None if require_explicit_facts else mock,
+                    captured_at=captured_at,
+                    operation_key=operation_key,
+                )
         return capture_mobility_snapshot(
             normalized_pairs,
             primary=mock,

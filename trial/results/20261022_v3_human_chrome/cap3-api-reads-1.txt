@@ -1,0 +1,7 @@
+cap3 membership reads (isolated copy; status + code only)
+owner /api/v1/travelers/session http_status=200 code=-
+owner /api/v1/journeys/cb4b3e56-ab40-4408-93b5-3f078222c995 http_status=200 code=-
+owner /api/v1/journeys/cb4b3e56-ab40-4408-93b5-3f078222c995/bootstrap-shortlist http_status=409 code=bootstrap.bootstrap_plan_already_exists
+owner /api/v1/journeys/cb4b3e56-ab40-4408-93b5-3f078222c995/operator http_status=200 code=-
+other /api/v1/journeys/cb4b3e56-ab40-4408-93b5-3f078222c995 http_status=200 code=-
+other /api/v1/journeys/cb4b3e56-ab40-4408-93b5-3f078222c995/operator http_status=403 code=request.forbidden

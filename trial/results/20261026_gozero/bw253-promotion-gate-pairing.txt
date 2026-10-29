@@ -1,0 +1,21 @@
+PROMOTION WRITERS PAIRED AGAINST THE SHARED AUTHORITY GATE bw253
+ROWS 16 (gate visible in the same function 3, not visible 13)
+NOTE: "not visible" is this ruler's limit, not a defect claim.
+GATE VISIBLE IN THE SAME WRITING FUNCTION
+  backend/app/main.py:18289 plan.status=SELECTED in select_plan [POST /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select]
+  backend/app/main.py:20071 journey.status=ACTIVE in start_journey [POST /api/v1/journeys/{journey_id}/start]
+  backend/app/main.py:20072 plan.status=ACTIVE in start_journey [POST /api/v1/journeys/{journey_id}/start]
+WRITERS WHERE THIS RULER CANNOT SEE THE GATE IN THE SAME FUNCTION
+  backend/app/execution/rendezvous_buddy_execution.py:175 execution.status=ACTIVE in activate_execution_on_handoff_accept [(no @app route decorator above it)]
+  backend/app/execution/rendezvous_buddy_execution.py:333 execution.status=ACTIVE in accept_execution_window [(no @app route decorator above it)]
+  backend/app/main.py:2505 mission.status=ACTIVE in put_guardian_mission [PUT /api/v1/journeys/{journey_id}/guardian/mission]
+  backend/app/main.py:2889 mission.status=ACTIVE in start_journey_operator [POST /api/v1/journeys/{journey_id}/operator/start]
+  backend/app/main.py:3052 intent.status=ACTIVE in answer_operator_intent_clarification [POST /api/v1/journeys/{journey_id}/operator/intents/{intent_id}/clarification]
+  backend/app/main.py:19038 new_plan.status=ACTIVE in _trip_studio_accept_impl [(no @app route decorator above it)]
+  backend/app/main.py:20743 plan.status=ACTIVE in complete_activity [(no @app route decorator above it)]
+  backend/app/main.py:20745 next_activity.status=ACTIVE in complete_activity [(no @app route decorator above it)]
+  backend/app/main.py:20963 next_activity.status=ACTIVE in _skip_current_activity [(no @app route decorator above it)]
+  backend/app/main.py:26278 replacement_current.status=ACTIVE in _accept_replan_executing [(no @app route decorator above it)]
+  backend/app/main.py:27060 intent.status=ACTIVE in _run_planned_separation_command_impl [(no @app route decorator above it)]
+  backend/app/operations/v9.py:761 plan.status=ACTIVE in materialize_stay_option [(no @app route decorator above it)]
+  backend/app/operations/v9.py:779 journey.status=ACTIVE in materialize_stay_option [(no @app route decorator above it)]

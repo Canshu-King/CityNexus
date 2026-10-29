@@ -1,0 +1,129 @@
+SHOT 390-g7-cold t=4.7
+HIT continue true t=5.6
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.1
+HIT open-settings true t=11.4
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.2
+HIT send true t=14.7
+HTTP POST 201 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/run
+HIT skip-questions true t=24.7
+SKIP t=25.5
+SKIPPED true
+DRAFT t=109.6
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=109.7
+HIT tab-chat true t=110.0
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/resume
+COMPOSER_ENABLED true t=136.0
+HIT send-fix true t=136.3
+FIX_SENT t=137.1
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/resume
+FIX_IDLE true t=237.3
+SHOT 390-g7-after-fix t=237.3
+HIT journey-tab true t=237.6
+DRAFT_SLOTS 9
+NO_REMOVE_BUTTON
+DRIFT_FOLD true TIME_COUNT 18 BEFORE [{"label":"天安门广场开始时间","value":"09:00"},{"label":"天安门广场结束时间","value":"10:00"},{"label":"故宫博物院开始时间","value":"11:00"},{"label":"故宫博物院结束时间","value":"12:00"},{"label":"故宫内午餐开始时间","value":"14:00"},{"label":"故宫内午餐结束时间","value":"15:00"},{"label":"景山公园开始时间","value":"16:00"},{"label":"景山公园结束时间","value":"17:00"},{"label":"四季民福烤鸭店(故宫店) 晚餐开始时间","value":"19:00"},{"label":"四季民福烤鸭店(故宫店) 晚餐结束时间","value":"20:00"},{"label":"颐和园开始时间","value":"09:00"},{"label":"颐和园结束时间","value":"10:00"},{"label":"颐和宾馆·玉露中餐厅 午餐开始时间","value":"14:00"},{"label":"颐和宾馆·玉露中餐厅 午餐结束时间","value":"15:00"},{"label":"南锣鼓巷开始时间","value":"16:00"},{"label":"南锣鼓巷结束时间","value":"17:00"},{"label":"什刹海开始时间","value":"19:00"},{"label":"什刹海结束时间","value":"20:00"}] t=252.3
+TIME_EDITED "什刹海结束时间" 20:00 -> 19:15 t=252.3
+W_CONFIRM true SAVE_ENABLED true t=253.5
+HIT save-drift true t=253.8
+HTTP POST 201 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/prepare-plan
+DRIFT_SAVE_ALERT ["当前展示的是已保存版本。","已保存 9 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+TIME_AFTER [{"label":"天安门广场开始时间","value":"09:00"},{"label":"天安门广场结束时间","value":"10:00"},{"label":"故宫博物院开始时间","value":"11:00"},{"label":"故宫博物院结束时间","value":"12:00"},{"label":"故宫内午餐开始时间","value":"14:00"},{"label":"故宫内午餐结束时间","value":"15:00"},{"label":"景山公园开始时间","value":"16:00"},{"label":"景山公园结束时间","value":"17:00"},{"label":"四季民福烤鸭店(故宫店) 晚餐开始时间","value":"19:00"},{"label":"四季民福烤鸭店(故宫店) 晚餐结束时间","value":"20:00"},{"label":"颐和园开始时间","value":"09:00"},{"label":"颐和园结束时间","value":"10:00"},{"label":"颐和宾馆·玉露中餐厅 午餐开始时间","value":"14:00"},{"label":"颐和宾馆·玉露中餐厅 午餐结束时间","value":"15:00"},{"label":"南锣鼓巷开始时间","value":"16:00"},{"label":"南锣鼓巷结束时间","value":"17:00"},{"label":"什刹海开始时间","value":"19:00"},{"label":"什刹海结束时间","value":"19:15"}] t=261.6
+DRIFT_CHANGED_ONLY ["什刹海结束时间"] COUNT 18->18 LOST []
+DRIFT_COUNT 0 TARGET_ONLY yes t=261.6
+SHOT 390-drift-after t=261.7
+HIT price-1-0 true t=262.0
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/plans/a28609a8-359a-4875-8300-e0058bc6e982/accept-unknown-price
+HIT refresh-after-price-1 true t=267.1
+HIT freeze-1-1 true t=272.1
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/plans/a28609a8-359a-4875-8300-e0058bc6e982/freeze-routes
+HIT refresh-after-freeze-1 true t=279.2
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=283.9
+SHOT 390-g7-plans-1 t=284.0
+HIT select-1 true t=284.3
+HTTP POST 422 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion a28609a8-359a-4875-8300-e0058bc6e982 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c, INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11, PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1","message_key":"request.invalid","trace_id":"8d2aed2f-7747-4fb9-b8b2-69cf73975d19","details":{"detail":"PlanVersion a28609a8-359a-4875-8300-e0058bc6e982 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c, INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11, PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1","failures":["INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11","PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-69BS7DE7"}}
+SELECT_REFUSAL ["这版方案排不下：两段安排之间留的赶路时间不够（2 段）；颐和宾馆·玉露中餐厅 午餐在你排的这段时间不开放。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+HIT ask-refusal-1 true t=290.4
+ASK_REFUSAL_SENT 1 t=291.1
+GAP_REPAIR 1 ["天安门广场结束时间 10:00->09:45","故宫博物院结束时间 12:00->11:45","故宫内午餐结束时间 15:00->14:45","景山公园结束时间 17:00->16:45","四季民福烤鸭店(故宫店) 晚餐结束时间 20:00->19:45","颐和园结束时间 10:00->09:45","颐和宾馆·玉露中餐厅 午餐结束时间 15:00->14:45","南锣鼓巷结束时间 17:00->16:45","什刹海结束时间 19:15->19:00"] t=291.1
+SHOT 390-g7-selected-1 t=493.1
+HIT journey-tab true t=493.4
+HIT save-2-0 true t=496.7
+HTTP POST 201 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/prepare-plan
+SAVE_ALERT 2/0 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","已保存 9 项正式安排。下方可以查看日程和出发待办。"]
+HIT price-2-1 true t=503.8
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/plans/2952ce86-c47a-48f9-a9e5-7cf2f571caac/accept-unknown-price
+HIT refresh-after-price-2 true t=508.8
+HIT freeze-2-2 true t=513.9
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/plans/2952ce86-c47a-48f9-a9e5-7cf2f571caac/freeze-routes
+HIT refresh-after-freeze-2 true t=521.0
+SELECT_STATE count=2 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=525.7
+SHOT 390-g7-plans-2 t=525.8
+HIT select-2 true t=526.1
+HTTP POST 422 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion a28609a8-359a-4875-8300-e0058bc6e982 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c, INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11, PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1","message_key":"request.invalid","trace_id":"29670fea-c549-4c92-8569-1a96f8994cff","details":{"detail":"PlanVersion a28609a8-359a-4875-8300-e0058bc6e982 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c, INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11, PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1","failures":["INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11","PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-69BS7DE7"}}
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：两段安排之间留的赶路时间不够（2 段）；颐和宾馆·玉露中餐厅 午餐在你排的这段时间不开放。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+HIT ask-refusal-2 true t=532.2
+ASK_REFUSAL_SENT 2 t=532.9
+GAP_REPAIR 2 ["天安门广场结束时间 10:00->09:45","故宫博物院结束时间 12:00->11:45","故宫内午餐结束时间 15:00->14:45","景山公园结束时间 17:00->16:45","四季民福烤鸭店(故宫店) 晚餐结束时间 20:00->19:45","颐和园结束时间 10:00->09:45","颐和宾馆·玉露中餐厅 午餐结束时间 15:00->14:45","南锣鼓巷结束时间 17:00->16:45","什刹海结束时间 20:00->19:45"] t=532.9
+SHOT 390-g7-selected-2 t=825.1
+HIT journey-tab true t=825.5
+HIT save-3-0 true t=828.7
+HTTP POST 201 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/prepare-plan
+SAVE_ALERT 3/0 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","已保存 9 项正式安排。下方可以查看日程和出发待办。"]
+HIT price-3-1 true t=835.8
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/plans/e669021c-6b61-4717-81fa-bef91ec379ad/accept-unknown-price
+HIT refresh-after-price-3 true t=840.8
+HIT freeze-3-2 true t=845.9
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/plans/e669021c-6b61-4717-81fa-bef91ec379ad/freeze-routes
+HIT refresh-after-freeze-3 true t=853.0
+SELECT_STATE count=3 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=857.7
+SHOT 390-g7-plans-3 t=857.8
+HIT select-3 true t=858.1
+HTTP POST 422 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion a28609a8-359a-4875-8300-e0058bc6e982 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c, INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11, PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1","message_key":"request.invalid","trace_id":"6b27de6b-e96f-4c0e-aa57-bdddb8ab1064","details":{"detail":"PlanVersion a28609a8-359a-4875-8300-e0058bc6e982 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c, INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11, PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1","failures":["INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","INSUFFICIENT_TRAVEL_GAP:real-place-f453a13f115f3e7f53dfc0a1|real-place-efa346b30a447afad223af11","PLACE_CLOSED:real-place-f453a13f115f3e7f53dfc0a1"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-69BS7DE7"}}
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：两段安排之间留的赶路时间不够（2 段）；颐和宾馆·玉露中餐厅 午餐在你排的这段时间不开放。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+HIT ask-refusal-3 true t=864.2
+HTTP POST 200 /api/v1/journeys/81c256c7-94cd-49fa-afb6-18c55b47e18c/agent/goal-tasks/b178877c-5887-47b8-8ce9-a52a2bb396c4/resume
+ASK_REFUSAL_SENT 3 t=864.9
+GAP_REPAIR 3 ["天安门广场结束时间 10:00->09:45","故宫博物院结束时间 12:00->11:45","故宫内午餐结束时间 15:00->14:45","景山公园结束时间 17:00->16:45","四季民福烤鸭店(故宫店) 晚餐结束时间 20:00->19:45","颐和园结束时间 10:00->09:45","颐和宾馆·玉露中餐厅 午餐结束时间 15:00->14:45","南锣鼓巷结束时间 17:00->16:45","什刹海结束时间 20:00->19:45"] t=864.9
+SHOT 390-g7-selected-3 t=911.6
+STATE t=911.6 {"inUse":false,"next":null}
+SHOT 390-g7-final t=1001.9
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n天安门广场实景（封面裁切） · N509FZ / CC BY-SA 4.0\n已有阶段性成果\n地图\n日程\n对话\n你的旅行搭档\n已有阶段性成果\n已整理 2 天 · 9 项安排\n\n地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。\n\n一起商量安排\n刷新任务\n\n2 天 · 2 人 · 旅行需求已从服务器读取\n\n你\n\n2026 年 12 月 3 日到 4 日在北京玩两天，两个人，每段步行不超过 1 公里，太远坐地铁 节奏：轻松少走\n\nCityNexus Agent\n\n北京的这两天，你们更想偏向哪种玩法？（每段步行≤1公里、远程坐地铁的节奏都会保持）\n\n这条回复没有改动日程（版本 0）\n你\n\n按已经定下的方向开始研究：把两天的安排直接保存成草案，不用再问我；缺的资料按未知处理。\n\nCityNexus Agent\n\n已经按\"轻松少走、每段步行≤1公里、太远坐地铁\"的方向把两天草案保存好了（缺的资料均按未知处理）。\n\n12月3日（中轴线·步行连成片）\n\n上午：天安门广场 → 步行约0.8km到午门进故宫博物院（建议08:30开门即入；淡季约08:30–16:30，周一闭馆，12/3周四开放）\n\n下午：故宫内午餐（冰窖餐厅等，约10:30–15:00）→ 神武门出即到景山公园（步行<0.3km，登顶看故宫全景）\n\n傍晚：四季民福烤鸭店(故宫店) 晚餐（距景山约1km，可步行或短途）\n\n12月4日（西北郊+胡同）\n\n上午：颐和园（较远，建议地铁前往；园中轻松漫步，淡季约06:30–19:00）\n\n下午：颐和园附近午餐 → 地铁去南锣鼓巷（胡同漫步、逛店、下午茶）\n\n傍晚：什刹海湖边散步（地铁可直达）\n\n说明：所有门票/预约、具体步行与地铁时长、餐费均未知，未做假设；故宫、颐和园均需提前确认预约与当日开放。需要我补充具体地铁换乘、或换某段节奏（比如把颐和园换成更近的景点）随时说。\n\n日程：版本 0 → 2\n你\n\n没有具体地点的那两处用餐安排，请用你查到的来源换成附近真实的餐馆，其余日期和安排都别动。\n\nCityNexus Agent\n\n已按你的要求，只替换了两处\"无具体地点的用餐\"，其余日期和安排原封未动：\n\n12月4日午餐：换成\"颐和宾馆·玉露中餐厅\"（颐和园东门宫门前街1号旁），来源显示午餐约 12:00–14:00、晚餐 18:00–22:00，费用未知。\n\n12月3日\"故宫内午餐\" 本来就已绑定具体餐厅（冰窖餐厅 B0FFI2XH20），也保留不变。\n\n其余两天的中轴线与胡同行程、景山/四季民福晚餐、南锣鼓巷、什刹海等均未改动。所有门票/预约、餐费和步行地铁时长仍为未知，未做假设。\n\n日程：版本 2 → 3\n你\n\n上面这句按不了：这版方案排不下：两段安排之间留的赶路时间不够（2 段）；颐和宾馆·玉露中餐厅 午餐在你排的这段时间不开放。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。 请把被点名的这几处按它们来源给的开放时间挪好，其它日期和其它安排都别动。\n\nCityNexus Agent\n\n已按来源开放时间把被点名的两处挪好，其余日期和安排原封未动：\n\n12月4日（仅调整这两段）\n\n颐和宾馆·玉露中餐厅 午餐：开始时间设为 12:00 后（来源午餐 12:00–14:00，原排在它不开放的时段内，已挪到开放时间）。\n\n南锣鼓巷：到达时间设为 15:00 后（午餐后地铁约 68 分钟，留足赶路缓冲，避免一结束就赶）。\n\n颐和园上午建议 11:30 前结束，衔接步行约 0.85km/11 分钟去午餐。\n\n未改动：12月3日全部（天安门广场、故宫、故宫内午餐、景山、四季民福晚餐），以及12月4日的颐和园上午、什刹海傍晚。\n\n门票/预约、餐费、步行与地铁具体时长仍为未知，未做假设；故宫、颐和园需提前确认预约与当日开放。\n\n日程：版本 3 → 4\n你\n\n上面这句按不了：消息还在确认中，刷新任务查看最新进度。 这版方案排不下：两段安排之间留的赶路时间不够（2 段）；颐和宾馆·玉露中餐厅 午餐在你排的这段时间不开放。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。 请把被点名的这几处按它们来源给的开放时间挪好，其它日期和其它安排都别动。\n\nCityNexus Agent\n\n已按来源开放时间把 12月4日 下午这两段挪好，其余日期和安排原封未动：\n\n颐和宾馆·玉露中餐厅 午餐：该下午区块已设为「最早 12:00 开始」，落在它来源给出的午餐 12:00–14:00 开放时段内（颐和园上午约 11:30 前结束，步行约 0.85km/11 分钟衔接）。\n\n南锣鼓巷：午餐后地铁约 68 分钟，已设为 15:00 后到达，留足赶路缓冲，避免一结束就赶。\n\n未改动：12月3日全部（天安门广场、故宫、故宫内午餐、景山、四季民福晚餐），以及 12月4日的颐和园上午、什刹海傍晚。\n\n门票/预约、餐费、步行与地铁具体时长仍为未知"
+ERRORS []
+PLAN_GAPS_ALL ["这 9 项费用你已经确认先不计入预算（总价不含这些项）。","这 9 项费用你已经确认先不计入预算（总价不含这些项）。","这 9 项费用你已经确认先不计入预算（总价不含这些项）。"] t=1001.9
+PLAN_SELECT 3
+PLAN_START 0
+PLAN_HAND 0 t=1001.9
+SHOT 390-r54-plan-blocked t=1001.9
+EXPLORE_STAGE_PROBE area=1 category=0 results=0 explore=1 t=1001.9
+SURVEY_EXPLORE_ENTRY [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"刷新任务","dis":false},{"tag":"BUTTON","id":"","name":"按讨论的方向开始研究","dis":false}] t=1001.9
+MISS type-CITY hidden t=1001.9
+SCROLL_RETRY find-city stillHidden=true t=1003.1
+CITY_RESULTS 0 [] t=1033.4
+NO_CITY_RESULT_SCREEN t=1033.4
+SURVEY_AFTER_PHOTON [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"刷新任务","dis":false},{"tag":"BUTTON","id":"","name":"按讨论的方向开始研究","dis":false}] t=1033.4
+RESULTS_PANE 0 t=1063.6
+SURVEY_INTEREST_OR_RESULTS [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"刷新任务","dis":false},{"tag":"BUTTON","id":"","name":"按讨论的方向开始研究","dis":false}] t=1063.6
+CARDS 0 t=1065.6
+CARD_TEXTS []
+CARD_BLOCKERS []
+FORMAL_KEYS 0 t=1065.6
+NO_FORMAL_DOOR cards=0 alert="" t=1065.6
+SHOT 390-x-no-formal-door t=1065.7
+HIT back-to-journey {"hitSelf":true,"cx":187.6510009765625,"cy":806.5351867675781,"disabled":false} t=1065.7
+BACK_ON_PLAN explore=1 start=0 select=3 t=1071.2
+TELLS_REFRESH false start=0 select=3 t=1071.2
+DEPART_FIRST start=0 select=3 t=1071.2
+X_PLAN_GAPS ["这 9 项费用你已经确认先不计入预算（总价不含这些项）。","这 9 项费用你已经确认先不计入预算（总价不含这些项）。","这 9 项费用你已经确认先不计入预算（总价不含这些项）。"] t=1071.2
+X_SELECT 3 enabled=false X_START 0 t=1071.2
+SURVEY_PLAN_AFTER_FORMAL [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"BUTTON","id":"","name":"在地图中查看 天安门广场","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"天安门广场开始时间","dis":false},{"tag":"INPUT","id":"","name":"天安门广场结束时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院结束时间","dis":false},{"tag":"INPUT","id":"","name":"故宫内午餐开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫内午餐结束时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园开始时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园结束时间","dis":false},{"tag":"INPUT","id":"","name":"四季民福烤鸭店(故宫店) 晚餐开始时间","dis":false},{"tag":"INPUT","id":"","name":"四季民福烤鸭店(故宫店) 晚餐结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和宾馆·玉露中餐厅 午餐开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和宾馆·玉露中餐厅 午餐结束时间","dis":false},{"tag":"INPUT","id":"","name":"南锣鼓巷开始时间","dis":false},{"tag":"INPUT","id":"","name":"南锣鼓巷结束时间","dis":false},{"tag":"INPUT","id":"","name":"什刹海开始时间","dis":false},{"tag":"INPUT","id":"","name":"什刹海结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":true},{"tag":"BUTTON","id":"rev-v3-replan","name":"根据路线重新安排","dis":false},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-replan","name":"根据路线重新安排","dis":false},{"tag":"BUTTON","id":"rev-plan-select","name":"选用这份方案","dis":true},{"tag":"BUTTON","id":"rev-plan-select","name":"选用这份方案","dis":true},{"tag":"BUTTON","id":"rev-plan-select","name":"选用这份方案","dis":true},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false} t=1071.2
+HIT select-final {"hitSelf":true,"cx":187.6510009765625,"cy":411.77850914001465,"disabled":true} t=1071.2
+X_SELECT_REFUSAL ["这版方案排不下：两段安排之间留的赶路时间不够（2 段）；颐和宾馆·玉露中餐厅 午餐在你排的这段时间不开放。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"] t=1077.3
+SHOT 390-x-after-select t=1077.3
+X_START_READY 0 enabled=false t=1077.3
+X_END alert="" errors=[] t=1077.3

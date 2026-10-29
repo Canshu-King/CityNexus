@@ -1,0 +1,131 @@
+SHOT 390-g7-cold t=4.7
+HIT continue true t=5.6
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.1
+HIT open-settings true t=11.4
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.2
+HIT send true t=14.7
+HTTP POST 201 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/run
+HIT skip-questions true t=27.8
+SKIP t=28.5
+SKIPPED true
+DRAFT t=166.8
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=166.9
+HIT tab-chat true t=167.2
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/resume
+COMPOSER_ENABLED true t=177.2
+HIT send-fix true t=177.5
+FIX_SENT t=178.3
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/resume
+FIX_IDLE true t=248.4
+SHOT 390-g7-after-fix t=248.4
+HIT journey-tab true t=248.8
+DRAFT_SLOTS 6
+NO_OPTIONAL_SLOT
+DRIFT_FOLD true TIME_COUNT 12 BEFORE [{"label":"天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）开始时间","value":"09:00"},{"label":"天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）结束时间","value":"10:00"},{"label":"地铁前往王府井步行街（购物、午餐）开始时间","value":"14:00"},{"label":"地铁前往王府井步行街（购物、午餐）结束时间","value":"15:00"},{"label":"王府井晚餐 · 绿茶餐厅(北京银泰IN88店)开始时间","value":"19:00"},{"label":"王府井晚餐 · 绿茶餐厅(北京银泰IN88店)结束时间","value":"20:00"},{"label":"地铁前往颐和园（园内轻松漫步）开始时间","value":"09:00"},{"label":"地铁前往颐和园（园内轻松漫步）结束时间","value":"10:00"},{"label":"地铁返回市区 → 北海公园开始时间","value":"14:00"},{"label":"地铁返回市区 → 北海公园结束时间","value":"15:00"},{"label":"什刹海晚餐 · 京城小院胡同菜露台小馆开始时间","value":"19:00"},{"label":"什刹海晚餐 · 京城小院胡同菜露台小馆结束时间","value":"20:00"}] t=254.8
+TIME_EDITED "什刹海晚餐 · 京城小院胡同菜露台小馆结束时间" 20:00 -> 19:15 t=254.8
+W_CONFIRM true SAVE_ENABLED true t=256.0
+HIT save-drift true t=256.4
+HTTP POST 201 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/prepare-plan
+DRIFT_SAVE_ALERT ["当前展示的是已保存版本。","已保存 6 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+TIME_AFTER [{"label":"天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）开始时间","value":"09:00"},{"label":"天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）结束时间","value":"10:00"},{"label":"地铁前往王府井步行街（购物、午餐）开始时间","value":"14:00"},{"label":"地铁前往王府井步行街（购物、午餐）结束时间","value":"15:00"},{"label":"王府井晚餐 · 绿茶餐厅(北京银泰IN88店)开始时间","value":"19:00"},{"label":"王府井晚餐 · 绿茶餐厅(北京银泰IN88店)结束时间","value":"20:00"},{"label":"地铁前往颐和园（园内轻松漫步）开始时间","value":"09:00"},{"label":"地铁前往颐和园（园内轻松漫步）结束时间","value":"10:00"},{"label":"地铁返回市区 → 北海公园开始时间","value":"14:00"},{"label":"地铁返回市区 → 北海公园结束时间","value":"15:00"},{"label":"什刹海晚餐 · 京城小院胡同菜露台小馆开始时间","value":"19:00"},{"label":"什刹海晚餐 · 京城小院胡同菜露台小馆结束时间","value":"19:15"}] t=264.1
+DRIFT_CHANGED_ONLY ["什刹海晚餐 · 京城小院胡同菜露台小馆结束时间"] COUNT 12->12 LOST []
+DRIFT_COUNT 0 TARGET_ONLY yes t=264.1
+SHOT 390-drift-after t=264.2
+HIT price-1-0 true t=264.5
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/plans/fa207d61-a684-4dad-8560-2b1fad250186/accept-unknown-price
+HIT refresh-after-price-1 true t=269.6
+HIT freeze-1-1 true t=274.6
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/plans/fa207d61-a684-4dad-8560-2b1fad250186/freeze-routes
+HIT refresh-after-freeze-1 true t=281.7
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=286.4
+SHOT 390-g7-plans-1 t=286.5
+HIT select-1 true t=286.8
+HTTP POST 422 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion fa207d61-a684-4dad-8560-2b1fad250186 is infeasible: PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8","message_key":"request.invalid","trace_id":"71b384f9-e774-4117-b043-08548c6ae7b5","details":{"detail":"PlanVersion fa207d61-a684-4dad-8560-2b1fad250186 is infeasible: PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8","failures":["PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-96P3GCTE"}}
+SELECT_REFUSAL ["这版方案排不下：什刹海晚餐 · 京城小院胡同菜露台小馆在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+HIT ask-refusal-1 true t=292.9
+ASK_REFUSAL_SENT 1 t=293.6
+GAP_REPAIR 1 ["天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）结束时间 10:00->09:45","地铁前往王府井步行街（购物、午餐）结束时间 15:00->14:45","王府井晚餐 · 绿茶餐厅(北京银泰IN88店)结束时间 20:00->19:45","地铁前往颐和园（园内轻松漫步）结束时间 10:00->09:45","地铁返回市区 → 北海公园结束时间 15:00->14:45","什刹海晚餐 · 京城小院胡同菜露台小馆结束时间 19:15->19:00"] t=293.6
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/resume
+SHOT 390-g7-selected-1 t=445.5
+HIT journey-tab true t=445.8
+HIT save-2-0 true t=449.1
+HTTP POST 201 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/prepare-plan
+SAVE_ALERT 2/0 ["当前展示的是已保存版本。","已保存 6 项正式安排。下方可以查看日程和出发待办。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+HIT price-2-1 true t=456.2
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/plans/3653c060-b4d4-4253-94ed-99034ce8f5cf/accept-unknown-price
+HIT refresh-after-price-2 true t=461.3
+HIT freeze-2-2 true t=466.3
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/plans/3653c060-b4d4-4253-94ed-99034ce8f5cf/freeze-routes
+HIT refresh-after-freeze-2 true t=473.4
+SELECT_STATE count=2 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=478.1
+SHOT 390-g7-plans-2 t=478.2
+HIT select-2 true t=478.5
+HTTP POST 422 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion fa207d61-a684-4dad-8560-2b1fad250186 is infeasible: PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8","message_key":"request.invalid","trace_id":"b780b2af-d0ab-4ed2-af1f-5fb8c40f83e6","details":{"detail":"PlanVersion fa207d61-a684-4dad-8560-2b1fad250186 is infeasible: PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8","failures":["PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-96P3GCTE"}}
+SELECT_REFUSAL ["这版方案排不下：什刹海晚餐 · 京城小院胡同菜露台小馆在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"]
+HIT ask-refusal-2 true t=484.6
+ASK_REFUSAL_SENT 2 t=485.3
+GAP_REPAIR 2 ["天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）结束时间 10:00->09:45","地铁前往王府井步行街（购物、午餐）结束时间 15:00->14:45","王府井晚餐 · 绿茶餐厅(北京银泰IN88店)结束时间 20:00->19:45","地铁前往颐和园（园内轻松漫步）结束时间 10:00->09:45","地铁返回市区 → 北海公园结束时间 15:00->14:45","什刹海晚餐 · 京城小院胡同菜露台小馆结束时间 20:00->19:45"] t=485.3
+SHOT 390-g7-selected-2 t=762.4
+HIT journey-tab true t=762.8
+HIT save-3-0 true t=766.0
+HTTP POST 201 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/prepare-plan
+SAVE_ALERT 3/0 ["消息还在确认中，刷新任务查看最新进度。","现场模型这一轮没有给出可用内容，结果没有保存；可以重试这一轮。","当前展示的是已保存版本。"]
+HIT price-3-1 true t=773.1
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/plans/733d2dc6-9881-4c8a-ad87-ad3570fa9d03/accept-unknown-price
+HIT refresh-after-price-3 true t=778.2
+HIT freeze-3-2 true t=783.2
+HTTP POST 200 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/agent/goal-tasks/146f3b61-ccf5-45ca-beae-dfd57a61266d/plans/733d2dc6-9881-4c8a-ad87-ad3570fa9d03/freeze-routes
+HIT refresh-after-freeze-3 true t=790.3
+SELECT_STATE count=3 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=795.0
+SHOT 390-g7-plans-3 t=795.1
+HIT select-3 true t=795.4
+HTTP POST 422 /api/v1/journeys/ffcb1ecc-bd28-4bb1-8708-1bbef1a636ae/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion fa207d61-a684-4dad-8560-2b1fad250186 is infeasible: PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8","message_key":"request.invalid","trace_id":"c3e1faac-bc35-45a0-89cb-1d5154e2c8c3","details":{"detail":"PlanVersion fa207d61-a684-4dad-8560-2b1fad250186 is infeasible: PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8","failures":["PLACE_CLOSED:real-place-c798c140dc706d9a9b470dc8"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-96P3GCTE"}}
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","现场模型这一轮没有给出可用内容，结果没有保存；可以重试这一轮。"]
+HIT ask-refusal-3 true t=801.5
+ASK_REFUSAL_SENT 3 t=802.2
+GAP_REPAIR 3 ["天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）结束时间 09:45->09:30","地铁前往王府井步行街（购物、午餐）结束时间 14:45->14:30","王府井晚餐 · 绿茶餐厅(北京银泰IN88店)结束时间 19:45->19:30","地铁前往颐和园（园内轻松漫步）结束时间 09:45->09:30","地铁返回市区 → 北海公园结束时间 14:45->14:30","什刹海晚餐 · 京城小院胡同菜露台小馆结束时间 19:45->19:30"] t=802.2
+SHOT 390-g7-selected-3 t=1144.6
+STATE t=1144.6 {"inUse":false,"next":null}
+SHOT 390-g7-final t=1234.9
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n旅行插画\n已有阶段性成果\n地图\n日程\n对话\n你的旅行搭档\n已有阶段性成果\n已整理 2 天 · 6 项安排\n\n地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。\n\n一起商量安排\n刷新任务\n\n2 天 · 2 人 · 旅行需求已从服务器读取\n\n你\n\n2026 年 12 月 3 日到 4 日在北京玩两天，两个人，每段步行不超过 1 公里，太远坐地铁 节奏：轻松少走\n\nCityNexus Agent\n\n这两天的玩法更偏向哪种？我会据此先帮你圈定北京的候选地点。\n\n这条回复没有改动日程（版本 0）\n你\n\n按已经定下的方向开始研究：把两天的安排直接保存成草案，不用再问我；缺的资料按未知处理。\n\nCityNexus Agent\n\n已完成北京两日轻松行程的草案研究并保存。要点如下：\n\n12月3日（城中轴线，步行串联）\n\n上午：天安门广场 → 天安门 → 故宫（午门进、神武门出）→ 景山公园。步行段均已核实在1公里内（广场↔天安门约670米、天安门↔午门约450米、神武门→景山约815米）。故宫周一闭馆，12月淡季08:30–16:30。\n\n下午：地铁到王府井步行街（购物、午餐）。\n\n晚上：王府井附近晚餐（步行可达）。\n\n12月4日（西北郊 + 老城胡同）\n\n上午：地铁到颐和园，园内慢走（12月淡季06:30–19:00，佛香阁周一不开放）。\n\n下午：地铁回市区，北海公园沿湖散步（淡季06:30–20:00）。\n\n晚上：地铁到南锣鼓巷 → 什刹海，胡同散步与晚餐。\n\n所有超1公里的路段均按规则安排地铁。门票、预约和具体餐厅价格目前未知，已在草案备注中标注，待后续确认。需要我继续补充某一时段的餐厅候选或细化交通路线吗？\n\n日程：版本 0 → 1\n你\n\n没有具体地点的那两处用餐安排，请用你查到的来源换成附近真实的餐馆，其余日期和安排都别动。\n\nCityNexus Agent\n\n已按你的要求，只改动了两处无具体地点的晚餐，其余日期和安排均保持不变，已保存为第 3 版草案。\n\n12月3日晚餐：王府井 · 绿茶餐厅(北京银泰IN88店)\n\n位置：王府井大街88号王府井银泰in88购物中心3F层，距王府井步行街步行可达\n\n营业：约周一至周六 11:00–21:30、周日 11:00–21:00（两人用餐合适）\n\n来源：高德地点检索\n\n12月4日晚餐：什刹海 · 京城小院胡同菜露台小馆\n\n位置：德胜门内大街花枝胡同东口19号，近什刹海/南锣鼓巷一带，胡同菜风格\n\n营业：周一至周日 10:30–14:00、16:30–22:30（适合两人晚餐）\n\n来源：高德地点检索\n\n两处餐厅的人均消费、是否需要预约目前仍为未知（已在草案备注标注）。其余时段（天安门—故宫—景山、王府井购物、颐和园、北海、南锣鼓巷—什刹海散步）均原样保留。\n\n日程：版本 1 → 3\n你\n\n上面这句按不了：这版方案排不下：什刹海晚餐 · 京城小院胡同菜露台小馆在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。 请把被点名的这几处按它们来源给的开放时间挪好，其它日期和其它安排都别动。\n\nCityNexus Agent\n\n已按来源给的开放时间把「什刹海晚餐 · 京城小院胡同菜露台小馆」挪好，并保存为第 4 版草案：\n\n该店营业为 周一至周日 10:30–14:00、16:30–22:30，12月4日（周五，原排 evening）晚市正常开放；为避免午休空档，将该项设为「最早 17:00 开始」的晚间，落在其开放时间内。\n\n其余日期与安排（12月3日天安门—故宫—景山—王府井、12月4日上午颐和园、下午北海、晚王府井绿茶餐厅等）均未改动。\n\n门票/预约、各餐厅人均消费仍按未知标注。本次仅在草稿层调整，未创建或激活正式方案版本。\n\n日程：版本 3 → 4\n你\n\n上面这句按不了：这版方案排不下：什刹海晚餐 · 京城小院胡同菜露台小馆在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。 请把被点名的这几处按它们来源给的开放时间挪好，其它日期和其它安排都别动。\n\n你\n\n上面这句按不了：消息还在确认中，刷新任务查看最新进度。 现场模型这一轮没有给出可用内容，结果没有保存；可以重试这一轮。 这版方案排不下：什刹海晚餐 · 京城小院胡同菜露台小馆在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。 请把被点名的这几处按它们来源给的开放时间挪好，其它日期和其它安排都别动。\n\nCityNexus Agent\n\n已按你的要求把被点名的「什刹海晚餐 · 京城小院胡同菜露台小馆」按来源开放时间挪好，并保存为第 5 版草案：\n\n12月4日（周五）晚餐：京城小院胡同菜露台小馆，设为「最早 17:00 开始」的晚间。来源营业时间为 周一至周日 10:30–14:00、16:30–22:30，晚市 16:30 起开放，17:00 后落在其开放窗口内，且避开了 14:00–16:30 的午休空档，完全吻合。\n\n其余日期与安排均原样保留：12月3日天安门—故宫—景山—王府井（含绿茶"
+ERRORS []
+PLAN_GAPS_ALL ["这 6 项费用你已经确认先不计入预算（总价不含这些项）。","这 6 项费用你已经确认先不计入预算（总价不含这些项）。","这 6 项费用你已经确认先不计入预算（总价不含这些项）。"] t=1234.9
+PLAN_SELECT 3
+PLAN_START 0
+PLAN_HAND 0 t=1234.9
+SHOT 390-r54-plan-blocked t=1234.9
+EXPLORE_STAGE_PROBE area=1 category=0 results=0 explore=1 t=1234.9
+PANE_SHAPE {"detailsOpen":true,"detailsBox":{"w":0,"h":0,"top":0,"display":"block","visibility":"visible","opacity":"1"},"summaryBox":{"w":0,"h":0,"top":0,"display":"list-item","visibility":"visible","opacity":"1"},"keyBox":{"w":0,"h":0,"top":0,"display":"flex","visibility":"visible","opacity":"1"},"keyAncestors":[{"cls":"BUTTON","display":"flex","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-quick-inline","display":"grid","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-quick-pane","display":"block","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-quick-secondary","display":"block","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-quick","display":"block","visibility":"visible","opacity":"1","overflow":"visible"},{"cls":"rev-firstlook-real-ui","display":"block","visibility":"visible","opacity":"1","overflow":"visible"}],"areaExists":true} t=1234.9
+KEY_ISVISIBLE_NOW false count=1 t=1234.9
+SURVEY_EXPLORE_ENTRY [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"刷新任务","dis":false},{"tag":"BUTTON","id":"","name":"按讨论的方向开始研究","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false}] t=1234.9
+MISS type-CITY hidden t=1234.9
+SCROLL_RETRY find-city stillHidden=true t=1236.1
+CITY_RESULTS 0 [] t=1266.4
+NO_CITY_RESULT_SCREEN t=1266.4
+SURVEY_AFTER_PHOTON [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"刷新任务","dis":false},{"tag":"BUTTON","id":"","name":"按讨论的方向开始研究","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false}] t=1266.4
+RESULTS_PANE 0 t=1296.6
+SURVEY_INTEREST_OR_RESULTS [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"刷新任务","dis":false},{"tag":"BUTTON","id":"","name":"按讨论的方向开始研究","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false}] t=1296.6
+CARDS 0 t=1298.6
+CARD_TEXTS []
+CARD_BLOCKERS []
+FORMAL_KEYS 0 t=1298.6
+NO_FORMAL_DOOR cards=0 alert="" t=1298.6
+SHOT 390-x-no-formal-door t=1298.6
+HIT back-to-journey {"hitSelf":true,"cx":187.6510009765625,"cy":806.5351867675781,"disabled":false} t=1298.6
+BACK_ON_PLAN explore=1 start=0 select=3 t=1304.2
+TELLS_REFRESH false start=0 select=3 t=1304.2
+DEPART_FIRST start=0 select=3 t=1304.2
+X_PLAN_GAPS ["这 6 项费用你已经确认先不计入预算（总价不含这些项）。","这 6 项费用你已经确认先不计入预算（总价不含这些项）。","这 6 项费用你已经确认先不计入预算（总价不含这些项）。"] t=1304.2
+X_SELECT 3 enabled=false X_START 0 t=1304.2
+SURVEY_PLAN_AFTER_FORMAL [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）开始时间","dis":false},{"tag":"INPUT","id":"","name":"天安门广场 → 天安门 → 故宫 → 景山公园（城中轴线，步行串联）结束时间","dis":false},{"tag":"INPUT","id":"","name":"地铁前往王府井步行街（购物、午餐）开始时间","dis":false},{"tag":"INPUT","id":"","name":"地铁前往王府井步行街（购物、午餐）结束时间","dis":false},{"tag":"INPUT","id":"","name":"王府井晚餐 · 绿茶餐厅(北京银泰IN88店)开始时间","dis":false},{"tag":"INPUT","id":"","name":"王府井晚餐 · 绿茶餐厅(北京银泰IN88店)结束时间","dis":false},{"tag":"INPUT","id":"","name":"地铁前往颐和园（园内轻松漫步）开始时间","dis":false},{"tag":"INPUT","id":"","name":"地铁前往颐和园（园内轻松漫步）结束时间","dis":false},{"tag":"INPUT","id":"","name":"地铁返回市区 → 北海公园开始时间","dis":false},{"tag":"INPUT","id":"","name":"地铁返回市区 → 北海公园结束时间","dis":false},{"tag":"INPUT","id":"","name":"什刹海晚餐 · 京城小院胡同菜露台小馆开始时间","dis":false},{"tag":"INPUT","id":"","name":"什刹海晚餐 · 京城小院胡同菜露台小馆结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":true},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-replan","name":"根据路线重新安排","dis":false},{"tag":"BUTTON","id":"rev-plan-select","name":"选用这份方案","dis":true},{"tag":"BUTTON","id":"rev-plan-select","name":"选用这份方案","dis":true},{"tag":"BUTTON","id":"rev-plan-select","name":"选用这份方案","dis":true},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false}] t=1304.2
+HIT select-final {"hitSelf":true,"cx":187.6510009765625,"cy":411.7617244720459,"disabled":true} t=1304.2
+X_SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：什刹海晚餐 · 京城小院胡同菜露台小馆在你排的这段时间不开放。把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。"] t=1310.2
+SHOT 390-x-after-select t=1310.2
+X_START_READY 0 enabled=false t=1310.2
+X_END alert="" errors=[] t=1310.2

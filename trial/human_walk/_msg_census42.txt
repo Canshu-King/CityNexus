@@ -1,0 +1,5 @@
+census after block 372: 42 of 42 landed, the gate still reads a red on a made-up title
+
+Re-run of the landed-blocks ruler after #372 went in: checked=42 green=42 red=0, no block claimed as
+delivered is missing from the ledger, and the negative control (an unseen title) still reads RED with the
+five most recent landing receipts printed. Receipt rewritten in-tree. 0 product bytes.

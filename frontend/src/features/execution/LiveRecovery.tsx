@@ -165,6 +165,7 @@ export function LiveRecovery({
   handledEventIds = [],
   onRefreshLocation,
   onAccepted,
+  onOperator,
 }: {
   journeyId: string;
   journeyStatus?: string | null;
@@ -173,6 +174,7 @@ export function LiveRecovery({
   /** Captures one user-requested foreground location and returns its server observation id. */
   onRefreshLocation?: () => Promise<string | null>;
   onAccepted?: () => void;
+  onOperator?: (operator: JourneyOperatorProjection | null) => void;
 }) {
   const { locale } = useLocale();
   const t = useT();
@@ -188,6 +190,7 @@ export function LiveRecovery({
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [operator, setOperator] = useState<JourneyOperatorProjection | null>(null);
+  useEffect(() => { onOperator?.(operator); }, [operator, onOperator]);
   const [transitReroute, setTransitReroute] = useState<InTransitRerouteResult | null>(null);
   const [groupRoute, setGroupRoute] = useState<GroupRendezvousRouteResult | null>(null);
   const [groupRecoveryResult, setGroupRecoveryResult] = useState<GroupRecoveryPlanResult | null>(null);
@@ -621,6 +624,26 @@ export function LiveRecovery({
   // cannot honour yields null, and the render below says so instead of pointing at
   // whatever happens to be first.
   const liveNow = nowId ? (activities.find((a) => a.id === nowId) ?? null) : null;
+  // A journey can be ACTIVE on the server long before its first stop: confirming a plan dated 5 December
+  // in October makes the status true and the moment false.  This card had two states (running, done), so
+  // a trip six weeks away announced itself as 正在进行 / 现在的行程 / 下一站 -- read on screen by walk-89
+  // (trial/results/20261022_v3_human_chrome/walk89-17-active-pane.png).
+  const firstStartMs = activities
+    .map((activity) => Date.parse(String(activity.start_at ?? activity.starts_at ?? "")))
+    .filter((moment) => Number.isFinite(moment))
+    .sort((left, right) => left - right)[0] ?? null;
+  const journeyNotStarted = firstStartMs !== null && firstStartMs > Date.now();
+  // The label under 第一站 belongs to the stop named beside it, not to whatever slot happens to be
+  // earliest in the plan.  Measured after a classroom replan: the header read 第一站：天坛公园 · 12月3日
+  // 09:00 while the library has 天坛 on 12-04 and the completed 天安门 on 12-03.
+  const liveNowStartMs = liveNow
+    ? Date.parse(String((liveNow as { start_at?: string; starts_at?: string }).start_at
+      ?? (liveNow as { starts_at?: string }).starts_at ?? ""))
+    : Number.NaN;
+  const startLabel = (moment: number | null): string => moment === null ? "" : new Intl.DateTimeFormat(locale, {
+    month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false,
+  }).format(new Date(moment));
+  const firstStartLabel = startLabel(Number.isFinite(liveNowStartMs) ? liveNowStartMs : firstStartMs);
   // Recent events that were already handled still deserve an explanation.
   const handled = proposals.filter((p) => p.status === "ACCEPTED").slice(0, 1);
 
@@ -929,16 +952,22 @@ export function LiveRecovery({
               ? zh
                 ? "已完成"
                 : "Completed"
-              : zh
-                ? "正在进行"
-                : "In progress"}
+              : journeyNotStarted
+                ? zh
+                  ? "还没出发"
+                  : "Not started"
+                : zh
+                  ? "正在进行"
+                  : "In progress"}
           </p>
           <h1>
             {journeyCompleted
               ? t("live.completedTitle")
-              : zh
-                ? "现在的行程"
-                : "Your trip right now"}
+              : journeyNotStarted
+                ? (zh ? "这一趟的安排" : "Your upcoming plan")
+                : zh
+                  ? "现在的行程"
+                  : "Your trip right now"}
           </h1>
           <p
             className="v8-lede"
@@ -948,7 +977,11 @@ export function LiveRecovery({
           >
             {journeyCompleted
               ? t("live.completedAdvisory")
-              : liveNow
+              : liveNow && journeyNotStarted
+                ? (zh
+                  ? `第一站：${String(liveNow.title ?? "")}${firstStartLabel ? ` · ${firstStartLabel}` : ""}`
+                  : `First stop: ${String(liveNow.title ?? "")}${firstStartLabel ? ` · ${firstStartLabel}` : ""}`)
+                : liveNow
                   ? zh
                     ? `下一站：${String(liveNow.title ?? "")}`
                     : `Next: ${String(liveNow.title ?? "")}`
@@ -963,7 +996,8 @@ export function LiveRecovery({
 
       <section className="journey-operator-card" data-testid="journey-operator" aria-live="polite">
         <div className="journey-operator-heading">
-          <p className="v8-kicker">Journey Operator</p>
+          <p className="v8-kicker">{zh ? "行程助手" : "Trip assistant"}</p>
+          <details className="v8-advanced-name" data-testid="journey-operator-advanced"><summary>{zh ? "高级信息" : "Advanced"}</summary><span>Journey Operator</span></details>
           <strong>{operator?.headline ?? (zh ? "把这趟行程交给 CityNexus" : "Let CityNexus take care of this trip")}</strong>
         </div>
         {operator?.attention && (
@@ -1539,7 +1573,8 @@ export function LiveRecovery({
         )}
         {operator?.brain && (
           <div className="journey-operator-brain" data-testid="journey-operator-brain">
-            <span className="v8-kicker">Planning brain</span>
+            <span className="v8-kicker">{zh ? "Agent 计划" : "Agent plan"}</span>
+            <details className="v8-advanced-name" data-testid="journey-brain-advanced"><summary>{zh ? "高级信息" : "Advanced"}</summary><span>Planning brain</span></details>
             <strong>{operator.brain.headline}</strong>
             {operator.brain.recovery_resume.pending && (
               <span>
@@ -1552,7 +1587,7 @@ export function LiveRecovery({
         )}
         {operator?.collective && operator.collective.state !== "SINGLE_TRAVELLER" && (
           <div className="journey-operator-collective" data-testid="journey-operator-collective">
-            <span className="v8-kicker">Shared trip</span>
+            <span className="v8-kicker">{zh ? "同行者" : "Shared trip"}</span>
             <strong>
               {operator.collective.state === "MEDIATING"
                 ? (zh ? "大家的选择不同，CityNexus 正在寻找兼顾彼此的方案。" : "Your choices differ. CityNexus is looking for a compromise that protects everyone.")

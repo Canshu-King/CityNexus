@@ -1,0 +1,54 @@
+SHOT run-diff-390-enter t=11.7
+HIT to-console true t=12.0
+RUN0 "尚未开演"
+HIT start-run true t=14.7
+HTTP 201 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs
+RUN1 "模拟进行中 · 12-03 09:00"
+SCENES 1
+HIT inject-closure true t=19.0
+HTTP 200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/7044b8b3-942c-4c2a-b3d5-b43b21
+RUN2 "等待守护决策 · 12-03 09:00"
+RUN2B "等待守护决策 · 12-03 09:00"
+SHOT run-diff-390-injected t=22.4
+HIT to-guardian true t=22.7
+GUARDIAN_SENT t=23.6
+WAIT 0 run="守护正在分析 · 12-03 09:00" t=38.6
+HIT refresh-1 false t=53.9
+WAIT 1 run="守护正在分析 · 12-03 09:00" t=53.9
+WAIT 2 run="守护正在分析 · 12-03 09:00" t=68.9
+HIT refresh-3 false t=84.2
+WAIT 3 run="守护正在分析 · 12-03 09:00" t=84.2
+WAIT 4 run="守护正在分析 · 12-03 09:00" t=99.2
+HIT refresh-5 false t=114.5
+WAIT 5 run="守护正在分析 · 12-03 09:00" t=114.5
+WAIT 6 run="守护正在分析 · 12-03 09:00" t=129.5
+HIT refresh-7 false t=144.8
+WAIT 7 run="守护正在分析 · 12-03 09:00" t=144.8
+WAIT 8 run="守护正在分析 · 12-03 09:00" t=159.8
+HIT refresh-9 false t=175.1
+WAIT 9 run="守护正在分析 · 12-03 09:00" t=175.1
+WAIT 10 run="守护正在分析 · 12-03 09:00" t=190.1
+HIT refresh-11 false t=205.4
+WAIT 11 run="守护正在分析 · 12-03 09:00" t=205.4
+WAIT 12 run="守护正在分析 · 12-03 09:00" t=220.4
+HIT refresh-13 false t=235.7
+WAIT 13 run="守护正在分析 · 12-03 09:00" t=235.7
+WAIT 14 run="守护正在分析 · 12-03 09:00" t=250.7
+HIT refresh-15 false t=266.0
+WAIT 15 run="守护正在分析 · 12-03 09:00" t=266.0
+WAIT 16 run="守护正在分析 · 12-03 09:00" t=281.0
+HIT refresh-17 false t=296.3
+WAIT 17 run="守护正在分析 · 12-03 09:00" t=296.3
+WAIT 18 run="守护正在分析 · 12-03 09:00" t=311.3
+HIT refresh-19 false t=326.6
+WAIT 19 run="守护正在分析 · 12-03 09:00" t=326.6
+WAIT 20 run="守护正在分析 · 12-03 09:00" t=341.6
+HTTP 200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/7044b8b3-942c-4c2a-b3d5-b43b21
+DIFF true
+DIFF_TEXT "接受后计划会这样变\n移除：故宫博物院\n路上：少 66 分钟\n费用：不变"
+SHOT run-diff-390-block t=357.1
+HIT accept true t=357.3
+HTTP 200 /api/v1/replans/e7912b9c-93ef-47fd-bc1b-6a7dc6c92c0e/accept
+AFTER_ACCEPT "时空模拟｜不是实际定位或真实灾情\n模拟时间：12/03 09:00 · 执行第 2 步 · 等待接受调整\n现实演示时间：10/26 16:23\n同一条模拟执行接管了这趟行程（run 序列按服务端为准）\n模拟已暂停：请到课堂控制台处理等待中的事件。\n+30 分钟\n+1 小时\n到下一站\n课堂控制台 · 模拟执行\n等待接受调整 · 12-03 09:00\n继续模拟\n刷新读数\n\n这次事件已经落定，可以继续模拟。\n\n进度里记着提案编号，但看不到可接受的内容；请重启课堂演示（双击启动器）。\n\n开演 · 12-03 09:00\n注入事件 · 12-03 09:00\n守护已接手 · 12-03 09:00\n守护已交出建议 · 12-03 09:00\n\n模拟时钟与模拟 GPS 推进；不生成设备到场证明，也不把模拟说成实际到访。\n\n行程已经启动\n\n实时进度、变更建议和 Agent 审批现在都在「行程」里。\n\n查看当前行程 →\n当前行程\n\n这里显示行程监测、助手运行记录和待确认操作。\n\n回到行程工作台\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认\n你希望它检查什么\n发送 ↑"
+SHOT run-diff-390-after t=370.3
+ERRORS []

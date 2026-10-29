@@ -1,0 +1,5 @@
+COLD {"h1":"你的下一趟旅行，从一句话开始。","hint":"还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。","city":"","party":"1","budget":"1000","submit":"继续规划 →","submitCentre":[188,728]}
+AFTER_GOAL {"h1":"你的下一趟旅行，从一句话开始。","hint":"还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。","city":"","party":"1","budget":"800","submit":"继续规划 →","submitCentre":[188,728]}
+SHOT play-stack3-1-goal-typed.png
+SMOKE_FAILED page.evaluate(...) is not a function
+NOTE 冷开一个标签页、输入一句话与城市名、按屏上那枚提交键两次；凭证只报在不在，值没有打印

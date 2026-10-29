@@ -1,0 +1,8 @@
+BEFORE "模拟进行中 · 12-04 08:06"
+SCENES_BUTTONS 3
+AFTER_SCENE "等待守护决策 · 12-04 08:06"
+GUARDIAN_BUTTON 1
+SLOW_TEXT "守护正在分析：接上模型时实测要四分钟左右；没接模型会一直停在等待。请别重复按。"
+SLOW_VISIBLE true
+BUSY_BUTTON_DISABLED true
+ERRORS []

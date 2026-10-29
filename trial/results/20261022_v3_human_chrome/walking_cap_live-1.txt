@@ -1,0 +1,45 @@
+换代前 趟=1 库=citynexus_v3_cap_1024.db journey_id_marker=7208faa1-55f5-4277-96f3-282f858089e9
+换代前 趟=1 库=citynexus_v3_cap_1024.db stored_route_attempt={"answered_at": "2026-10-24T00:50:24.014491+00:00", "frozen": true, "over_cap_walks": 0, "overnight": 1, "reason_code": null, "replaced_long_walks": 0, "total": 5, "transit": 0, "unanswered": [], "verified": 5, "walking_cap_m": null}
+换代前 趟=1 库=citynexus_v3_cap_1024.db frozen_fact_count_marker=5
+换代前 趟=1 库=citynexus_v3_cap_1024.db frozen_fact 天安门广场|故宫博物院 mode=None distance_m=None walking_distance_m=None minutes=46
+换代前 趟=1 库=citynexus_v3_cap_1024.db frozen_fact 景山公园|什刹海 mode=None distance_m=None walking_distance_m=None minutes=40
+换代前 趟=1 库=citynexus_v3_cap_1024.db frozen_fact 颐和园|南锣鼓巷 mode=None distance_m=None walking_distance_m=None minutes=216
+换代前 趟=1 库=citynexus_v3_cap_1024.db frozen_fact 故宫博物院|景山公园 mode=None distance_m=None walking_distance_m=None minutes=20
+换代前 趟=1 库=citynexus_v3_cap_1024.db frozen_fact 什刹海|颐和园 mode=None distance_m=None walking_distance_m=None minutes=190
+换代前 趟=1 库=citynexus_v3_cap_1024.db research_row_marker=5
+换代前 趟=1 库=citynexus_v3_cap_1024.db research_row 天安门广场|故宫博物院 mode=WALK distance_m=3385 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代前 趟=1 库=citynexus_v3_cap_1024.db research_row 故宫博物院|景山公园 mode=WALK distance_m=1445 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代前 趟=1 库=citynexus_v3_cap_1024.db research_row 景山公园|什刹海 mode=WALK distance_m=2966 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代前 趟=1 库=citynexus_v3_cap_1024.db research_row 什刹海|颐和园 mode=WALK distance_m=14198 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代前 趟=1 库=citynexus_v3_cap_1024.db research_row 颐和园|南锣鼓巷 mode=WALK distance_m=16185 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代前 趟=1 库=citynexus_v3_cap_1024.db traveller_words source_text=12 月 3 日到 12 月 4 日在北京玩两天，人均预算 800。第一天上午逛故宫，下午去景山公园和南锣鼓巷，晚上去簋街吃饭；第二天上午去颐和园，下午去天坛。我走路不多，每段步行不超过1公里，远的请坐地铁并写明线路。 capabilities_json=[]
+换代后 趟=1 库=citynexus_v3_cap2_1024.db journey_id_marker=cb4b3e56-ab40-4408-93b5-3f078222c995
+换代后 趟=1 库=citynexus_v3_cap2_1024.db stored_route_attempt={"answered_at": "2026-10-24T01:16:21.478369+00:00", "frozen": true, "over_cap_walks": 0, "overnight": 1, "reason_code": null, "replaced_long_walks": 2, "total": 4, "transit": 4, "unanswered": [], "verified": 4, "walking_cap_m": 1000}
+换代后 趟=1 库=citynexus_v3_cap2_1024.db frozen_fact_count_marker=4
+换代后 趟=1 库=citynexus_v3_cap2_1024.db frozen_fact 天安门广场|故宫博物院 mode=TRANSIT distance_m=6006 walking_distance_m=3326 minutes=78
+换代后 趟=1 库=citynexus_v3_cap2_1024.db frozen_fact 前门大街|慕田峪长城 mode=TRANSIT distance_m=74940 walking_distance_m=2184 minutes=224
+换代后 趟=1 库=citynexus_v3_cap2_1024.db frozen_fact 慕田峪长城|颐和园 mode=TRANSIT distance_m=88327 walking_distance_m=2449 minutes=252
+换代后 趟=1 库=citynexus_v3_cap2_1024.db frozen_fact 故宫博物院|前门大街 mode=TRANSIT distance_m=5181 walking_distance_m=2501 minutes=56
+换代后 趟=1 库=citynexus_v3_cap2_1024.db research_row_marker=4
+换代后 趟=1 库=citynexus_v3_cap2_1024.db research_row 天安门广场|故宫博物院 mode=WALK distance_m=3385 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代后 趟=1 库=citynexus_v3_cap2_1024.db research_row 故宫博物院|前门大街 mode=WALK distance_m=3512 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代后 趟=1 库=citynexus_v3_cap2_1024.db research_row 前门大街|慕田峪长城 mode=TRANSIT distance_m=74940 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代后 趟=1 库=citynexus_v3_cap2_1024.db research_row 慕田峪长城|颐和园 mode=TRANSIT distance_m=88327 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代后 趟=1 库=citynexus_v3_cap2_1024.db traveller_words source_text=北京玩两天，两个人。每段步行不超过1公里，远的请改坐地铁并写明线路和站名。 capabilities_json=[]
+换代后 趟=2 库=citynexus_v3_cap2_1024.db journey_id_marker=c92ddaf1-79e9-40ad-8c21-a02895036889
+换代后 趟=2 库=citynexus_v3_cap2_1024.db stored_route_attempt={"answered_at": "2026-10-24T01:33:04.408765+00:00", "frozen": true, "over_cap_walks": 0, "overnight": 1, "reason_code": null, "replaced_long_walks": 5, "total": 6, "transit": 6, "unanswered": [], "verified": 6, "walking_cap_m": 1000}
+换代后 趟=2 库=citynexus_v3_cap2_1024.db frozen_fact_count_marker=6
+换代后 趟=2 库=citynexus_v3_cap2_1024.db frozen_fact 天安门广场|故宫博物院 mode=TRANSIT distance_m=6006 walking_distance_m=3326 minutes=78
+换代后 趟=2 库=citynexus_v3_cap2_1024.db frozen_fact 前门大街|八达岭长城 mode=TRANSIT distance_m=69660 walking_distance_m=2340 minutes=193
+换代后 趟=2 库=citynexus_v3_cap2_1024.db frozen_fact 景山公园|前门大街 mode=TRANSIT distance_m=5804 walking_distance_m=2254 minutes=50
+换代后 趟=2 库=citynexus_v3_cap2_1024.db frozen_fact 颐和园|什刹海 mode=TRANSIT distance_m=16443 walking_distance_m=2663 minutes=73
+换代后 趟=2 库=citynexus_v3_cap2_1024.db frozen_fact 故宫博物院|景山公园 mode=TRANSIT distance_m=1762 walking_distance_m=1256 minutes=36
+换代后 趟=2 库=citynexus_v3_cap2_1024.db frozen_fact 八达岭长城|颐和园 mode=TRANSIT distance_m=71479 walking_distance_m=2386 minutes=200
+换代后 趟=2 库=citynexus_v3_cap2_1024.db research_row_marker=6
+换代后 趟=2 库=citynexus_v3_cap2_1024.db research_row 天安门广场|故宫博物院 mode=WALK distance_m=3385 walking_cap_m=1000 frozen_mode=TRANSIT frozen_distance_m=6006 frozen_minutes=77 frozen_lines=地铁8号线(瀛海--朱辛庄)
+换代后 趟=2 库=citynexus_v3_cap2_1024.db research_row 故宫博物院|景山公园 mode=WALK distance_m=1445 walking_cap_m=1000 frozen_mode=TRANSIT frozen_distance_m=1762 frozen_minutes=36 frozen_lines=124路(西四路口东--大屯南)
+换代后 趟=2 库=citynexus_v3_cap2_1024.db research_row 景山公园|前门大街 mode=WALK distance_m=4322 walking_cap_m=1000 frozen_mode=TRANSIT frozen_distance_m=5804 frozen_minutes=49 frozen_lines=地铁8号线(朱辛庄--瀛海)
+换代后 趟=2 库=citynexus_v3_cap2_1024.db research_row 前门大街|八达岭长城 mode=TRANSIT distance_m=69660 walking_cap_m=None frozen_mode=None frozen_distance_m=None frozen_minutes=None frozen_lines=
+换代后 趟=2 库=citynexus_v3_cap2_1024.db research_row 八达岭长城|颐和园 mode=WALK distance_m=52185 walking_cap_m=1000 frozen_mode=TRANSIT frozen_distance_m=71479 frozen_minutes=199 frozen_lines=877路(八达岭长城--地铁北土城站)|地铁10号线外环(车道沟--车道沟)|地铁4号线大兴线(天宫院--安河桥北)
+换代后 趟=2 库=citynexus_v3_cap2_1024.db research_row 颐和园|什刹海 mode=WALK distance_m=14198 walking_cap_m=1000 frozen_mode=TRANSIT frozen_distance_m=16443 frozen_minutes=73 frozen_lines=地铁4号线大兴线(安河桥北--天宫院)
+换代后 趟=2 库=citynexus_v3_cap2_1024.db traveller_words source_text=北京玩两天，两个人。每段步行不超过1公里，远的请改坐地铁并写明线路和站名。 capabilities_json=[]

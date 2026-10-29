@@ -1,0 +1,82 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_a_partially_measured_freeze_records_what_it_measured __________
+
+signed_place = (<starlette.testclient.TestClient object at 0x00000211883C4CB0>, {'Authorization': 'Bearer eyJhdWQiOiJjaXR5bmV4dXMtdHJ...f8f1-ead9-4b1a-b273-ea4ff3985b8b', '85c59ace-525b-4981-967b-75921ec6d026', '2e31a087-8d22-4840-a588-fb67186b0ab2', ...)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021188473500>
+
+    def test_a_partially_measured_freeze_records_what_it_measured(signed_place, monkeypatch) -> None:
+        client, owner, _outsider, journey_id, *_ = signed_place
+        _no_live_answer(monkeypatch)
+        task_id = _task(client, owner, journey_id)
+        root, plan_id, ids = _draft_with_canonical_places(client, owner, journey_id, task_id)
+        _store_route(task_id, TOWER["id"], PARK["id"])
+        _append_one_evening_stop(plan_id, ids[TOWER["id"]])
+    
+        answer = _freeze(client, owner, root, task_id, plan_id)
+        assert answer.status_code == 200, answer.text
+        body = answer.json()
+        assert (body["total"], body["verified"], body["frozen"]) == (2, 1, False), body
+        assert body["reason_code"] == "ROUTE_PARTIALLY_VERIFIED", body
+    
+        stored = _stored_result(task_id)
+>       attempt = stored["route_attempt"]
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'route_attempt'
+
+tests\test_qoder_route_attempt_remembered_r1.py:74: KeyError
+____________ test_a_fully_measured_freeze_records_zero_unanswered _____________
+
+signed_place = (<starlette.testclient.TestClient object at 0x00000211FF772B70>, {'Authorization': 'Bearer eyJhdWQiOiJjaXR5bmV4dXMtdHJ...5af0-90bb-4ad4-954f-8384def44bfe', '58706abb-4526-49e7-840c-71c5e3fd64f4', '4feb7ffd-9b35-4d21-8afe-f33549448869', ...)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000211886C18B0>
+
+    def test_a_fully_measured_freeze_records_zero_unanswered(signed_place, monkeypatch) -> None:
+        client, owner, _outsider, journey_id, *_ = signed_place
+        _no_live_answer(monkeypatch)
+        task_id = _task(client, owner, journey_id)
+        root, plan_id, _ids = _draft_with_canonical_places(client, owner, journey_id, task_id)
+        _store_route(task_id, TOWER["id"], PARK["id"])
+    
+        answer = _freeze(client, owner, root, task_id, plan_id)
+        assert answer.status_code == 200, answer.text
+        body = answer.json()
+        assert (body["total"], body["verified"], body["frozen"]) == (1, 1, True), body
+    
+        stored = _stored_result(task_id)
+>       attempt = stored["route_attempt"]
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'route_attempt'
+
+tests\test_qoder_route_attempt_remembered_r1.py:100: KeyError
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+app\main.py:726
+  D:\moodle\_cmdr_rescue_v3_1022\backend\app\main.py:726: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:4681
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:4681: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_route_attempt_remembered_r1.py::test_a_partially_measured_freeze_records_what_it_measured
+FAILED tests/test_qoder_route_attempt_remembered_r1.py::test_a_fully_measured_freeze_records_zero_unanswered
+2 failed, 4 warnings in 2.27s

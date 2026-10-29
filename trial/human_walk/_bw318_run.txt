@@ -1,0 +1,74 @@
+WHICH OF THESE HAS A BUTTON bw318
+DENOMINATOR rows read out of bw313 = 21; frontend files scanned = 163 (generated client, tests and spec helpers excluded)
+ 1. /api/v1/journeys/{journey_id}/agent/mobile-compat-runs  (backend backend/app/main.py:1932, terms=provider) -> CALLER_FOUND in 1 处
+      frontend/src/api/citynexus.ts:3457
+ 2. /api/v1/journeys/{journey_id}/launch-origin  (backend backend/app/main.py:3424, terms=place_id) -> CALLER_FOUND in 1 处
+      frontend/src/features/execution/LiveRecovery.tsx:409  copy: frontend/src/features/execution/LiveRecovery.tsx:419 setMessage(zh ? "暂时无法保存出发点。" : "We couldn't save that starting point y
+ 3. /api/v1/journeys/{journey_id}/in-transit/reroute  (backend backend/app/main.py:3715, terms=journey) -> CALLER_FOUND in 1 处
+      frontend/src/api/citynexus.ts:4682
+ 4. /api/v1/journeys/{journey_id}/missions/{mission_id}/clarification  (backend backend/app/main.py:5507, terms=payload) -> CALLER_FOUND in 3 处
+      frontend/src/api/citynexus.ts:4754
+      frontend/src/features/agent/JourneyClarificationPanel.tsx:329  copy: frontend/src/features/agent/JourneyClarificationPanel.tsx:337 ? (zh ? "助手正在依据服务器事实继续决策。" : "The assistant is continuing against serv
+      frontend/src/features/execution/MemberPlaceInvitationPanel.tsx:328  copy: frontend/src/features/execution/MemberPlaceInvitationPanel.tsx:334 ? "决策轮已过期或行程已更新，请刷新后重试。"
+ 5. /api/v1/journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id}  (backend backend/app/main.py:5606, terms=Journey member) -> CALLER_FOUND in 1 处
+      frontend/src/api/citynexus.ts:3530
+ 6. /api/v1/journeys/{journey_id}  (backend backend/app/main.py:7691, terms=journey) -> CALLER_FOUND in 30 处
+      frontend/src/api/candidateRejections.ts:89
+      frontend/src/api/citynexus.ts:4953
+      frontend/src/api/journeyContinuation.ts:133
+ 7. /api/v1/journeys/{journey_id}  (backend backend/app/main.py:7696, terms=journey) -> CALLER_FOUND in 30 处
+      frontend/src/api/candidateRejections.ts:89
+      frontend/src/api/citynexus.ts:4953
+      frontend/src/api/journeyContinuation.ts:133
+ 8. /api/v1/journeys/{journey_id}/undelete  (backend backend/app/main.py:7756, terms=journey) -> CALLER_FOUND in 2 处
+      frontend/src/features/trash/journeyTrash.ts:56
+      frontend/src/features/trash/journeyTrashCopy.ts:13  copy: frontend/src/features/trash/journeyTrashCopy.ts:13 *    (`backend/app/main.py` -- "The word is 找回 / undelete").
+ 9. /api/v1/journeys/{journey_id}/undelete  (backend backend/app/main.py:7762, terms=journey) -> CALLER_FOUND in 2 处
+      frontend/src/features/trash/journeyTrash.ts:56
+      frontend/src/features/trash/journeyTrashCopy.ts:13  copy: frontend/src/features/trash/journeyTrashCopy.ts:13 *    (`backend/app/main.py` -- "The word is 找回 / undelete").
+10. /api/v1/journeys/{journey_id}/undelete  (backend backend/app/main.py:7783, terms=journey) -> CALLER_FOUND in 2 处
+      frontend/src/features/trash/journeyTrash.ts:56
+      frontend/src/features/trash/journeyTrashCopy.ts:13  copy: frontend/src/features/trash/journeyTrashCopy.ts:13 *    (`backend/app/main.py` -- "The word is 找回 / undelete").
+11. /api/v1/journeys/{journey_id}/stay-options/{option_id}/mode  (backend backend/app/main.py:11042, terms=payload) -> CALLER_FOUND in 1 处
+      frontend/src/app/V8Experience.tsx:4935  copy: frontend/src/app/V8Experience.tsx:4941 ? "未识别"
+12. /api/v1/journeys/{journey_id}/operator/reality/provider-replay  (backend backend/app/main.py:11519, terms=provider) -> NO_FRONTEND_CALLER
+13. /api/v1/journeys/{journey_id}/group-recovery/apply  (backend backend/app/main.py:16917, terms=idempotency) -> CALLER_FOUND in 2 处
+      frontend/src/api/citynexus.ts:4718
+      frontend/src/features/execution/LiveRecovery.tsx:1595  copy: frontend/src/features/execution/LiveRecovery.tsx:1595 ? (zh ? "方案已获集体授权，等待应用。" : "The proposal has group approval and is rea
+14. /api/v1/journeys/{journey_id}/plans/generate  (backend backend/app/main.py:17621, terms=place_id) -> CALLER_FOUND in 18 处
+      frontend/src/api/citynexus.ts:4939
+      frontend/src/api/journeyContinuation.ts:133
+      frontend/src/api/v12Authoritative.ts:4
+15. /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select  (backend backend/app/main.py:18152, terms=journey) -> CALLER_FOUND in 19 处
+      frontend/src/api/citynexus.ts:4744
+      frontend/src/app/LegacyApp.tsx:1727
+      frontend/src/app/V8Experience.tsx:4701  copy: frontend/src/app/V8Experience.tsx:4708 <p className="v8-kicker">{zh ? "我的" : "Me"}</p>
+16. /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select  (backend backend/app/main.py:18167, terms=plan_version) -> CALLER_FOUND in 19 处
+      frontend/src/api/citynexus.ts:4744
+      frontend/src/app/LegacyApp.tsx:1727
+      frontend/src/app/V8Experience.tsx:4701  copy: frontend/src/app/V8Experience.tsx:4708 <p className="v8-kicker">{zh ? "我的" : "Me"}</p>
+17. /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select  (backend backend/app/main.py:18221, terms=authority) -> CALLER_FOUND in 19 处
+      frontend/src/api/citynexus.ts:4744
+      frontend/src/app/LegacyApp.tsx:1727
+      frontend/src/app/V8Experience.tsx:4701  copy: frontend/src/app/V8Experience.tsx:4708 <p className="v8-kicker">{zh ? "我的" : "Me"}</p>
+18. /api/v1/journeys/{journey_id}/start  (backend backend/app/main.py:20012, terms=Journey member) -> CALLER_FOUND in 25 处
+      frontend/src/api/citynexus.ts:4764
+      frontend/src/app/LegacyApp.tsx:1674
+      frontend/src/app/V8Experience.tsx:4679  copy: frontend/src/app/V8Experience.tsx:4685 return zh ? "自动执行已开启" : "Automatic changes are on";
+19. /api/v1/journeys/{journey_id}/start  (backend backend/app/main.py:20020, terms=journey) -> CALLER_FOUND in 25 处
+      frontend/src/api/citynexus.ts:4764
+      frontend/src/app/LegacyApp.tsx:1674
+      frontend/src/app/V8Experience.tsx:4679  copy: frontend/src/app/V8Experience.tsx:4685 return zh ? "自动执行已开启" : "Automatic changes are on";
+20. /api/v1/journeys/{journey_id}/start  (backend backend/app/main.py:20046, terms=authority) -> CALLER_FOUND in 25 处
+      frontend/src/api/citynexus.ts:4764
+      frontend/src/app/LegacyApp.tsx:1674
+      frontend/src/app/V8Experience.tsx:4679  copy: frontend/src/app/V8Experience.tsx:4685 return zh ? "自动执行已开启" : "Automatic changes are on";
+21. /api/v1/journeys/{journey_id}/events  (backend backend/app/main.py:21498, terms=provider) -> CALLER_FOUND in 12 处
+      frontend/src/api/candidateRejections.ts:91
+      frontend/src/api/citynexus.ts:4926
+      frontend/src/api/journeyContinuation.ts:94
+TALLY caller_found=20 no_caller=1 total=21
+NEGATIVE_CONTROL /api/v1/journeys/{journey_id}/zzz-not-a-real-route must find nothing: CLEAN
+COUNTING_RULE a file counts as a caller only if it carries both of the last two path segments; the generated OpenAPI client is never a caller
+COVERAGE_LIMIT a caller in source is not a button a traveller can press: this proves the path is asked for somewhere in the frontend, not that any screen offers it. The nearby copy is the first CJK string within 40 lines, which may belong to another control in the same file.
+WROTE D:\moodle\_cmdr_rescue_v3_1022\trial\results\20261026_gozero\bw318-which-of-these-has-a-button.txt

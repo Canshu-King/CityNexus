@@ -1,0 +1,3 @@
+LIVE DENOMINATORS bw313=21 bw318=21 listed catch=26 bw328 rows=26
+LIVE TALLY {'PAIRED_TO_LISTED_SENTENCE': 2, 'PAIRED_TO_UNLISTED_CATCH': 2, 'CATCH_WITHOUT_OWN_SENTENCE': 4, 'NO_CATCH_IN_WINDOW': 48, 'NO_FRONTEND_CALLER': 0} | refusals=21 paired_listed=1 paired_unlisted=1 unpaired=19 catches reached=2 never reached=24
+WROTE D:/moodle/_cmdr_rescue_v3_1022\trial\results\20261026_gozero\bw337-which-chinese-sentence-sits-on-which-refusal.txt lines=57

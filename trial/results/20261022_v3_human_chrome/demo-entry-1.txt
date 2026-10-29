@@ -1,0 +1,6 @@
+COLD_HAS_BEARER false
+DEMO_BUTTON "课堂演示：进入示例行程"
+AFTER_TEXT "C\nCityNexus\n你的智能旅行伙伴\nAI 建议可试\n北京 · 2日行程\n旅途正在继续。\n换地区 ›\n旅行插画\n行程执行中\n地图\n执行与待办\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：故宫博物院 · 12月3日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：故宫博物院\n接下来：天坛公园\n已找到准确路线 · 约 78 分钟\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员。\n附近有什么可以顺路玩？\n点击后读取一次当前位置。推荐仅你可见，距离以直线计算。\n个人时间偏好\n15 分钟\n30 分钟\n45 分钟\n兴趣（可选）\n随便看看\n咖啡 / 美食\n文化\n自然\n查找附近体验\n直接搜索真实附近地点（需同意）\n你: 尚未分享位置\n集合点：故宫博物院（来自当前行程安排）\n显示同行者的粗略位置；浏览器定位供路线参考。\n同时看着后面的行程\nI’m watching the rest of your journey.\n未来 0 个行程点 · 看到 19:39\nAGENT 计划\n高级信息\nPlanning AI is ready.\nOPEN-WORLD RECOVERY\n已知选择不够，我正在附近寻找新的可能性。\n照看这趟行程\nI found new places to check\nDetected: Closure\nWorking on a recovery\nI’m looking for more recovery options nearby\nI found new places to check\n正在处理行程变化\n发现真实"
+HAS_COCKPIT true
+BEARER_AFTER true
+ERRORS []

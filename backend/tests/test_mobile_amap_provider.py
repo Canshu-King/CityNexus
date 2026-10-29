@@ -104,12 +104,54 @@ def test_search_uses_exact_adcode_and_keeps_provider_gcj02_coordinates() -> None
         "latitude": 25.710456,
         "longitude": 116.756123,
         "coordinate_system": "GCJ02",
+        # This POI carries no business block, so the sentence stays None: an absent provider answer is
+        # recorded as absent, never as an opening time.
+        "opening_hours_text": None,
     }
     query = parse_qs(urlparse(str(calls[0].url)).query)
     assert query["region"] == ["350825"]
     assert query["city_limit"] == ["true"]
     assert query["page_size"] == ["8"]
     assert len(calls) == 1
+
+
+def test_search_carries_the_provider_own_opening_hours_sentence() -> None:
+    """``show_fields=business`` was already requested; the projection used to throw the answer away.
+
+    The sentence below is the shape measured live from AMap on 2026-10-23 for 天坛公园 and 天坛公园售票处
+    (trial/results/20261022_v3_human_chrome/amap-opentime-values-1.txt).  Carrying it verbatim is the
+    whole point: the departure door reads an opening fact only if somebody brought the fact home.
+    """
+    calls: list[httpx.Request] = []
+    client = _client(
+        {
+            "status": "1",
+            "pois": [
+                {
+                    "id": "B000A81CB2", "name": "天坛公园", "type": "风景名胜", "address": "天坛里",
+                    "pname": "北京市", "cityname": "北京市", "adname": "东城区", "adcode": "110101",
+                    "citycode": "010", "location": "116.410829,39.881913",
+                    "business": {"opentime_week": "周一至周日 06:30-22:00 最晚进入21:00", "keytag": "5A景区"},
+                },
+                {
+                    "id": "B0FFI0TMCV", "name": "天坛公园售票处", "type": "售票处", "address": "天坛路",
+                    "pname": "北京市", "cityname": "北京市", "adname": "东城区", "adcode": "110101",
+                    "citycode": "010", "location": "116.410000,39.882000",
+                    "business": {"opentime_today": "08:30-20:30"},
+                },
+            ],
+        },
+        calls=calls,
+    )
+    try:
+        result = client.search("天坛", "北京市", adcode="110101", limit=8)
+    finally:
+        client.close()
+
+    assert parse_qs(urlparse(str(calls[0].url)).query)["show_fields"] == ["business"]
+    assert result["places"][0]["opening_hours_text"] == "周一至周日 06:30-22:00 最晚进入21:00"
+    # A POI that only answers for today still counts as an answer, and nothing here invents a week.
+    assert result["places"][1]["opening_hours_text"] == "08:30-20:30"
 
 
 def test_search_marks_conflicts_and_unknowns_and_matches_parent_admin_level() -> None:
@@ -337,6 +379,16 @@ def test_provider_infocodes_map_to_stable_key_quota_and_permission_codes() -> No
         "10001": "AMAP_INVALID_KEY",
         "10003": "AMAP_QUOTA_EXCEEDED",
         "10012": "AMAP_SERVICE_PERMISSION_DENIED",
+        # Asked too often at once, which is not today's allowance spent.  Measured: eight walking calls
+        # fired back to back on one short city pair answered OK, OK, OK then three times infocode 10021
+        # CUQPS_HAS_EXCEEDED_THE_LIMIT, and one call four seconds later answered OK again
+        # (trial/results/20261022_v3_human_chrome/amap-burst-infocode-1.txt:2 against :3).
+        "10021": "AMAP_RATE_LIMITED",
+        "10004": "AMAP_RATE_LIMITED",
+        # Measured, not guessed: walking 王府井步行街 -> 八达岭长城 answered this code while an 800 m
+        # hop in the same city answered OK at the same minute
+        # (trial/results/20261022_v3_human_chrome/amap-quota-vs-qps-1.txt:2 and :3).
+        "20803": "AMAP_OUT_OF_PROVIDER_RANGE",
         "77777": "AMAP_PROVIDER_REJECTED",
     }
     for infocode, expected_code in cases.items():
@@ -363,3 +415,33 @@ def test_httpcore_protocol_child_logger_redacts_key_query(caplog) -> None:
     assert "private-test-value" not in caplog.text
     assert "[redacted]" in caplog.text
 
+
+
+def test_the_status_door_reads_the_key_the_agent_leg_reads(monkeypatch) -> None:
+    """``/providers/v9`` must not call AMap unconfigured while the Agent is calling it configured.
+
+    Measured on the stack booted for the 2026-10-23 departure walk: the status said
+    ``NOT_CONFIGURED / AMAP_WEB_KEY is absent`` in the same process whose Agent research leg was routing
+    real Beijing places, because config.py names the secret ``CITYNEXUS_AMAP_WEB_KEY`` and this module
+    had been reading the bare ``AMAP_WEB_KEY``.
+    """
+
+    from types import SimpleNamespace
+
+    from app.integrations.china import amap as amap_module
+
+    monkeypatch.delenv("AMAP_WEB_KEY", raising=False)
+    monkeypatch.setattr(amap_module, "settings", SimpleNamespace(amap_web_key="settings-name-key"))
+    ready = amap_module.amap_status()
+    assert ready.status == "READY" and ready.provenance == "LIVE" and ready.reason is None, ready
+
+    monkeypatch.setattr(amap_module, "settings", SimpleNamespace(amap_web_key=None))
+    monkeypatch.setenv("AMAP_WEB_KEY", "bare-name-key")
+    assert amap_module.amap_status().status == "READY", "the older spelling must keep working"
+
+    monkeypatch.delenv("AMAP_WEB_KEY", raising=False)
+    absent = amap_module.amap_status()
+    assert absent.status == "NOT_CONFIGURED" and absent.provenance == "UNAVAILABLE", absent
+    assert absent.reason and "key" in absent.reason.lower()
+    # A refusal never carries the secret, whichever name supplied it.
+    assert "settings-name-key" not in str(absent) and "bare-name-key" not in str(absent)

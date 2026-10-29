@@ -1,0 +1,72 @@
+services.py ACROSS EVERY TREE ON DISK bw295
+relative path backend\app\services.py
+rescue (this shift) :: D:/moodle/_cmdr_rescue_v3_1022
+  bytes=126757 sha256=8de56c8e981f mtime=10-20 14:25 head=1d56fad389 (parses)
+  refusal lines=[746, 782, 787, 789, 799]  def lines=[689]
+  refusal inside lines 141-148: NONE
+  lines 141-148 verbatim:
+       141|         "member_place_invitations",
+       142|         "member_side_quest_return_reports",
+       143|         "member_side_quests",
+       144|         "member_live_moment_scout_receipts",
+       145|         "planned_split_meetup_handshakes",
+       146|         "collective_authority_receipts",
+       147|         "guardian_pulses",
+       148|         "provider_observations",
+       149|         "journey_outcome_events",
+classroom :: E:/_cmdr_clean_1028
+  bytes=126757 sha256=8de56c8e981f mtime=10-20 14:25 head=88b891d22c (parses)
+  refusal lines=[746, 782, 787, 789, 799]  def lines=[689]
+  refusal inside lines 141-148: NONE
+  lines 141-148 verbatim:
+       141|         "member_place_invitations",
+       142|         "member_side_quest_return_reports",
+       143|         "member_side_quests",
+       144|         "member_live_moment_scout_receipts",
+       145|         "planned_split_meetup_handshakes",
+       146|         "collective_authority_receipts",
+       147|         "guardian_pulses",
+       148|         "provider_observations",
+       149|         "journey_outcome_events",
+tip :: E:/_cmdr_tip_113
+  bytes=126757 sha256=8de56c8e981f mtime=10-20 14:25 head=dea0328e0b (parses)
+  refusal lines=[746, 782, 787, 789, 799]  def lines=[689]
+  refusal inside lines 141-148: NONE
+  lines 141-148 verbatim:
+       141|         "member_place_invitations",
+       142|         "member_side_quest_return_reports",
+       143|         "member_side_quests",
+       144|         "member_live_moment_scout_receipts",
+       145|         "planned_split_meetup_handshakes",
+       146|         "collective_authority_receipts",
+       147|         "guardian_pulses",
+       148|         "provider_observations",
+       149|         "journey_outcome_events",
+reference :: D:/moodle/_qoder_cmdr_ref_20260921
+  bytes=65522 sha256=a85796654fb0 mtime=09-21 15:21 head=e9efec6bf (parses)
+  refusal lines=[]  def lines=[]
+  refusal inside lines 141-148: NONE
+  lines 141-148 verbatim:
+       141|         "idempotency_keys",
+       142|         "action_approvals",
+       143|         "replan_proposals",
+       144|         "recommendations",
+       145|         "impact_assessments",
+       146|         "transactions",
+       147|         "orders",
+       148|         "bookings",
+       149|         "commitments",
+frozen CityNexus :: D:/moodle/CityNexus
+  bytes=85177 sha256=459f7cd5773f mtime=10-08 04:01 head=0d001f403f (parses)
+  refusal lines=[]  def lines=[]
+  refusal inside lines 141-148: NONE
+  lines 141-148 verbatim:
+       141|     # Delete children first because the package schema intentionally enables FKs.
+       142|     for table in (
+       143|         # ORD-0476: a footprint points at a journey, an activity and a place, so it has to go be
+       144|         # all three -- otherwise `demo/reset` hits a foreign key and answers 500 with nothing de
+       145|         "journey_checkins",
+       146|         "edge_actions",
+       147|         "edge_observations",
+       148|         "edge_devices",
+       149|         "push_subscriptions",

@@ -1,0 +1,5 @@
+BOX {"x":42,"y":353.625,"width":306,"height":137.140625}
+IN_VIEWPORT true
+SCROLL_Y 2856
+TEXT "移除故宫博物院；路上少 66 分钟。"
+ERRORS []

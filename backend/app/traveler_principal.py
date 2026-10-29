@@ -25,6 +25,8 @@ class TravelerPrincipal:
     traveler_id: str
     auth_method: str
     expires_at: int
+    demo_presenter_journey_id: str | None = None
+    demo_database_sha256: str | None = None
 
 
 def _b64encode(raw: bytes) -> str:
@@ -50,6 +52,8 @@ def issue_traveler_token(
     *,
     ttl_seconds: int | None = None,
     now: int | None = None,
+    demo_presenter_journey_id: str | None = None,
+    demo_database_sha256: str | None = None,
 ) -> str:
     """Issue a signed short-lived traveler token.
 
@@ -70,6 +74,8 @@ def issue_traveler_token(
         "iat": clock,
         "exp": clock + ttl,
     }
+    if demo_presenter_journey_id and demo_database_sha256:
+        payload['demo_presenter']={'journey_id':demo_presenter_journey_id,'database_sha256':demo_database_sha256}
     body = _b64encode(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8"))
     signature = _b64encode(hmac.new(_secret(), body.encode("ascii"), hashlib.sha256).digest())
     return f"{body}.{signature}"
@@ -93,6 +99,8 @@ def resolve_traveler_principal(
     token = _bearer_token(request)
     if token is None:
         raise HTTPException(401, "authenticated traveler credentials are required")
+    if not token.isascii() or len(token) > 8192:
+        raise HTTPException(401, "traveler credentials are invalid")
     try:
         body, signature = token.split(".", 1)
     except ValueError as exc:
@@ -121,6 +129,8 @@ def resolve_traveler_principal(
         traveler_id=traveler_id,
         auth_method="SIGNED_HMAC_BEARER",
         expires_at=expires_at,
+        demo_presenter_journey_id=(payload.get('demo_presenter') or {}).get('journey_id'),
+        demo_database_sha256=(payload.get('demo_presenter') or {}).get('database_sha256'),
     )
 
 
@@ -177,3 +187,19 @@ def member_has_capability(
         )
         is not None
     )
+
+
+def require_journey_read(request: Request, session: Session, journey_id: str):
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey_id
+    )
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_READ authority")
+    return principal, member
+
+
+def readable_journey_ids(request: Request, session: Session) -> list[str]:
+    principal = resolve_traveler_principal(request, session)
+    return [member.journey_id for member in session.scalars(select(JourneyMember).where(
+        JourneyMember.traveler_id == principal.traveler_id))
+        if _member_is_in_force(member) and member_has_capability(session, member, "JOURNEY_READ")]

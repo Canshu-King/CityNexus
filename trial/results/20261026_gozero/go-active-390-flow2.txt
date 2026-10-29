@@ -1,0 +1,73 @@
+SHOT 390-f2-cold t=6.0
+HIT continue true t=6.9
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=10.5
+HIT open-settings true t=12.7
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=14.6
+HIT send true t=16.0
+HTTP POST 201 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/run
+SHOT 390-f2-pending-question t=34.8
+QUESTION_HINT "（版本 0）"
+HIT skip-questions true t=35.2
+SKIP_PRESSED t=35.9
+SKIPPED true
+DRAFT_SEEN t=342.5
+SHOT 390-f2-after-research t=342.6
+DRAFT_SEEN true
+HIT journey-tab true t=342.9
+SHOT 390-f2-journey t=347.4
+CARD_SEEN true t=347.4
+SHOT 390-f2-card t=347.5
+CONFIRM_CHECKED true
+HIT save-candidate true t=353.2
+HTTP POST 201 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/prepare-plan
+SHOT 390-f2-saved t=359.0
+HIT generate-plans true t=359.3
+HTTP POST 422 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/plans/generate
+SHOT 390-f2-generated t=368.1
+GEN_MESSAGE ["这版安排用的是 56 个真实地点，但还没有一处同时具备正式候选要的开放时间与票价来源，所以严格候选排不出来。继续用上面这份草案候选就可以：先确认费用、核实转场，再选用。"]
+HIT freeze-1 true t=368.4
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-2 true t=377.5
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-3 true t=386.5
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-4 true t=395.6
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-5 true t=404.6
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-6 true t=413.7
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-7 true t=422.7
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-8 true t=431.8
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-9 true t=440.9
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-10 true t=449.9
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-11 true t=459.0
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+HIT freeze-12 true t=468.1
+HTTP POST 200 /api/v1/journeys/e8f81207-2070-4360-aeee-4090d2979c85/agent/goal-tasks/e99b4180-3754-43ee-a1d5-4433d136f1f5/plans/71973500-e058-42af-9c51-003c9b6870ba/freeze-routes
+ROUTE_STATE ["转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场"]
+NO_START_BUTTON
+STATE t=476.9 {"inUse":false,"nextStop":null,"headline":null}
+SHOT 390-f2-final t=597.1
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0\n已有阶段性成果\n地图\n日程\n对话\n按天调整行程\n\n7 项安排 · 2 天\n\n你的旅行草案\n\n草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。\n\nDay 1\n12-03\nDay 2\n12-04\n2026-12-03 · 4 项安排\n天安门广场（拍照、人民英雄纪念碑）\nN509FZ · CC BY-SA 4.0\n故宫博物院（午门入、中轴线参观）\nuser:kallgan · CC BY-SA 3.0\n景山公园（神武门出即达，万春亭俯瞰故宫）\nN509FZ · CC BY-SA 4.0\n上午\n· 天安门广场（拍照、人民英雄纪念碑）\n点击编辑\n上午\n· 故宫博物院（午门入、中轴线参观）\n点击编辑\n下午\n· 景山公园（神武门出即达，万春亭俯瞰故宫）\n点击编辑\n晚上\n· 前门大街（地铁前往，晚餐+老字号+逛街）\n点击编辑\n＋ 添加安排\n检查草案保存状态\n\n当前展示的是已保存版本。\n\n准备出发 · 正式计划与待办\n从这份安排继续\n\n7 项安排已保存，刷新也能找回。\n\n已确认时间 · 查看或调整\n按以上时间准备方案\n安排已保存\n生成正式候选方案\n\n转场已核实 5/5（其中 1 段是跨夜衔接，5 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案\n重新核实转场\n\n量回来的路上时间\n天安门广场（拍照、人民英雄纪念碑） → 故宫博物院（午门入、中轴线参观）：这一段路上要 78 分钟，中间只留了 60 分钟。\n根据路线重新安排\n\n另有 1 段时间还没有确定地点，没有算进转场核实。\n\n天安门广场（拍照、人民英雄纪念碑）\n来源写这天开放（来源写的时段 05:00—20:30）\n故宫博物院（午门入、中轴线参观）\n来源写这天开放（来源写的时段 08:30—16:30）；来源另写「以官方通知为准」\n景山公园（神武门出即达，万春亭俯瞰故宫）\n来源写这天开放（来源写的时段 06:30—20:00）\n前门大街（地铁前往，晚餐+老字号+逛街）\n来源写这天开放（来源写的时段 00:00—24:00）\n颐和园（地铁前往，昆明湖、佛香阁、长廊）\n来源写这天开放（来源写的时段 06:30—19:00）\n南锣鼓巷（胡同慢逛、晚餐，邻近烟袋斜街）\n来源写这天开放（来源写的时段 00:00—24:00）\n\n还没有来源给过确定的费用；另有 6 处门票没有来源，预算里没有把它们算作 0 元，实际花费可能超出预算。\n\n票价没有来源，我接受先不计入预算\n让 Agent 换成价格明确的地点\n出发待办\n天安门广场（拍照、人民英雄纪念碑）\n票价：没有来源给出这一项的价格\n故宫博物院（午门入、中轴线参观）\n票价：没有来源给出这一项的价格\n景山公园（神武门出即达，万春亭俯瞰故宫）\n票价：没有来源给出这一项的价格\n前门大街（地铁前往，晚餐+老字号+逛街）\n票价：没有来源给出这一项的价格\n颐和园（地铁前往，昆明湖、佛香阁、长廊）\n票价：没有来源给出这一项的价格\n地铁+午餐前往南锣鼓巷\n具体地点：让 Agent 找这一处\n南锣鼓巷（胡同慢逛、晚餐，邻近烟袋斜街）\n票价：没有来源给出这一项的价格\n\n还有 7 项要主动向来源要，按下面这一个按钮逐项去补。\n\n按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。\n\n和 Agent 补齐出发资料\nTRAVEL PLAN\n你的行程方案\n刷新方案\n等待正式计划\n\n1 份正式候选方案\n\n方案 1\n2 天 · 7 项安排\n费用待确认\n\n7 项费用待确认，尚未计入完整预算。\n\n12月03日\n09:0"
+ERRORS []

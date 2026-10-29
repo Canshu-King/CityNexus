@@ -1,0 +1,6 @@
+ENTRY_BUTTON 1 DISABLED false
+BANNER_COUNT 1
+BANNER_TEXT "示例行程还没准备好，请让演示机先启动。"
+BANNER_BOX {"x":0,"y":0,"width":430,"height":49}
+STILL_ON_TRIPS true
+ERRORS []

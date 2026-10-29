@@ -1,0 +1,12 @@
+play launcher
+1 ready=trial/results/20261022_v3_human_chrome/play-ready-1.txt:1 real_city is live and web_bind is 0.0.0.0
+2 preflight=trial/results/20261022_v3_human_chrome/play-preflight-1.txt:2 prints the URL and the three-step how-to
+3 providers=trial/results/20261022_v3_human_chrome/play-providers-1.txt:1 amap is READY and LIVE
+4 bat_play=trial/play_launcher/citynexus-play.bat:8 tools now point at the launcher's own copy
+5 bat_server=trial/play_launcher/citynexus-play-server.bat:8 same for the server window
+6 serve_real_city=trial/play_launcher/_cmdr_v3_serve_human_r1.py:59 real research switches on only when the key is present
+7 serve_ready=trial/play_launcher/_cmdr_v3_serve_human_r1.py:132 readiness now waits on listener plus health instead of the re-exec'd pid
+8 quickstart=trial/results/20261025_V3_PLAY_QUICKSTART.md:1 eight steps, six with screenshots, the eighth left textual and disclosed
+9 old_marked=trial/results/20261022_V3_TEN_STEP_PLAYBOOK.md:1 marked as superseded and points at the new page
+10 walk1=trial/results/20261022_v3_human_chrome/play-v3-walk-1.txt:1 steps one to five with real pointer clicks
+11 walk5=trial/results/20261022_v3_human_chrome/play-v3-walk-5.txt:1 research still running after three minutes of polling

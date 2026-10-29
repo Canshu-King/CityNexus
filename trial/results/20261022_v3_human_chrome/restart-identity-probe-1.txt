@@ -1,0 +1,4 @@
+restart identity probe (same DB kept, stack restarted with a new auth secret)
+OLD_BEARER /api/v1/travelers/session http_status=401 
+OLD_BEARER /api/v1/journeys/2d9cda98-f506-478d-94ee-1def684ad5f9 http_status=200 
+OLD_BEARER /api/v1/journeys/2d9cda98-f506-478d-94ee-1def684ad5f9/operator http_status=401 

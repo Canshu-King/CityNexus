@@ -1,0 +1,147 @@
+CONTROL_SITE_SEEN tests/test_r64_member_side_quest.py:1840
+TEST_FILES_PARSED 378
+PARSE_ERRORS 0
+PRIVATE_CALLS_WITHOUT_HEADERS 868
+FILES_INVOLVED 121
+   56  tests/test_v13_integrity.py
+   50  tests/test_wp01_wp03.py
+   24  tests/test_v7_traveler_twin.py
+   23  tests/test_wp06_followup_assist.py
+   21  tests/test_v9_real_trip_operations.py
+   21  tests/test_wp05_integrity_next.py
+   18  tests/test_sol_concurrency_and_remap.py
+   18  tests/test_wp04_endpoints.py
+   18  tests/test_wp06_postgate_hardening_next.py
+   17  tests/test_agent_mission_runtime.py
+   16  tests/test_v12_authoritative_trip_execution.py
+   15  tests/test_rx4_c4_generate_gate.py
+   14  tests/stateful/test_journey_truth_state_machine.py
+   13  tests/test_wp04_hardening_wp05.py
+   12  tests/test_guardian_v4.py
+   12  tests/test_provider_runtime_gate.py
+   12  tests/test_qoder_activity_identity_contract.py
+   12  tests/test_sol_execution_cursor.py
+   12  tests/test_v5_autopilot.py
+   12  tests/test_v8_stay_mobility.py
+   12  tests/test_weather_runtime_gate_gpt.py
+   12  tests/test_wp06_twin_v2_gate.py
+   11  tests/test_qoder_mobility_replan_endpoint.py
+   11  tests/test_v13_2_intelligent_journey_memory.py
+   11  tests/test_v6_predictive_real_city.py
+   10  tests/test_post_goal_five_defects.py
+   10  tests/test_qoder_stay_generation_operations.py
+   10  tests/test_r24_adaptive_memory.py
+   10  tests/test_r43_operator_loop.py
+   10  tests/test_r44_resilient_operator_brain.py
+   10  tests/test_r64_member_side_quest.py
+   10  tests/test_wp06_postgate_candidate_provenance.py
+    9  tests/test_backend_connected_golden_contract.py
+    9  tests/test_gpt_adversarial_provider_hardening.py
+    9  tests/test_qoder_live_replans_endpoint.py
+    9  tests/test_qoder_ord0386_plan_version_history.py
+    9  tests/test_qoder_ord0402_recycle_bin.py
+    9  tests/test_sol_guardian_projection.py
+    8  tests/test_guardian_pulse.py
+    8  tests/test_qoder_ord0383_journey_soft_delete.py
+    8  tests/test_rx1_cross_journey_trigger_gate.py
+    8  tests/test_rx4_c4_protection_surface_gate.py
+    8  tests/test_v14_grounded_adaptive_recovery.py
+    8  tests/test_vertical_slice_hardening_next.py
+    8  tests/test_wp04a0_bridge.py
+    7  tests/test_guardian_model_evidence.py
+    7  tests/test_qoder_ord0360_single_active_anchor.py
+    7  tests/test_replan_completion_truth.py
+    7  tests/test_solver_runtime_gate.py
+    6  tests/test_gpt_solver_hardening_next.py
+    6  tests/test_qoder_current_plan_is_named.py
+    6  tests/test_r14_terminal_disruption_recovery.py
+    6  tests/test_sol_plan_handover.py
+    6  tests/test_v10_flagship_e2e.py
+    5  tests/test_in_transit_reroute.py
+    5  tests/test_r53_journey_inbox_product.py
+    5  tests/test_r54_reality_reconciliation_product.py
+    5  tests/test_v13_1_2_structural_anchor_integrity.py
+    5  tests/test_v15_copilot.py
+    5  tests/test_weather_refresh_endpoint.py
+    4  tests/test_agent_principal_boundary.py
+    4  tests/test_final_consumer_truth_blockers.py
+    4  tests/test_qoder_ord0383_undelete_write_lock.py
+    4  tests/test_qoder_ord0399_journey_undelete.py
+    4  tests/test_qoder_rejection_message_keys.py
+    4  tests/test_qoder_simulation_mode.py
+    4  tests/test_r23_adaptive_traveler_twin.py
+    4  tests/test_r28_execution_truth.py
+    4  tests/test_r63_planned_separation.py
+    4  tests/test_snapshot_j_backend_truth_gaps.py
+    4  tests/test_v16_integration.py
+    4  tests/test_v1922_six_fix_regressions.py
+    3  tests/test_agent_authority_v2_actions.py
+    3  tests/test_gpt_agent_authority_v3.py
+    3  tests/test_gpt_weather_adversarial_next.py
+    3  tests/test_live_context_watch.py
+    3  tests/test_product_next_hardening.py
+    3  tests/test_qoder_mobility_evidence_sources.py
+    3  tests/test_qoder_ord0434_share_grants.py
+    3  tests/test_r28_durable_approval_continuation.py
+    3  tests/test_r51_live_journey_intent.py
+    3  tests/test_r52_decision_inbox.py
+    3  tests/test_r57_group_presence_operator.py
+    3  tests/test_revolution_r77_recovery.py
+    3  tests/test_v13_1_1_semantic_integrity.py
+    3  tests/test_v13_3_real_city_intelligence.py
+    3  tests/test_v17_semantic_compiler.py
+    3  tests/test_v18_semantic_time_and_verification.py
+    2  tests/test_agent_alternatives_v3.py
+    2  tests/test_event_resolution_projection.py
+    2  tests/test_gpt_agent_authority_v2.py
+    2  tests/test_impact_resolver.py
+    2  tests/test_qoder_anywhere_gates.py
+    2  tests/test_qoder_anywhere_matrix_truth.py
+    2  tests/test_qoder_journey_window_boundary.py
+    2  tests/test_qoder_ord0272_continuation.py
+    2  tests/test_qoder_ord0296_write_deadline.py
+    2  tests/test_qoder_stay_mobility_amap_door_r1.py
+    2  tests/test_r28_authenticated_member_principal.py
+    2  tests/test_r55_live_progress_drift_product.py
+    2  tests/test_r78_member_rendezvous_coordination.py
+    2  tests/test_r80_private_buddy_route.py
+    2  tests/test_r85_zero_catalog_bootstrap.py
+    2  tests/test_v10_generic_compose.py
+    2  tests/test_v13_3_prep_deepseek_contract.py
+    2  tests/test_wp07_foundation_assist.py
+    1  tests/test_qoder_beijing_catalogue.py
+    1  tests/test_qoder_catalog_reason_code.py
+    1  tests/test_qoder_city_failure_reasons.py
+    1  tests/test_qoder_generic_compose_reason_codes.py
+    1  tests/test_qoder_ord0219_write_side_rule_guard.py
+    1  tests/test_qoder_ord0287_k8_carrier.py
+    1  tests/test_qoder_stay_generation_phases.py
+    1  tests/test_qoder_trip_shape_and_budget_reference.py
+    1  tests/test_r27_member_surface.py
+    1  tests/test_r76_journey_membership_invitation.py
+    1  tests/test_r79_buddy_rescue_handoff.py
+    1  tests/test_r81_private_location_binding.py
+    1  tests/test_r84_empty_catalog_entry.py
+    1  tests/test_v14_trial_readiness.py
+    1  tests/test_weather_runtime_hardening.py
+TOP CALL SITES
+  tests/stateful/test_journey_truth_state_machine.py:156 GET /api/v1/journeys//experience
+  tests/stateful/test_journey_truth_state_machine.py:160 GET /api/v1/journeys//offline-snapshot
+  tests/stateful/test_journey_truth_state_machine.py:176 POST /api/v1/journeys//plans/generate
+  tests/stateful/test_journey_truth_state_machine.py:184 GET /api/v1/journeys//plans
+  tests/stateful/test_journey_truth_state_machine.py:190 POST /api/v1/journeys//plans//select
+  tests/stateful/test_journey_truth_state_machine.py:196 POST /api/v1/journeys//start
+  tests/stateful/test_journey_truth_state_machine.py:204 GET /api/v1/journeys//experience
+  tests/stateful/test_journey_truth_state_machine.py:214 POST /api/v1/journeys//bookings
+  tests/stateful/test_journey_truth_state_machine.py:246 GET /api/v1/journeys//experience
+  tests/stateful/test_journey_truth_state_machine.py:251 POST /api/v1/journeys//events
+  tests/stateful/test_journey_truth_state_machine.py:266 GET /api/v1/journeys//events
+  tests/stateful/test_journey_truth_state_machine.py:294 GET /api/v1/journeys//replans
+  tests/stateful/test_journey_truth_state_machine.py:311 GET /api/v1/journeys//experience
+  tests/stateful/test_journey_truth_state_machine.py:317 POST /api/v1/journeys//activities//
+  tests/test_agent_alternatives_v3.py:18 POST /api/v1/journeys//plans/generate
+  tests/test_agent_alternatives_v3.py:23 POST /api/v1/journeys//plans//select
+  tests/test_agent_authority_v2_actions.py:19 POST /api/v1/journeys//plans/generate
+  tests/test_agent_authority_v2_actions.py:24 POST /api/v1/journeys//plans//select
+  tests/test_agent_authority_v2_actions.py:70 POST /api/v1/journeys//agent/approvals//approve
+  tests/test_agent_mission_runtime.py:404 POST /api/v1/journeys//plans/generate

@@ -1,0 +1,4 @@
+BLUE_DOT true
+TILES {"count":9,"first":[200,200,200,200,200,200]}
+DOT_STATE "模拟旅客：天坛公园 · 39.8805, 116.4046（WGS84，模拟位置，不是物理 GPS）"
+ERRORS []

@@ -1,0 +1,2 @@
+CANDIDATE_0 url=http://127.0.0.1:14496/revolution mark=null
+REFUSE no_live_cockpit_tab -- 没有一枚标签页同时有三枚图层键和固定输入区；按错会污染别人的走查，也不许用新标签页假装成它

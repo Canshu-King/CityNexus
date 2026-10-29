@@ -1,0 +1,39 @@
+suite=frontend playwright.mobile-trial.config.ts (50 tests, 1 worker) on tip 0058649c98 (local run, Windows)
+config=playwright.mobile-trial.config.ts:5 port 14273, webServer npm run dev with VITE_REV_TRIAL_MODE=sample, no live API
+TOTAL passed=41 failed=9 duration=5.0m
+NOTE backend at 127.0.0.1:8000 was NOT running; vite logged ECONNREFUSED for /api/v1/journeys/... during the run
+=== failure classification (first error line each) ===
+
+1) e2e\revolution-amap-research-ui.spec.ts:11:1 › TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source an
+   Error: expect(locator).toContainText(expected) failed
+   Expected substring: "650 米 · 480 秒"
+   Received string:    "旅行研究 · 已有阶段成果本轮研究摘要TEST_FIXTURE 已整理路线线索。Agent 真实工作过程 · 已记录 1 条事件按时间显示模型轮次、工具结果和恢复进度。#1工具返回结果 · 查询步行路线 · 第1轮工具结果 · 1 次查询步行路线步行路线 ·
+   - Expect "toContainText" getByTestId('rev-mission-cockpit').getByRole('region', { name: 'Agent 任务', exact: true }) with timeout 9000ms
+
+2) e2e\revolution-mobile-hermes-transparency.spec.ts:250:1 › TEST_FIXTURE DRAFT activity entry only reads signed plans with
+   Error: locator.fill: Test timeout of 45000ms exceeded.
+
+3) e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, 
+   Error: expect(received).toEqual(expected) // deep equality
+   167 |   await expect(workbench).toContainText("已选用");
+   168 |   await expect(page.getByTestId("rev-v3-server-departure")).toContainText("可以确认出发");
+
+4) e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, 
+   Error: expect(received).toEqual(expected) // deep equality
+   167 |   await expect(workbench).toContainText("已选用");
+   168 |   await expect(page.getByTestId("rev-v3-server-departure")).toContainText("可以确认出发");
+
+5) e2e\revolution-place-card-facts.spec.ts:56:1 › named place search waits for explicit submission and keeps the public are
+   Error: locator.click: Test timeout of 45000ms exceeded.
+
+6) e2e\revolution-place-card-facts.spec.ts:121:1 › place cards show grounded hours and costs while preserving provenance an
+   Error: locator.click: Test timeout of 45000ms exceeded.
+
+7) e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 390 
+   Error: locator.click: Error: strict mode violation: getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id="photon:W/12344"]').getB
+
+8) e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 430 
+   Error: locator.click: Error: strict mode violation: getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id="photon:W/12344"]').getB
+
+9) e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 1566 
+   Error: locator.click: Error: strict mode violation: getByTestId('rev-mission-cockpit').locator('.cn-place-photo[data-place-id="photon:W/12344"]').getB

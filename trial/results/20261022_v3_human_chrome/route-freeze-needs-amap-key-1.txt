@@ -1,0 +1,4 @@
+cwd=D:\moodle\_cmdr_rescue_v3_1022\backend
+command=-m pytest tests/test_goal_route_freeze.py::test_a_hop_nobody_measured_freezes_nothing -q  (with CITYNEXUS_AMAP_WEB_KEY removed from the environment)
+exit_code=1
+summary=1 failed, 4 warnings in 2.29s

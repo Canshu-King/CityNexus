@@ -1,0 +1,6 @@
+COLD_HAS_EXPLORE 0 t=6.7
+NAV_BUTTONS ["继续规划 →","探索","我的旅程","我的","×"] t=6.7
+ENTERED_BY "/探索/" t=6.7
+EXPLORE_PANE 0 AREA 0 t=10.7
+SHAPE {"details":null,"key":null} t=10.7
+ERROR_NONE t=10.8

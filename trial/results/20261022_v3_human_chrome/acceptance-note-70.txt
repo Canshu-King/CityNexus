@@ -1,0 +1,5 @@
+PRESENTER_RUN "等待接受调整 · 12-03 09:00"
+ACCEPTANCE_NOTE "守护没有交出可接受的提案（进度里看不到提案 id）；这条模拟解不开，请重启课堂演示（双击启动器）。"
+RESUME_BUTTONS 0
+ADVANCE_HINT ""
+ERRORS []

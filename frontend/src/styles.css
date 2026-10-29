@@ -1984,3 +1984,13 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   background: #f5f6f8;
   cursor: not-allowed;
 }
+
+/* On a phone the 行程守护 panel owns the one actionable recovery card.  The
+   desktop recovery surface would otherwise repeat the same decision with
+   internal place ids right above it (measured 2026-10-25: two cards plus the
+   panel card on one 390 px screen).  Desktop keeps both. */
+@media (max-width: 899px) {
+  [data-testid="live-proposal"] {
+    display: none;
+  }
+}

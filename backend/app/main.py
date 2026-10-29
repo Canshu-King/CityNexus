@@ -193,6 +193,9 @@ from app.db.models import (
 from app.db.models import (
     Booking as BookingModel,
 )
+from pydantic import BaseModel as _SimulationBaseModel
+from app.db.models import SimulationClock
+
 from app.recovery_epoch import (
     RECOVERY_EPOCH_SUPERSEDED,
     RecoveryEpochSuperseded,
@@ -911,6 +914,49 @@ TEMPORAL_MESSAGE_KEYS = {
     "V13_JOURNEY_DAYS_OUT_OF_BOUNDS": "journey.days_out_of_bounds",
     "V13_INVALID_ANCHOR_WINDOW": "journey.anchor_order",
 }
+
+# The compose doors (`/authoritative-compose`, the AI discovery route) reach the planner's own
+# refusals, and until now answered them with `HTTPException(422, str(exc))`.  A phone therefore
+# rendered the internal string -- `V13_PLACE_CLOSED:6f0c2f…` -- as the traveller's sentence, with a
+# place id nobody can read and no key a screen could translate.  These are domain rules like the
+# journey window is, so they get the same shape: a named code, a message a person can act on, and a
+# key of its own.
+PLAN_FIT_REJECTIONS = {
+    "V13_PLACE_CLOSED": "The source records one of these places as closed, so this version cannot be "
+        "arranged around it. Replace that stop, or choose another day.",
+    "V13_OPENING_STATUS_UNKNOWN": "One of these places has no opening hours on record, so this "
+        "version cannot be timed around it. Fill its hours in from a source, or replace that stop.",
+    "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET": "Too few places were gathered to arrange a day around. "
+        "Confirm another place and run it again.",
+    "V13_DISCOVERY_COMPOSE_EMPTY": "The places that were gathered did not fit a complete day, so no "
+        "candidate was written. Try a shorter list of places, or different dates.",
+}
+
+PLAN_FIT_MESSAGE_KEYS = {
+    "V13_PLACE_CLOSED": "plan.place_closed",
+    "V13_OPENING_STATUS_UNKNOWN": "plan.opening_hours_not_recorded",
+    "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET": "plan.discovery_place_set_incomplete",
+    "V13_DISCOVERY_COMPOSE_EMPTY": "plan.discovery_compose_empty",
+}
+
+
+def plan_fit_rejection(exc: ValueError) -> HTTPException:
+    """Turn one of the planner's named refusals into the answer a traveller can read.
+
+    A `ValueError` whose name is not one of these is a bug: it is re-raised here, so it keeps its 500
+    instead of arriving dressed up as a client error -- the same rule `temporal_rejection` above holds.
+    The place id the planner appends stays out of the body; the card that offered the save already
+    names the stop, and an id is not something a person on a phone can act on.
+    """
+
+    code = str(exc).partition(":")[0]
+    if code not in PLAN_FIT_REJECTIONS:
+        raise exc
+    answer = HTTPException(422, PLAN_FIT_REJECTIONS[code])
+    answer.reason_code = code
+    answer.message_key = PLAN_FIT_MESSAGE_KEYS[code]
+    answer.error_details = {"reason": code}
+    return answer
 
 
 @app.exception_handler(WriteDeadlineExceeded)
@@ -5021,7 +5067,7 @@ def run_real_city_intelligence(
         raise HTTPException(502, f"DeepSeek discovery failed: {exc}") from exc
     except ValueError as exc:
         session.rollback()
-        raise HTTPException(422, str(exc)) from exc
+        raise plan_fit_rejection(exc) from exc
 
 
 @app.get("/api/v1/journeys/{journey_id}/operations/stream")
@@ -6216,6 +6262,54 @@ def demo_mode_enabled() -> bool:
     return bool(settings.demo_mode)
 
 
+@app.get("/api/v1/demo/session")
+def demo_session(
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    """One-click classroom entry: a signed session for the newest unfinished journey.
+
+    Only exists while the process runs as a stage (``CITYNEXUS_DEMO_MODE=true``).  It exists so a
+    teacher on a fresh browser can enter the prepared journey without seeding a cookie or a local
+    pointer; it never creates a journey and never writes.  The token is the same signed bearer a
+    normal session uses, and every later call is authorised by it.
+    """
+    if not demo_mode_enabled():
+        raise HTTPException(404, "Not found")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "traveler auth is not configured")
+    from app.traveler_principal import issue_traveler_token
+    from app.demo_access import require_demo_presenter
+    require_demo_presenter(request, session)
+
+    # A started journey is the scene; drafts only stand in when none has started.
+    # Ordering the mixed set by `updated_at` alone picked a draft whose timestamp
+    # was newer than the started journey's (measured 2026-10-25 23:43).
+    journey = session.scalars(
+        select(Journey)
+        .where(Journey.deleted_at.is_(None), Journey.status == "ACTIVE")
+        .order_by(Journey.updated_at.desc(), Journey.id.desc())
+        .limit(1)
+    ).first()
+    if journey is None:
+        journey = session.scalars(
+            select(Journey)
+            .where(Journey.deleted_at.is_(None), Journey.status == "DRAFT")
+            .order_by(Journey.updated_at.desc(), Journey.id.desc())
+            .limit(1)
+        ).first()
+    if journey is None:
+        raise HTTPException(404, "DEMO_JOURNEY_NOT_PREPARED")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    return {
+        "access_token": issue_traveler_token(str(journey.traveler_id)),
+        "traveler_id": str(journey.traveler_id),
+        "journey_id": journey.id,
+        "journey_title": journey.title,
+    }
+
+
 # ORD-0389: the second half of the door.  `demo_mode` alone meant any caller who reached a
 # deployment running with CITYNEXUS_DEMO_MODE=true -- which is exactly how the shared preview is
 # started (D:/moodle/_qoder_preview_20260920/run/cmdr_hop1_backend.bat) -- so the switch that
@@ -6360,7 +6454,11 @@ def demo_prepare_scenario(session: Session = Depends(get_session)):
     }
 
 @app.post("/api/v1/demo/start-scenario")
-def demo_start_scenario(session: Session = Depends(get_session)):
+def demo_start_scenario(
+    request: Request,
+    journey_id: UUID | None = None,
+    session: Session = Depends(get_session),
+):
     """Start the seeded journey, through `/start` and with all of its gates intact.
 
     The second stage of the demo: reset leaves the journey PLANNED with a selected plan so
@@ -6380,9 +6478,17 @@ def demo_start_scenario(session: Session = Depends(get_session)):
             message_key="demo.start_disabled",
         )
     with SessionLocal() as scene_session:
-        journey = scene_session.scalar(
-            select(Journey).where(Journey.active_plan_version_id.is_not(None))
-        ) or scene_session.scalar(select(Journey).order_by(Journey.created_at.desc()))
+        # A classroom tab shows one journey and must start that one.  Without the id this
+        # route used to pick any journey with a plan, so the clock card and the start could
+        # describe two different trips (measured 2026-10-25: the card read journey A while the
+        # gate judged journey B).
+        journey = (
+            scene_session.get(Journey, str(journey_id))
+            if journey_id is not None
+            else scene_session.scalar(
+                select(Journey).where(Journey.active_plan_version_id.is_not(None))
+            ) or scene_session.scalar(select(Journey).order_by(Journey.created_at.desc()))
+        )
         if journey is None:
             return error(
                 "DEMO_SCENARIO_MISSING",
@@ -6393,7 +6499,9 @@ def demo_start_scenario(session: Session = Depends(get_session)):
             )
         journey_id = journey.id
         try:
-            twin = start_journey(UUID(journey_id), scene_session)
+            twin = start_journey(
+                UUID(journey_id), None, scene_session, trusted_demo=True  # type: ignore[arg-type]
+            )
             scene_session.commit()
         except HTTPException as exc:
             scene_session.rollback()
@@ -7482,7 +7590,9 @@ def update_signed_goal_draft(journey_id: UUID, task_id: UUID, payload: GoalDraft
         raise HTTPException(403, "Journey owner update required")
     response.headers["Cache-Control"] = "private, no-store, max-age=0"
     response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
-    return update_goal_draft(session, journey, member, task_id, days=payload.days, expected_revision=payload.expected_revision)
+    return update_goal_draft(session, journey, member, task_id, days=payload.days,
+                             expected_revision=payload.expected_revision,
+                             reuse_source_task_id=payload.reuse_source_task_id)
 
 
 @app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/cancel")
@@ -7516,7 +7626,12 @@ def list_recent_signed_draft_journeys(
     response: Response,
     session: Session = Depends(get_session),
 ):
-    """Return a small private recovery window for the signed traveler's DRAFT journeys."""
+    """The signed traveller's own unfinished journeys, newest first.
+
+    A restarted browser still holds only its bearer.  A DRAFT-only window left an
+    ACTIVE journey unreachable without its id (the 「库在会话不在」 gap), so this
+    door also returns journeys the traveller has already started.
+    """
     from app.traveler_principal import resolve_traveler_principal
 
     principal = resolve_traveler_principal(request, session)
@@ -7526,30 +7641,29 @@ def list_recent_signed_draft_journeys(
         select(Journey)
         .where(
             Journey.traveler_id == principal.traveler_id,
-            Journey.status == "DRAFT",
+            Journey.status.in_(("DRAFT", "ACTIVE")),
             Journey.deleted_at.is_(None),
         )
-        .order_by(Journey.created_at.desc(), Journey.id.desc())
+        .order_by(Journey.updated_at.desc(), Journey.id.desc())
         .limit(5)
     ).all()
-    return [{"id": item.id, "city_code": item.city_code, "status": item.status} for item in items]
+    return [
+        {"id": item.id, "city_code": item.city_code, "status": item.status, "title": item.title}
+        for item in items
+    ]
 
 
 @app.get("/api/v1/journeys", response_model=list[JourneySchema])
-def list_journeys(session: Session = Depends(get_session)):
-    """Every trip on this server that a traveller has not put in the recycle bin.
+def list_journeys(request: Request, response: Response, session: Session = Depends(get_session)):
+    from app.traveler_principal import readable_journey_ids
+    allowed = readable_journey_ids(request, session)
+    response.headers["Cache-Control"] = "private, no-store"
+    # Return only undeleted Journeys this signed in-force member may read.
 
-    ORD-0383 slice 1 keeps this door to one rule - `deleted_at IS NULL` - so it has no
-    pagination, no per-traveller scope and no bin listing; those are the next slices' orders.
-    A deleted trip stays readable at `GET /api/v1/journeys/{journey_id}` and behind it at the
-    sub-resource doors: the query below is the only place on this tree that filters the column,
-    and no other module under `backend/app` reads it.  Slice 1 removes a trip from the list,
-    not from the store, and the row is what a recycle bin will have to show.
-    """
 
     items = session.scalars(
         select(Journey)
-        .where(Journey.deleted_at.is_(None))
+        .where(Journey.deleted_at.is_(None), Journey.id.in_(allowed))
         .order_by(Journey.created_at, Journey.id)
     ).all()
     return [journey_schema(item) for item in items]
@@ -7689,35 +7803,31 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
 
 
 @app.get("/api/v1/recycle-bin/journeys", response_model=list[RecycleBinJourney])
-def list_recycle_bin_journeys(session: Session = Depends(get_session)):
-    """ORD-0402 slice 1: the trips that are in the recycle bin, each with its own deletion moment.
+def list_recycle_bin_journeys(request: Request, response: Response, session: Session = Depends(get_session)):
+    from app.traveler_principal import readable_journey_ids
+    allowed = readable_journey_ids(request, session)
+    response.headers["Cache-Control"] = "private, no-store"
+    # Return only deleted Journeys this signed in-force member may read.
 
-    This is a second door. `GET /api/v1/journeys` (above) keeps its promise of answering only the
-    rows with `deleted_at IS NULL`, so nothing here changes what a client of that door sees, and a
-    screen does not have to notice an absence to know a trip was dropped - each row below carries
-    `deleted_at` as stored and `bin_state` = `IN_RECYCLE_BIN`, derived from that same column
-    rather than from the row's absence anywhere.
-
-    This version is the whole bin: no pagination, no per-traveller scope, no filter parameters,
-    no date window.  The order says to write that plainly instead of hinting at a filter, so it is
-    written here and in the contract, and the list is ordered by `deleted_at` newest first because
-    a bin screen reads most naturally that way - that is an ordering, not a subset.
-
-    Read-only.  There is no permanent-delete door on this server (that would be a separate verb
-    with its own confirmation), so nothing here may promise one, and the rows stay addressable at
-    `GET /api/v1/journeys/{journey_id}` until 找回 clears the column.
-    """
 
     items = session.scalars(
         select(Journey)
-        .where(Journey.deleted_at.is_not(None))
+        .where(Journey.deleted_at.is_not(None), Journey.id.in_(allowed))
         .order_by(Journey.deleted_at.desc(), Journey.id)
     ).all()
     return [recycle_bin_entry_schema(item) for item in items]
 
 
+def _authorize_private_journey_read(request, response, session, journey_id):
+    from app.traveler_principal import require_journey_read
+    require_journey_read(request, session, str(journey_id))
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+
+
 @app.get("/api/v1/journeys/{journey_id}")
-def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
+def get_journey(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
+    _authorize_private_journey_read(request, response, session, journey_id)
     return journey_schema(require(session, Journey, str(journey_id), "Journey"))
 
 
@@ -7974,6 +8084,27 @@ def read_shared_journey(
 # this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
 # are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
 # (`app/stay_mobility.py:1963`).
+def _role_capabilities(session: Session, role: str) -> set[str]:
+    """What a role may do, read out of `journey_role_capabilities` and not out of this function.
+
+    Brought across from Qoder's capability line with the consent and departure-commit doors that use
+    it (that line's `collective_consent.py` names this pair next to `_member_state`).  It is the same
+    table the shipped `app.traveler_principal.member_has_capability` reads, so the roster projection
+    and the door cannot drift onto two different capability lists: one of the ported spec's arms
+    presses exactly that.
+
+    The door asks the table `MEMBER_MANAGE`: if operations narrow the table, the doors follow it the
+    same instant.  A hardcoded `role in {"OWNER", "ADMIN"}` here would have kept working after such
+    a change and said something untrue about the product.
+    """
+
+    return set(
+        session.scalars(
+            select(JourneyRoleCapability.capability).where(JourneyRoleCapability.role == role)
+        ).all()
+    )
+
+
 def _member_state(member: JourneyMemberModel, now: datetime) -> str:
     if member.removed_at:
         return "MEMBER_WITHDRAWN"
@@ -10188,7 +10319,8 @@ def list_journey_role_rules(journey_id: UUID, session: Session = Depends(get_ses
 
 
 @app.get("/api/v1/journeys/{journey_id}/experience")
-def get_journey_experience(journey_id: UUID, session: Session = Depends(get_session)):
+def get_journey_experience(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
+    _authorize_private_journey_read(request, response, session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
     payload = experience_payload(session, journey)
     # Surface the durable recovery state (and, if the plan is still ACTIVE,
@@ -17948,7 +18080,7 @@ def authoritative_compose_journey(
         )
     except ValueError as exc:
         session.rollback()
-        raise HTTPException(422, str(exc)) from exc
+        raise plan_fit_rejection(exc) from exc
     return {
         "optimizer": result.optimizer_kind,
         "complete_plan_count": len(result.plans),
@@ -19860,8 +19992,14 @@ def start_journey(
     journey_id: UUID,
     request: Request,
     session: Session = Depends(get_session),
+    *,
+    trusted_demo: bool = False,
 ):
-    if settings.traveler_auth_secret:
+    # `trusted_demo` exists for /demo/start-scenario only: that door already requires
+    # CITYNEXUS_DEMO_MODE and is served on the loopback classroom stack, and it used to pass its
+    # own Session in this request slot (AttributeError 'Session' has no headers).  A real
+    # traveller request never sets it.
+    if settings.traveler_auth_secret and not trusted_demo:
         from app.traveler_principal import (
             member_has_capability,
             resolve_journey_member_principal,
@@ -20124,19 +20262,12 @@ def _transition_activity_state(
     attestation: ExecutionTruthAttestation | None,
     session: Session,
 ):
-    allowed_predecessors = {
-        "EN_ROUTE": {"ACTIVE", "NOT_STARTED"},
-        "ARRIVED": {"EN_ROUTE"},
-        "IN_PROGRESS": {"ARRIVED"},
-    }
+    from app.simulation.native_bridge import require_native_execution_unmanaged
+    from app.execution.activity_state import require_subject, require_transition, require_departure_route
+    require_native_execution_unmanaged(session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
-    if journey.status != "ACTIVE" or not journey.active_plan_version_id:
-        raise HTTPException(409, "journey must be ACTIVE")
     activity = session.get(Activity, str(activity_id))
-    if activity is None or activity.plan_version_id != journey.active_plan_version_id:
-        raise HTTPException(409, "activity is not on the active plan")
-    if journey.current_activity_id != activity.id:
-        raise HTTPException(409, "activity is not the current activity")
+    require_subject(journey, activity)
     applied_followthrough = active_group_recovery_spend(session, journey)
     followthrough_snapshot = (
         applied_followthrough[2] if applied_followthrough else None
@@ -20232,29 +20363,9 @@ def _transition_activity_state(
             session.commit()
             return _twin_snapshot(session, journey)
 
-    predecessors = allowed_predecessors.get(target_state, set())
-    if activity.status not in predecessors:
-        expected = ", ".join(sorted(predecessors)) or "none"
-        raise HTTPException(
-            409,
-            f"INVALID_ACTIVITY_TRANSITION:{activity.status}->{target_state}; expected={expected}",
-        )
+    require_transition(activity, target_state)
     if target_state == "EN_ROUTE":
-        metadata = _json_object(activity.metadata_json)
-        override = metadata.get("execution_mobility_override")
-        if override:
-            snapshot_payload = override.get("snapshot") if isinstance(override, dict) else None
-            actual_edge = override.get("actual_edge") if isinstance(override, dict) else None
-            try:
-                snapshot = MobilitySnapshot.from_evidence(snapshot_payload or {})
-                origin_key = str((actual_edge or {}).get("origin_key") or "")
-                destination_key = str((actual_edge or {}).get("destination_key") or "")
-                snapshot.hard_minutes(origin_key, destination_key)
-                fact = snapshot.facts[(origin_key, destination_key)]
-                if fact.fact_quality != "LIVE_PROVIDER_CAPTURE":
-                    raise KeyError("execution override is not live provider truth")
-            except (KeyError, TypeError, ValueError):
-                raise HTTPException(409, "DEPART_BLOCKED_MISSING_LIVE_EXECUTION_MOBILITY")
+        require_departure_route(activity)
     metadata = json.loads(activity.metadata_json or "{}")
     captured_at = execution_clock.now().astimezone(timezone.utc).isoformat()
     truth = _resolve_execution_truth_attestation(
@@ -20538,6 +20649,8 @@ def complete_activity(
     payload: ExecutionTruthAttestation | None = None,
     session: Session = Depends(get_session),
 ):
+    from app.simulation.native_bridge import require_native_execution_unmanaged
+    require_native_execution_unmanaged(session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "journey must be ACTIVE")
@@ -20691,6 +20804,8 @@ def _skip_current_activity(
     clarification_id: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Skip exactly the current activity and preserve the real route truth."""
+    from app.simulation.native_bridge import require_native_execution_unmanaged
+    require_native_execution_unmanaged(session, journey.id)
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "journey must be ACTIVE")
     if activity.plan_version_id != journey.active_plan_version_id:
@@ -21085,7 +21200,7 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
 
 
 @app.get("/api/v1/demo/scene")
-def demo_scene(session: Session = Depends(get_session)):
+def demo_scene(request: Request, response: Response, session: Session = Depends(get_session)):
     """Which day the stage is set on, from the server - the one read gap Simulation needs.
 
     Everything else about walking a scenario already exists (complete/skip/events/replan/
@@ -21100,6 +21215,10 @@ def demo_scene(session: Session = Depends(get_session)):
     unknown scene reported as "today" is the unknown-as-known failure this project keeps
     being charged for.
     """
+
+    from app.demo_access import require_demo_presenter
+    require_demo_presenter(request, session)
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
 
     # The scenario on stage is the journey an ACTIVE plan points at, and failing that the most
     # recently seeded journey - deliberately not an `ACTIVE|PLANNED` status filter, because the
@@ -21209,12 +21328,119 @@ def demo_scene(session: Session = Depends(get_session)):
     }
 
 
+def _simulation_clock_payload(
+    session: Session, journey: Journey, row: SimulationClock | None
+) -> dict[str, Any]:
+    activity = (
+        session.get(Activity, journey.current_activity_id)
+        if journey.current_activity_id
+        else None
+    )
+    place = (
+        session.get(Place, activity.place_id)
+        if activity is not None and activity.place_id
+        else None
+    )
+    plan = (
+        session.get(PlanVersion, journey.active_plan_version_id)
+        if journey.active_plan_version_id
+        else None
+    )
+    return {
+        "journey_id": journey.id,
+        "virtual_now": row.virtual_now if row is not None else journey.start_at,
+        "version": row.version if row is not None else 0,
+        "persisted": row is not None,
+        "basis": "PERSISTED_SIMULATION_CLOCK" if row is not None else "JOURNEY_START",
+        "journey_status": journey.status,
+        "plan_version_id": plan.id if plan is not None else None,
+        "current_activity_id": activity.id if activity is not None else None,
+        "current_activity_title": activity.title if activity is not None else None,
+        "current_activity_status": activity.status if activity is not None else None,
+        "traveller": (
+            {
+                "latitude": place.latitude,
+                "longitude": place.longitude,
+                "coordinate_system": place.coordinate_system or "WGS84",
+                "label": place.name,
+                "source": "SCENARIO_SIMULATED_LOCATION",
+            }
+            if place is not None
+            else None
+        ),
+    }
+
+
+def _require_simulation_enabled() -> None:
+    if not settings.simulation_enabled:
+        raise HTTPException(404, "SIMULATION_DISABLED")
+
+
+class SimulationClockAdvance(_SimulationBaseModel):
+    minutes: int
+    expected_version: int
+
+
+@app.get("/api/v1/demo/simulation-clock/{journey_id}")
+def get_simulation_clock(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
+    _require_simulation_enabled()
+    _authorize_private_journey_read(request, response, session, journey_id)
+    journey = require(session, Journey, str(journey_id), "Journey")
+    return _simulation_clock_payload(
+        session, journey, session.get(SimulationClock, journey.id)
+    )
+
+
+@app.post("/api/v1/demo/simulation-clock/{journey_id}/advance")
+def advance_simulation_clock(
+    journey_id: UUID,
+    request: Request,
+    payload: SimulationClockAdvance,
+    session: Session = Depends(get_session),
+):
+    _require_simulation_enabled()
+    from app.demo_access import require_demo_database
+    from app.traveler_principal import resolve_journey_member_principal, member_has_capability
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    if not member_has_capability(session, member, "JOURNEY_EXECUTION_UPDATE"):
+        raise HTTPException(403, "JOURNEY_EXECUTION_UPDATE_REQUIRED")
+    require_demo_database(session)
+    _require_simulation_enabled()
+    from app.simulation.models import SimulationRun
+    if session.scalar(select(SimulationRun).where(SimulationRun.journey_id == str(journey_id))):
+        raise HTTPException(409, "USE_SIMULATION_RUN_ADVANCE")
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not 1 <= payload.minutes <= 1440:
+        raise HTTPException(422, "SIMULATION_CLOCK_MINUTES_OUT_OF_RANGE")
+    row = session.get(SimulationClock, journey.id)
+    current_version = row.version if row is not None else 0
+    if payload.expected_version is not None and payload.expected_version != current_version:
+        raise HTTPException(409, "SIMULATION_CLOCK_VERSION_STALE")
+    base = datetime.fromisoformat(row.virtual_now if row is not None else journey.start_at)
+    advanced = base + timedelta(minutes=payload.minutes)
+    stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
+    if row is None:
+        row = SimulationClock(
+            journey_id=journey.id, virtual_now=advanced.isoformat(), version=1, updated_at=stamp
+        )
+        session.add(row)
+    else:
+        row.virtual_now = advanced.isoformat()
+        row.version = current_version + 1
+        row.updated_at = stamp
+    session.commit()
+    return _simulation_clock_payload(session, journey, row)
+
+
 @app.get("/api/v1/journeys/{journey_id}/twin", response_model=JourneyTwinSchema)
 def get_journey_twin(
     journey_id: UUID,
+    request: Request,
+    response: Response,
     now: datetime | None = Query(default=None),
     session: Session = Depends(get_session),
 ):
+    _authorize_private_journey_read(request, response, session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
     # ORD-0058's flagged static inference, settled by measurement instead of assumption: a
     # `?now=` without an offset arrives naive while the projection compares it against
@@ -21336,7 +21562,8 @@ def create_journey_event(
 
 
 @app.get("/api/v1/journeys/{journey_id}/events", response_model=list[EventSchema])
-def list_journey_events(journey_id: UUID, session: Session = Depends(get_session)):
+def list_journey_events(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
+    _authorize_private_journey_read(request, response, session, journey_id)
     require(session, Journey, str(journey_id), "Journey")
     items = session.scalars(
         select(EventModel)
@@ -22243,6 +22470,60 @@ def _mobility_gap_from(exc: MobilityDataUnavailable) -> dict[str, Any]:
     )
 
 
+def _reuse_measured_baseline_mobility(
+    *,
+    event_type: str,
+    captured: MobilitySnapshotCaptureResult,
+    base_evidence: dict[str, Any],
+    operation_seed: str,
+) -> MobilitySnapshotCaptureResult:
+    """Keep the selected plan's own measured legs when the route itself is unchanged.
+
+    A closure or weather event changes whether a place is usable, not how long it
+    takes to get to the places that remain.  The runtime capture still runs (it
+    may know a newer provider number), but when it has no live adapter for a pair
+    the selected plan already measured, the capture's mock blanket constant must
+    not replace that measurement.  New adjacencies are untouched: they still need
+    the runtime provider, so this helper never invents a leg.
+    """
+
+    if event_type not in {"CLOSURE", "WEATHER"}:
+        return captured
+    baseline = MobilitySnapshot.from_evidence(base_evidence)
+    captured_facts = captured.snapshot.facts
+    reusable = {
+        pair: fact
+        for pair, fact in baseline.facts.items()
+        if fact.fact_quality in HARD_FEASIBLE_QUALITIES
+        and (
+            pair not in captured_facts
+            or captured_facts[pair].fact_quality not in HARD_FEASIBLE_QUALITIES
+        )
+    }
+    if not reusable:
+        return captured
+    merged_capabilities = dict(captured.snapshot.provider_capabilities)
+    merged_capabilities["baseline_reuse"] = {
+        "source_snapshot_id": baseline.snapshot_id,
+        "reused_pairs": len(reusable),
+        "reason": "CLOSURE_OR_WEATHER_KEEPS_MEASURED_ROUTE",
+    }
+    return MobilitySnapshotCaptureResult(
+        snapshot=MobilitySnapshot(
+            facts={**captured_facts, **reusable},
+            source_provider_key=captured.snapshot.source_provider_key,
+            captured_at=captured.snapshot.captured_at,
+            degraded=captured.snapshot.degraded,
+            snapshot_id="replan-baseline-merged-"
+            + hashlib.sha256(f"{operation_seed}:{baseline.snapshot_id}".encode("utf-8")).hexdigest()[:32],
+            operation_key=f"replan:{operation_seed}:baseline-merged",
+            provider_capabilities=merged_capabilities,
+        ),
+        failed_primary_pairs=captured.failed_primary_pairs,
+        fallback_pairs=tuple(pair for pair in captured.fallback_pairs if pair not in reusable),
+    )
+
+
 def _replan_estimate(
     session: Session,
     journey: Journey,
@@ -22330,6 +22611,28 @@ def generate_replan(
     request: Request,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
+):
+    # The route never lets a caller claim the in-process trust leg: a query
+    # argument such as ?trusted_agent=true would otherwise skip the bearer check.
+    # The Guardian's own tool call enters through _generate_replan_impl below.
+    return _generate_replan_impl(
+        journey_id,
+        body,
+        request,
+        idempotency_key,
+        session,
+        trusted_agent=False,
+    )
+
+
+def _generate_replan_impl(
+    journey_id: UUID,
+    body: ReplanGenerateRequest,
+    request: Request | None,
+    idempotency_key: str | None,
+    session: Session,
+    *,
+    trusted_agent: bool,
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
@@ -23206,6 +23509,12 @@ def generate_replan(
                 failed_primary_pairs=captured.failed_primary_pairs,
                 fallback_pairs=captured.fallback_pairs,
             )
+    mobility_capture = _reuse_measured_baseline_mobility(
+        event_type=trigger_event.event_type,
+        captured=mobility_capture,
+        base_evidence=frozen_v12_evidence,
+        operation_seed=str(trigger_id),
+    )
     mobility = mobility_capture.snapshot
     mobility_degraded_providers = (mobility.source_provider_key,) if mobility.degraded else ()
     if mobility.degraded:
@@ -25091,6 +25400,9 @@ def accept_replan(
     session: Session = Depends(get_session),
 ):
     proposal = require(session, ReplanProposalModel, str(proposal_id), "Replan proposal")
+    # The Guardian's tool call enters the in-process door (_accept_replan_impl) directly, so this
+    # HTTP route always authenticates a bearer principal.
+    signed_actor_id = None
     if settings.traveler_auth_secret:
         journey = require(session, Journey, str(proposal.journey_id), "Journey")
         from app.traveler_principal import member_has_capability, resolve_journey_member_principal
@@ -25100,12 +25412,21 @@ def accept_replan(
         )
         if not member_has_capability(session, actor, "JOURNEY_UPDATE"):
             raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+        signed_actor_id = _principal.traveler_id
     if _is_group_recovery_collective_proposal(session, proposal):
         raise HTTPException(
             409,
             "GROUP_RECOVERY_REQUIRES_AUTHENTICATED_APPLY",
         )
-    return _accept_replan_impl(proposal_id, idempotency_key, session)
+    from app.simulation.clock import journey_business_time
+
+    # This URL is keyed by proposal, so Journey-path middleware cannot scope it.
+    with journey_business_time(session, proposal.journey_id):
+        return _accept_replan_impl(
+            proposal_id, idempotency_key, session,
+            actor_type="AUTHENTICATED_TRAVELER" if signed_actor_id else "system",
+            actor_id=signed_actor_id,
+        )
 
 
 def _switch_active_plan_atomically(
@@ -28090,3 +28411,40 @@ app.include_router(departure_read_router)
 
 from app.agent.goal_preparation import router as goal_preparation_router
 app.include_router(goal_preparation_router)
+
+from app.agent.goal_route_freeze import router as goal_route_freeze_router
+app.include_router(goal_route_freeze_router)
+
+from app.agent.goal_travel_gaps import router as goal_travel_gaps_router
+app.include_router(goal_travel_gaps_router)
+
+from app.agent.goal_price_consent import router as goal_price_consent_router
+app.include_router(goal_price_consent_router)
+
+# Qoder's mutation half, brought across file by file onto this line -- not the whole branch:
+# the signed departure commit, and the collective-consent gate that decides when a proposal may
+# update the shared plan.  Both keep their own path; neither is mounted behind the read router.
+from app.collective_consent import router as collective_consent_router
+app.include_router(collective_consent_router)
+
+from app.departure_commit import router as departure_commit_router
+app.include_router(departure_commit_router)
+
+
+from app.simulation.api import router as simulation_router
+app.include_router(simulation_router)
+
+
+@app.middleware("http")
+async def persisted_simulation_business_clock(request: Request, call_next):
+    from app.simulation.clock import journey_business_time
+    match = re.match(r"^/api/v1/journeys/([0-9a-fA-F-]{36})(?:/|$)", request.url.path)
+    if not match or not settings.simulation_enabled:
+        return await call_next(request)
+    with SessionLocal() as clock_session:
+        with journey_business_time(clock_session, match.group(1)):
+            return await call_next(request)
+
+
+from app.demo_pairing import router as demo_pairing_router
+app.include_router(demo_pairing_router)

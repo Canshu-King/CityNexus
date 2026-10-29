@@ -1,0 +1,4 @@
+LIVE ANCHORS {'same_source': 2, 'tally': 3, 'controls': 4, 'provenance': 7, 'counting': 27, 'coverage': 28, 'tally_326': 28, 'tally_327': 3, 'tally_328': 30, 'tally_337': 4, 'ruler': 127, 'cutter': 46, 'section': 3831, 'prev_section': 3819}
+LIVE NUMBERS tally={'bodies': 63, 'hands_server_text_to_state': 4, 'hands_server_structure_to_state': 8, 'compares_only': 1, 'reads_and_leaves_it_unused': 0, 'never_reads_a_server_field': 50} rows=13 listed=13 old326={'catch': 64, 'reads_the_refusal': 1, 'hides_the_refusal': 63} new326={'catch': 63, 'reads_the_refusal': 5, 'hides_the_refusal': 58} new327={'catch': 63, 'says_zh': 26} new328={'rows': 26, 'rendered': 26}
+PENDING_INBOX_BEFORE_WRITE 0
+WROTE D:/moodle/_qoder_ledger_inbox\494abfd7_0014.md bytes=8021 rows=13

@@ -1,0 +1,43 @@
+WALK55_START 2026-10-23T18:42:09.547Z http://127.0.0.1:14496/revolution
+STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我
+STEP_02 days=2
+STEP_02A_PREFILLED party=1 budget=800
+STEP_02 party=2 budget=600
+ASK GET /journeys/9aafda16-075c-4cf3-b584-6094be210800/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+STEP_03 sent_at 2026-10-23T18:42:25.874Z
+WAIT_60s busy=true
+SETTLED ticks=7 elapsed_s=70
+STEP_04B_START_RESEARCH pressed=true
+WAIT_60s busy=false
+WAIT_120s busy=false
+WAIT_180s busy=false
+WAIT_240s busy=false
+WAIT_300s busy=false
+WAIT_360s busy=false
+WAIT_420s busy=false
+WAIT_480s busy=false
+WAIT_540s busy=false
+WAIT_600s busy=false
+WAIT_660s busy=false
+WAIT_720s busy=false
+WAIT_780s busy=false
+WAIT_840s busy=false
+WAIT_900s busy=false
+WAIT_960s busy=false
+SETTLE_TIMEOUT pattern=正在推进|正在研究
+STEP_05_DRAFT slots=0
+LAYER rev-mission-layer-map attempt=1 clicked=true
+STEP_06_MAP []
+SHOT walk101-06-map-strip.png bytes=216352
+LAYER rev-mission-layer-agent attempt=1 clicked=true
+STEP_07 variants_sent_at 2026-10-23T18:59:44.695Z
+SETTLED ticks=4 elapsed_s=40
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_08_VARIANTS {"cards":0,"tabs":[],"chosen":[],"selectButtons":0,"slots":0}
+SHOT walk101-08-three-versions.png bytes=110248
+STEP_09_choose_visible=false picked_card=-1
+ASK GET /journeys/9aafda16-075c-4cf3-b584-6094be210800/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_10_AFTER_RELOAD {"cards":0,"tabs":[],"chosen":[],"selectButtons":0,"slots":0} screen=C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待你的决定 地图 日程 对话 按天调整行程 0 项安排 · 2 天 你的旅行草案 草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。 Day 1 12-30 Day 2 12-31 
+SHOT walk101-10-after-reload.png bytes=158452
+DEPARTURE_NOT_ON_TIMELINE trying 我的旅程

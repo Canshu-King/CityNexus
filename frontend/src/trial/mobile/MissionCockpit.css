@@ -4,7 +4,9 @@
   --os-muted: #74887d;
   --os-line: #e1eae4;
   --os-glow: #14765c;
-  margin: 10px 0 36px;
+  /* Leave room under the last card for the fixed chat bar: at 1024x768 the clock
+     strip's keys sat under it and a finger hit the textarea instead. */
+  margin: 10px 0 150px;
   color: var(--os-ink);
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
 }
@@ -25,7 +27,7 @@
   background:
     radial-gradient(circle at 94% 14%, rgba(166, 178, 255, .45), transparent 30%),
     radial-gradient(circle at 7% 112%, rgba(77, 156, 168, .22), transparent 46%),
-    linear-gradient(122deg, #064739 0%, #0d6652 74%, #2d8c6b 100%);
+    linear-gradient(122deg, var(--rx-brand-deep) 0%, #0d6652 74%, #2d8c6b 100%);
   color: #fff;
   position: relative;
 }
@@ -53,12 +55,12 @@
 .rev-mobile-v1 .cn-mission-head h2 {
   margin: 13px 0 10px;
   font-size: clamp(25px, 3.4vw, 35px) !important;
-  letter-spacing: -.045em;
+  letter-spacing: 0;
   line-height: 1.24;
   font-weight: 760;
   color: #fff !important;
 }
-.rev-mobile-v1 .cn-mission-head h2 span { color: #d2f0df; }
+.rev-mobile-v1 .cn-mission-head h2 span { display: block; margin-top: 2px; color: #d2f0df; font-size: .72em; }
 .rev-mobile-v1 .cn-mission-head p {
   max-width: 530px;
   margin: 0;
@@ -116,7 +118,7 @@
   gap: 9px;
   color: #205a48;
   font-size: 14px;
-  letter-spacing: -.015em;
+  letter-spacing: 0;
 }
 .rev-mobile-v1 .cn-mission-section-heading svg { color: var(--os-glow); }
 .rev-mobile-v1 .cn-mission-section-heading strong { font-weight: 760; }
@@ -164,7 +166,7 @@
   border: 0;
   border-radius: 12px;
   padding: 11px 14px;
-  background: #0e6a55 !important;
+  background: var(--rx-brand) !important;
   color: #fff !important;
   font-size: 13px;
   font-weight: 730;
@@ -189,7 +191,7 @@
 .rev-mobile-v1 .cn-mission-plan-metric strong {
   color: #1b2442;
   font-size: 23px;
-  letter-spacing: -.06em;
+  letter-spacing: 0;
 }
 .rev-mobile-v1 .cn-mission-mini-dot {
   margin: 0 7px;
@@ -453,6 +455,12 @@
   .rev-mobile-v1 .cn-mission-timeline-pane {
     max-height: none; overflow-y: visible;
   }
+  /* The left map column stays with the reader while the long right-hand column scrolls. */
+  .rev-mobile-v1 .cn-mission-map-pane {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+  }
 }
 .rev-mobile-v1 .cn-mission-os .rev-workspace-inline .rev-workspace-body { padding: 6px 0 0; }
 .rev-mobile-v1 .cn-mission-os .rev-workspace-inline .rev-workspace-answer {
@@ -518,7 +526,7 @@
 .rev-mobile-v1 .cn-mission-agent-glance > strong {
   font-size: 20px;
   line-height: 1.42;
-  letter-spacing: -.03em;
+  letter-spacing: 0;
   color: #1b3640;
 }
 .rev-mobile-v1 .cn-mission-agent-glance > p {
@@ -583,8 +591,10 @@
   .rev-mobile-v1 .cn-mission-head .cn-mission-state { font-size: 11px; margin: 0; }
   .rev-mobile-v1 .cn-mission-media-credit { bottom: 5px; right: 9px; font-size: 9px; }
   .rev-mobile-v1 .cn-mission-layer-tabs {
-    position: sticky; top: 0; z-index: 12; padding: 8px 0; margin: 0;
-    background: #f5f8f6; scroll-margin-top: 0; gap: 5px;
+    /* The header is sticky at top:0 with z-index 20; sticking this row at top:0 too put all three buttons under
+       it, where the page brand block swallowed the tap (layer-tab-hittest-3.txt before/after readings). */
+    position: sticky; top: var(--rev-fl-header-h, 66px); z-index: 12; padding: 8px 0; margin: 0;
+    background: #f5f8f6; scroll-margin-top: calc(var(--rev-fl-header-h, 66px) + 8px); gap: 5px;
   }
   .rev-mobile-v1 .cn-mission-layer-tabs button { min-height: 46px; font-size: 14px; font-weight: 700; border-radius: 12px; }
   .rev-mobile-v1 .cn-mission-grid { gap: 0; }
@@ -615,4 +625,42 @@
   }
   .rev-mobile-v1 .cn-mission-os .cn-mission-head { min-height: 112px; }
   .rev-mobile-v1 .cn-mission-head .cn-mission-state { align-self: flex-start; }
+}
+
+/* The classroom block sits far below on a real journey; this jumps to it. */
+.rev-mobile-v1 .cn-mission-jump-clock {
+  display: inline-flex;
+  align-items: center;
+  margin: 4px 0 2px;
+  padding: 9px 14px;
+  border: 1px solid #bfe3d2;
+  border-radius: 12px;
+  color: #146b50;
+  background: #f2fbf6;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 720;
+  cursor: pointer;
+}
+.rev-mobile-v1 .cn-mission-classroom-entry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 4px;
+  padding: 10px 14px;
+  border: 1px solid #bfe3d2;
+  border-radius: 14px;
+  background: #f4fbf7;
+}
+.rev-mobile-v1 .cn-mission-classroom-entry > span {
+  flex: 1 1 220px;
+  color: #2b5c4a;
+  font-size: 13px;
+  font-weight: 650;
+}
+.rev-mobile-v1 .cn-mission-classroom-entry small[role="status"] {
+  flex: 1 1 100%;
+  color: #8a4b1f;
+  font-size: 12px;
 }

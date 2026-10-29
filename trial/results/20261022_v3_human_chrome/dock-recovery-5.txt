@@ -1,0 +1,21 @@
+CANDIDATE_0 url=http://127.0.0.1:14462/revolution mark={"tabs":3,"dock":true,"recovery":false,"status":"","shape":"493x604","pointer":"{\"id\":\"2"}
+CANDIDATE_1 url=http://127.0.0.1:14436/revolution mark={"tabs":0,"dock":false,"recovery":false,"status":"","shape":"494x783","pointer":"{\"id\":\"0"}
+CANDIDATE_2 url=http://127.0.0.1:14436/revolution mark={"tabs":3,"dock":true,"recovery":false,"status":"","shape":"494x783","pointer":"{\"id\":\"0"}
+CANDIDATE_3 url=http://127.0.0.1:14436/revolution mark={"tabs":0,"dock":false,"recovery":false,"status":"","shape":"493x604","pointer":"{\"id\":\"0"}
+SELECTED origin=http://127.0.0.1:14462 mark={"tabs":3,"dock":true,"recovery":false,"status":"","shape":"493x604","pointer":"{\"id\":\"2"}
+START {"tabs":3,"dock":true,"recovery":false,"status":"","shape":"493x604","pointer":"{\"id\":\"2"}
+SEND_PRE {"enabled":true,"value":""}
+SENT at 2026-10-23T22:10:26.502Z text=先别加新地点。这一趟里还有哪一段没核实？
+POLL_5s {"recovery":true,"status":"Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。"}
+RECOVERY_ROW {"row":{"text":"重试这一轮先浏览已找到的地点","y":462,"x":9,"centre":[239,490],"covers_it":false,"topmost":"rev-mission-dock-recovery","inViewport":true},"retry":{"text":"重试这一轮","y":474,"x":9,"centre":[123,496],"disabled":false,"covers_it":false,"topmost":"BUTTON","inViewport":true},"browse":{"text":"先浏览已找到的地点","y":474,"x":243,"centre":[356,496],"disabled":false,"covers_it":false,"topmost":"BUTTON","inViewport":true},"scrollY":1475,"shape":"493x604"}
+SHOT dock-recovery-1-before.png
+BASELINE_TASK undefined
+PRESSED 重试这一轮 at 2026-10-23T22:10:31.635Z
+RESUME_POLL_5s recovery=true status="Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。" resume_calls=[{"at":"2026-10-23T22:10:26.495Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":200,"at_end":"2026-10-23T22:10:28.905Z"},{"at":"2026-10-23T22:10:31.637Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":200,"at_end":"2026-10-23T22:10:33.806Z"}]
+RESUME_RECEIPT {"at":"2026-10-23T22:10:31.637Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":200,"at_end":"2026-10-23T22:10:33.806Z"} same_task=false
+SHOT dock-recovery-2-after-retry.png
+AFTER_RETRY_ROW {"row":{"text":"重试这一轮先浏览已找到的地点","y":462,"x":9,"centre":[239,490],"covers_it":false,"topmost":"rev-mission-dock-recovery","inViewport":true},"retry":{"text":"重试这一轮","y":474,"x":9,"centre":[123,496],"disabled":false,"covers_it":false,"topmost":"BUTTON","inViewport":true},"browse":{"text":"先浏览已找到的地点","y":474,"x":243,"centre":[356,496],"disabled":false,"covers_it":false,"topmost":"BUTTON","inViewport":true},"scrollY":1475,"shape":"493x604"}
+BEFORE_BROWSE {"row":{"text":"重试这一轮先浏览已找到的地点","y":462,"x":9,"centre":[239,490],"covers_it":false,"topmost":"rev-mission-dock-recovery","inViewport":true},"retry":{"text":"重试这一轮","y":474,"x":9,"centre":[123,496],"disabled":false,"covers_it":false,"topmost":"BUTTON","inViewport":true},"browse":{"text":"先浏览已找到的地点","y":474,"x":243,"centre":[356,496],"disabled":false,"covers_it":false,"topmost":"BUTTON","inViewport":true},"scrollY":1475,"shape":"493x604"}
+BROWSE_RESULT {"mapPressed":"true","agentPressed":"false","cards":0,"strip":"YOUR NEXT JOURNEY北京把想去变成出发。已有 2 天安排，随时可以和 Agent 一起调整。换地区 › 旅行插画部分能力暂时不可用地图日程对话你的旅行搭档部分能力暂时不可用已整理 2 天 · 7 项安排地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。一起商量安排刷新任务2 天 · 2 人 · 旅行需求已从服务器读取你先别问太多，按我说的直接安排。你按我们讨论的方向开始研究，遇到重要取舍先给我选择。CityNex","pointer":"{\"id\":\"2"}
+SHOT dock-recovery4-after-browse.png
+NOTE 唯一的写入动作是发送一条旅客消息与两次点击（重试这一轮 / 先浏览已找到的地点）；未写 storage、未调接口、未起新标签页

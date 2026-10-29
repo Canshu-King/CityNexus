@@ -1,0 +1,3 @@
+ARM A_one_city_in_sentence city_value="北京" hint_visible=false hint_text=
+ARM G_lead_in_counts city_value="" hint_visible=true hint_text=还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。
+PROBE_DONE

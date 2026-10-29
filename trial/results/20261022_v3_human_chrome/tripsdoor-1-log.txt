@@ -1,0 +1,11 @@
+TRIPSDOOR_BEGIN 2026-10-23T00:04:07.229Z base=http://127.0.0.1:14416/revolution
+LANDED C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+LANDED_BUTTONS ["BUTTON:rev-firstlook-start","BUTTON:rev-mobile-tab-explore","BUTTON:rev-mobile-tab-trips","BUTTON:rev-mobile-tab-me"]
+STORED_KEYS ["citynexus.revolution.firstlook.journey","citynexus.revolution.firstlook.recent-journeys","citynexus.revolution.goal-task.3f7b4103-bea2-413d-a464-8ff1ba959bbb.202f120d-b144-4534-899d-54e1414c4033"]
+STORED_JOURNEY null
+SHOT tripsdoor1-01-landing.png bytes=157618
+PANEL C CityNexus 你的智能旅行伙伴 AI 建议可试 TRIPS 行程 这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度。 开始探索 → AI 服务 AI 建议可试 选好地点并确认行程后，Agent 就会开始工作。 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+PANEL_BUTTONS ["BUTTON:rev-mobile-empty-start","BUTTON:rev-mobile-tab-explore","BUTTON:rev-mobile-tab-trips","BUTTON:rev-mobile-tab-me"]
+SHOT tripsdoor1-02-panel.png bytes=113871
+OPENERS=0
+TRIPSDOOR_END 2026-10-23T00:04:24.223Z

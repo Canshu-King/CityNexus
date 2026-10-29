@@ -1,0 +1,41 @@
+CITABLE UNTRACKED ARTIFACTS bw276
+CITED_NAMES_FROM_AUDIT 33
+RESOLVED_TO_ONE_PATH 30  AMBIGUOUS 0  NO_FILE_FOUND 3
+ALREADY_TRACKED 0  STILL_UNTRACKED 30
+BYTES_TO_ADD 3538442 (3.37 MiB)
+LARGEST_FIVE [["trial/results/20261026_gozero/select-430-before.png", 405912], ["trial/results/20261026_gozero/my-trips-430-plan.png", 371173], ["trial/results/20261026_gozero/my-trips-430-reloaded.png", 371173], ["trial/results/20261026_gozero/guardian-diff-390-after.png", 321160], ["trial/results/20261026_gozero/map-after-accept-390.png", 243160]]
+PATHS_STILL_UNTRACKED
+  trial/human_walk/_go_to_active_chrome_r6.mjs
+  trial/results/20261026_gozero/390-go-cold.png
+  trial/results/20261026_gozero/430-r54-plan-blocked.png
+  trial/results/20261026_gozero/aq3-clean-chain-430-r92.txt
+  trial/results/20261026_gozero/dinner-430-after.png
+  trial/results/20261026_gozero/dinner-430-before.png
+  trial/results/20261026_gozero/go-active-390-full.txt
+  trial/results/20261026_gozero/go-active-390.txt
+  trial/results/20261026_gozero/go-live-430-after.png
+  trial/results/20261026_gozero/go-live-430.txt
+  trial/results/20261026_gozero/guardian-diff-390-after.png
+  trial/results/20261026_gozero/guardian-diff-390-panel.png
+  trial/results/20261026_gozero/half-day-390.txt
+  trial/results/20261026_gozero/half-day-430-after.png
+  trial/results/20261026_gozero/half-day-430-before.png
+  trial/results/20261026_gozero/half-day-430.txt
+  trial/results/20261026_gozero/map-after-accept-390.png
+  trial/results/20261026_gozero/map-planned-390-r50.txt
+  trial/results/20261026_gozero/my-trips-430-plan.png
+  trial/results/20261026_gozero/my-trips-430-reloaded.png
+  trial/results/20261026_gozero/my-trips-430.txt
+  trial/results/20261026_gozero/plan-open-hand-390-r54.txt
+  trial/results/20261026_gozero/plan-open-hand-390-r54.txt
+  trial/results/20261026_gozero/resolved-note-390.png
+  trial/results/20261026_gozero/run-diff-390-after.png
+  trial/results/20261026_gozero/run-diff-390-block.png
+  trial/results/20261026_gozero/run-diff-390.txt
+  trial/results/20261026_gozero/select-430-after.png
+  trial/results/20261026_gozero/select-430-before.png
+  trial/results/20261026_gozero/select-430.txt
+NO_FILE_ON_DISK_UNDER_TRIAL
+  LegacyApp.tsx
+  cityNamed.ts
+  frontend/src/features/setup/cityNamed.ts

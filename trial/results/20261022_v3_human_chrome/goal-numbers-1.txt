@@ -1,0 +1,7 @@
+START {"goal":"","party":"1","budget":"1000","partyLabel":"同行人数","budgetLabel":"总预算（元）"}
+TYPE "带爸妈三人轻松逛两天，人均预算 400，少走路。" fields={"goal":"带爸妈三人轻松逛两天，人均预算 400，少走路。","party":"3","budget":"1200","partyLabel":"同行人数","budgetLabel":"总预算（元）"}
+TYPE "两个人，人均 650，别太赶。" fields={"goal":"两个人，人均 650，别太赶。","party":"2","budget":"1300","partyLabel":"同行人数","budgetLabel":"总预算（元）"}
+TYPE "帮我安排五天，人均 1200。" fields={"goal":"帮我安排五天，人均 1200。","party":"2","budget":"2400","partyLabel":"同行人数","budgetLabel":"总预算（元）"}
+TYPE "随便逛逛。" fields={"goal":"随便逛逛。","party":"2","budget":"2400","partyLabel":"同行人数","budgetLabel":"总预算（元）"}
+SHOT goal-numbers-1.png
+NOTE 只填了这一枚文本框并回读数显字段；没按「开始规划」、没提交、没建 Journey，新标签页用完即关

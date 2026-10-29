@@ -1,0 +1,3 @@
+census r301 re-run after blocks 368 and 369: 39 of 39 landed, 0 red
+
+Receipt trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt regenerated from the ledger itself, not from a remembered count: 39 blocks checked, 39 green, none that did not land, and the negative control still reads an unseen title RED - so the gate has not gone vacuous while gaining two blocks. Instrument fault: no (0 of 39 read red), which is the class added after my own tuple-return change silently broke this ruler and reported 36 delivered blocks as lost. 0 product bytes.

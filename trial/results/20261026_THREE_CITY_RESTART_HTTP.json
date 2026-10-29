@@ -1,0 +1,242 @@
+{
+  "backend_sha": "b14a57eef7e3ee7fed4de2b64575efe09e56da9a",
+  "evidence_kind": "SIGNED_NATIVE_HTTP_SAME_DATABASE_NORMAL_OWNED_RESTART_NO_NEW_PROVIDER",
+  "eligible_unique_adcodes": [
+    "110000",
+    "330100",
+    "320500"
+  ],
+  "deduplication_note": "Owned and published views can contain the same adcode; eligible_city_count is three unique cities, not the number of view rows.",
+  "stages": {
+    "before-restart": {
+      "raw_receipt_sha256": "fe7d6499fa0398de551a37a32dcadae57c12ea4aba1ef20de0b2877077ba1847",
+      "raw_receipt": "C:\\Users\\仓鼠王\\cn51\\classroom-20261026-qa\\supply-native-20261026\\three-city-before-restart.json",
+      "summary": {
+        "17": {
+          "status": "READY",
+          "eligible_city_count": 3,
+          "cities": [
+            {
+              "adcode": "110000",
+              "poi": 40,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320100",
+              "poi": 32,
+              "routes": 2,
+              "missing": [
+                "AT_LEAST_3_CAPTURED_ROUTES_REQUIRED"
+              ]
+            },
+            {
+              "adcode": "330100",
+              "poi": 32,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320500",
+              "poi": 31,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "110000",
+              "poi": 40,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "330100",
+              "poi": 32,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320500",
+              "poi": 31,
+              "routes": 3,
+              "missing": []
+            }
+          ]
+        },
+        "0": {
+          "status": "READY",
+          "eligible_city_count": 3,
+          "cities": [
+            {
+              "adcode": "110000",
+              "poi": 40,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320100",
+              "poi": 32,
+              "routes": 2,
+              "missing": [
+                "AT_LEAST_3_CAPTURED_ROUTES_REQUIRED"
+              ]
+            },
+            {
+              "adcode": "330100",
+              "poi": 32,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320500",
+              "poi": 31,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "110000",
+              "poi": 40,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "330100",
+              "poi": 32,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320500",
+              "poi": 31,
+              "routes": 3,
+              "missing": []
+            }
+          ]
+        }
+      },
+      "counts": {
+        "agent_runs": 39,
+        "provider_calls": 115
+      },
+      "public_hashes": {
+        "110000": "94b6c37704228505d941cf0c866199d69614a000e28bc786340a8404bdf4f9a3",
+        "330100": "291cf04d7cfd55d3621f283c3e36132ada30d3e992a589732b42c25320f54885",
+        "320500": "4e6d54b8532c6cc46692c46242cb737f2406a1b99039e637d289067116a1d09f"
+      }
+    },
+    "after-restart": {
+      "raw_receipt_sha256": "fe7d6499fa0398de551a37a32dcadae57c12ea4aba1ef20de0b2877077ba1847",
+      "raw_receipt": "C:\\Users\\仓鼠王\\cn51\\classroom-20261026-qa\\supply-native-20261026\\three-city-after-restart.json",
+      "summary": {
+        "17": {
+          "status": "READY",
+          "eligible_city_count": 3,
+          "cities": [
+            {
+              "adcode": "110000",
+              "poi": 40,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320100",
+              "poi": 32,
+              "routes": 2,
+              "missing": [
+                "AT_LEAST_3_CAPTURED_ROUTES_REQUIRED"
+              ]
+            },
+            {
+              "adcode": "330100",
+              "poi": 32,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320500",
+              "poi": 31,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "110000",
+              "poi": 40,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "330100",
+              "poi": 32,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320500",
+              "poi": 31,
+              "routes": 3,
+              "missing": []
+            }
+          ]
+        },
+        "0": {
+          "status": "READY",
+          "eligible_city_count": 3,
+          "cities": [
+            {
+              "adcode": "110000",
+              "poi": 40,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320100",
+              "poi": 32,
+              "routes": 2,
+              "missing": [
+                "AT_LEAST_3_CAPTURED_ROUTES_REQUIRED"
+              ]
+            },
+            {
+              "adcode": "330100",
+              "poi": 32,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320500",
+              "poi": 31,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "110000",
+              "poi": 40,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "330100",
+              "poi": 32,
+              "routes": 3,
+              "missing": []
+            },
+            {
+              "adcode": "320500",
+              "poi": 31,
+              "routes": 3,
+              "missing": []
+            }
+          ]
+        }
+      },
+      "counts": {
+        "agent_runs": 39,
+        "provider_calls": 115
+      },
+      "public_hashes": {
+        "110000": "94b6c37704228505d941cf0c866199d69614a000e28bc786340a8404bdf4f9a3",
+        "330100": "291cf04d7cfd55d3621f283c3e36132ada30d3e992a589732b42c25320f54885",
+        "320500": "4e6d54b8532c6cc46692c46242cb737f2406a1b99039e637d289067116a1d09f"
+      }
+    }
+  }
+}

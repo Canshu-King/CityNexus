@@ -1,0 +1,18 @@
+{
+  "http": 200,
+  "status": "BLOCKED",
+  "required_city_count": 3,
+  "eligible_city_count": 0,
+  "cities": [
+    {
+      "city_code": "CN-RV-3507014DDE2C",
+      "status": "BLOCKED",
+      "missing": [
+        "VERIFIED_CITY_ADCODE_REQUIRED",
+        "AT_LEAST_3_CAPTURED_ROUTES_REQUIRED"
+      ],
+      "poi": 56,
+      "routes": 0
+    }
+  ]
+}

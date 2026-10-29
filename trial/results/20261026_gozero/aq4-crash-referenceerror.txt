@@ -1,0 +1,18 @@
+SHOT 430-aq-cold t=5.5
+HIT continue true t=6.5
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=10.3
+HIT open-settings true t=12.7
+CONSENT true
+CONSENT true
+HIT close-settings true t=14.8
+HIT send true t=16.5
+HTTP POST 201 /api/v1/journeys/56f52db6-1fd8-472b-b08c-092ae37c23f1/agent/goal-tasks
+SENT t=17.4
+HTTP POST 200 /api/v1/journeys/56f52db6-1fd8-472b-b08c-092ae37c23f1/agent/goal-tasks/f74cf350-ef66-49c0-b8b3-1caf1f2784f1/run
+HIT skip-questions true t=32.8
+SKIP t=33.7
+SKIPPED true
+DRAFT t=105.8
+DRAFT_SEEN true
+SHOT 430-aq-after-research t=105.9

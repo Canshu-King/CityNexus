@@ -10,6 +10,8 @@ export type WorkspaceMapPoint = Omit<Pick<BootstrapDiscoveryCandidate, "candidat
   adcode?: string;
   public_address?: Record<string, string>;
   kind?: "place" | "area";
+  origin?: "PLAN_ACTIVITY";
+  external_id?: string;
 };
 
 const OSM_SOURCE_URL = /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/;
@@ -21,10 +23,20 @@ function isAmapPoint(place: WorkspaceMapPoint): boolean {
 }
 
 function validPoint(place: WorkspaceMapPoint): boolean {
+  // The basemap is OSM, so what decides whether a point may be drawn is the coordinate system it is
+  // stored in -- not which provider found it.  A place row converted to WGS84 by the identity layer is
+  // safe to plot even when it came from Amap; a GCJ02 number is not, whatever its provider.
   return place.region_status !== "CONFLICT" && place.selection_state !== "REGION_CONFLICT"
-    && !(typeof place.provider === "string" && place.provider.toLowerCase() === "amap") && place.coordinate_system === "WGS84"
+    && place.coordinate_system === "WGS84"
     && Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
     && Math.abs(place.latitude) <= 85 && Math.abs(place.longitude) <= 180;
+}
+
+function sourceLink(url: string | undefined): {href: string; label: string} | null {
+  if (!url) return null;
+  if (OSM_SOURCE_URL.test(url)) return {href: url, label: "查看地点来源 ↗"};
+  if (AMAP_MARKER_URL.test(url)) return {href: url, label: "在高德地图打开 ↗"};
+  return null;
 }
 
 function shortAdministrativeAddress(address?: Record<string, string>): string {
@@ -33,10 +45,16 @@ function shortAdministrativeAddress(address?: Record<string, string>): string {
     .slice(0, 3).join(" · ");
 }
 
-export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedId }: {
+export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedId, traveller }: {
   candidates: WorkspaceMapPoint[]; allowed: boolean; onAllow: () => void; onSelect?: (id: string) => void; selectedId?: string | null;
+  traveller?: { latitude: number; longitude: number; label: string; coordinate_system?: string } | null;
 }) {
   const host = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<import("maplibre-gl").Map | null>(null);
+  const travellerMarker = useRef<import("maplibre-gl").Marker | null>(null);
+  // MapLibre is imported lazily, so the simulated position can arrive before the map object
+  // exists.  Without this flag the marker effect ran once against a null map and never again.
+  const [mapReady, setMapReady] = useState(false);
   const points = useMemo(() => candidates.filter(validPoint), [candidates]);
   const amapPoints = useMemo(() => candidates.filter((point) => isAmapPoint(point)
     && point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT"
@@ -69,8 +87,14 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
   }, [previewPins]);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
+  // A journey can be executing before any research pin exists; the simulated
+  // traveller alone is enough to give the classroom map something to show.
+  const travellerOnMap = Boolean(
+    traveller && (!traveller.coordinate_system || traveller.coordinate_system === "WGS84")
+    && Number.isFinite(traveller.latitude) && Number.isFinite(traveller.longitude),
+  );
   useEffect(() => {
-    if (!allowed || !host.current || points.length === 0) return;
+    if (!allowed || !host.current || (points.length === 0 && !travellerOnMap)) return;
     let disposed = false;
     let map: import("maplibre-gl").Map | undefined;
     let observer: ResizeObserver | undefined;
@@ -78,13 +102,17 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
     setFailed(false);
     void import("maplibre-gl").then(({ default: lib }) => {
       if (disposed || !host.current) return;
-      map = new lib.Map({ container: host.current, center: [points[0].longitude, points[0].latitude], zoom: 13,
+      const center: [number, number] = points.length
+        ? [points[0].longitude, points[0].latitude]
+        : [traveller!.longitude, traveller!.latitude];
+      map = new lib.Map({ container: host.current, center, zoom: points.length ? 13 : 14,
         style: { version: 8, sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
           tileSize: 256, attribution: "© OpenStreetMap contributors" } }, layers: [{ id: "osm", type: "raster", source: "osm" }] },
         dragRotate: false, pitchWithRotate: false, attributionControl: { compact: true },
       });
       map.addControl(new lib.NavigationControl({ showCompass: false }), "top-right");
       map.on("error", () => { if (!disposed) setFailed(true); });
+      mapRef.current = map; setMapReady(true);
       const bounds = new lib.LngLatBounds();
       points.forEach((point, index) => {
         const element = document.createElement("button");
@@ -94,9 +122,10 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
         const content = document.createElement("div");
         const title = document.createElement("strong"); title.textContent = point.name; content.append(title);
         if (point.kind === "area") { const type = document.createElement("p"); type.textContent = "地区／村落线索"; content.append(type); }
-        if (point.source_url && OSM_SOURCE_URL.test(point.source_url)) {
-          const source = document.createElement("a"); source.textContent = "查看地点来源 ↗";
-          source.href = point.source_url; source.target = "_blank"; source.rel = "noreferrer";
+        const link = sourceLink(point.source_url);
+        if (link) {
+          const source = document.createElement("a"); source.textContent = link.label;
+          source.href = link.href; source.target = "_blank"; source.rel = "noreferrer";
           content.append(document.createElement("br"), source);
         }
         element.addEventListener("click", () => onSelect?.(point.candidate_id));
@@ -107,12 +136,40 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       if (points.length > 1) map.fitBounds(bounds, { padding: 50, maxZoom: 15, duration: 0 });
       observer = new ResizeObserver(() => map?.resize()); observer.observe(host.current);
     }).catch(() => { if (!disposed) setFailed(true); });
-    return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); map?.remove(); };
-  }, [allowed, points, onSelect]);
+    return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); travellerMarker.current?.remove(); travellerMarker.current = null; mapRef.current = null; setMapReady(false); map?.remove(); };
+  }, [allowed, points, onSelect, travellerOnMap]);
+  // The simulated traveller is a second marker, kept apart from the numbered pins: it is the
+  // only thing on this map that moves, and its coordinates come from the sandbox clock, not
+  // from any device location.  GCJ02 is not converted here; it is only drawn as WGS84.
+  useEffect(() => {
+    const draw = traveller && (!traveller.coordinate_system || traveller.coordinate_system === "WGS84")
+      && Number.isFinite(traveller.latitude) && Number.isFinite(traveller.longitude);
+    if (!allowed || !mapReady || !draw) { travellerMarker.current?.remove(); travellerMarker.current = null; return; }
+    void import("maplibre-gl").then(({ default: lib }) => {
+      if (!mapRef.current || !traveller) return;
+      if (!travellerMarker.current) {
+        const element = document.createElement("div");
+        element.className = "rev-workspace-map-traveller";
+        element.dataset.testid = "rev-map-traveller";
+        element.title = `模拟旅客：${traveller.label}（模拟位置）`;
+        element.setAttribute("aria-label", `模拟旅客位置：${traveller.label}`);
+        travellerMarker.current = new lib.Marker({ element })
+          .setLngLat([traveller.longitude, traveller.latitude]).addTo(mapRef.current);
+      } else {
+        travellerMarker.current.setLngLat([traveller.longitude, traveller.latitude]);
+      }
+      // A moving simulated traveller that sits outside the framed pins is invisible on a phone;
+      // following it is what makes the demo's blue dot findable without panning by hand.
+      mapRef.current.easeTo({ center: [traveller.longitude, traveller.latitude], duration: 300 });
+    });
+  }, [allowed, mapReady, traveller?.latitude, traveller?.longitude, traveller?.label, traveller?.coordinate_system]);
   return <section aria-label="当前行程地图">
-    <p>OpenStreetMap 地图地点 {points.length} 处 · 高德地点 {amapPoints.length} 处</p>
-    {!points.length && !amapPoints.length && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
-    {points.length > 0 && <>
+    <p>{travellerOnMap && !points.length && !amapPoints.length
+      ? "模拟旅客 1 位 · 暂无研究地点"
+      : `地图地点 ${points.length} 处 · 高德地点 ${amapPoints.length} 处`}</p>
+    {traveller && <p data-testid="rev-map-traveller-state">模拟旅客：{traveller.label} · {traveller.latitude.toFixed(4)}, {traveller.longitude.toFixed(4)}（{traveller.coordinate_system ?? "WGS84"}，模拟位置，不是物理 GPS）</p>}
+    {!points.length && !amapPoints.length && !travellerOnMap && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
+    {(points.length > 0 || travellerOnMap) && <>
       {!allowed ? <div className="rev-workspace-map-consent">
         <div className="rev-workspace-map-preview" aria-label="已发现地点的坐标分布预览" data-testid="rev-workspace-coordinate-preview">
           <span className="rev-workspace-preview-label">地点分布预览 · 未加载外部底图</span>
@@ -141,10 +198,11 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       </div>
         : <div ref={host} className="rev-workspace-map" data-testid="rev-workspace-map-canvas" />}
       {failed && <p role="status">底图暂时没有加载成功，下面的地点列表仍可查看。</p>}
-      <ol className="rev-workspace-place-list" aria-label="OpenStreetMap 地点">{points.map((point) => <li key={point.candidate_id} data-selected={point.candidate_id === selectedId}><strong>{point.name}</strong>
+      <ol className="rev-workspace-place-list" aria-label="地图地点">{points.map((point) => { const link = sourceLink(point.source_url); return (
+        <li key={point.candidate_id} data-selected={point.candidate_id === selectedId}><strong>{point.name}</strong>
         <small>{point.kind === "area" ? "地区／村落线索" : point.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "地点位置"} · {point.observation_expired ? "上次搜索的地点，营业与费用需更新" : point.selection_state === "READY_FOR_NATIVE_PLAN" ? "资料可用于正式排程" : "部分营业或费用资料待核实"}</small>
-        {point.source_url && OSM_SOURCE_URL.test(point.source_url) &&
-          <a href={point.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}</li>)}</ol>
+        {point.origin === "PLAN_ACTIVITY" && <small data-testid="rev-map-planned-stop">已排入当前方案</small>}
+        {link && <a href={link.href} target="_blank" rel="noreferrer">{link.label}</a>}</li>); })}</ol>
     </>}
     {amapPoints.length > 0 && <section aria-label="高德地点" data-testid="rev-amap-research-leads">
       <h3>高德地点</h3>

@@ -1,0 +1,6 @@
+START status=RUNNING elapsed_s=12.5
+CLOSURE status=PAUSED_FOR_GUARDIAN elapsed_s=15.8
+WAIT_NOTE 1 {"text":"守护正在让模型生成调整，实测约四分半；这段时间可以照常讲解，不用重复按。","visible":true,"inViewport":true}
+OLD_SENTENCE_COUNT 0
+AFTER_12S status=GUARDIAN_RUNNING elapsed_s=28.1
+ERRORS []

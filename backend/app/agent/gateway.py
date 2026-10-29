@@ -753,6 +753,52 @@ class AgentToolGateway:
         return context, trigger, proposals
 
     @staticmethod
+    def _server_owned_recovery_trigger(
+        mission: JourneyMission | None, journey: Journey
+    ) -> str | None:
+        """Return the trigger bound to a server-created recovery child mission."""
+
+        if mission is None:
+            return None
+        resolved_intent = _mission_json(mission.resolved_intent_json)
+        if "server_owned_recovery_context" not in resolved_intent:
+            return None
+
+        context = resolved_intent.get("server_owned_recovery_context")
+        if not isinstance(context, dict):
+            raise HTTPException(409, "RECOVERY_TRIGGER_BINDING_INVALID")
+
+        if (
+            str(mission.journey_id) != str(journey.id)
+            or mission.is_standing is not False
+            or not mission.parent_mission_id
+            or str(context.get("journey_id") or "") != str(journey.id)
+            or str(context.get("recovery_mission_id") or "") != str(mission.id)
+            or str(context.get("standing_mission_id") or "")
+            != str(mission.parent_mission_id)
+        ):
+            raise HTTPException(409, "RECOVERY_TRIGGER_BINDING_INVALID")
+
+        mission_trigger = mission.trigger_event_id
+        context_trigger = context.get("trigger_event_id")
+        try:
+            mission_trigger_id = str(UUID(str(mission_trigger))) if mission_trigger else None
+            context_trigger_id = str(UUID(str(context_trigger))) if context_trigger else None
+        except (TypeError, ValueError, AttributeError):
+            raise HTTPException(409, "RECOVERY_TRIGGER_BINDING_INVALID") from None
+        if (
+            mission_trigger_id is not None
+            and context_trigger_id is not None
+            and mission_trigger_id != context_trigger_id
+        ):
+            raise HTTPException(409, "RECOVERY_TRIGGER_BINDING_INVALID")
+
+        expected_trigger_id = mission_trigger_id or context_trigger_id
+        if expected_trigger_id is None:
+            raise HTTPException(409, "RECOVERY_TRIGGER_BINDING_INVALID")
+        return expected_trigger_id
+
+    @staticmethod
     def catalog() -> list[dict[str, object]]:
         return tool_catalog()
 
@@ -761,6 +807,9 @@ class AgentToolGateway:
         return tool_catalog_v2()
 
     def dispatch(self, tool_name: str, request: AgentToolCall) -> dict[str, Any]:
+        from app.simulation.clock import simulation_scope_active
+        if simulation_scope_active() and tool_name in _MEDIATION_ACTIVE_REALITY_MUTATIONS:
+            raise HTTPException(403, "SIMULATION_REQUIRES_SIGNED_PLAN_ACCEPTANCE")
         if tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
             raise HTTPException(404, "Agent tool is not in the CityNexus allowlist")
         handlers = {
@@ -1057,6 +1106,16 @@ class AgentToolGateway:
             if request.mission_id is not None
             else None
         )
+        recovery_trigger_id = self._server_owned_recovery_trigger(mission, journey)
+        if recovery_trigger_id is not None:
+            if (
+                request.trigger_event_id is not None
+                and str(request.trigger_event_id) != recovery_trigger_id
+            ):
+                raise HTTPException(409, "RECOVERY_TRIGGER_SCOPE_MISMATCH")
+            request = request.model_copy(
+                update={"trigger_event_id": UUID(recovery_trigger_id)}
+            )
         r61_context = self._r61_reground_context(mission)
         if r61_context is not None:
             expected_trigger = str(
@@ -2139,6 +2198,16 @@ class AgentToolGateway:
             if request.mission_id is not None
             else None
         )
+        recovery_trigger_id = self._server_owned_recovery_trigger(mission, journey)
+        if recovery_trigger_id is not None:
+            if (
+                request.trigger_event_id is not None
+                and str(request.trigger_event_id) != recovery_trigger_id
+            ):
+                raise HTTPException(409, "RECOVERY_TRIGGER_SCOPE_MISMATCH")
+            request = request.model_copy(
+                update={"trigger_event_id": UUID(recovery_trigger_id)}
+            )
         r61_context = self._r61_reground_context(mission)
         if r61_context is not None:
             expected_trigger = str(
@@ -2217,7 +2286,7 @@ class AgentToolGateway:
             upgraded.update(collective_proposal_receipt(self.session, journey, cached_rows))
             return upgraded
 
-        from app.main import generate_replan
+        from app.main import _generate_replan_impl
 
         # Agent tool calls may omit the optional bounded search width.  Keep
         # the request deterministic instead of passing None into the public
@@ -2235,7 +2304,7 @@ class AgentToolGateway:
         if self.bound_run_id:
             self.session.info["source_agent_run_id"] = self.bound_run_id
         try:
-            generated = generate_replan(
+            generated = _generate_replan_impl(
                 UUID(journey.id),
                 ReplanGenerateRequest(
                     trigger_event_id=request.trigger_event_id,
@@ -2244,8 +2313,10 @@ class AgentToolGateway:
                     protected_activity_ids=protected_activity_ids,
                     place_ids=request.place_ids,
                 ),
+                request=None,
                 idempotency_key=inner_key,
                 session=self.session,
+                trusted_agent=True,
             )
         finally:
             if previous_epoch_context is None:
@@ -2787,6 +2858,20 @@ class AgentToolGateway:
         journey = _require_journey(self.session, request.journey_id or UUID(proposal.journey_id))
         if proposal.journey_id != journey.id:
             raise HTTPException(403, "proposal does not belong to this Journey")
+        mission = (
+            self.session.get(JourneyMission, str(request.mission_id))
+            if request.mission_id is not None
+            else None
+        )
+        recovery_trigger_id = self._server_owned_recovery_trigger(mission, journey)
+        if recovery_trigger_id is not None:
+            if (
+                request.trigger_event_id is not None
+                and str(request.trigger_event_id) != recovery_trigger_id
+            ):
+                raise HTTPException(409, "RECOVERY_TRIGGER_SCOPE_MISMATCH")
+            if str(proposal.trigger_event_id or "") != recovery_trigger_id:
+                raise HTTPException(409, "RECOVERY_PROPOSAL_TRIGGER_MISMATCH")
         policy_row = get_or_create_policy(self.session, journey.traveler_id)
         policy = policy_from_model(policy_row)
         facts, evidence = _facts_for_accept(self.session, proposal, journey)

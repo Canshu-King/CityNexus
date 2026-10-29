@@ -1,0 +1,80 @@
+
+Running 2 tests using 1 worker
+
+[1/2] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, and survives refresh 390
+  1) [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, and survives refresh 390 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "/api/v1/journeys/00000000-0000-4000-8000-000000000331/plans/00000000-0000-4000-8000-000000000332/select",
+    +   "/api/v1/journeys/00000000-0000-4000-8000-000000000331/departure/commit",
+      ]
+
+      167 |   await expect(workbench).toContainText("已选用");
+      168 |   await expect(page.getByTestId("rev-v3-server-departure")).toContainText("可以确认出发");
+    > 169 |   expect(writes).toEqual([`/api/v1/journeys/${journeyId}/plans/${planId}/select`]);
+          |                  ^
+      170 |   await page.reload();
+      171 |   await page.getByTestId("rev-mobile-tab-trips").click();
+      172 |   await expect(workbench).toContainText("已选用");
+        at D:\moodle\_cmdr_rescue_v3_1022\frontend\e2e\revolution-mobile-plan-workbench.spec.ts:169:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-mobile-plan-wor-f109a-rt-and-survives-refresh-390-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-mobile-plan-wor-f109a-rt-and-survives-refresh-390-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-mobile-plan-wor-f109a-rt-and-survives-refresh-390-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-mobile-plan-wor-f109a-rt-and-survives-refresh-390-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/2] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, and survives refresh 430
+  2) [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, and survives refresh 430 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "/api/v1/journeys/00000000-0000-4000-8000-000000000331/plans/00000000-0000-4000-8000-000000000332/select",
+    +   "/api/v1/journeys/00000000-0000-4000-8000-000000000331/departure/commit",
+      ]
+
+      167 |   await expect(workbench).toContainText("已选用");
+      168 |   await expect(page.getByTestId("rev-v3-server-departure")).toContainText("可以确认出发");
+    > 169 |   expect(writes).toEqual([`/api/v1/journeys/${journeyId}/plans/${planId}/select`]);
+          |                  ^
+      170 |   await page.reload();
+      171 |   await page.getByTestId("rev-mobile-tab-trips").click();
+      172 |   await expect(workbench).toContainText("已选用");
+        at D:\moodle\_cmdr_rescue_v3_1022\frontend\e2e\revolution-mobile-plan-workbench.spec.ts:169:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-mobile-plan-wor-5d057-rt-and-survives-refresh-430-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-mobile-plan-wor-5d057-rt-and-survives-refresh-430-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-mobile-plan-wor-5d057-rt-and-survives-refresh-430-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-mobile-plan-wor-5d057-rt-and-survives-refresh-430-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2 failed
+    [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, and survives refresh 390 
+    [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, and survives refresh 430 

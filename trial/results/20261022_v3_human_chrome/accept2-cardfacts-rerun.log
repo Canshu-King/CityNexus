@@ -1,0 +1,5 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:122:1 › place cards show grounded hours and costs while preserving provenance and OSM links
+  1 passed (10.4s)

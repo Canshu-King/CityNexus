@@ -1,0 +1,5 @@
+CITIES status=BLOCKED eligible=0 required=3
+CITY 110000 BLOCKED missing=AT_LEAST_3_CAPTURED_ROUTES_REQUIRED poi=56 routes=0
+FACTS count=2
+FACT quality=LIVE_PROVIDER_CAPTURE degraded=False geometry_points=0 captured_at=2026-10-24T21:49:32.575034+00:00
+FACT quality=LIVE_PROVIDER_CAPTURE degraded=False geometry_points=0 captured_at=2026-10-24T21:49:32.575034+00:00

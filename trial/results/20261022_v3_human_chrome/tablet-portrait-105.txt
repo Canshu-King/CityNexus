@@ -1,0 +1,4 @@
+BEFORE {"scrollY":0,"jump":true,"top":415,"left":35}
+AFTER_JUMP {"scrollY":2730,"spatialScrollLeft":0,"clock":{"top":136,"left":36,"right":732,"w":696,"h":179,"inView":true,"hitSelf":true},"start":{"top":424,"left":53,"w":662,"h":44,"inView":true,"hitSelf":true}}
+RUN "模拟进行中 · 12-03 09:00"
+ERRORS []

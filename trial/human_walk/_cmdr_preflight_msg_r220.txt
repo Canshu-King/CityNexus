@@ -1,0 +1,13 @@
+Pre-flight the classroom stack read-only, so tomorrow's tablet walk starts from facts.
+
+The operator's own verification is the one thing nobody else can do, so the useful service is to say
+what the classroom database can and cannot show before they sit down.  A read-only ruler opens the
+canary with mode=ro -- and refuses any path that is not the classroom canary, so the real databases
+are unreachable by construction -- and reports the journey and plan state together with the route
+evidence tables.
+
+The starting condition for the departure door is satisfied: one PLANNED journey in the December
+window carries an active plan version in SELECTED state.  What is missing is evidence: both mobility
+fact tables read zero rows in total, so the walking-distance preference can only be answered by a
+live capture during the walk, or by the unknown/estimated wording.  That is stated as a database
+condition, not a screen defect, and capturing real routes was not run on this shift.

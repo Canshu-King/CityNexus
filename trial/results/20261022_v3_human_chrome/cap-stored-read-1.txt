@@ -1,0 +1,13 @@
+rule=read-only sqlite, journey_intents rows and their capability codes (scanner trial/human_walk/_cap_stored_read_r1.py)
+db=citynexus_v3_cap2_1024.db tables=93
+journey_intents columns=id,journey_id,created_by_traveler_id,created_by_member_id,source_text,intent_kind,scope_kind,scope_start_at,scope_end_at,local_date,target_activity_ids_json,canonical_dimensions_json,constraints_json,capabilities_json,preference_hints_json,semantic_envelope_json,source,compiler_provider_key,compiler_model_key,compiler_confidence,status,evaluation_state,semantic_fingerprint,created_at,updated_at,superseded_at,expired_at,cancelled_at
+journey_intents rows=8
+  id=161cd4a7-18c3-4db9-b7ad-e83c42906ec3 journey=c92ddaf1 superseded_at=None codes=[] text=北京玩两天，两个人。每段步行不超过1公里，远的请改坐地铁并写明线路和站名。
+  id=2c3a1261-6cda-417c-9a76-4d0b76c607b4 journey=62ffb116 superseded_at=None codes=[] text=北京玩两天，两个人
+  id=46f280dd-bc34-43e9-beb2-e7405b945b99 journey=6fe5d515 superseded_at=None codes=[] text=北京玩两天，两个人
+  id=96fd2cbd-cd82-4466-93ec-535d2fb7fdb5 journey=bd3a5a54 superseded_at=None codes=[] text=北京玩两天，两个人
+  id=9a778c0b-141c-42db-9c2b-cc6268bc4f4b journey=1645a493 superseded_at=None codes=[] text=北京玩两天，两个人
+  id=9f35b03a-4798-4e36-aa69-a71b7bb91d12 journey=cb4b3e56 superseded_at=None codes=[] text=北京玩两天，两个人。每段步行不超过1公里，远的请改坐地铁并写明线路和站名。
+  id=a89f9149-336c-4d85-97e2-1bf0a707e87d journey=452b6bc5 superseded_at=None codes=[] text=北京玩两天，两个人
+  id=f8bfe6ef-c9af-45c7-ae26-0c7347bbf497 journey=55c9019d superseded_at=None codes=[] text=北京玩两天，两个人
+journey_missions columns_of_interest=intent_json,resolved_intent_json

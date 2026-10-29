@@ -1,0 +1,73 @@
+NOT-RETRIEVABLE CITATIONS, ONE BY ONE by305
+SOURCE trial/results/20261026_gozero/by179-cited-artifact-audit.txt (declared 17, parsed 17)
+POOL searched: git-tracked files plus every file under trial/ (tracked or not)
+- LegacyApp.tsx  [present-but-untracked]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: another writer
+    name exists - the citation omits its directory
+    cite one of: frontend/src/app/LegacyApp.tsx
+- _arm_collision_ruler_r109.py  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: this line
+    no exact match; closest real files listed
+    rewrite the citation to one of: trial/human_walk/_arm_collision_ruler_r108.py, trial/human_walk/_raw_error_sink_ruler_r1.py
+- bf110…-r4.txt  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md,20261027_GO_FROM_BLANK_DELIVERY.md | face: this line
+    no exact match; closest real files listed
+    rewrite the citation to one of: trial/results/20261026_gozero/bf110-replan-apply-full-chain-430-r4.txt
+- bj115….txt  [no-file-answers-to-the-name]
+    cited by 20261027_GO_FROM_BLANK_DELIVERY.md | face: this line
+    no exact match; closest real files listed
+    rewrite the citation to one of: trial/results/20261026_gozero/bj115-named-sentence-tip-generation-430-r2.txt, trial/results/20261026_gozero/bj115-named-sentence-tip-generation-430-r3.txt, trial/results/20261026_gozero/bj115-named-sentence-tip-generation-430.txt
+- bn122…390.txt  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: this line
+    no exact match; closest real files listed
+    rewrite the citation to one of: trial/results/20261026_gozero/bn122-tool-step-source-390.txt
+- cityNamed.ts  [present-but-untracked]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: another writer
+    name exists - the citation omits its directory
+    cite one of: frontend/src/features/setup/cityNamed.ts
+- error-context.md  [gitignored-so-never-committed]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: shared
+    a rule ignores this shape, so it can never be committed
+    either unignore the path or stop citing it as retrievable evidence
+- frontend/src/features/setup/cityNamed.ts  [present-but-untracked]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: this line
+    nothing on disk answers this name
+    the document cites an artifact that is not there - needs a correction note
+- half-day-430-r34.txt  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: this line
+    no exact match; closest real files listed
+    rewrite the citation to one of: trial/results/20261026_gozero/half-day-390.txt, trial/results/20261026_gozero/half-day-430.txt
+- json  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: this line
+    no exact match; closest real files listed
+    rewrite the citation to one of: PACKAGE-MANIFEST.json, REVOLUTION_R47_TRANSACTIONAL_JOURNEY_OPERATOR_RESULT.json, backend/data/mock/wp04_city_services_overlay.json
+- mine.txt  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: another writer
+    no exact match; closest real files listed
+    rewrite the citation to one of: frontend/.storybook/main.ts, frontend/src/main.tsx, review/CityNexus-Overnight-Agent-Foundation-Checkpoint-20260911-v2/frontend/src/main.tsx
+- outer-after-runaccept-390-a/b.png  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: shared
+    a rule ignores this shape, so it can never be committed
+    either unignore the path or stop citing it as retrievable evidence
+- py/.yml/.sh/.mjs  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: this line
+    nothing on disk answers this name
+    the document cites an artifact that is not there - needs a correction note
+- test-results/…47ad9…/error-context.md  [gitignored-so-never-committed]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: shared
+    a rule ignores this shape, so it can never be committed
+    either unignore the path or stop citing it as retrievable evidence
+- theirs.tsx  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: another writer
+    no exact match; closest real files listed
+    rewrite the citation to one of: frontend/src/mocks/handlers.ts, frontend/src/theme.ts
+- ts  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: this line
+    nothing on disk answers this name
+    the document cites an artifact that is not there - needs a correction note
+- tsx  [no-file-answers-to-the-name]
+    cited by 20261026_GO_FROM_BLANK_REPORT.md | face: this line
+    nothing on disk answers this name
+    the document cites an artifact that is not there - needs a correction note
+TALLY a rule ignores this shape, so it can never be committed=3, name exists - the citation omits its directory=2, no exact match; closest real files listed=8, nothing on disk answers this name=4
+NOTE all 17 rows are itemised above; nothing here was added, renamed or deleted.

@@ -1,0 +1,10 @@
+### 八达岭长城  search_hits=2
+   hit0 Q798826 doc_label='Бадалин' exact_name_match=False distance_m=745 files=1 first=['GreatWall Badaling.jpg']
+   hit1 Q33239460 doc_label='八达岭长城站' exact_name_match=False distance_m=794 files=1 first=['Exterior of Badaling Great Wall Railway Station (20220109161541).jpg']
+### 天坛公园  search_hits=2
+   hit0 Q125445 doc_label='天坛' exact_name_match=False distance_m=531 files=1 first=['Temple of Heaven 20160323 01.jpg']
+   hit1 Q49570636 doc_label='Tiantan Gongyuan' exact_name_match=True distance_m=309 files=0 first=[]
+### 南锣鼓巷  search_hits=3
+   hit0 Q9529545 doc_label='Nanluoguxiang' exact_name_match=True distance_m=113 files=1 first=['Nanluogu Xiang (6230757826).jpg']
+   hit1 Q10909164 doc_label='Nanluogu Xiang station' exact_name_match=False distance_m=436 files=2 first=['Westbound platform of L6 Nanluogu Xiang Station (20230318133108).jpg', 'Southbound platform of L8 Nanluogu Xiang Station (20230318135056).jpg']
+   hit2 Q13647749 doc_label='南锣鼓巷社区' exact_name_match=False distance_m=None files=0 first=[]

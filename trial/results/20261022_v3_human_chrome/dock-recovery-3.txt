@@ -1,0 +1,24 @@
+CANDIDATE_0 url=http://127.0.0.1:14462/revolution mark={"tabs":3,"dock":true,"recovery":true,"status":"Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。","shape":"493x604","pointer":"{\"id\":\"2"}
+CANDIDATE_1 url=http://127.0.0.1:14436/revolution mark={"tabs":0,"dock":false,"recovery":false,"status":"","shape":"494x783","pointer":"{\"id\":\"0"}
+CANDIDATE_2 url=http://127.0.0.1:14436/revolution mark={"tabs":3,"dock":true,"recovery":false,"status":"","shape":"494x783","pointer":"{\"id\":\"0"}
+CANDIDATE_3 url=http://127.0.0.1:14436/revolution mark={"evaluate_error":"page.evaluate: Execution context was destroyed, most likely because of a navigation"}
+SELECTED origin=http://127.0.0.1:14462 mark={"tabs":3,"dock":true,"recovery":true,"status":"Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。","shape":"493x604","pointer":"{\"id\":\"2"}
+START {"tabs":3,"dock":true,"recovery":true,"status":"Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。","shape":"493x604","pointer":"{\"id\":\"2"}
+RECOVERY_ROW {"row":{"text":"重试这一轮先浏览已找到的地点","y":462,"x":9,"centre":[239,490],"covers_it":false,"topmost":"rev-mission-dock-recovery","inViewport":true},"retry":{"text":"重试这一轮","y":474,"x":9,"centre":[123,496],"disabled":false,"covers_it":false,"topmost":"BUTTON","inViewport":true},"browse":{"text":"先浏览已找到的地点","y":474,"x":243,"centre":[356,496],"disabled":false,"covers_it":false,"topmost":"BUTTON","inViewport":true},"scrollY":254,"shape":"493x604"}
+SHOT dock-recovery-1-before.png
+BASELINE_TASK undefined
+PRESSED 重试这一轮 at 2026-10-23T22:08:57.913Z
+RESUME_POLL_5s recovery=false status="Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。" resume_calls=[{"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":null}]
+RESUME_POLL_10s recovery=false status="Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。" resume_calls=[{"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":null}]
+RESUME_POLL_15s recovery=false status="Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。" resume_calls=[{"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":null}]
+RESUME_POLL_20s recovery=false status="Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。" resume_calls=[{"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":null}]
+RESUME_POLL_25s recovery=false status="Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。" resume_calls=[{"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":null}]
+RESUME_POLL_30s recovery=false status="Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。" resume_calls=[{"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":null}]
+RESUME_POLL_35s recovery=false status="Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。" resume_calls=[{"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":null}]
+RESUME_POLL_40s recovery=false status="" resume_calls=[{"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":200,"at_end":"2026-10-23T22:09:33.610Z"}]
+RESUME_RECEIPT {"at":"2026-10-23T22:08:57.915Z","kind":"resume","task":"1c7b5dcf","method":"POST","status":200,"at_end":"2026-10-23T22:09:33.610Z"} same_task=false
+SHOT dock-recovery-2-after-retry.png
+AFTER_RETRY_ROW {"row":null,"retry":null,"browse":null,"scrollY":1439,"shape":"493x604"}
+BROWSE_RESULT {"mapPressed":"false","agentPressed":"true","cards":0,"strip":"YOUR NEXT JOURNEY北京把想去变成出发。已有 2 天安排，随时可以和 Agent 一起调整。换地区 › 旅行插画已有阶段性成果地图日程对话你的旅行搭档已有阶段性成果已整理 2 天 · 7 项安排地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。一起商量安排刷新任务2 天 · 2 人 · 旅行需求已从服务器读取你先别问太多，按我说的直接安排。你按我们讨论的方向开始研究，遇到重要取舍先给我选择。CityNexus A","pointer":"{\"id\":\"2"}
+SHOT dock-recovery-3-after-browse.png
+NOTE 唯一的写入动作是发送一条旅客消息与两次点击（重试这一轮 / 先浏览已找到的地点）；未写 storage、未调接口、未起新标签页

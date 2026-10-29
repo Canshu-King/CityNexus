@@ -1,0 +1,6 @@
+landing gate r300: a wrong --title now lists the most recent landed titles
+
+This shift I searched the ledger for a phrase the block never contained, read LEDGER_HITS 0, and had to
+re-check whether a block had been lost.  It had not - the query was wrong.  The gate now shows what it
+did find, so a typo cannot be mistaken for an accident; --selftest asserts all three shapes.
+0 product bytes.

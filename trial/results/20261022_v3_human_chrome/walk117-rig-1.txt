@@ -1,0 +1,6 @@
+PAGE http://127.0.0.1:14562/revolution
+API_PORT 60461
+DB citynexus_v3_resume_1024.db
+MODEL_STUB http://127.0.0.1:7898/v1/chat/completions answers 503 on every POST
+OWNER_STACK_UNTOUCHED page 14436 db citynexus_v3_human_1022.db (mtime kept, file lock survived the launcher's remove attempt)
+STOPPED_AFTER page 14562 api 60461 stub 7898 all three no longer listening

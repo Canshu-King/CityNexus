@@ -1,0 +1,11 @@
+Name the eight validation reds and record that the contract is silent about a required field.
+ 
+All eight bodies are refused for the same missing key: consented_provider, required by the product's own
+request model with no default.  The field is sent by three frontend readers, so no traveller hits this
+door the way the tests do -- the eight belong with the stale-fixture family, not with the product.
+ 
+Measuring the door field by field against the checked-in contract found six of twelve fields absent,
+two of them required, so the generated client and the contract cannot describe what the endpoint
+actually accepts; that is the same hole as the six operation ids with no reader.  A side observation is
+logged for ruling rather than fixed: the model keeps an optional boolean consent flag beside a
+required provider enum, two consent notions in one body.  Nothing was changed.

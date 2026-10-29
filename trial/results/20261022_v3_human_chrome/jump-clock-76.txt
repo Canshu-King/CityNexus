@@ -1,0 +1,6 @@
+PHONE_BEFORE {"scrollY":0,"jump":true,"text":"去课堂控制台 ↓","top":405,"inView":true,"hitSelf":true}
+PHONE_AFTER {"scrollY":3062,"clockTop":0,"clockInView":true}
+PHONE_ERRORS []
+TABLET_BEFORE {"scrollY":0,"jump":true,"text":"去课堂控制台 ↓","top":455,"inView":true,"hitSelf":true}
+TABLET_AFTER {"scrollY":3344,"clockTop":0,"clockInView":true}
+TABLET_ERRORS []

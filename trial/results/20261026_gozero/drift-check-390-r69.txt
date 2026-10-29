@@ -1,0 +1,81 @@
+SHOT 390-g7-cold t=4.9
+HIT continue true t=5.8
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.5
+HIT open-settings true t=11.8
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.7
+HIT send true t=15.1
+HTTP POST 201 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks/8249b388-e6db-4a44-99a8-53f52d4b3fb0/run
+HIT skip-questions true t=22.2
+SKIP t=22.9
+SKIPPED true
+DRAFT t=179.2
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=179.3
+HIT tab-chat true t=179.6
+COMPOSER_ENABLED true t=205.6
+HIT send-fix false t=205.9
+FIX_SENT t=205.9
+FIX_IDLE true t=266.1
+SHOT 390-g7-after-fix t=266.1
+HIT journey-tab true t=266.5
+DRAFT_SLOTS 7
+NO_REMOVE_BUTTON
+DRIFT_FOLD true TIME_COUNT 14 BEFORE [{"label":"天安门广场：看升旗/广场拍照开始时间","value":"09:00"},{"label":"天安门广场：看升旗/广场拍照结束时间","value":"10:00"},{"label":"故宫博物院：由午门入园参观开始时间","value":"11:00"},{"label":"故宫博物院：由午门入园参观结束时间","value":"12:00"},{"label":"景山公园：登万春亭俯瞰故宫开始时间","value":"14:00"},{"label":"景山公园：登万春亭俯瞰故宫结束时间","value":"15:00"},{"label":"前门大街：老字号晚餐与逛街开始时间","value":"19:00"},{"label":"前门大街：老字号晚餐与逛街结束时间","value":"20:00"},{"label":"颐和园：昆明湖、长廊慢游开始时间","value":"09:00"},{"label":"颐和园：昆明湖、长廊慢游结束时间","value":"10:00"},{"label":"北海公园：白塔、九龙壁开始时间","value":"14:00"},{"label":"北海公园：白塔、九龙壁结束时间","value":"15:00"},{"label":"南锣鼓巷：胡同小吃与文创开始时间","value":"19:00"},{"label":"南锣鼓巷：胡同小吃与文创结束时间","value":"20:00"}] t=281.1
+TIME_EDITED "南锣鼓巷：胡同小吃与文创结束时间" 20:00 -> 19:15 t=281.1
+HIT save-drift false t=281.4
+DRIFT_SAVE_NOT_PRESSED
+HIT save-1-0 true t=281.8
+HTTP POST 201 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks/8249b388-e6db-4a44-99a8-53f52d4b3fb0/prepare-plan
+SAVE_ALERT 1/0 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","已保存 7 项正式安排。下方可以查看日程和出发待办。"]
+HIT price-1-1 true t=288.8
+HTTP POST 200 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks/8249b388-e6db-4a44-99a8-53f52d4b3fb0/plans/b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8/accept-unknown-price
+HIT refresh-after-price-1 true t=293.9
+HIT freeze-1-2 true t=299.0
+HIT refresh-after-freeze-1 true t=306.0
+HTTP POST 200 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks/8249b388-e6db-4a44-99a8-53f52d4b3fb0/plans/b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8/freeze-routes
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=310.8
+SHOT 390-g7-plans-1 t=310.8
+HIT select-1 true t=311.1
+HTTP POST 422 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","message_key":"request.invalid","trace_id":"de404cb0-5962-487d-8507-cd512307c6ab","details":{"detail":"PlanVersion b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","failures":["INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-ADP7MDG2"}}
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+HIT ask-refusal-1 true t=317.2
+ASK_REFUSAL_SENT 1 t=318.0
+GAP_REPAIR 1 ["天安门广场：看升旗/广场拍照结束时间 10:00->09:45","故宫博物院：由午门入园参观结束时间 12:00->11:45","景山公园：登万春亭俯瞰故宫结束时间 15:00->14:45","前门大街：老字号晚餐与逛街结束时间 20:00->19:45","颐和园：昆明湖、长廊慢游结束时间 10:00->09:45","北海公园：白塔、九龙壁结束时间 15:00->14:45","南锣鼓巷：胡同小吃与文创结束时间 19:15->19:00"] t=318.0
+SHOT 390-g7-selected-1 t=690.3
+HIT journey-tab true t=690.7
+HIT save-2-0 true t=694.0
+HTTP POST 422 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks/8249b388-e6db-4a44-99a8-53f52d4b3fb0/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY","message_key":"request.invalid","trace_id":"44b0b87f-ebb7-46cf-baac-267653431e2c","details":{"rule":"end_not_after_start","sequence_no":7,"title":"南锣鼓巷：胡同小吃与文创","date":"2026-12-04","start_time":"19:00","end_time":"19:00","previous_end_time":"14:45","journey_start_at":"2026-12-03T09:00:00+08:00","journey_end_at":"2026-12-04T21:00:00+08:00"},"reason_code":"ITEM_END_NOT_AFTER_ITEM_START","error_receipt_id":"CNX-DCHDC5MS"}}
+SAVE_ALERT 2/0 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","第 7 项「南锣鼓巷：胡同小吃与文创」 19:00–19:00：结束时间不晚于开始时间。改这一项的时间再保存，其余不用动。"]
+HIT save-2-1 true t=701.0
+HTTP POST 422 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks/8249b388-e6db-4a44-99a8-53f52d4b3fb0/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY","message_key":"request.invalid","trace_id":"58cfde78-25f4-43d8-8d21-a3d7a09a0f4c","details":{"rule":"end_not_after_start","sequence_no":7,"title":"南锣鼓巷：胡同小吃与文创","date":"2026-12-04","start_time":"19:00","end_time":"19:00","previous_end_time":"14:45","journey_start_at":"2026-12-03T09:00:00+08:00","journey_end_at":"2026-12-04T21:00:00+08:00"},"reason_code":"ITEM_END_NOT_AFTER_ITEM_START","error_receipt_id":"CNX-DCHDC5MS"}}
+SAVE_ALERT 2/1 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","第 7 项「南锣鼓巷：胡同小吃与文创」 19:00–19:00：结束时间不晚于开始时间。改这一项的时间再保存，其余不用动。"]
+HIT save-2-2 true t=708.1
+HTTP POST 422 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks/8249b388-e6db-4a44-99a8-53f52d4b3fb0/prepare-plan BODY {"error":{"code":"VALIDATION_ERROR","message":"SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY","message_key":"request.invalid","trace_id":"b593871f-2318-4230-8e21-d7f70dd09d2f","details":{"rule":"end_not_after_start","sequence_no":7,"title":"南锣鼓巷：胡同小吃与文创","date":"2026-12-04","start_time":"19:00","end_time":"19:00","previous_end_time":"14:45","journey_start_at":"2026-12-03T09:00:00+08:00","journey_end_at":"2026-12-04T21:00:00+08:00"},"reason_code":"ITEM_END_NOT_AFTER_ITEM_START","error_receipt_id":"CNX-DCHDC5MS"}}
+SAVE_ALERT 2/2 ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+SELECT_STATE count=1 visible=true enabled=false {"disabled":true,"cls":"","parent":"rev-plan-option"} t=714.8
+HIT refresh-for-disabled-2-3 true t=715.2
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=718.4
+SHOT 390-g7-plans-2 t=718.6
+HIT select-2 true t=718.9
+HTTP POST 422 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","message_key":"request.invalid","trace_id":"6f245c00-fbb9-4a33-b53d-fdbb59234850","details":{"detail":"PlanVersion b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","failures":["INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-ADP7MDG2"}}
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+HIT ask-refusal-2 true t=725.0
+HTTP POST 200 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/agent/goal-tasks/8249b388-e6db-4a44-99a8-53f52d4b3fb0/resume
+ASK_REFUSAL_SENT 2 t=725.8
+GAP_REPAIR 2 ["天安门广场：看升旗/广场拍照结束时间 10:00->09:45","故宫博物院：由午门入园参观结束时间 12:00->11:45","景山公园：登万春亭俯瞰故宫结束时间 15:00->14:45","前门大街：老字号晚餐与逛街结束时间 20:00->19:45","颐和园：昆明湖、长廊慢游结束时间 10:00->09:45","北海公园：白塔、九龙壁结束时间 15:00->14:45","南锣鼓巷：胡同小吃与文创结束时间 19:15->19:00"] t=725.8
+SHOT 390-g7-selected-2 t=772.4
+HIT journey-tab true t=772.7
+HIT refresh-start-3 true t=776.0
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=780.3
+SHOT 390-g7-plans-3 t=780.3
+HIT select-3 true t=780.6
+HTTP POST 422 /api/v1/journeys/c3cd51a2-5d8e-4ad3-9b0d-5ea15131474a/departure/commit BODY {"error":{"code":"VALIDATION_ERROR","message":"PlanVersion b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","message_key":"request.invalid","trace_id":"8c1562c0-573a-4ac6-a3dd-9e2327c2cf7f","details":{"detail":"PlanVersion b7264ed0-2a4e-4b03-aa2c-99e7ee8212f8 is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c","failures":["INSUFFICIENT_TRAVEL_GAP:real-place-00d9e27cd4cc6c7b28b6509e|real-place-62c2e60619da82efebfdea8c"]},"reason_code":"PLAN_INFEASIBLE","error_receipt_id":"CNX-ADP7MDG2"}}
+SELECT_REFUSAL ["这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"]
+HIT ask-refusal-3 true t=786.7
+ASK_REFUSAL_SENT 3 t=787.5
+GAP_REPAIR 3 ["天安门广场：看升旗/广场拍照结束时间 10:00->09:45","故宫博物院：由午门入园参观结束时间 12:00->11:45","景山公园：登万春亭俯瞰故宫结束时间 15:00->14:45","前门大街：老字号晚餐与逛街结束时间 20:00->19:45","颐和园：昆明湖、长廊慢游结束时间 10:00->09:45","北海公园：白塔、九龙壁结束时间 15:00->14:45","南锣鼓巷：胡同小吃与文创结束时间 19:15->19:00"] t=787.5

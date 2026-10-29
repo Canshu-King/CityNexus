@@ -1,0 +1,21 @@
+block 370 generator: the 19 catch sites that write their own sentence, with the words each one picks
+
+trial/human_walk/_cmdr_write_block_370_r331.py emitted the block that landed as
+_qoder_ledger_inbox/_processed/494abfd7_2213.md.inserted_221414. It reads the per-site lines bw327 prints
+and refuses to write unless they reconcile: parsed rows == says_zh == 19, the three sentence axes summing
+to the 64 catch bodies, both REVERSE_CHECK sets empty, and bw327's catch total equal to bw326's published
+catch=64, so this list cannot describe a different set than the two rulers above it.
+
+Two checks were wrong in the first draft and are now right. The destination axes overlap (a body can hold
+a setter and a console call), so demanding state+nowhere+console == catch would have aborted on correct
+data; the generator now derives the overlap by inclusion-exclusion and prints it as its own number, which
+reads 0 here because into_console is 0 across all 25 panels. And a stray dict-comprehension hack that
+existed only to dodge a bad anchor needle is gone - the needle is the ruler's own def literals line.
+
+Q43 read the finished block before it went to the inbox: 64 claims, 0 findings, GREEN, with the advisory it
+always raises on a per-site list (13 quantities vouched by a source line number) left visible rather than
+dressed away. Landing was confirmed by reading the ledger back: one hit, archived copy present, inbox
+empty. One thing this pass also shows about #331: the mirror leg printed rc=0 at 22:03 and rc=1 at 22:14 on
+the same code path, and since CNX_MIRROR_LIVE is unset both of those are the DRY arm - so its read-side
+guard is flapping, which is a fact about that leg and not about these insertions, all of which landed.
+0 product bytes.

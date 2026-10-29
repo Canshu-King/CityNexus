@@ -1,0 +1,24 @@
+STAY-MATERIALIZED PLAN AGAINST THE SELECTION GATE bw250
+DATABASE sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_r250_49dte_6m/probe.db (temporary, reached only through the product's own POST routes)
+GATE_ANSWERS_RECORDED 1 (refused 1, passed 0)
+PLAN VERSIONS ON THIS JOURNEY 1
+PLAN STATUSES {"ACTIVE": 1}
+ACTIVITY PLACE ROWS BY PROVIDER AND OPENING WORD
+    9 x citynexus-v9-domain | opening=NORMALIZED
+EVERY ANSWER BY STEP (this is the denominator, refusals alone are not)
+  control: ask the shared gate directly          line=799  used_ids=9   content_places=9   REFUSED
+STEPS
+  POST /api/v1/demo/reset -> http_status=200
+  POST /api/v1/journeys -> http_status=201
+  POST /api/v1/journeys/00ede356-4605-4b7b-9ca1-84b8424add70/stays/offers/capture -> http_status=200
+  POST /api/v1/journeys/00ede356-4605-4b7b-9ca1-84b8424add70/stay-options/generate -> http_status=200
+  POST /api/v1/journeys/00ede356-4605-4b7b-9ca1-84b8424add70/stay-options/d54f013b-ff54-4be6-b27e-77a5d5e7376a/select -> http_status=200
+  JOURNEY_STATUS_RIGHT_AFTER_STAY_SELECT ACTIVE
+  POST /api/v1/journeys/00ede356-4605-4b7b-9ca1-84b8424add70/plans/c3b50e9a-3e52-487d-911c-90ad54a3a8bc/select -> http_status=422
+  PLAN_SELECT http_status=422 body={"error":{"code":"VALIDATION_ERROR","message":"Only a candidate plan can be selected","message_key":"request.invalid","trace_id":"41baa9cc-8a87-4224-a572-388cc8d3ee71","details":null,"error_receipt_id":"CNX-ARF2F2R8"}}
+  POST /api/v1/journeys/00ede356-4605-4b7b-9ca1-84b8424add70/start -> http_status=200
+  START http_status=200 body={"journey_id":"00ede356-4605-4b7b-9ca1-84b8424add70","active_plan_version_id":"c3b50e9a-3e52-487d-911c-90ad54a3a8bc","current_activity_id":"70967700-61b0-4839-9dd4-4b1d5bb76f4a","latest_event_id":null,"projection_status":"READY","snapshot_at":"2026-10-29T03:45:44.266341Z","upcoming_commitments":[],"context":{"journey_status":"ACTIVE","provider_level":1,"degraded_providers":[],"feasibility_envelope
+MEASURED YES
+POSITIVE_CONTROL asked=True seen_by_trace=True direct_answer=UNRESOLVED_ACTIVITY_FACTS
+V9_DOMAIN_ROWS_PRESENT YES
+V9_DOMAIN_ROWS_REFUSED_BY_THE_GATE NO

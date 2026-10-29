@@ -1,0 +1,5 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:469:3 › Revolution Mobile-First UI fixture › ACTIVE mobile shows the signed Hermes run and returned tool events
+  1 passed (7.2s)

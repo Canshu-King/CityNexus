@@ -1,0 +1,77 @@
+read from citynexus_v3_human13_1022.db with the sqlite backup API (the running stack keeps its WAL)
+
+journey 23a13e84-f169-404f-83e4-942cc49cc2ec status DRAFT start 2026-12-03T09:00 active_plan None created 2026-10-23T00:11:54.223305+00:00
+
+plan e84a4116 version 1 status CANDIDATE source MANUAL snapshot f41a179a frozen_facts 3 captured 2026-10-23T00:15:16
+      hop -00d9e27 -> -62c2e60 minutes 46 quality LIVE_PROVIDER_CAPTURE cost CITYNEXUS_COST_ESTIMATE
+      hop -07848c0 -> -248bb52 minutes 12 quality LIVE_PROVIDER_CAPTURE cost CITYNEXUS_COST_ESTIMATE
+      hop -62c2e60 -> -07848c0 minutes 20 quality LIVE_PROVIDER_CAPTURE cost CITYNEXUS_COST_ESTIMATE
+   seq 1 天安门广场 · 看广场与纪念碑                SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 2 故宫博物院 · 中轴线深度游                 SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 3 景山公园 · 登万春亭俯瞰故宫                SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 4 北海公园 · 市中心轻松散步                 SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 5 自由休整 / 就近慢逛                    FREE_TIME place=none  opening=-                     routing=NOT_ROUTED
+   seq 6 晚餐与休闲（王府井/前门一带，待定）             FREE_TIME place=none  opening=-                     routing=NOT_ROUTED
+   activities=6 bound_to_a_place=4
+
+mission 2ee58462 status PARTIAL_READY started 2026-10-23T00:12:00 completed 2026-10-23T00:17:26 draft_revision=None plan_id=-
+   stored prepare-plan answer: slots=6 unrouted=2 known_subtotal=0 opening_checks=4 price_accepted=True
+
+goal-task event trail (audit_logs.action='agent.goal_task.event', newest 30):
+   2026-10-23T00:12:53 seq 30 TOOL_STARTED status WORKING tool save_draft_itinerary reason -
+   2026-10-23T00:12:53 seq 31 TOOL_COMPLETED status WORKING tool save_draft_itinerary reason -
+   2026-10-23T00:12:53 seq 32 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-23T00:12:56 seq 33 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-23T00:12:56 seq 34 TOOL_STARTED status WORKING tool discover_places reason -
+   2026-10-23T00:12:56 seq 35 TOOL_COMPLETED status WORKING tool discover_places reason -
+   2026-10-23T00:12:56 seq 36 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-23T00:13:00 seq 37 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-23T00:13:00 seq 38 TOOL_STARTED status WORKING tool ask_traveler reason -
+   2026-10-23T00:13:00 seq 39 TOOL_COMPLETED status WORKING tool ask_traveler reason -
+   2026-10-23T00:13:00 seq 40 TASK_NEEDS_DECISION status NEEDS_DECISION tool - reason TRAVELER_INPUT_REQUIRED
+   2026-10-23T00:13:15 seq 41 USER_MESSAGE_ADDED status RESUMABLE tool - reason -
+   2026-10-23T00:13:15 seq 42 RUN_STARTED status WORKING tool - reason -
+   2026-10-23T00:13:15 seq 43 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-23T00:14:29 seq 44 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-23T00:14:29 seq 45 TOOL_STARTED status WORKING tool save_draft_variants reason -
+   2026-10-23T00:14:29 seq 46 TOOL_COMPLETED status WORKING tool save_draft_variants reason -
+   2026-10-23T00:14:29 seq 47 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-23T00:14:38 seq 48 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-23T00:14:38 seq 49 TASK_PARTIAL_READY status PARTIAL_READY tool - reason SUMMARY_READY
+   2026-10-23T00:14:49 seq 50 TASK_DRAFT_UPDATED status PARTIAL_READY tool - reason -
+   2026-10-23T00:15:46 seq 51 USER_MESSAGE_ADDED status RESUMABLE tool - reason -
+   2026-10-23T00:15:46 seq 52 RUN_STARTED status WORKING tool - reason -
+   2026-10-23T00:15:46 seq 53 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-23T00:16:37 seq 54 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-23T00:16:37 seq 55 TOOL_STARTED status WORKING tool inspect_journey reason -
+   2026-10-23T00:16:37 seq 56 TOOL_COMPLETED status WORKING tool inspect_journey reason -
+   2026-10-23T00:16:37 seq 57 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-23T00:17:26 seq 58 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-23T00:17:26 seq 59 TASK_PARTIAL_READY status PARTIAL_READY tool - reason SUMMARY_READY
+
+the traveller's own doors, in server order (audit rows whose action names a goal/plan/journey step):
+   2026-10-23T00:15:12 goal.draft.prepared              {"draft_revision": 2, "plan_version_id": "e84a4116-10c0-42ee-a5e9-68e746a66554"}
+   2026-10-23T00:15:16 goal.routes.frozen               {"plan_version_id": "e84a4116-10c0-42ee-a5e9-68e746a66554", "frozen": true, "verified": 3, "total": 3, "mobility_snapshot_id": "f41a179a-7e84-4fbe-8f90-828302aa9dd7"}
+   2026-10-23T00:15:27 goal.price.unknown.accepted      {"plan_version_id": "e84a4116-10c0-42ee-a5e9-68e746a66554", "unknown_count": 4}
+
+AMap provider calls made since this journey was created (provider_calls carries no journey column, so this is a time window, not a per-journey claim):
+   amap-web-service goal_amap_district 1  (2026-10-23T00:12:28 → 2026-10-23T00:12:28)
+   amap-web-service goal_amap_search 5  (2026-10-23T00:12:28 → 2026-10-23T00:12:56)
+   amap-web-service goal_amap_walking 3  (2026-10-23T00:15:16 → 2026-10-23T00:15:16)
+   wikimedia-commons goal_place_media 6  (2026-10-23T00:12:31 → 2026-10-23T00:14:32)
+
+audit trail for this journey (action, rows):
+   agent.goal_task.event 59
+   agent_tool_requested 2
+   goal.draft.prepared 1
+   goal.price.unknown.accepted 1
+   goal.routes.frozen 1
+   journey.created 1
+
+idempotency keys by operation, and the ones whose stored answer names this journey:
+   goal.freeze-routes total=3 naming_this_journey=1
+   goal.prepare total=3 naming_this_journey=1
+   goal.price-accept total=3 naming_this_journey=1
+   journey.departure.commit total=1 naming_this_journey=0
+   revolution.start.journey total=3 naming_this_journey=1
+   revolution.start.traveler total=3 naming_this_journey=0

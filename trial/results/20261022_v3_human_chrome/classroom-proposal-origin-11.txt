@@ -1,0 +1,4 @@
+ORIGIN "规则引擎生成 · 不是大模型现场推理"
+DIFF "移除故宫博物院；路上少 66 分钟。"
+CARD true
+ERRORS []

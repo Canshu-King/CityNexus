@@ -1,0 +1,7 @@
+GUARDIAN_TAB 1
+PANEL 1 PROPOSAL 1 ACCEPT 1
+DIFF "移除故宫博物院；路上少 66 分钟。"
+ORIGIN "规则引擎生成 · 不是大模型现场推理"
+ACCEPT_BOX {"rect":{"x":55,"y":445.625,"width":136,"height":44},"hit":{"hitSelf":true,"top":446,"inView":true}}
+RESPONSES ["200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/replans","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current","200 /api/v1/demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current","200 /api/v1/demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/cities?seed=17"]
+ERRORS []

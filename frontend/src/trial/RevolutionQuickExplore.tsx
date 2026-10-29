@@ -828,7 +828,9 @@ export function RevolutionQuickExplore({
 
   const focusAiPrompt = () => {
     if (missionMode) {
-      document.getElementById("rev-mission-chat-input")?.focus();
+      const input = document.getElementById("rev-mission-chat-input");
+      input?.scrollIntoView({ block: "center", inline: "nearest" });
+      input?.focus();
       return;
     }
     const prompt = quickExploreRef.current?.querySelector<HTMLTextAreaElement>("#rev-quick-ai-prompt");
@@ -854,7 +856,9 @@ export function RevolutionQuickExplore({
               : "想去哪儿逛逛？"}
         </h2>
         <p>
-          {stage === "area" && "这里可以手动查找地点，也可以在底部告诉 Agent 你的旅行目标。"}
+          {stage === "area" && (missionMode
+            ? "你的想法已经写好了，可以改，改完交给 Agent。"
+            : "这里可以手动查找地点，也可以在底部告诉 Agent 你的旅行目标。")}
           {stage === "category" && "位置已选好。你可以直接输入地点或玩法关键词；四种分类只是备用查找方式。"}
           {stage === "results" && !isPartialLiveResult && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
           {stage === "walk" && "保存了两个公开地点。你可以在行程中手动更新到访进度。"}
@@ -862,11 +866,11 @@ export function RevolutionQuickExplore({
         {stage === "area" && agentConfigured && (
           <button
             type="button"
-            className="rev-quick-text-btn"
+            className={missionMode ? "rev-quick-primary" : "rev-quick-text-btn"}
             data-testid="rev-quick-ask-ai-shortcut"
             onClick={focusAiPrompt}
           >
-            问 AI
+            {missionMode ? "改这句，然后交给 Agent →" : "问 AI"}
           </button>
         )}
         <div className="rev-quick-progress" aria-label="当前步骤">
@@ -921,6 +925,8 @@ export function RevolutionQuickExplore({
             mapLink={mapLink}
             aiGoal={aiGoal}
             showAiPrompt={!missionMode}
+            leadWithAgent={aiGoal.trim().length >= 4}
+            secondary={missionMode}
             agentConfigured={agentConfigured}
             agentChecking={agentChecking}
             aiAdvice={aiAdvice}

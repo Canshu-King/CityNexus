@@ -1,0 +1,11 @@
+DEMO GATE THREE-ARM MEASUREMENT bw223
+TARGETS tests/test_qoder_simulation_mode.py tests/test_qoder_catalog_hydration.py
+REPS_PER_ARM 3
+STABLE_CORE_ROWS 7 failing in every repetition of arm A: test_a_naive_projection_instant_is_refused_by_name_instead_of_500 test_reset_leaves_a_bookable_stage_and_start_scenario_makes_it_executable test_the_projection_carries_the_lifecycle_and_never_a_percentage test_the_reset_route_is_closed_without_the_switch_and_deletes_nothing test_the_scene_clock_moves_with_the_scenario_and_never_with_the_device test_the_scene_read_reports_the_scenario_clock_and_not_this_machine test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set
+ARM_A refusal=DEMO_DATABASE_NOT_ISOLATED counts=[7, 7, 7]
+ARM_B refusal=DEMO_PRESENTER_REQUIRED counts=[7, 7, 8] (only environment changed: declared DB mirrored into CITYNEXUS_DEMO_DATABASE_PATH + CITYNEXUS_DEMO_MODE)
+ARM_C refusal=DEMO_PRESENTER_REQUIRED counts=[7, 7, 7] (arm B plus a 40-character filler presenter key)
+NOTHING_REPAIRED_BY_ENVIRONMENT enforced above: no stable core row turned green in arms B or C
+TIMING_SENSITIVE_ROWS {"test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned": "1/9"}
+GATE_READ app/demo_access.py:14 needs settings.demo_mode plus an absolute declared path equal to the bound database; app/demo_access.py:36 then needs either the presenter header or a signed traveler bound to that database
+PRODUCT_BYTES_CHANGED 0 -- the arms differ only by environment variables; the key set in arm C is a filler string, never a credential

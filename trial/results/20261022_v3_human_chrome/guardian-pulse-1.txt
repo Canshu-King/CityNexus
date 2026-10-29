@@ -1,0 +1,49 @@
+{
+ "session_http": 405,
+ "pulse_http": 200,
+ "pulse_seconds": 230.4,
+ "counts_before": {
+  "pulses": 4,
+  "agent_runs": 34,
+  "proposals": 1
+ },
+ "counts_after": {
+  "pulses": 5,
+  "agent_runs": 35,
+  "proposals": 1
+ },
+ "returned_keys": [
+  "context_watch",
+  "counterfactuals",
+  "guardian",
+  "next_move",
+  "overnight",
+  "phase",
+  "pulse_id",
+  "resilience",
+  "signals",
+  "standby_maintenance",
+  "trace"
+ ],
+ "returned_status": null,
+ "returned_decision": "RECOVERY_REQUIRED",
+ "pulse_status": "COMPLETED",
+ "pulse_agent_runtime": null,
+ "pulse_result_keys": [
+  "context_watch",
+  "counterfactuals",
+  "guardian",
+  "next_move",
+  "overnight",
+  "phase",
+  "resilience",
+  "signals",
+  "standby_maintenance",
+  "trace"
+ ],
+ "latest_proposal": {
+  "status": "PRESENTED",
+  "source_agent_run_id": null,
+  "created_at": "2026-10-25T07:12:53.695103+00:00"
+ }
+}

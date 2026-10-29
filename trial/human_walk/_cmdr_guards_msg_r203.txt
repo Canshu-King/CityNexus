@@ -1,0 +1,13 @@
+Name what the nine invariant guards actually hit, measured again at the tip.
+
+A guard that prints its own drift sentence is only useful if the drift is real, so these nine were
+re-run at this generation rather than read off the older log: all nine are still red, and each one
+now carries the concrete thing it caught. Two of the nine got an independent second ruler -- the
+generated-client gap was recomputed by walking the OpenAPI paths and testing the client's own
+reference form, and it agreed with the guard's number (170 operations, 164 with a reader, 6 absent,
+each absent id named). The live-network offenders are pointed at by file and line, the hardcoded
+lock-wait at the line that writes it, and the receipt-table guard at the three model definitions
+that made its LIKE clause too wide.
+
+Nothing was edited to make a guard pass, and no product byte changed: this is measurement plus two
+new rulers that abort when their own arithmetic disagrees.

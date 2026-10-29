@@ -1,0 +1,13 @@
+WALK10D_START 2026-10-22T10:49:42.646Z purpose=returning traveller with no session in this browser process
+LOCAL_STATE journey={"id":"7cd5dda8-fca7-4a5a-ad39-87ce651ec7af","cityCode":"CN-RV-088DFE9C5574","cityName":"北京","status":"DRAFT","ownerTravelerId":"c88bee40-6c69-4519-85df-6f23e51332d8"} recent=[{"id":"7cd5dda8-fca7-4a5a-ad39-87ce651ec7af","cityCode":"CN-RV-088DFE9C5574","cityName":"北京","status":"DRAFT","ownerTravelerId":"c88bee40-6c69-4519-85df-6f23e51332d8"}]
+SESSION bearer=absent session_id=absent
+FIRST_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+SHOT human-70-returning-first-screen.png
+TAB_trips visible=true
+SCREEN_TRIPS C CityNexus 你的智能旅行伙伴 AI 建议可试 TRIPS 行程 开始探索一个地区后，你保存的路线和出发进度会显示在这里。 开始探索 → AI 服务 AI 建议可试 选好地点并确认行程后，Agent 就会开始工作。 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+SHOT human-71-tab-trips.png
+TAB_me visible=true
+SCREEN_ME C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS 我的 开始探索后，这里会显示你的地区和助手状态。 AI 助手 AI 建议可试 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+SHOT human-71-tab-me.png
+RESUME_BUTTONS=0
+WALK10D_END 2026-10-22T10:49:52.773Z

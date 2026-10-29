@@ -51,6 +51,11 @@ class Settings:
     traveler_auth_ttl_seconds: int = int(
         os.getenv("CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS", "3600")
     )
+    # Classroom sandbox, first cut: off unless the play stack turns it on.  With it off both
+    # simulation-clock routes answer 404, so a production deploy cannot reach them at all.
+    simulation_enabled: bool = (
+        os.getenv("CITYNEXUS_SIMULATION_ENABLED", "false").lower() == "true"
+    )
     live_valhalla_url: str | None = os.getenv("CITYNEXUS_LIVE_VALHALLA_URL") or None
     # Remote Valhalla emulators must opt into test provenance explicitly. The
     # adapter independently marks loopback and reserved test hosts as test.
@@ -76,6 +81,21 @@ class Settings:
         if item.strip()
     )
     hermes_native_binary: str | None = os.getenv("CITYNEXUS_HERMES_BINARY") or None
+    # A model turn of the goal-task loop carries the journey context and the whole tool schema, so
+    # it needs longer than any provider probe. This used to be borrowed from
+    # `impact_timeout_seconds` (ten seconds), and measured on a real browser run every such turn
+    # died as `MODEL_TIMEOUT` with zero steps written -- the traveller pressed 发送 and got nothing.
+    # The Agent's own clock, so turning the impact knob down cannot mute the assistant.
+    #
+    # Ninety seconds was itself too tight, measured on the departure card's ask (walk-68 through
+    # walk-71, one story, four presses of the same gap list): the turn came back once at 80 seconds
+    # and timed out three times at the ninety-second ceiling, each timeout landing on the traveller's
+    # screen as a failed run. Asking the Agent to look up six arrangements is the heaviest turn this
+    # loop makes, so the ceiling moves to three minutes -- the failure is now reported on screen
+    # (frontend/src/trial/mobile/WorkspaceActions.tsx:668), which is what made the rate measurable.
+    agent_model_timeout_seconds: float = float(
+        os.getenv("CITYNEXUS_AGENT_MODEL_TIMEOUT_SECONDS", "180")
+    )
     hermes_native_proven: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_PROVEN") or None
     hermes_native_api_url: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_API_URL") or None
     hermes_api_server_key: str | None = os.getenv("CITYNEXUS_HERMES_API_SERVER_KEY") or None

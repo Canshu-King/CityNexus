@@ -61,6 +61,7 @@ export interface PlanVersion {
   is_current?: boolean;
   stale?: boolean;
   selectable?: boolean;
+  mobility_snapshot_id?: string | null;
   lifecycle?: string;
   explanation?: Record<string, unknown>;
 }
@@ -1734,6 +1735,14 @@ export interface BootstrapDiscoveryCandidate {
   source_tags: Record<string, string>;
   source_attribution?: string;
   source_attribution_url?: string;
+  // /map-places also projects the stops already accepted into the active plan, straight from `places`.
+  // Those carry no bootstrap observation, so they arrive with their own origin instead of a receipt.
+  origin?: "PLAN_ACTIVITY";
+  place_id?: string;
+  provider?: string;
+  source_coordinate_system?: string | null;
+  scheduled_start_at?: string;
+  activity_title?: string;
   public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
 }
@@ -2213,11 +2222,88 @@ export interface GoalDraftArtifact {
 export interface GoalPreparationSchedule {
   day_index: number; slot_index: number; start_time: string; end_time: string;
 }
+export interface GoalRouteEdge {
+  from_place_id: string; to_place_id: string; from_name: string; to_name: string;
+  status: "REUSED_PROVIDER_RECEIPT" | "MEASURED_NOW" | "ROUTE_UNAVAILABLE";
+  minutes: number | null; distance_m: number | null; provider: string | null;
+  source_url: string | null; captured_at: string | null; reason_code: string | null;
+  // The link runs to the next calendar day, so the card names it instead of counting it as today's walk.
+  spans_night?: boolean;
+  // Which door answered this hop. A far link or a cross-night one is not a walk, and the card says so
+  // with the lines the provider named rather than dressing a bus ride up as footsteps.
+  mode?: "WALK" | "TRANSIT" | null;
+  lines?: string[];
+  // The traveller's own per-hop walking limit, and what this door did about it: `replaced_walk_m` is the
+  // walk that the transport answer stands in for, `over_cap_m` is a walk that stayed because the
+  // transport door had no answer. (backend/app/agent/goal_route_freeze.py:388 and :401)
+  replaced_walk_m?: number | null;
+  walking_cap_m?: number | null;
+  over_cap_m?: number | null;
+}
+
+export interface GoalRouteFreezeResult {
+  journey_id: string; task_id: string; plan_version_id: string; edges: GoalRouteEdge[];
+  verified: number; total: number; frozen: boolean; mobility_snapshot_id: string | null;
+  overnight?: number;
+  transit?: number;
+  // Hops the walking limit moved onto the transport door, hops still over it, and the limit itself
+  // (absent when the traveller never wrote a number).
+  replaced_long_walks?: number;
+  over_cap_walks?: number;
+  walking_cap_m?: number | null;
+  reason_code: string | null; idempotency_replay?: boolean;
+}
+
+// The measured minutes of each hop read against the gap the traveller left for it, plus the smallest
+// re-arrangement that fits.  This one asks for nothing and changes nothing: applying the rows is the
+// traveller's own press of the same 保存为正式候选方案 door, which writes a new CANDIDATE version.
+export interface GoalTravelGapHop {
+  origin_title: string; destination_title: string;
+  planned_gap_minutes: number | null; required_minutes: number | null; short_by_minutes: number;
+  spans_night: boolean; provider?: string | null; reason_code?: string | null;
+}
+
+export interface GoalTravelGapRow {
+  day_index: number; slot_index: number; title: string;
+  planned_start: string; planned_end: string; proposed_start: string; proposed_end: string;
+  extra_minutes: number; direct_cause: boolean;
+}
+
+export interface GoalTravelGapAnswer {
+  journey_id: string; task_id: string; plan_version_id: string;
+  frozen: boolean; hops: GoalTravelGapHop[]; rows: GoalTravelGapRow[];
+  reason_code: string | null;
+}
+
+// One traveller's recorded decision about prices no source answered. The count and the id list come
+// back from the server, and `unknown_cost_included: false` is the part the screen must never drop:
+// accepting is not buying, and it is not a budget that holds.
+export interface GoalPriceConsentResult {
+  journey_id: string; task_id: string; plan_version_id: string; accepted: boolean;
+  unknown_place_ids: string[]; unknown_count: number; known_subtotal_minor: number;
+  currency: string; unknown_cost_included: false; authority_state: string;
+  mobility_snapshot_id: string | null; selectable_after: boolean; blocker_after: string | null;
+  confirmed_at: string; idempotency_replay?: boolean;
+}
+
 export interface GoalPreparationResult {
   journey_id: string; task_id: string; draft_revision: number; plan_version_id: string;
   status: "CANDIDATE"; selected: false; activated: false; slots_count: number;
+  unrouted_count?: number;
+  known_subtotal_minor?: number;
   mobility_frozen: boolean;
-  gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN" }>;
+  // The last time this card pressed 核实并冻结今天的转场, whatever that door answered -- including a half
+  // measured set.  backend/app/agent/goal_route_freeze.py writes it so a refresh cannot erase work the
+  // traveller already paid for (trial/results/20261022_v3_human_chrome/walk-83-log.txt:34 against :54).
+  route_attempt?: { verified: number; total: number; overnight: number; transit: number; frozen: boolean;
+    replaced_long_walks?: number; over_cap_walks?: number; walking_cap_m?: number | null;
+    reason_code?: string | null; answered_at: string;
+    unanswered: Array<{ from_name?: string | null; to_name?: string | null; reason_code?: string | null }> };
+  price_unknown_accepted?: { plan_version_id: string; unknown_place_ids: string[]; accepted_at: string; known_subtotal_minor: number; currency: string };
+  gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN";
+    resolution?: string; detail?: { verdict?: string; reason_code?: string; source_text?: string } | null }>;
+  opening_checks?: Array<{ sequence_no: number; title: string; verdict: string; reason_code?: string | null;
+    window?: number[] | null; defers_to_notice?: boolean; source_text?: string | null }>;
 }
 export interface GoalResearchLead {
   id: string; name: string; category: string; latitude: number; longitude: number;
@@ -2244,6 +2330,19 @@ export interface GoalResearchRoute {
   duration_seconds: number;
   captured_at: string;
   source_url: string;
+  // Which door answered.  A row written by the public-transport leg names the bus or metro lines it
+  // used; a row with no mode came from the walking door, which is the only thing that ever wrote one
+  // here before that leg existed (backend/app/agent/goal_route_freeze.py).
+  mode?: "WALK" | "TRANSIT" | null;
+  lines?: string[];
+  // What this version of the plan froze for this hop, once the traveller's own walking limit touched it.
+  // The row above stays what the Agent measured; these fields say whether the plan rode instead of walked
+  // (backend/app/agent/goal_route_freeze.py `_mark_frozen_hop`).
+  walking_cap_m?: number | null;
+  frozen_mode?: "WALK" | "TRANSIT" | null;
+  frozen_distance_m?: number | null;
+  frozen_minutes?: number | null;
+  frozen_lines?: string[];
 }
 export interface GoalDraftVariant {
   id: string; title: string; comparison: string; artifact: GoalDraftArtifact;
@@ -2258,6 +2357,7 @@ export interface GoalPlaceMedia {
 export interface GoalPlaceMediaResult {
   candidate_id: string; journey_id: string; task_id: string; place_id: string;
   status: string; media: GoalPlaceMedia | null; cache_hit?: boolean;
+  reason_code?: string | null;
   source_reference?: string | null; source_wikidata_id?: string | null;
 }
 
@@ -2267,7 +2367,8 @@ export interface DraftGoalTask {
   mode: "GOAL_PLANNING";
   status: string;
   goal: string;
-  conversation?: Array<{ role: "user" | "assistant"; text: string; message_id: string; at: string }>;
+  conversation?: Array<{ role: "user" | "assistant"; text: string; message_id: string; at: string;
+    draft_revision_before?: number | null; draft_revision_after?: number | null }>;
   consent: { model?: boolean; online_research?: boolean };
   budget: { max_model_turns?: number; max_tool_calls?: number; unlimited?: boolean };
   interaction_mode?: "DISCUSS" | "RESEARCH";
@@ -2291,6 +2392,8 @@ export interface DraftGoalTask {
     tool_name: string;
     status: string;
     result: Record<string, unknown>;
+    created_at?: string;
+    completed_at?: string | null;
   }>;
   assistant_summary?: string | null;
   draft_artifact?: GoalDraftArtifact | null;
@@ -2861,7 +2964,28 @@ export interface JourneyDepartureRead {
   selected_plan: { plan_version_id: string; activities_count: number } | null;
   candidates: Array<{ plan_version_id: string; version_no: number; activities_count: number }>;
 }
+// What `GET /api/v1/journeys/session/recent-drafts` answers for the bearer: three fields, read
+// off the route that already exists on this tree (`backend/app/main.py:7513`).
+export interface SessionDraftJourney { id: string; city_code: string; status: string; title?: string }
+export interface DemoSessionRead {
+  access_token: string; traveler_id: string; journey_id: string; journey_title: string;
+}
+export interface DemoPairingRead extends DemoSessionRead {
+  expires_in: number;
+}
 export interface JourneyMemberSeatRead { journey_id: string; traveler_id: string; may_confirm_departure: boolean; seat: { in_force: boolean; role: string | null } }
+
+// What the commit door answers (`backend/app/departure_commit.py:251`). `journey` is the same record
+// the journey read gives, because the transition is the shipped plan door's own
+// (`backend/app/main.py:18029`); `idempotency_replay` only ever arrives on a second press with the
+// same key, and it is the door saying "this is the answer you already got".
+export interface JourneyDepartureCommit {
+  journey_id: string; plan_version_id: string; committed_by: string;
+  seat: { traveler_id: string; seat_kind: string; role: string | null; member_id: string | null;
+    member_state: string; expires_at: string | null; in_force: boolean };
+  idempotency_key: string; decision_action: string; committed_at: string;
+  idempotency_replay?: true; journey: JourneyRecord;
+}
 
 export const cityNexusApi = {
   resetDemo(): Promise<DemoIds> {
@@ -2916,11 +3040,43 @@ export const cityNexusApi = {
   getJourneyDeparture(journeyId: string): Promise<JourneyDepartureRead> {
     return requestJson<JourneyDepartureRead>("/journeys/" + journeyId + "/departure", { headers: travelerAuthHeaders(), cache: "no-store" });
   },
+  // The signed commit door (`backend/app/departure_commit.py:128`): one traveller's own press, one
+  // decision, and a key that lets the same traveller press again without making a second plan
+  // selection.  The keys below are read off the answer the door actually builds
+  // (`backend/app/departure_commit.py:251`), not off a wish list.
+  commitJourneyDeparture(journeyId: string, planVersionId: string, idempotencyKey: string): Promise<JourneyDepartureCommit> {
+    return requestJson<JourneyDepartureCommit>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/departure/commit",
+      { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify({ plan_version_id: planVersionId }) },
+    );
+  },
   getJourneyMemberSeat(journeyId: string): Promise<JourneyMemberSeatRead> {
     return requestJson<JourneyMemberSeatRead>("/journeys/" + journeyId + "/members/me", { headers: travelerAuthHeaders(), cache: "no-store" });
   },
   getJourney(journeyId: string): Promise<JourneyRecord> {
     return requestJson<JourneyRecord>("/journeys/" + journeyId, { headers: travelerAuthHeaders() });
+  },
+  // The trips this signed traveller left behind, scoped by the server rather than by a filter this
+  // screen writes for itself: `GET /api/v1/journeys` on this tree is deliberately not per-traveller
+  // (`backend/app/main.py:7540`), so it is the wrong door for one person's own list and would turn
+  // the screen into a window onto other people's trips.  This door answers with the bearer's rows.
+  demoSession(): Promise<DemoSessionRead> {
+    return requestJson<DemoSessionRead>("/demo/session", { cache: "no-store" });
+  },
+
+  redeemDemoPairing(ticket: string): Promise<DemoPairingRead> {
+    return requestJson<DemoPairingRead>("/demo/pairing/redeem", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticket }),
+      cache: "no-store",
+    });
+  },
+
+  listSessionDraftJourneys(): Promise<SessionDraftJourney[]> {
+    return requestJson<SessionDraftJourney[]>("/journeys/session/recent-drafts",
+      { headers: travelerAuthHeaders(), cache: "no-store" });
   },
 
   listJourneyPlans(journeyId: string): Promise<PlanVersion[]> {
@@ -2935,7 +3091,10 @@ export const cityNexusApi = {
   },
 
   listEvents(journeyId: string): Promise<EventRecord[]> {
-    return requestJson<EventRecord[]>("/journeys/" + journeyId + "/events");
+    return requestJson<EventRecord[]>("/journeys/" + journeyId + "/events", {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    });
   },
 
   getAgentPolicy(travelerId: string): Promise<AgentPolicy> {
@@ -2999,7 +3158,7 @@ export const cityNexusApi = {
   },
 
   getPlan(planId: string): Promise<PlanVersion> {
-    return requestJson<PlanVersion>("/plans/" + planId);
+    return requestJson<PlanVersion>("/plans/" + planId, { headers: travelerAuthHeaders(), cache: "no-store" });
   },
 
   createBooking(journeyId: string, activityId: string): Promise<Booking> {
@@ -3052,7 +3211,10 @@ export const cityNexusApi = {
 
   getTwin(journeyId: string, now?: string): Promise<JourneyTwin> {
     const suffix = now ? "?now=" + encodeURIComponent(now) : "";
-    return requestJson<JourneyTwin>("/journeys/" + journeyId + "/twin" + suffix);
+    return requestJson<JourneyTwin>("/journeys/" + journeyId + "/twin" + suffix, {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    });
   },
 
   getAgentFeed(journeyId: string, limit = 100): Promise<AgentFeedResponse> {
@@ -3187,6 +3349,32 @@ export const cityNexusApi = {
       "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId) + "/prepare-plan",
       { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
         body: JSON.stringify({ expected_revision: revision, schedule }) },
+    );
+  },
+
+  freezeGoalRoutes(journeyId: string, taskId: string, planVersionId: string, idempotencyKey: string): Promise<GoalRouteFreezeResult> {
+    return requestJson<GoalRouteFreezeResult>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
+        + "/plans/" + encodeURIComponent(planVersionId) + "/freeze-routes",
+      { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey } },
+    );
+  },
+
+  travelGaps(journeyId: string, taskId: string, planVersionId: string): Promise<GoalTravelGapAnswer> {
+    return requestJson<GoalTravelGapAnswer>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
+        + "/plans/" + encodeURIComponent(planVersionId) + "/travel-gaps",
+      { method: "GET", headers: { ...travelerAuthHeaders() } },
+    );
+  },
+
+  acceptUnknownPrice(journeyId: string, taskId: string, planVersionId: string, unknownPlaceIds: string[],
+                     idempotencyKey: string): Promise<GoalPriceConsentResult> {
+    return requestJson<GoalPriceConsentResult>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
+        + "/plans/" + encodeURIComponent(planVersionId) + "/accept-unknown-price",
+      { method: "POST", body: JSON.stringify({ unknown_place_ids: unknownPlaceIds }),
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey } },
     );
   },
 
@@ -4716,6 +4904,7 @@ export const cityNexusApi = {
   ): Promise<EventRecord> {
     return requestJson<EventRecord>("/journeys/" + journeyId + "/events", {
       method: "POST",
+      headers: travelerAuthHeaders(),
       body: JSON.stringify({
         event_type: "CLOSURE",
         severity: "MAJOR",
@@ -4736,6 +4925,7 @@ export const cityNexusApi = {
   ): Promise<EventRecord> {
     return requestJson<EventRecord>("/journeys/" + journeyId + "/events", {
       method: "POST",
+      headers: travelerAuthHeaders(),
       body: JSON.stringify({
         event_type: eventType,
         severity,
@@ -4760,20 +4950,21 @@ export const cityNexusApi = {
   },
 
   listReplans(journeyId: string): Promise<ReplanProposal[]> {
-    return requestJson<ReplanProposal[]>("/journeys/" + journeyId + "/replans");
+    return requestJson<ReplanProposal[]>("/journeys/" + journeyId + "/replans",
+      { headers: travelerAuthHeaders(), cache: "no-store" });
   },
 
   acceptReplan(proposalId: string, idempotencyKey: string): Promise<AcceptReplanResponse> {
     return requestJson<AcceptReplanResponse>("/replans/" + proposalId + "/accept", {
       method: "POST",
-      headers: { "Idempotency-Key": idempotencyKey },
+      headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
     });
   },
 
   rejectReplan(proposalId: string, idempotencyKey?: string): Promise<ReplanProposal> {
     return requestJson<ReplanProposal>("/replans/" + proposalId + "/reject", {
       method: "POST",
-      headers: idempotencyKey ? { "Idempotency-Key": idempotencyKey } : undefined,
+      headers: { ...travelerAuthHeaders(), ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}) },
     });
   },
 };

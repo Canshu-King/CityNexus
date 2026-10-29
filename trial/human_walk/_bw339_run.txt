@@ -1,0 +1,4 @@
+LIVE ANCHORS {'revision': 4, 'tally_326': 28, 'tally_327': 3, 'control_327': 4, 'tally_328': 30, 'tally_337': 4, 'reverse_337': 28, 'ruler_325': 46, 'ruler_327': 64, 'ruler_328': 83, 'ruler_337': 147, 'section': 3819, 'prev_section': 3808}
+LIVE CORRECTION old327={'says_zh': 19, 'into_state': 40, 'nowhere': 24, 'retry_shaped': 9} new327={'says_zh': 26, 'into_state': 50, 'nowhere': 14, 'retry_shaped': 11} old328={'rows': 19, 'rendered': 19, 'no_setter_for_text': 0} new328={'rows': 26, 'rendered': 26, 'no_setter_for_text': 0} old326={'reads_the_refusal': 1, 'hides_the_refusal': 63} new326={'reads_the_refusal': 6, 'hides_the_refusal': 58} 337={'refusals': 21, 'unpaired': 19, 'listed': 1, 'unlisted': 1} reached=2 never=24 shape={'files': 163, 'bodies': 322, 'median': 3, 'longest': 80} scanner=('27', '26')
+PENDING_INBOX_BEFORE_WRITE 0
+WROTE D:/moodle/_qoder_ledger_inbox\494abfd7_2354.md bytes=4031

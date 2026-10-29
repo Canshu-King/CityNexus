@@ -1,0 +1,10 @@
+14.37: the chain is closed - the 19 panel sentences are the ones markup renders
+
+The render ruler resolved 19 of 19 panel-authored Chinese sentences into a state
+that appears inside a JSX interpolation or a conditional render slot, with 0 stored
+but unread and 0 sentences outside any setter. Two sites were re-read by hand rather
+than trusted to the regex. The full chain now reads: server English refusal -> catch
+does not read the error (63 of 64 bodies) -> the panel writes its own Chinese sentence
+-> that sentence is rendered under a role attribute. So the traveller never sees
+English on these paths; they see a Chinese sentence that has nothing to do with this
+failure. 0 product bytes touched.

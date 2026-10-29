@@ -1,0 +1,4 @@
+FIRST 200 token=True code=None
+SECOND 401 token=False code=REQUEST_ERROR
+FORGED 401 token=False code=REQUEST_ERROR
+VERDICT GREEN

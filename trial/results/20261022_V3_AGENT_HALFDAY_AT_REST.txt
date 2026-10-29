@@ -1,0 +1,16 @@
+V3 half-day edit read at rest, straight from the SQLite file with the backend and the browser both closed
+READ_AT :: 2026-10-22 14:50:35
+DB_FILE :: D:/moodle/_cmdr_v3_live_1022/citynexus_v3_agent7_1022.db
+MISSION_ID :: 3e841d5a-067b-4f4a-a3f1-beb024074c2f
+JOURNEY_ID :: f2e9cbfe-a141-4626-b301-0aa7cc908d39
+MISSION_STATUS :: NEEDS_DECISION
+DRAFT_REVISION :: 1
+DRAFT_DAYS :: [["2026-11-02", 0], ["2026-11-03", 1]]
+DRAFT_SLOTS :: [{"author": "USER", "cost_status": "UNKNOWN", "notes": "", "opening_status": "UNKNOWN", "place_id": null, "time_of_day": "afternoon", "title": "湖边慢走，不安排门票", "travel_time_status": "UNKNOWN"}]
+RUN_COUNT :: 4
+RUN :: ["de305bfa", "PARTIAL", "TRAVELER_INPUT_REQUIRED"]
+RUN :: ["298e5dec", "PARTIAL", "TRAVELER_INPUT_REQUIRED"]
+RUN :: ["a983d46f", "PARTIAL", "TRAVELER_INPUT_REQUIRED"]
+RUN :: ["7445b4a1", "PARTIAL", "TRAVELER_INPUT_REQUIRED"]
+STEPS :: [["ask_traveler", "COMPLETED"], ["ask_traveler", "COMPLETED"], ["ask_traveler", "COMPLETED"], ["ask_traveler", "COMPLETED"]]
+AUDIT_TASK_DRAFT_UPDATED_EVENTS :: 1

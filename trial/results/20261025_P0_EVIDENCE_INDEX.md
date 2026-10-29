@@ -1,0 +1,43 @@
+# P0 证据索引（由回执现读生成）
+
+生成器：`trial/human_walk/_p0_evidence_index_r1.py`；每条都从回执解析，缺文件写 MISSING。
+
+| 项目 | 判定 | 证据 | 关键读数 |
+|---|---|---|---|
+| P0-1 LAN 不穿透 / 票一次性 | 绿 | presenter-proxy-bypass-1.txt, pairing-replay-66.txt | BYPASS_SUSPECTED=False；首兑 200，重兑 401，无 key 403 |
+| P0-2 时钟条接同一 run（屏上） | 绿 | clock-run-ui-1.txt | PLUS30_1_TEXT "模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中"；AFTER_NEXT "模拟时间：12/03 12:18 · 执行第 6 步 · 模拟进行中"；ERRORS [] |
+| P0-2 时钟条三键复跑（入口落位后） | 绿 | clock-run-ui-77.txt | PLUS30_1_TEXT "模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中"；AFTER_NEXT "模拟时间：12/03 15:00 · 执行第 6 步 · 模拟进行中"；RELOAD_SAME_STEP true |
+| P0-2 两日闭环（真栈） | 绿 | clock-two-day-classroom-62.txt, classroom-clock-run-62-live-classroom.png | FINAL "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"；classroom-clock-run-62-live-classroom.png (58862 bytes) |
+| P0-2 两日闭环（合入 PR #54 后真栈） | 绿 | clock-two-day-merge54-84.txt, classroom-two-day-merge54-84.png | START "模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中"；FINAL "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"；classroom-two-day-merge54-84.png (58638 bytes) |
+| P0-2 LAN 平板等价路径 | 绿 | clock-run-lan-63.txt, classroom-clock-run-63-c.png | AFTER_NEXT "模拟时间：12/03 15:00 · 执行第 6 步 · 模拟进行中"；classroom-clock-run-63-c.png (63854 bytes) |
+| P0-2 场景→守护→缺任务 | 绿 | clock-scene-guardian-59.txt | AFTER_SCENE "等待守护决策 · 12-03 09:00"；AFTER_GUARDIAN "缺少守护任务 · 12-03 09:00" |
+| P0-2 单一状态链（CAS + 旧门） | 绿 | single-state-chain-65.txt | stale=409（SIMULATION_SEQUENCE_STALE）；legacy=409（USE_SIMULATION_RUN_ADVANCE） |
+| P0-3 城市池 / 1 城同 run | 黄（池子 BLOCKED，但不挡开演） | cities-classroom-62.txt | 池 status=BLOCKED，eligible=0/3，missing=VERIFIED_CITY_ADCODE_REQUIRED,AT_LEAST_3_CAPTURED_ROUTES_REQUIRED |
+| 守护屏接受当前事件提案（r100） | 绿 | guardian-panel-accept-100.txt, classroom-guardian-panel-accept-100.png | origin=Agent 生成 · 服务器留有运行记录；pending=RESOLVED；resume=RUNNING |
+| 守护 AI 开关（隔离副本） | 绿 | ai-off-guardian-86.txt, trial/human_walk/_ai_off_guardian_r1.py | guardian http=503，elapsed_s=0.01，SIMULATION_AI_DISABLED；sequence_unchanged=True；guardian_runs=0；missing=['AI_DISABLED'] |
+| 接受调整后模拟换计划（r92） | 绿 | guardian-plan-applied-92.txt, classroom-plan-applied-92.png | 模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成；活动=['天安门广场', '天坛公园']；守护已接手 · 12-03 09:00守护已接手 · 12-03 09:00推进 · 12-03 09:00游览 · 12-04 09:00完成一站 · 12-04 10:00两日走完 · 12-04 10:00 |
+| 平板整链：入口→守护→接受→完成（1024×768） | 绿 | guardian-plan-applied-tablet-93.txt, classroom-plan-applied-tablet-93.png | ELAPSED_S 227；模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成；活动=['天安门广场', '天坛公园'] |
+| 投影整链：入口→守护→接受→完成（1280×900） | 绿 | guardian-plan-applied-projector-97.txt, classroom-plan-applied-projector-97.png | ELAPSED_S 271；模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成；活动=['天安门广场', '天坛公园'] |
+| 守护屏当前事件提案（r91） | 绿 | guardian-panel-live-90.txt, guardian-panel-live-91.txt, guardian-panel-live-91-panel.png | r90 origin=规则引擎生成 · 不是大模型现场推理；r91 origin=Agent 生成 · 服务器留有运行记录；proposal=移除故宫博物院；路上少 66 分钟。 |
+| 守护暂停（历史缺陷，#54 已修） | 历史红·已修 | guardian-unavailable-67.txt, guardian-accept-flow-83.txt, 20261025_GUARDIAN_AI_SWITCH_REPORT.md | 旧读数：guardian http=200，after=PAUSED_FOR_ACCEPTANCE；修复后：AFTER_RESUME {"run":"模拟进行中 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null,"guardianFailed":false,"guardianUnresolved":false} |
+| AI 开关不拦调用（历史缺陷，#54 已修） | 历史红·已修 | guardian-unavailable-67.txt, ai-off-guardian-86.txt | 旧读数：ai_enabled=False，guardian_runs=1；修复后：guardian http=503，elapsed_s=0.01 |
+| 接受调整支线 | 绿 | proposal-accept-68.txt | accept http=200；plan e74a5edb-3f6d-40c3-910c-52e449619d40 → f84adc05-fb3b-4721-9c21-4db3bab96c28 |
+| resume 门（夹具） | 绿 | resume-after-resolved-69.txt | resume http=200，after=RUNNING（事件先在副本里 RESOLVED，1 行） |
+| 平板视口两日（合入 PR #54 后，1024×768） | 绿 | clock-two-day-tablet-merge54-85.txt, classroom-two-day-tablet-merge54-85.png | START "模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中"；FINAL "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"；classroom-two-day-tablet-merge54-85.png (136596 bytes) |
+| 平板视口两日（1024×768） | 绿 | tablet-two-day-72.txt, classroom-tablet-two-day-72.png | FINAL "模拟时间：12/04 15:00 · 执行第 20 步 · 模拟行程已完成"；classroom-tablet-two-day-72.png (155049 bytes) |
+| 平板形状四控件命中（1024×768） | 绿 | tablet-hit-73.txt, classroom-tablet-hit-73.png | 四枚 hit 读数见回执；USER_VERIFIED 仍 PENDING |
+| P0-4 带票入口落位与首屏跳转 | 绿 | jump-clock-87.txt, classroom-jump-phone-before-87.png, classroom-jump-tablet-before-87.png, classroom-jump-projector-before-87.png | PHONE_BEFORE {"scrollY":0,"jump":true,"text":"去课堂控制台 ↓","top":405,"inView":true,"hitSelf":true}；PHONE_AFTER {"scrollY":3062,"clockTop":0,"clockInView":true}；TABLET_BEFORE {"scrollY":0,"jump":true,"text":"去课堂控制台 ↓","top":455,"inView":true,"hitSelf":true}；TABLET_AFTER {"scrollY":3344,"clockTop":0,"clockInView":true}；PROJECTOR_BEFORE {"scrollY":0,"jump":true,"text":"去课堂控制台 ↓","top":477,"inView":true,"hitSelf":true}；PROJECTOR_AFTER {"scrollY":3308,"clockTop":0,"clockInView":true} |
+| 死锁屏提示 | 绿 | acceptance-note-70.txt | ACCEPTANCE_NOTE "守护没有交出可接受的提案（进度里看不到提案 id）；这条模拟解不开，请重启课堂演示（双击启动器）。" |
+| 慢网 502 HTML 控制台不消失（合入后） | 绿 | console-blip-97.txt, classroom-console-blip-97.png | PRESENTER_BEFORE "模拟进行中 · 12-03 09:00"；PRESENTER_AFTER "模拟进行中 · 12-03 09:00"；ROUTES_BROKEN progress+plans=502-html |
+| 完成态重进（合入后，独立副本） | 绿 | completed-reentry-98.txt, classroom-completed-reentry-98.png | banner=这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。；clock=0，presenter=0，entry=0 |
+| 时钟跳转让位（竖屏 768 + 三视口） | 绿 | tablet-portrait-105.txt, jump-clock-106.txt, classroom-tablet-portrait-105.png | 竖屏 clock.top=136 hitSelf=True；三视口 clockTop=[131, 136, 136] |
+| 双屏同一 run 同步（390 + 1280） | 绿 | two-screen-sync-102.txt, classroom-two-screen-102.png | 投影初始=模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中；平板+30=模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中；投影同步=模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中 |
+| 守护失败后的「再请一次守护」（隔离栈真按） | 绿 | guardian-retry-108.txt, guardian-retry-108-after.png | 按钮=RETRY_BUTTON 1；命中=True；disabled=False；末态=PAUSED_MODEL_UNAVAILABLE；outcome=EXTERNAL_FAILED |
+| 守护成功轮的转态耗时（同一路径） | 绿 | guardian-failure-watch-107.txt, classroom-guardian-failure-107.png | 转态耗时=193 秒；末态=PAUSED_FOR_ACCEPTANCE；outcome=PROPOSAL_READY |
+| 课堂主线整条计时（390 真机） | 绿 | classroom-timed-path-109.txt, classroom-timed-path-109.png | 走到封存=287.9 秒；末态=SIMULATED_COMPLETED |
+| 守护等待期只有一句话 | 绿 | guardian-wait-110.txt, classroom-guardian-wait-110.png | WAIT_NOTE 1 {"text":"守护正在让模型生成调整，实测约四分半；这段时间可以照常讲解，不用重复按。","visible":true,"inViewport":true}；OLD_SENTENCE_COUNT 0 |
+| 票门重兑与伪造票（真栈复验） | 绿 | pairing-replay-119.txt | FIRST 200 token=True code=None；SECOND 401 token=False code=REQUEST_ERROR；FORGED 401 token=False code=REQUEST_ERROR |
+| 断外网仍能开演与推进（390 真机） | 绿 | classroom-offline-125.txt, classroom-offline-125.png | BLOCKED_EXTERNAL_TOTAL 0；NEXT status=RUNNING#6 |
+| 无票根地址的课堂入口文案 | 绿 | entry-no-ticket-99.txt, classroom-entry-no-ticket-99.png | SESSION_BUTTON 1；BANNER_AFTER "课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。" |
+| 合入后一键核对 | 绿 | after-merge-check.txt | ENTRY_DOOR=PAIRING，SIM_CONSOLE=AVAILABLE:NOT_STARTED，all_green=True，tickets=3 |
+| P0-4 平板亲手点 | PENDING | tablet-evidence-20261026-015439.txt | VERDICT=NO_EXTERNAL_CLIENT，外部请求=0，run={'id': 'e354b9da-80b7-4882-b3aa-ef295ffdd103', 'sequence': 0, 'status': 'RUNNING', 'virtual_now': '2026-12-03T09:00:00+08:00', 'updated_at': '2026-10-25T17:50:47.099158+00:00'} |

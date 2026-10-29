@@ -1,0 +1,6 @@
+read from citynexus_v3_human14_1022.db; the stack walk-76 drove; read-only copy, no writes
+mission 25d366be status=PARTIAL_READY started=2026-10-23T00:41:44.447003+00:00 completed=2026-10-23T00:42:49.126950+00:00
+research_places=0 draft_revision=0 days=2 slots=0 pending_question=None interaction_mode=RESEARCH
+assistant_summary="我先按均衡经典的北京方向直接研究候选地点。由于目的地是中文城市，优先使用高德（amap）来源进行检索。"
+events by type: MODEL_TURN_COMPLETED=3, MODEL_TURN_STARTED=3, RUN_STARTED=2, TASK_ACCEPTED=1, TASK_PARTIAL_READY=2, TOOL_COMPLETED=1, TOOL_STARTED=1, USER_MESSAGE_ADDED=1
+tools actually started: inspect_journey

@@ -1,0 +1,18 @@
+STEP open t=2.4s
+STEP trips t=3.5s
+STEP demo t=6.8s
+STEP guardian t=9.0s
+PROPOSAL_TEXT "移除故宫博物院；路上少 66 分钟。"
+PROPOSAL_BOX {"x":42,"y":397.78125,"width":346,"height":137.140625}
+PROPOSAL_IN_VIEW true
+STEP accept t=9.1s
+AFTER_FIRST_STOP "天坛公园 · 12月3日 09:00"
+STEP after-reload t=14.6s
+CLOCK_BEFORE "模拟时间：12/03 09:00 · 服务器第 0 版"
+CLOCK_AFTER "模拟时间：12/03 10:00 · 服务器第 1 版"
+STEP clock t=16.2s
+BLUE_DOT true
+DOT_STATE "模拟旅客：天坛公园 · 39.8805, 116.4046（WGS84，模拟位置，不是物理 GPS）"
+STEP map t=18.2s
+TOTAL_S 18.2
+ERRORS []

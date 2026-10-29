@@ -1,0 +1,68 @@
+{
+  "BACKEND": "D:/moodle/_codex_workers/citynexus-sandbox-security-20261025/backend",
+  "journey": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+  "pairing_status": 201,
+  "redeem_status": 200,
+  "redeem_journey": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+  "cities_status": 200,
+  "cities": {
+    "status": "BLOCKED",
+    "required_city_count": 3,
+    "eligible_city_count": 0,
+    "cities": [
+      {
+        "city_code": "CN-RV-3507014DDE2C",
+        "status": "BLOCKED",
+        "missing": [
+          "VERIFIED_CITY_ADCODE_REQUIRED",
+          "AT_LEAST_3_CAPTURED_ROUTES_REQUIRED"
+        ],
+        "poi": 56,
+        "routes": 0
+      }
+    ]
+  },
+  "start_status": 409,
+  "start": {
+    "error": {
+      "code": "CONFLICT",
+      "message": "SIMULATION_REQUIRES_NATIVE_ACTIVE_JOURNEY",
+      "message_key": "request.conflict",
+      "trace_id": "b35691c6-c724-4430-ac3b-a734940b5748",
+      "details": null,
+      "error_receipt_id": "CNX-YMF6Y6C4"
+    }
+  },
+  "advance_walk": [],
+  "final": {},
+  "current_status": 200,
+  "current": {
+    "run_id": "a4b2f882-8c9d-4aa1-82b8-93a5aecac09e",
+    "journey_id": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+    "city_code": "CN-RV-3507014DDE2C",
+    "seed": 17,
+    "sequence": 7,
+    "status": "SIMULATED_COMPLETED",
+    "virtual_now": "2026-12-04T10:00:00+08:00",
+    "state_keys": [
+      "completed_activity_ids",
+      "guardian_lease_expires_at",
+      "location",
+      "pending_event_id",
+      "plan_version_id",
+      "provider_observation_ids",
+      "provider_snapshot_refs",
+      "scene_ids",
+      "suggested_scene"
+    ],
+    "current_activity_id": null,
+    "pending_event_id": "c8539439-4298-4a40-b397-fcd935d446ac",
+    "history_last": {
+      "event": "SIMULATED_COMPLETED",
+      "recorded_at": "2026-10-25T09:40:22.812485+00:00",
+      "sequence": 7,
+      "virtual_now": "2026-12-04T10:00:00+08:00"
+    }
+  },
+  "progress_status": 0
+}

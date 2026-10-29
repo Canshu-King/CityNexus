@@ -1,0 +1,6 @@
+JOURNEY 2e9cd67d-10ca-4ecd-920b-76c81a350c71
+GET1 {"status": 200, "virtual_now": "2026-12-03T09:00:00+08:00", "version": 0, "persisted": false, "basis": "JOURNEY_START", "traveller": null, "activity": null}
+ADVANCE {"status": 200, "virtual_now": "2026-12-03T10:00:00+08:00", "version": 1, "persisted": true}
+GET2 {"status": 200, "virtual_now": "2026-12-03T10:00:00+08:00", "version": 1}
+STALE {"status": 409, "detail": "{'error': {'code': 'CONFLICT', 'message': 'SIMULATION_CLOCK_VERSION_STALE', 'message_key': 'request.conflict', 'trace_id"}
+RANGE {"status": 422, "detail": "{'error': {'code': 'VALIDATION_ERROR', 'message': 'SIMULATION_CLOCK_MINUTES_OUT_OF_RANGE', 'message_key': 'request.inval"}

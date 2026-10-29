@@ -2756,3 +2756,20 @@ class JourneyRoleCapability(Base):
     capability: Mapped[str] = mapped_column(String, primary_key=True)
     scope_message_key: Mapped[str] = mapped_column(String)
     created_at: Mapped[str] = mapped_column(String)
+
+
+class SimulationClock(Base):
+    """Persisted virtual clock for one classroom-sandbox journey (first cut).
+
+    The clock is per journey, never global: a global freeze would also move the guardian
+    thread and real users' timestamps.  `version` is the optimistic guard that keeps a
+    double press from adding the same hour twice.
+    """
+
+    __tablename__ = "simulation_clocks"
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), primary_key=True
+    )
+    virtual_now: Mapped[str] = mapped_column(String)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    updated_at: Mapped[str] = mapped_column(String)

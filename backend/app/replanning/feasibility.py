@@ -262,6 +262,25 @@ def _location_key(activity: FeasibilityActivity) -> str | None:
     return activity.place_id or activity.city_service_id or None
 
 
+def _is_unrouted_band(activity: FeasibilityActivity) -> bool:
+    """A confirmed stretch of time with no venue yet -- 「19:00 晚餐及自由活动」.
+
+    Only a row whose own plan declares it so is treated this way: the Agent's draft writer writes
+    ``metadata.routing = "NOT_ROUTED"`` (backend/app/agent/goal_preparation.py).  Nothing else in the
+    product writes that marker, so every other row keeps being asked for a location exactly as before.
+    The alternative was measured, not assumed: as ordinary location-less rows these bands produced
+    ``LOCATION_MISSING`` for themselves and ``MOBILITY_CONTEXT_MISSING`` for the pair they sat in
+    (trial/results/20261022_v3_human_chrome/selection-gate-replay-1.txt, replayed against the walked
+    candidate) -- three rows of a plan the traveller had just confirmed, and no operation anywhere on
+    the screen that could answer them.
+    """
+
+    metadata = getattr(activity, "metadata", None) or {}
+    if not isinstance(metadata, Mapping):
+        return False
+    return str(metadata.get("routing") or "").upper() == "NOT_ROUTED"
+
+
 # A structural C4 anchor occupies a bounded slot; this mirrors
 # ``app.planning.anchor_schedule.ANCHOR_DURATION_MIN`` so both sides agree.
 _ANCHOR_DURATION_MIN = 20
@@ -825,7 +844,7 @@ def evaluate_feasibility(
         failures.append("REQUIRED_PLACE_MISSING")
 
     for item in ordered:
-        if not item.place_id and not item.city_service_id:
+        if not item.place_id and not item.city_service_id and not _is_unrouted_band(item):
             failures.append(f"LOCATION_MISSING:{item.key}")
         if item.place_id:
             place = context.places.get(str(item.place_id))
@@ -963,11 +982,25 @@ def evaluate_feasibility(
                 failures.append(f"BREAK_INTERVAL_EXCEEDED:{code}")
 
     if provider_key == "mock-mobility" or provider_is_frozen:
-        for previous, current in zip(ordered, ordered[1:]):
+        # The chain the traveller walks is the chain of *places*, in time order.  A declared free-time
+        # band between two stops is not a destination to route to, so the hop asked about is the one
+        # from the stop before it to the stop after it -- the same pair the Agent's draft door lists as
+        # 转场路线 and the same pair the freeze door measures (backend/app/agent/goal_route_freeze.py).
+        located = [item for item in ordered if not _is_unrouted_band(item)]
+        for previous, current in zip(located, located[1:]):
             origin = _location_key(previous)
             destination = _location_key(current)
             if not origin or not destination:
                 failures.append("MOBILITY_CONTEXT_MISSING")
+                continue
+            if origin == destination:
+                # Two consecutive stops at the same venue are not a routing question.  Both capture
+                # doors already refuse to route such a pair (app/main.py:22876,
+                # app/integrations/mobility/runtime.py:121 -- ``left != right``), so no honest snapshot
+                # can ever hold the fact this loop used to demand: a plan that stayed at one place
+                # between two activities could only pass by inheriting the mock fixture's blanket
+                # ``default_minutes``, which this module's own contract says is not a measurement
+                # (docs/MOBILITY_TRUTH_CONTRACT.md).  Travel minutes here are zero by definition.
                 continue
             try:
                 travel_minutes = int(provider.estimate_minutes(origin, destination))

@@ -1,0 +1,18 @@
+GUARDIAN_BUTTON 1
+POLL 0 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 5 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 10 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 15 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 20 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 25 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 30 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 31 status=PAUSED_FOR_ACCEPTANCE seq=2 proposals=[{"id":"5fab0e3e-ff35-41d3-a780-4418e5f38f11","status":"PRESENTED"}]
+BEFORE {"status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","pending":{"id":"a00a4f38-e96a-4d5c-b0ca-0b69cdd07907","event_type":"CLOSURE","status":"DETECTED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"5fab0e3e-ff35-41d3-a780-4418e5f38f11","status":"PRESENTED"}]}
+PANEL {"run":"等待接受调整 · 12-03 09:00","message":null,"proposal":"移除故宫博物院；路上少 66 分钟。","origin":"Agent 生成 · 服务器留有运行记录","note":null}
+PANEL_ACCEPT 1 disabled=false
+AFTER_ACCEPT_POLL 0 status=PAUSED_FOR_ACCEPTANCE pending=RESOLVED plan=e74a5edb-3f6d-40c3-910c-52e449619d40
+AFTER_ACCEPT {"status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","pending":{"id":"a00a4f38-e96a-4d5c-b0ca-0b69cdd07907","event_type":"CLOSURE","status":"RESOLVED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"5fab0e3e-ff35-41d3-a780-4418e5f38f11","status":"ACCEPTED"}]}
+RESUME_BUTTON 1
+AFTER_RESUME {"status":"RUNNING","sequence":3,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","pending":{"id":"a00a4f38-e96a-4d5c-b0ca-0b69cdd07907","event_type":"CLOSURE","status":"RESOLVED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"5fab0e3e-ff35-41d3-a780-4418e5f38f11","status":"ACCEPTED"}]}
+RESPONSES ["200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/replans","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/ac277080-a41f-4025-810e-6d082b30e85a/gua","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/replans","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/replans","200 /api/v1/replans/5fab0e3e-ff35-41d3-a780-4418e5f38f11/accept","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/replans","200 /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/ac277080-a41f-4025-810e-6d082b30e85a/res"]
+ERRORS []

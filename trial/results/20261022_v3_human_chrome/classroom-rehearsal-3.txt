@@ -1,0 +1,14 @@
+STEP open t=4.4s
+STEP trips t=5.6s
+STEP demo t=8.8s
+STEP guardian t=11.0s
+PROPOSAL "移除故宫博物院；路上少 66 分钟。"
+ACCEPT_VISIBLE true
+STEP accept t=11.1s
+AFTER_FIRST_STOP "天坛公园 · 12月3日 09:00"
+STEP after-reload t=16.6s
+CLOCK_BEFORE "模拟时间：12/03 09:00 · 服务器第 0 版"
+CLOCK_AFTER "模拟时间：12/03 10:00 · 服务器第 1 版"
+STEP clock t=18.5s
+TOTAL_S 18.5
+ERRORS []

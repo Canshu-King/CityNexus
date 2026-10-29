@@ -1,0 +1,33 @@
+{
+  "product_sha": "122ff647db514e25b6ac1f90e16625eb2a35808e",
+  "evidence_kind": "SIGNED_NATIVE_CITY_IDENTITY_POST_AND_PREFLIGHT_GET",
+  "first_attempt_http": 403,
+  "first_attempt_reason": "DEMO_PRESENTER_REQUIRED",
+  "binding_http": 200,
+  "identity": {
+    "internal_city_code": "CN-RV-3507014DDE2C",
+    "provider": "amap",
+    "provider_city_adcode": "110000",
+    "public_name": "北京市",
+    "source_call_id": "60deda42-50d4-4af4-bb26-1d8d85da0c24",
+    "source_sha256": "c8e0581fafd15b977202e3f29e037e9fa2891cc95cf296773054a917a585c5bb",
+    "bound_at": "2026-10-26T03:35:39.299570+00:00"
+  },
+  "source_task_id": "1690b9ed-9d00-4c49-986e-85cbd7b3554d",
+  "new_provider_requests": 0,
+  "new_model_requests": 0,
+  "agent_provider_counts_unchanged": true,
+  "eligible_city_count": 0,
+  "cities": [
+    {
+      "city_code": "CN-RV-3507014DDE2C",
+      "adcode": "110000",
+      "status": "BLOCKED",
+      "poi_count": 40,
+      "route_count": 0,
+      "missing": [
+        "AT_LEAST_3_CAPTURED_ROUTES_REQUIRED"
+      ]
+    }
+  ]
+}

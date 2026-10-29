@@ -1,0 +1,5 @@
+BEFORE_ACTION ["检查已完成","需要调整行程","问题仍待解决"]
+AFTER_ACTION ["检查已完成","当前恢复第 5 轮","需要调整行程","问题仍待解决"]
+PROPOSAL_STILL_THERE false
+FIRST_STOP ["第一站：天坛公园 · 12月3日 09:00","天坛公园","天坛公园（来自当前行程安排）"]
+ERRORS []

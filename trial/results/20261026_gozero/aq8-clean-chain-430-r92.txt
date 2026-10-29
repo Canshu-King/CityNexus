@@ -1,0 +1,56 @@
+SHOT 430-aq-cold t=5.4
+HIT continue true t=6.4
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=11.2
+HIT open-settings true t=15.0
+CONSENT true
+CONSENT true
+HIT close-settings true t=21.9
+HIT send true t=25.2
+HTTP POST 201 /api/v1/journeys/1ccb1ac7-ac94-479b-b0aa-1132d3d07288/agent/goal-tasks
+SENT t=27.5
+HTTP POST 200 /api/v1/journeys/1ccb1ac7-ac94-479b-b0aa-1132d3d07288/agent/goal-tasks/d8cc7ddb-7f28-4930-b650-2972a6212cce/run
+HIT skip-questions true t=36.9
+SKIP t=39.2
+SKIPPED true
+DRAFT t=87.2
+DRAFT_SEEN true
+SHOT 430-aq-after-research t=89.8
+BUTTON_TOTAL 44
+NAME {"name":"地图","disabled":false,"testid":"rev-mission-layer-map"}
+NAME {"name":"日程","disabled":false,"testid":"rev-mission-layer-timeline"}
+NAME {"name":"对话","disabled":false,"testid":"rev-mission-layer-agent"}
+NAME {"name":"刷新任务","disabled":false,"testid":null}
+NAME {"name":"取消任务","disabled":false,"testid":null}
+NAME {"name":"刷新 Agent 实际任务","disabled":false,"testid":null}
+NAME {"name":"在地图中查看 故宫博物院（上午游览）","disabled":false,"testid":null}
+NAME {"name":"检查草案保存状态","disabled":true,"testid":null}
+NAME {"name":"刷新任务","disabled":false,"testid":null}
+MISS tab-hand-0
+MISS tab-hand-1
+MISS tab-hand-2
+MISS tab-hand-3
+MISS tab-hand-4
+WAIT_KEY t=91.9 ["Agent 正在研究，等这一轮结束即可编辑保存。"]
+WAIT_KEY t=111.9 ["Agent 正在研究，等这一轮结束即可编辑保存。"]
+HTTP POST 200 /api/v1/journeys/1ccb1ac7-ac94-479b-b0aa-1132d3d07288/agent/goal-tasks/d8cc7ddb-7f28-4930-b650-2972a6212cce/resume
+WAIT_KEY t=131.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=151.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=171.9 ["当前展示的是已保存版本。"]
+WAIT_KEY t=192.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=212.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=232.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=252.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=272.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=292.0 ["当前展示的是已保存版本。"]
+WAIT_KEY t=312.1 ["当前展示的是已保存版本。"]
+WAIT_KEY t=332.1 ["当前展示的是已保存版本。"]
+WAIT_KEY t=352.1 ["当前展示的是已保存版本。"]
+WAIT_KEY t=372.1 ["当前展示的是已保存版本。"]
+WAIT_KEY t=392.1 ["当前展示的是已保存版本。"]
+WAIT_KEY t=412.2 ["当前展示的是已保存版本。"]
+WAIT_KEY t=432.2 ["当前展示的是已保存版本。"]
+WAIT_KEY t=452.2 ["当前展示的是已保存版本。"]
+WAIT_KEY t=472.2 ["当前展示的是已保存版本。"]
+WAIT_KEY t=492.2 ["当前展示的是已保存版本。"]
+WAIT_KEY t=512.2 ["当前展示的是已保存版本。"]

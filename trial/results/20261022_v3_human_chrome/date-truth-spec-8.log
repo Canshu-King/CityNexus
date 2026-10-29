@@ -1,0 +1,6 @@
+
+Running 2 tests using 1 worker
+
+[1/2] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:133:3 › Revolution Mobile-First UI fixture › a date range in the sentence fills the form and the Journey with the same dates
+[2/2] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:156:3 › Revolution Mobile-First UI fixture › a hand-edited form is never silently overwritten; the screen asks which dates win
+  2 passed (9.4s)

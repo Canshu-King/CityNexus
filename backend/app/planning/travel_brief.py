@@ -10,7 +10,7 @@ from uuid import uuid4
 
 from sqlalchemy import select
 
-from app.db.models import JourneyIntent, JourneyTripContext, RealPlaceCandidate
+from app.db.models import Activity, JourneyIntent, JourneyTripContext, Place, RealPlaceCandidate
 from app.planning.day_rhythm import extract_day_rhythm
 
 INTEREST_KEYS = {
@@ -147,15 +147,53 @@ def brief_projection(session, journey, member):
     return result
 
 
+def _provider_attribution(provider_key):
+    """An Amap point must not borrow the OpenStreetMap copyright that _candidate_payload defaults to."""
+    from app.integrations.discovery.photon_poi import OSM_ATTRIBUTION, OSM_ATTRIBUTION_URL
+    if str(provider_key or "").lower() == "amap":
+        return "© 高德地图（AMAP）", None
+    return OSM_ATTRIBUTION, OSM_ATTRIBUTION_URL
+
+
+def _plan_activity_point(activity, place):
+    """A stop the traveller already accepted, projected from the place row that carries it."""
+    metadata = json.loads(place.metadata_json or "{}")
+    opening = json.loads(place.opening_hours_json or "{}")
+    cost = metadata.get("cost_evidence") if isinstance(metadata.get("cost_evidence"), dict) else {}
+    source_url = next((str(url) for url in (metadata.get("source_urls") or []) if url), None) \
+        or (str(opening["source_url"]) if opening.get("source_url") else None)
+    attribution, attribution_url = _provider_attribution(place.provider_key)
+    return {
+        "candidate_id": str(place.id), "place_id": str(place.id),
+        "name": place.name, "category": place.category,
+        "provider_key": place.provider_key, "provider": place.provider_key,
+        "external_id": place.external_id,
+        "latitude": place.latitude, "longitude": place.longitude,
+        "coordinate_system": str(place.coordinate_system or "WGS84"),
+        "source_coordinate_system": place.source_coordinate_system,
+        "source_url": source_url, "source_attribution": attribution, "source_attribution_url": attribution_url,
+        "region_status": str(metadata.get("region_status") or "UNKNOWN"),
+        "selection_state": "READY_FOR_NATIVE_PLAN", "selection_action": None, "selection_blockers": [],
+        "opening_state": str(opening.get("status") or "UNKNOWN"),
+        "price_state": str(cost.get("status") or "UNKNOWN"),
+        "observation_expired": False, "captured_at": place.updated_at,
+        "scheduled_start_at": activity.start_at, "activity_title": activity.title,
+        "origin": "PLAN_ACTIVITY",
+    }
+
+
 def map_place_projection(session, journey, member):
     """Private saved coordinates survive fact expiry; never renew planning receipts."""
     from app.execution.bootstrap_discovery import _candidate_payload, _scope_expired, _bootstrap_scope_entries
     region_label = _public_region_label(session, journey)
     points = []
+    seen_places = set()
     for candidate in session.scalars(select(RealPlaceCandidate).where(
         RealPlaceCandidate.journey_id == journey.id,
         RealPlaceCandidate.provider_key.in_(("photon", "overpass")),
     ).order_by(RealPlaceCandidate.captured_at.desc(), RealPlaceCandidate.id).limit(100)).all():
+        if candidate.materialized_place_id:
+            seen_places.add(str(candidate.materialized_place_id))
         evidence = json.loads(candidate.evidence_json or "{}")
         scopes = [scope for scope in _bootstrap_scope_entries(evidence)
             if scope.get("member_id") == str(member.id) and scope.get("traveler_id") == str(member.traveler_id)]
@@ -170,6 +208,19 @@ def map_place_projection(session, journey, member):
             payload["selection_action"] = None
             payload["selection_blockers"] = ["OBSERVATION_EXPIRED"]
         points.append(payload)
+    # The bootstrap arm above only knows the traveller's own private observations.  A plan built by the
+    # Agent materialises its stops into `places` and no candidate row survives there with a member scope,
+    # so an accepted itinerary used to render as 「0 处地点 / 暂无研究地点」 next to a schedule of six stops.
+    if journey.active_plan_version_id:
+        rows = session.execute(select(Activity, Place).join(Place, Place.id == Activity.place_id)
+            .where(Activity.plan_version_id == str(journey.active_plan_version_id),
+                   Activity.place_id.is_not(None))
+            .order_by(Activity.start_at, Activity.sequence_no)).all()
+        for activity, place in rows:
+            if str(place.id) in seen_places:
+                continue
+            seen_places.add(str(place.id))
+            points.append(_plan_activity_point(activity, place))
     return {"journey_id": str(journey.id), "candidates": points}
 
 

@@ -1,0 +1,2 @@
+SCREEN {"li_count":5,"items":["开演 · 12-03 09:00","推进 · 12-03 09:30","推进 · 12-03 10:00","推进 · 12-03 10:30","推进 · 12-03 11:00"],"historyLength":5,"events":["SIM_STARTED","SIM_CLOCK_ADVANCED","SIM_CLOCK_ADVANCED","SIM_CLOCK_ADVANCED","SIM_CLOCK_ADVANCED"]}
+ERRORS []

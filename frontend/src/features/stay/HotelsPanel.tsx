@@ -13,6 +13,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
+import { travelerAuthHeaders } from "../../lib/travelerSession";
 import { namedCodeIn, readResponseFacts, type RawFacts } from "../../lib/rawFacts";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
 
@@ -67,7 +68,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       try {
         // Read first: a previous capture may already have produced options.
         const read = async () => {
-          const r = await fetch(`/api/v1/journeys/${journeyId}/experience`);
+          const r = await fetch(`/api/v1/journeys/${journeyId}/experience`, { headers: { Accept: "application/json", ...travelerAuthHeaders() } });
           const body = await r.json();
           return (body?.options ?? []) as StayOption[];
         };

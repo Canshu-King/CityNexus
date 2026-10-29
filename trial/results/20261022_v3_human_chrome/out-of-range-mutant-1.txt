@@ -1,0 +1,37 @@
+.......................F..                                               [100%]
+================================== FAILURES ===================================
+____ test_provider_infocodes_map_to_stable_key_quota_and_permission_codes _____
+
+    def test_provider_infocodes_map_to_stable_key_quota_and_permission_codes() -> None:
+        cases = {
+            "10001": "AMAP_INVALID_KEY",
+            "10003": "AMAP_QUOTA_EXCEEDED",
+            "10012": "AMAP_SERVICE_PERMISSION_DENIED",
+            # Measured, not guessed: walking 王府井步行街 -> 八达岭长城 answered this code while an 800 m
+            # hop in the same city answered OK at the same minute
+            # (trial/results/20261022_v3_human_chrome/amap-quota-vs-qps-1.txt:2 and :3).
+            "20803": "AMAP_OUT_OF_PROVIDER_RANGE",
+            "77777": "AMAP_PROVIDER_REJECTED",
+        }
+        for infocode, expected_code in cases.items():
+            client = _client(
+                {
+                    "status": "0",
+                    "info": "free-form provider detail must not escape",
+                    "infocode": infocode,
+                }
+            )
+            try:
+                result = client.district("连城县")
+            finally:
+                client.close()
+>           assert result["reason_code"] == expected_code
+E           AssertionError: assert 'AMAP_PROVIDER_REJECTED' == 'AMAP_OUT_OF_PROVIDER_RANGE'
+E             
+E             - AMAP_OUT_OF_PROVIDER_RANGE
+E             + AMAP_PROVIDER_REJECTED
+
+tests\test_mobile_amap_provider.py:400: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_mobile_amap_provider.py::test_provider_infocodes_map_to_stable_key_quota_and_permission_codes
+1 failed, 25 passed in 1.06s

@@ -1,0 +1,8 @@
+503 recovery acceptance gate
+1 gate=frontend/e2e/revolution-workspace-actions.spec.ts:275 (FAILED_RECOVERABLE + MODEL_HTTP_503 loaded from the pointer)
+2 retry=POST same journey/task /resume with model_consent true and interaction_mode RESEARCH; zero POST /api/v1/journeys
+3 browse=rev-mission-map-pane visible immediately
+4 screenshot=trial/results/20261022_v3_human_chrome/dock-recovery-503-390.png
+5 suite_run15=50 passed 1 failed of 51 (6.6m) => fixture-rerun-15-accept2.log
+6 red_at=place-card-facts missing its post-reload restore line; the same case alone passed in 10.4s => accept2-cardfacts-rerun.log
+7 typecheck_rc=0 => typecheck-accept2-1.log

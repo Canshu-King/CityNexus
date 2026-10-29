@@ -1,0 +1,8 @@
+Close the open observation that a bare journey id still opens a private journey.
+
+Three credential arms were run against the live tip stack: no credential, a bearer that is not a
+token, and a bearer made of sixty-four zeros. All three were refused. The two refusals that carried
+a bearer answer a different sentence than the one that carried none, which is what a door that
+reads the credential looks like from outside. So the earlier 200 belonged to an older generation
+rather than to a hole that is still open. The instrument reads only: one SELECT against the canary
+database opened read-only, and three GET requests.

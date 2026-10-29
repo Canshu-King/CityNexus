@@ -1,0 +1,12 @@
+COLD_BODY "C CityNexus 你的智能旅行伙伴 AI 已配置 · 未验证 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认"
+COLD_HAS_JOURNEY_POINTER true save_key=0
+SHOT 430-ar-cold t=6.3
+DIAG {"nav_present":true,"nav_html":"<nav class=\"rev-mobile-bottom-nav rev-workspace-nav\" aria-label=\"底部导航\" data-testid=\"rev-mobile-bottom-nav\"><button type=\"button\" class=\"rev-mobile-nav-button is-active\" aria-label=\"探索\" aria-current=\"page\" data-testid=\"rev-mobile-tab-explore\"><span class=\"rev-mobile-nav-icon\"><svg xmlns=\"http://www.w","testids":["revolution-first-look","revolution-agent-runtime","rev-mobile-welcome","rev-trip-goal","rev-firstlook-city","rev-trip-destination-hint","rev-trip-start-date","rev-trip-duration","rev-trip-party-size","rev-trip-budget","rev-trip-planning-mode","rev-trip-energy","rev-trip-interest-local_food","rev-trip-interest-night_market","rev-trip-interest-old_town","rev-trip-interest-heritage","rev-trip-interest-nature","rev-trip-interest-coast","rev-trip-interest-architecture","rev-trip-interest-nightlife","rev-trip-interest-photography","rev-trip-interest-family","rev-trip-interest-shopping","rev-trip-interest-park/garden"],"buttons":5,"frames":0}
+DIAG_LOCATOR testid=1 by_text=1
+HAND 0 found=0
+HAND 1 found=0
+HAND 2 found=0
+SHOT 430-ar-before-key t=6.3
+NO_KEY TEXTS ["还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。"]
+NO_KEY LEAK citynexus_api_in_body=false api_in_band=false uuid_in_band=false
+ABORT the save key never became reachable through the traveller's own tabs

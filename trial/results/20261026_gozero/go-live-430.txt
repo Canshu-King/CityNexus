@@ -1,0 +1,27 @@
+HIT journey-tab true t=8.5
+MISS continue-trip t=24.0
+EDITOR 1
+HIT day-0 true t=28.3
+SLOT_NOT_FOUND 全聚德
+HIT day-1 true t=30.1
+SLOT_NOT_FOUND 什刹海前海
+MISS save-draft t=43.6
+HIT generate-plan true t=43.9
+HTTP 422 /api/v1/journeys/d2efa5b4-183b-4fe5-9cf5-7b86099abf05/plans/generate
+HIT freeze-0 true t=53.1
+HTTP 200 /api/v1/journeys/d2efa5b4-183b-4fe5-9cf5-7b86099abf05/agent/goal-tasks/23010c0d-47a5-40df-a9cc-5
+HIT refresh-0 true t=59.3
+HIT freeze-1 true t=64.5
+HTTP 200 /api/v1/journeys/d2efa5b4-183b-4fe5-9cf5-7b86099abf05/agent/goal-tasks/23010c0d-47a5-40df-a9cc-5
+HIT refresh-1 true t=70.7
+HIT freeze-2 true t=75.9
+HTTP 200 /api/v1/journeys/d2efa5b4-183b-4fe5-9cf5-7b86099abf05/agent/goal-tasks/23010c0d-47a5-40df-a9cc-5
+HIT refresh-2 true t=82.1
+SELECT_CARDS 2
+HIT select-0 true t=87.3
+HTTP 200 /api/v1/journeys/d2efa5b4-183b-4fe5-9cf5-7b86099abf05/departure/commit
+ALERTS ["这次有一部分还没完成，你可以继续告诉我想怎么调整。"]
+START_VISIBLE true
+HIT start-trip true t=93.6
+AFTER_HEAD "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京 · 2日行程\n旅途正在继续。\n换地区 ›\n旅行插画\n行程执行中\n地图\n执行与待办\n课堂演示 · 模拟时间与推进都在课堂控制台里\n去课堂控制台 ↓\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：故宫博物院（午门入，中轴线慢走） · 12月3日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：故宫博物院（午门入，中轴线慢走）\n接下来：景山公园（万春亭看中轴线）\n路线还需要检查。\n检查路线\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员。\n附近有什么可以顺路玩？\n点击后读取一次当前位置。推荐仅你可见，距离以直线计算。\n个人时间偏好\n15 分钟\n30 分钟\n45 分钟\n兴趣（可选）\n随便看看\n咖啡 / 美食\n文化\n自然\n查找附近体验\n直接搜索真实附近地点（需同意）\n你: 尚未分享位置\n集合点：故宫博物院（午门入，中轴线慢走）（来自当前行程安排）\n显示同行者的粗略位置；浏览器定位供路线参考。\n同时看着后面的行程\nI’m watching the rest of your journey.\n未来 0 个行程点 · 看到 04:10\nAGENT 计划\n高级信息\nPlanning AI is ready.\n照看这趟行程\n你将从哪里出发？\nCityNexus 需要一个明确的起点，才能估算何时出发。\n也可以选择一个已验证的地点作为计划起点。\n下一站准备情况\n故宫博物院（午门入，中轴线慢走）\n基本准备好了 · 仍有实时信息未确认。\n路线尚未准备好。\n\n当前没有需"
+SHOT go-live-430-after t=102.6

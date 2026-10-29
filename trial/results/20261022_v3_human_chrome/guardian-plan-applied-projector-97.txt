@@ -1,0 +1,26 @@
+START {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"RUNNING","sequence":0,"plan_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","activity_id":"5b60b374-8d3b-40fb-be9f-ada33e650bb8","pending":null,"proposals":[]}
+SCENE {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"PAUSED_FOR_GUARDIAN","sequence":1,"plan_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","activity_id":"5b60b374-8d3b-40fb-be9f-ada33e650bb8","pending":{"id":"816bb40b-e99f-4a73-9585-0b38d4f83c89","event_type":"CLOSURE","status":"DETECTED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[]}
+GUARDIAN_BUTTON 1
+POLL 0 elapsed_s=6 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 5 elapsed_s=36 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 10 elapsed_s=66 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 15 elapsed_s=97 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 20 elapsed_s=127 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 25 elapsed_s=157 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 30 elapsed_s=187 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 35 elapsed_s=217 status=GUARDIAN_RUNNING seq=2 proposals=[]
+POLL 37 elapsed_s=230 status=PAUSED_FOR_ACCEPTANCE seq=2 proposals=[{"id":"fb1aef3f-cfe2-4586-8f3c-f97d5308517b","status":"PRESENTED"}]
+BEFORE_ACCEPT {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"plan_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","activity_id":"5b60b374-8d3b-40fb-be9f-ada33e650bb8","pending":{"id":"816bb40b-e99f-4a73-9585-0b38d4f83c89","event_type":"CLOSURE","status":"DETECTED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"fb1aef3f-cfe2-4586-8f3c-f97d5308517b","status":"PRESENTED"}]}
+EVENT_ACCEPT_BUTTON 1
+ACCEPT_POLL 0 status=PAUSED_FOR_ACCEPTANCE pending=RESOLVED plan=3e1b0798-7656-4ca3-8af2-837d387b1b4c
+AFTER_ACCEPT {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"plan_id":"3e1b0798-7656-4ca3-8af2-837d387b1b4c","activity_id":"247021cd-e2bc-4fcb-972c-2438f306e2c7","pending":{"id":"816bb40b-e99f-4a73-9585-0b38d4f83c89","event_type":"CLOSURE","status":"RESOLVED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"fb1aef3f-cfe2-4586-8f3c-f97d5308517b","status":"ACCEPTED"}]}
+RESUME_BUTTON 1
+AFTER_RESUME {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"RUNNING","sequence":3,"plan_id":"3e1b0798-7656-4ca3-8af2-837d387b1b4c","activity_id":"247021cd-e2bc-4fcb-972c-2438f306e2c7","pending":{"id":"816bb40b-e99f-4a73-9585-0b38d4f83c89","event_type":"CLOSURE","status":"RESOLVED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"fb1aef3f-cfe2-4586-8f3c-f97d5308517b","status":"ACCEPTED"}]}
+PLAN_BEFORE_NEXT [{"id":"cac6fb73-c044-47e3-a869-0fb94fdc9175","title":"天安门广场","start":"2026-12-03T09:00:00+08:00","status":"COMPLETED"},{"id":"247021cd-e2bc-4fcb-972c-2438f306e2c7","title":"天坛公园","start":"2026-12-04T09:00:00+08:00","status":"ACTIVE"}]
+SCREEN_BEFORE_NEXT {"virtual":"模拟时间：12/03 09:00 · 执行第 2 步 · 等待接受调整","run":"模拟进行中 · 12-03 09:00","message":null,"history":"开演 · 12-03 09:00注入事件 · 12-03 09:00守护已接手 · 12-03 09:00守护已交出建议 · 12-03 09:00继续模拟 · 12-03 09:00"}
+NEXT_BUTTON 1 disabled=true
+AFTER_NEXT {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","status":"SIMULATED_COMPLETED","sequence":7,"plan_id":"3e1b0798-7656-4ca3-8af2-837d387b1b4c","activity_id":null,"pending":{"id":"816bb40b-e99f-4a73-9585-0b38d4f83c89","event_type":"CLOSURE","status":"RESOLVED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"proposals":[{"id":"fb1aef3f-cfe2-4586-8f3c-f97d5308517b","status":"ACCEPTED"}]}
+SCREEN_AFTER_NEXT {"virtual":"模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成","run":"模拟行程已完成 · 12-04 10:00","message":null,"history":"出发 · 12-04 08:06到达 · 12-04 09:00游览 · 12-04 09:00完成一站 · 12-04 10:00两日走完 · 12-04 10:00"}
+PLAN_AFTER_NEXT [{"id":"cac6fb73-c044-47e3-a869-0fb94fdc9175","title":"天安门广场","start":"2026-12-03T09:00:00+08:00","status":"COMPLETED"},{"id":"247021cd-e2bc-4fcb-972c-2438f306e2c7","title":"天坛公园","start":"2026-12-04T09:00:00+08:00","status":"COMPLETED"}]
+ELAPSED_S 271
+ERRORS []

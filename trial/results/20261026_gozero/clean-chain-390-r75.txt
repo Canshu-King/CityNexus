@@ -1,0 +1,227 @@
+SHOT 390-g7-cold t=7.6
+HIT continue true t=8.5
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=12.1
+HIT open-settings true t=14.3
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=16.1
+HIT send true t=17.6
+HTTP POST 201 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/run
+HIT skip-questions true t=42.7
+SKIP t=43.4
+SKIPPED true
+DRAFT t=79.5
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=79.6
+HIT tab-chat true t=79.9
+HTTP POST 200 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume
+COMPOSER_ENABLED true t=117.9
+HIT send-fix true t=118.3
+FIX_SENT t=119.0
+FIX_IDLE true t=304.4
+SHOT 390-g7-after-fix t=304.4
+HIT journey-tab true t=304.7
+DRAFT_SLOTS 5
+NO_OPTIONAL_SLOT
+DRIFT_FOLD true TIME_COUNT 10 BEFORE [{"label":"故宫博物院开始时间","value":"09:00"},{"label":"故宫博物院结束时间","value":"10:00"},{"label":"景山公园（含北海公园，相邻约400米）开始时间","value":"14:00"},{"label":"景山公园（含北海公园，相邻约400米）结束时间","value":"15:00"},{"label":"王府井步行街开始时间","value":"19:00"},{"label":"王府井步行街结束时间","value":"20:00"},{"label":"颐和园（东门进，逛长廊、佛香阁、昆明湖）开始时间","value":"09:00"},{"label":"颐和园（东门进，逛长廊、佛香阁、昆明湖）结束时间","value":"10:00"},{"label":"圆明园遗址公园开始时间","value":"14:00"},{"label":"圆明园遗址公园结束时间","value":"15:00"}] t=310.8
+TIME_EDITED "圆明园遗址公园结束时间" 15:00 -> 14:15 t=310.8
+W_CONFIRM true SAVE_ENABLED true t=312.1
+HIT save-drift true t=312.4
+HTTP POST 201 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan
+DRIFT_SAVE_ALERT ["消息还在确认中，刷新任务查看最新进度。","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+TIME_AFTER [{"label":"故宫博物院开始时间","value":"09:00"},{"label":"故宫博物院结束时间","value":"10:00"},{"label":"景山公园（含北海公园，相邻约400米）开始时间","value":"14:00"},{"label":"景山公园（含北海公园，相邻约400米）结束时间","value":"15:00"},{"label":"王府井步行街开始时间","value":"19:00"},{"label":"王府井步行街结束时间","value":"20:00"},{"label":"颐和园（东门进，逛长廊、佛香阁、昆明湖）开始时间","value":"09:00"},{"label":"颐和园（东门进，逛长廊、佛香阁、昆明湖）结束时间","value":"10:00"},{"label":"圆明园遗址公园开始时间","value":"14:00"},{"label":"圆明园遗址公园结束时间","value":"14:15"}] t=320.1
+DRIFT_CHANGED_ONLY ["圆明园遗址公园结束时间"] COUNT 10->10 LOST []
+DRIFT_COUNT 0 TARGET_ONLY yes t=320.1
+SHOT 390-drift-after t=320.2
+HIT price-1-0 true t=320.6
+HTTP POST 200 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/plans/7a05ed66-eaf9-42ab-9b9f-3abe22ad63f7/accept-unknown-price
+HIT refresh-after-price-1 true t=325.6
+HIT freeze-1-1 true t=330.7
+HTTP POST 200 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/plans/7a05ed66-eaf9-42ab-9b9f-3abe22ad63f7/freeze-routes
+HIT refresh-after-freeze-1 true t=337.7
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=342.5
+SHOT 390-g7-plans-1 t=342.5
+HIT select-1 true t=342.8
+HTTP POST 200 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/departure/commit
+SELECT_REFUSAL ["消息还在确认中，刷新任务查看最新进度。","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。"]
+HIT ask-refusal-1 true t=348.9
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"6917e0f1-1c4f-495f-bdb5-dd991cd26340","details":null,"error_receipt_id":"CNX-BTVAZAE5"}}
+ASK_REFUSAL_SENT 1 t=349.7
+GAP_REPAIR 1 ["故宫博物院结束时间 10:00->09:45","景山公园（含北海公园，相邻约400米）结束时间 15:00->14:45","王府井步行街结束时间 20:00->19:45","颐和园（东门进，逛长廊、佛香阁、昆明湖）结束时间 10:00->09:45","圆明园遗址公园结束时间 14:15->14:00"] t=349.7
+SHOT 390-g7-selected-1 t=396.3
+HIT journey-tab true t=396.7
+HIT save-2-0 true t=400.0
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"fe0b6afa-4632-4bf0-9cb9-148b88993734","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/0 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-1 true t=407.0
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"db3016f8-43c9-414f-8563-64ff55291eaa","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/1 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-2 true t=414.1
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"8048c7d3-3954-4657-ba49-7792dc629243","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/2 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-3 true t=421.2
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"e7c76d06-4c7b-4ae2-847b-8536babbee02","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/3 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-4 true t=428.2
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"3b128ba5-c6cf-46f0-be6d-78316d9262ac","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/4 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-5 true t=435.3
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"66809c00-407a-4b95-bcff-56760ec265d8","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/5 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-6 true t=442.4
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"ea680810-e645-4bc1-9c3f-2d43c309c7fe","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/6 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-7 true t=449.4
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"979a0e17-1a67-4c80-a3cd-35638a7857a4","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/7 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-8 true t=456.5
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"6bd010a6-9a20-4e04-91e3-94c515f95d65","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/8 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-9 true t=463.6
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"d8be97df-96f7-44d5-b456-f76890d44e3c","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/9 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-10 true t=470.6
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"0c9bca4b-9a22-4d3e-9d0f-5790d1730d34","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/10 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-11 true t=477.7
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"1f230253-0a41-4ba6-bca0-40330e43d357","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/11 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-12 true t=484.8
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"991dd7f5-f5ef-4070-b82f-fad83fad74e5","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/12 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-13 true t=491.8
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"dfea6794-1b13-4812-871d-285c5cc282b9","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/13 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-14 true t=498.9
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"60c5b3bc-7243-4fa3-a897-312a5d9a8525","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/14 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-15 true t=505.9
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"eb47f58f-b5f0-4a2b-b067-580974c3f6e4","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/15 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-16 true t=513.0
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"32504ebb-0b98-47bc-a94e-f229a2f3a6ea","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/16 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-17 true t=520.1
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"19c123d1-5e53-4911-bf8e-68def62087c8","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/17 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-18 true t=527.1
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"991108c3-fb77-4acc-85a0-adf6dcf91bb6","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/18 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-19 true t=534.2
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"df1e24cd-d0f0-4d1d-87c4-86b394e347ca","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/19 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-20 true t=541.3
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"945ed792-eaf2-4511-9f4f-237c719cd866","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/20 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-21 true t=548.3
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"96e39a64-b836-48dd-896d-1c16f147d7aa","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/21 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-22 true t=555.4
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"1731c410-3de0-4e08-ba46-095578b26dd1","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/22 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-2-23 true t=562.4
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"ca7dca99-45e7-4985-acf2-76cfbff2f7a8","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 2/23 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-0 true t=569.5
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"78c6bd6a-dcbc-42cf-9919-856f42105db8","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/0 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-1 true t=576.6
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"a3164b9f-4181-4bc2-a267-06aa5896c837","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/1 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-2 true t=583.6
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"4de30856-1581-4045-a616-daf0c235d996","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/2 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-3 true t=590.7
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"60492be6-0323-4e4e-80e1-2bb0912bd08d","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/3 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-4 true t=597.7
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"52a7a421-80dd-4cdc-a17a-ec3ef5814a4b","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/4 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-5 true t=604.8
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"5756fd34-29c6-44cf-bcf7-1d4540da3e6a","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/5 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-6 true t=611.9
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"d534771e-0929-4017-8a1d-8149e36df3f6","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/6 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-7 true t=618.9
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"e4138887-a771-46e7-8cb1-16f11bbc6b8f","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/7 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-8 true t=626.0
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"52e02436-ecd8-4b25-83a1-b7889ae35460","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/8 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-9 true t=633.1
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"ca5721d1-fece-499c-867e-86b67445f152","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/9 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-10 true t=640.1
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"031c1195-364c-42c4-9ff6-b2a21a541c27","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/10 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-11 true t=647.2
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"b5193250-a1fc-43b2-a506-4375a13e8931","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/11 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-12 true t=654.3
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"6468e005-2203-4bae-9b11-f4f2fa3bd9f0","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/12 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-13 true t=661.3
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"4400b07a-b66f-40c0-b688-591780696dd1","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/13 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-14 true t=668.4
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"238f1f53-9ec9-43df-888f-64188301c20f","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/14 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-15 true t=675.4
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"6c1de0ff-abfa-41b8-a364-31dcc1131343","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/15 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-16 true t=682.5
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"fc19ba27-c3a5-4b3a-b335-296c15dd5566","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/16 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-17 true t=689.5
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"0d2703d1-500f-430a-8cb1-7fffc79ef920","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/17 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-18 true t=696.6
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"764c5fe6-5826-47ef-8829-1d7bf08b67fc","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/18 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-19 true t=703.7
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"e893e32d-d698-4ef3-9f80-6267f1fc3631","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/19 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-20 true t=710.7
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"ab6c5f1f-9b9a-4313-8157-671d8ed6e2b5","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/20 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-21 true t=717.8
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"d86973f9-1592-470f-9d41-46fb0ccf3db9","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/21 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-22 true t=724.9
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"bc90c36d-8756-42ad-9a95-e917c9c4e876","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/22 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+HIT save-3-23 true t=731.9
+HTTP POST 409 /api/v1/journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/prepare-plan BODY {"error":{"code":"CONFLICT","message":"GOAL_TASK_REQUIRES_DRAFT_JOURNEY","message_key":"request.conflict","trace_id":"db75ded3-0fc5-4be6-b14c-b88e865d2a95","details":null,"error_receipt_id":"CNX-SKYGW9BK"}}
+SAVE_ALERT 3/23 ["CityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume","现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。","当前展示的是已保存版本。"]
+STATE t=738.7 {"inUse":false,"next":null}
+SHOT 390-g7-final t=828.9
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n旅行插画\n部分能力暂时不可用\n地图\n日程\n对话\n按天调整行程\n\n5 项安排 · 2 天\n\n你的旅行草案\n\n草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。\n\nDay 1\n12-03\nDay 2\n12-04\n2026-12-03 · 3 项安排\n上午\n· 故宫博物院\n点击编辑\n下午\n· 景山公园（含北海公园，相邻约400米）\n点击编辑\n晚上\n· 王府井步行街\n点击编辑\n＋ 添加安排\n检查草案保存状态\n\n当前展示的是已保存版本。\n\n准备出发 · 正式计划与待办\n从这份安排继续\n\n保留已选地点和日期；时间可以稍后调整。\n\n编辑行程时间（可选）\n12-03 · 故宫博物院\n开始\n结束\n12-03 · 景山公园（含北海公园，相邻约400米）\n开始\n结束\n12-03 · 王府井步行街\n开始\n结束\n12-04 · 颐和园（东门进，逛长廊、佛香阁、昆明湖）\n开始\n结束\n12-04 · 圆明园遗址公园\n开始\n结束\n按以上时间准备方案// Once a version is saved the time fields above stay editable — the card's own refusal text tells the // traveller to move a time and save again (measured on the gozero walks: 改这一项的时间再保存，其余不用动), // so keeping this key dead made that instruction impossible to follow.\n保存为正式候选方案\n\n这次未能保存，时间仍留在这里，可以重试。\n\n按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。\n\n和 Agent 补齐出发资料\nTRAVEL PLAN\n你的行程方案\n刷新方案\n可以确认出发\n\n5 项正式安排\n\n方案 1\n已选用\n2 天 · 5 项安排\n费用待确认\n\n这 5 项费用你已经确认先不计入预算（总价不含这些项）。\n\n12月03日\n09:00—10:00\n故宫博物院\n费用待确认\n查看地点来源 ↗\n14:00—15:00\n景山公园（含北海公园，相邻约400米）\n费用待确认\n查看地点来源 ↗\n19:00—20:00\n王府井步行街\n费用待确认\n查看地点来源 ↗\n12月04日\n09:00—10:00\n颐和园（东门进，逛长廊、佛香阁、昆明湖）\n费用待确认\n查看地点来源 ↗\n14:00—14:15\n圆明园遗址公园\n费用待确认\n查看地点来源 ↗\n\n已选好方案。确认后开始正式行程。\n\n确认方案，开始行程\n准备出发\n行程守护\n同行决策\nYOUR TRIP\n我的行程\n\n还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。\n\n去发现地点 →\nAI 助手\nAI 工作动态\nAI 服务\nAI 已配置 · 未验证\n本次行程\n暂无运行记录\n\n选定真实地点后，在上方确认正式行程。\n\n正式行程开始且 AI 可用时，实际工作记录会显示在这里。\n\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认\n⚙\n继续和当前 Agent 对话\n发送 ↑\n\nCityNexus API 409: /journeys/d44da3bc-aed1-4d5a-8d16-af53efaffa44/agent/goal-tasks/5d7a73b7-c49c-4d38-808f-c326d936953b/resume\n\n重试这一轮\n先浏览已找到的地点"
+ERRORS []
+PLAN_GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] t=828.9
+PLAN_SELECT 0
+PLAN_START 1
+PLAN_HAND 0 t=828.9
+SHOT 390-r54-plan-blocked t=829.0
+EXPLORE_STAGE_PROBE area=1 category=0 results=0 explore=1 t=829.0
+SURVEY_EXPLORE_ENTRY [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院结束时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（含北海公园，相邻约400米）开始时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（含北海公园，相邻约400米）结束时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街开始时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（东门进，逛长廊、佛香阁、昆明湖）开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（东门进，逛长廊、佛香阁、昆明湖）结束时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园开始时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":false},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-start","name":"确认方案，开始行程","dis":false},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false},{"tag":"BUTTON","id":"rev-dock-retry-round","name":"重试这一轮","dis":false},{"tag":"BUTTON","id":"rev-dock-browse-found","name":"先浏览已找到的地点","dis":false}] t=829.0
+MISS type-CITY hidden t=829.0
+MISS find-city hidden t=829.0
+CITY_RESULTS 0 [] t=859.3
+NO_CITY_RESULT_SCREEN t=859.3
+SURVEY_AFTER_PHOTON [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院结束时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（含北海公园，相邻约400米）开始时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（含北海公园，相邻约400米）结束时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街开始时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（东门进，逛长廊、佛香阁、昆明湖）开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（东门进，逛长廊、佛香阁、昆明湖）结束时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园开始时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":false},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-start","name":"确认方案，开始行程","dis":false},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false},{"tag":"BUTTON","id":"rev-dock-retry-round","name":"重试这一轮","dis":false},{"tag":"BUTTON","id":"rev-dock-browse-found","name":"先浏览已找到的地点","dis":false}] t=859.3
+RESULTS_PANE 0 t=889.5
+SURVEY_INTEREST_OR_RESULTS [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院结束时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（含北海公园，相邻约400米）开始时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（含北海公园，相邻约400米）结束时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街开始时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（东门进，逛长廊、佛香阁、昆明湖）开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（东门进，逛长廊、佛香阁、昆明湖）结束时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园开始时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":false},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-start","name":"确认方案，开始行程","dis":false},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false},{"tag":"BUTTON","id":"rev-dock-retry-round","name":"重试这一轮","dis":false},{"tag":"BUTTON","id":"rev-dock-browse-found","name":"先浏览已找到的地点","dis":false}] t=889.5
+CARDS 0 t=891.5
+CARD_TEXTS []
+CARD_BLOCKERS []
+FORMAL_KEYS 0 t=891.5
+NO_FORMAL_DOOR cards=0 alert="" t=891.5
+SHOT 390-x-no-formal-door t=891.6
+X_PLAN_GAPS ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] t=891.6
+X_SELECT 0 enabled=false X_START 1 t=891.6
+SURVEY_PLAN_AFTER_FORMAL [{"tag":"BUTTON","id":"","name":"换地区 ›","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-map","name":"地图","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-timeline","name":"日程","dis":false},{"tag":"BUTTON","id":"rev-mission-layer-agent","name":"对话","dis":false},{"tag":"BUTTON","id":"","name":"Day 1 12-03","dis":false},{"tag":"BUTTON","id":"","name":"Day 2 12-04","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"SELECT","id":"","name":"","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"＋ 添加安排","dis":false},{"tag":"BUTTON","id":"","name":"检查草案保存状态","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院开始时间","dis":false},{"tag":"INPUT","id":"","name":"故宫博物院结束时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（含北海公园，相邻约400米）开始时间","dis":false},{"tag":"INPUT","id":"","name":"景山公园（含北海公园，相邻约400米）结束时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街开始时间","dis":false},{"tag":"INPUT","id":"","name":"王府井步行街结束时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（东门进，逛长廊、佛香阁、昆明湖）开始时间","dis":false},{"tag":"INPUT","id":"","name":"颐和园（东门进，逛长廊、佛香阁、昆明湖）结束时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园开始时间","dis":false},{"tag":"INPUT","id":"","name":"圆明园遗址公园结束时间","dis":false},{"tag":"INPUT","id":"","name":"","dis":false},{"tag":"BUTTON","id":"","name":"保存为正式候选方案","dis":false},{"tag":"BUTTON","id":"rev-v3-ask-agent","name":"和 Agent 补齐出发资料","dis":false},{"tag":"BUTTON","id":"","name":"刷新方案","dis":false},{"tag":"BUTTON","id":"rev-plan-start","name":"确认方案，开始行程","dis":false},{"tag":"BUTTON","id":"rev-open-trip","name":"准备出发","dis":false},{"tag":"BUTTON","id":"","name":"行程守护","dis":false},{"tag":"BUTTON","id":"","name":"同行决策","dis":false},{"tag":"BUTTON","id":"","name":"去发现地点 →","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-explore","name":"探索","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-trips","name":"我的旅程","dis":false},{"tag":"BUTTON","id":"rev-mobile-tab-me","name":"我的","dis":false},{"tag":"BUTTON","id":"","name":"对话设置","dis":false},{"tag":"BUTTON","id":"","name":"发送 ↑","dis":false},{"tag":"BUTTON","id":"rev-dock-retry-round","name":"重试这一轮","dis":false},{"tag":"BUTTON","id":"rev-dock-browse-found","name":"先浏览已找到的地点","dis":false}] t=891.6
+X_END alert="" errors=[] t=891.6

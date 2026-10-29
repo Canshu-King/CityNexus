@@ -1,0 +1,7 @@
+block 373: the correction that voids the nineteen-site counts, landed at 23:55
+
+Landed as 494abfd7_2354.md.inserted_235528 after the Q43 gate read 30 claims with 0 findings. The generator
+re-reads the two ledger headings it voids (with their live ledger line numbers), the corrected totals from
+the fresh receipts and the superseded totals from the .before_catch_body_fix copies, and aborts if the
+scanner control does not end on the number the block publishes. Its first draft was Q43-red because the
+heading carried three bare block numbers - retired in-tree rather than left in the inbox. 0 product bytes.

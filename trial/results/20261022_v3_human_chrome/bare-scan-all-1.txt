@@ -1,0 +1,76 @@
+doc=trial/results/20261022_V3_CHROME_USE_HUMAN_WALKTHROUGH.md
+doc_scanned_at_commit=a499ed2e2f7e3433fd1e9e1355ca48cde8c1f5cf
+rule=文件名紧跟在实数读数之后（全部章节）
+rules=wide trial/human_walk/_bare_coordinate_scan_r1.py:50 | token shape trial/human_walk/_bare_coordinate_scan_r1.py:41 | verb table trial/human_walk/_bare_coordinate_scan_r1.py:44 | scoped trial/human_walk/_bare_coordinate_scan_r1.py:63
+scanner=trial/human_walk/_bare_coordinate_scan_r1.py:124
+count=21
+DOC:51 TOKEN trial/results/20261022_V3_AGENT_HALFDAY_PRESS.md -> trial/results/20261022_V3_AGENT_HALFDAY_PRESS.md  (1 行命中，逐行列出)
+   line 20 | - 这一格是**旅客自己动手**改半天。让 Agent 自己改半天（“把第二天下午换成……”这一句直接落到草案）仍未验：这四轮里模型一直在问，没有自己产出 slot——它没有地点可排（这趟行程是旅客一句话建的，城市码是私有键 `CN-RV-…`，规范地名在结构化 brief 里，见 `backend
+DOC:67 TOKEN 20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md -> trial/results/20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md  (1 行命中，逐行列出)
+   line 106 | ## 四、仪表条件（如实记下，不当成产品结论）
+DOC:73 TOKEN 20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md -> trial/results/20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md  (2 行命中，逐行列出)
+   line 161 | ## 七、屏上那句"按你说的改"到底改了没有（第三处缺陷与修法）
+   line 157 | `AGENT_RESEARCH_GROUNDED = BLOCKED` 的**原因句**作废，结论本身要等第七节那一趟真走一遍才能重判。
+DOC:90 TOKEN walk-47-log.txt -> trial/results/20261022_v3_human_chrome/walk-47-log.txt  (2 行命中，逐行列出)
+   line 27 | STEP_09 {"cards":3,"visible":1,"tabs":["A · 轻松少走版","B · 省钱版","C · 本地特色版"],"chosen":["已选为当前行程"],"slots":6}
+   line 2 | STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规
+DOC:175 TOKEN backend/tests/test_goal_place_media.py -> backend/tests/test_goal_place_media.py  (1 行命中，逐行列出)
+   line 113 | lookalike["media"]["thumb_url"] = "https://thumb.wikimedia.org.evil.invalid/x.jpg"
+DOC:177 TOKEN walk-39-log.txt -> trial/results/20261022_v3_human_chrome/walk-39-log.txt  (3 行命中，逐行列出)
+   line 1 | WALK23_START 2026-10-22T15:43:25.763Z url=http://127.0.0.1:14381/revolution the photo strip, wikimedia routed through the local proxy port
+   line 20 | WALK23_END 2026-10-22T15:46:15.507Z
+   line 18 | FINAL_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0 等待你的决定 地图 日程 对话 现实地图 4 处地点 查看其他研究（31） 先看看这些地方 
+DOC:229 TOKEN collective_screen_r1.mjs -> FILE NOT FOUND IN THIS TREE
+DOC:237 TOKEN trial/results/20261022_v3_human_chrome/walk-44-log.txt -> trial/results/20261022_v3_human_chrome/walk-44-log.txt  (0 行命中；下列其最后三行供判读)
+   line 24 | SHAPE_430x932 {"viewport":[430,932],"track_box":{"x":30,"w":356},"scroll":{"scrollWidth":858,"clientWidth":356,"scrollable":502,"scrollLeft":1},"cards
+   line 25 | SHOT human-223-strip-430x932.png bytes=673598
+   line 26 | WALK44_END 2026-10-22T16:46:43.800Z
+DOC:249 TOKEN identity_pointer_r1.mjs -> FILE NOT FOUND IN THIS TREE
+DOC:289 TOKEN media-binding-before-1.txt -> trial/results/20261022_v3_human_chrome/media-binding-before-1.txt  (3 行命中，逐行列出)
+   line 2 | CASE {"place": "八达岭长城", "status": "UNAVAILABLE", "reason": null, "identity": "UNBOUND", "wikidata": null, "file": null, "author": "", "license": null,
+   line 3 | CASE {"place": "天坛公园", "status": "UNAVAILABLE", "reason": null, "identity": "UNBOUND", "wikidata": null, "file": null, "author": "", "license": null, 
+   line 4 | CASE {"place": "南锣鼓巷", "status": "UNAVAILABLE", "reason": null, "identity": "UNBOUND", "wikidata": null, "file": null, "author": "", "license": null, 
+DOC:319 TOKEN trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt -> trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt  (0 行命中；下列其最后三行供判读)
+   line 15 | CATALOG_PLACES_IN_CN-RV-2E8CE2493CDF 72
+   line 16 | PROVIDER {"provider_key": "amap", "rows": 72, "opening_known": 56, "cost_known": 0}
+   line 17 | PLACES_WITH_BOTH_FACTS_KNOWN_IN_CN-RV-2E8CE2493CDF 0
+DOC:327 TOKEN trial/results/20261022_v3_human_chrome/region-status-by-provider-1.txt -> trial/results/20261022_v3_human_chrome/region-status-by-provider-1.txt  (0 行命中；下列其最后三行供判读)
+   line 4 | photon     UNKNOWN         126
+   line 5 | TOTAL_MATCHED 851 TOTAL_UNKNOWN_OR_ABSENT 126
+   line 6 | NOTE region_status is written by app/region_matching.py public_region_status (lines 49-72), which answers UNKNOWN when the label or an address field i
+DOC:382 TOKEN trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt -> trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt  (0 行命中；下列其最后三行供判读)
+   line 28 | 什刹海 / 南锣鼓巷 收尾              DATE_SPECIFIC_UNKNOWN  NO_WINDOW_STATED / -                 OPEN_ON_DATE           - / 24:00
+   line 29 | 
+   line 30 | venues_read=6
+DOC:1093 TOKEN trial/human_walk/worktree_slice_reading_1024.txt -> trial/human_walk/worktree_slice_reading_1024.txt  (0 行命中；下列其最后三行供判读)
+   line 3 | 屏上唯一一条相关读数：walk-95 第 4 行 STEP_02A_PREFILLED party=1 budget=800（仪表改这两栏之前读的；旅客句中有「人均预算 800」，未写人数）
+   line 4 | 未测：CSS 那一半的视觉；「旅客手动改过就不再覆盖」那一支；两栏在窄屏是否仍按得到
+   line 5 | 同目录 worktree_slice_RevolutionFirstLook_1024.patch 是这两枚文件的 git diff 全文，供写它的人自行取回
+DOC:1119 TOKEN trial/human_walk/infeasible_sentence_arms_r1.mjs -> trial/human_walk/infeasible_sentence_arms_r1.mjs  (0 行命中；下列其最后三行供判读)
+   line 51 | say(`PROBE_DONE ${new Date().toISOString()}`);
+   line 52 | await page.close().catch(() => undefined);
+   line 53 | await browser.close().catch(() => undefined);
+DOC:1154 TOKEN trial/human_walk/press_the_door_r1.mjs -> trial/human_walk/press_the_door_r1.mjs  (0 行命中；下列其最后三行供判读)
+   line 88 | say(`SHOT door-pressed-01.png bytes=${fs.statSync(path.join(OUT, "door-pressed-01.png")).size}`);
+   line 89 | say(`DONE ${new Date().toISOString()}`);
+   line 90 | await browser.close().catch(() => undefined);
+DOC:1207 TOKEN stalled-research-screen-1.txt -> trial/results/20261022_v3_human_chrome/stalled-research-screen-1.txt  (0 行命中；下列其最后三行供判读)
+   line 3 | DRAFT_SLOTS=0 VARIANT_CARDS=0 DEPARTURE_VISIBLE=false
+   line 4 | DOCK (unreadable)
+   line 5 | SHOT_ERR page.screenshot: Timeout 30000ms exceeded. Call log: [2m -
+DOC:1347 TOKEN first-tap-layers-3.txt -> trial/results/20261022_v3_human_chrome/first-tap-layers-3.txt  (0 行命中；下列其最后三行供判读)
+   line 67 | FIRST_TAP_SUCCESS=3/3 shape=430x932 arm=after_scroll
+   line 68 | JOURNEY_KEPT same pointer={"id":"0d83a51a-4d7d-44eb-94a6-c85cbd418
+   line 69 | NOTE 动作只有换视口、刷新、滚动到指定位置与中心点真鼠标点击；未写 storage、未调接口、未起新标签页
+DOC:1473 TOKEN goal-numbers-1.txt -> trial/results/20261022_v3_human_chrome/goal-numbers-1.txt  (0 行命中；下列其最后三行供判读)
+   line 5 | TYPE "随便逛逛。" fields={"goal":"随便逛逛。","party":"2","budget":"2400","partyLabel":"同行人数","budgetLabel":"总预算（元）"}
+   line 6 | SHOT goal-numbers-1.png
+   line 7 | NOTE 只填了这一枚文本框并回读数显字段；没按「开始规划」、没提交、没建 Journey，新标签页用完即关
+DOC:1758 TOKEN dock_clearance_probe_r1.mjs -> trial/human_walk/dock_clearance_probe_r1.mjs  (0 行命中；下列其最后三行供判读)
+   line 96 | say("NOTE this instrument presses nothing; it only scrolls the pane's own scroller and reads rectangles");
+   line 97 | say("DONE tab left open");
+   line 98 | await browser.close().catch(() => undefined);
+DOC:1926 TOKEN trial/results/20261022_v3_human_chrome/model_503_dock_press-1.txt -> trial/results/20261022_v3_human_chrome/model_503_dock_press-1.txt  (0 行命中；下列其最后三行供判读)
+   line 7 | run FAILED_EXTERNAL | MODEL_HTTP_503 | cn:hy3 | started=2026-10-24T02:28:49.103248 ended=2026-10-24T02:28:49.112686
+   line 8 | run FAILED_EXTERNAL | MODEL_HTTP_503 | cn:hy3 | started=2026-10-24T02:29:09.886664 ended=2026-10-24T02:29:09.908787
+   line 9 | run FAILED_EXTERNAL | MODEL_HTTP_503 | cn:hy3 | started=2026-10-24T02:30:10.062263 ended=2026-10-24T02:30:10.068001

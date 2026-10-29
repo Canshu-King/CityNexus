@@ -1,0 +1,29 @@
+CLOCK_PRESENT 1
+BEFORE "模拟时间：12/03 09:00 · 服务器第 0 版"
+CITIES "随机城市池：可用 0 座，标准要 3 座；这趟演示用行程自己的城市，仍可开演。 · 池子还差：城市身份未核实、真捕获路线不足三条"
+START_BUTTON present
+RUN_OWNED 0
+RUN_OWNED_LATE 0
+AFTER_START "模拟时间：12/03 09:00 · 服务器第 0 版"
+PRESENTER_RUN "模拟进行中 · 12-03 09:00"
+PRESENTER_MESSAGE ""
+STEP_START null
+PLUS30_1_DISABLED false
+PLUS30_1_TEXT "模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中"
+PLUS30_1_STEP 1
+PLUS30_1_NOTE "已把模拟时间推进 30 分钟"
+PLUS30_1_PRESENTER "模拟进行中 · 12-03 09:30"
+PLUS30_2_DISABLED false
+PLUS30_2_TEXT "模拟时间：12/03 10:00 · 执行第 2 步 · 模拟进行中"
+PLUS30_2_STEP 2
+PLUS30_2_NOTE "已把模拟时间推进 30 分钟"
+PLUS30_2_PRESENTER "模拟进行中 · 12-03 10:00"
+NEXT_DISABLED false
+AFTER_NEXT "模拟时间：12/03 15:00 · 执行第 6 步 · 模拟进行中"
+AFTER_NEXT_STEP 6
+AFTER_NEXT_NOTE "已走到下一站（第 6 步）"
+BEFORE_RELOAD "模拟时间：12/03 15:00 · 执行第 6 步 · 模拟进行中"
+AFTER_RELOAD "模拟时间：12/03 15:00 · 执行第 6 步 · 模拟进行中"
+RELOAD_SAME_STEP true
+RUN_OWNED_END 1
+ERRORS []

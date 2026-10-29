@@ -1,0 +1,11 @@
+P1 slice A — ACTIVE screen speaks the journey's language, platform names folded
+1 before_screen the ACTIVE fixture at 390x844 showed "WB2API · 行程助手" and no advanced entry => trial/results/20261022_v3_human_chrome/p1a-before-active-trips.png
+2 after_screen the same fixture shows "行程助手" + "▸ 高级信息"; full page shows TRIP ASSISTANT/AGENT PLAN with ▸ Advanced => p1a-after-active-trips.png, p1a-after-active-trips-full.png
+3 schedule_fold the departure card at 390 shows "▶ 编辑行程时间（可选）" with the save button outside => p1a-draft-schedule-folded-390.png
+4 gates e2e/revolution-mobile-shell.spec.ts:614-619 (advanced closed; three platform strings not visible; card says 行程助手) and e2e/revolution-draft-preparation.spec.ts:57-61 (time inputs hidden, expand, fill)
+5 negative_control with the three product files reverted, the ACTIVE gate fails rc=1; restored rc=0 => p1a-gate-negative-1.log, p1a-gate-restored-1.log
+6 typecheck_rc=0
+7 suite_run1=49 passed 1 failed (390 page.reload wait timeout); same case alone passed in 7.1s
+8 suite_run2=49 passed 1 failed, same 390 page.reload wait timeout (reproducible in full suite, not in isolation)
+9 boundary P1 multi-member co-decision copy stays blocked on ruling #284; the live 14522 stack session expired (freeze-route 401)
+10 repro the case alone passed 7.1s; the whole workspace-actions file passed 7/7; visual-travel + workspace-actions passed 11/11 => p1a-flake-rerun-1.log, p1a-workspace-file-1.log, /tmp/twofile.log

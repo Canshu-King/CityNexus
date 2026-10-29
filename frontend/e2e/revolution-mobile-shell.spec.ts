@@ -94,19 +94,91 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     const destinationBounds = await page.getByTestId("rev-firstlook-city").boundingBox();
     expect(destinationBounds?.height ?? 999).toBeLessThanOrEqual(64);
     await page.screenshot({ path: testInfo.outputPath("mobile-welcome-TEST-FIXTURE.png"), fullPage: true });
+    // Ruling acceptance #1: the Agent entry (goal box) and its one submit are both on the first screen.
+    for (const testId of ["rev-trip-goal", "rev-firstlook-start"]) {
+      const box = await page.getByTestId(testId).boundingBox();
+      expect(box && box.y + box.height <= 844).toBe(true);
+    }
     const nav = page.getByTestId("rev-mobile-bottom-nav");
     await expect(nav).toBeVisible();
+    const tabDestinations: Array<[string, string]> = [
+      ["rev-mobile-tab-trips", "rev-mobile-empty-trips"],
+      ["rev-mobile-tab-me", "rev-mobile-empty-me"],
+      ["rev-mobile-tab-explore", "rev-mobile-welcome"],
+    ];
+    for (const [tabId, screenId] of tabDestinations) {
+      await page.evaluate(() => window.scrollTo(0, 0));
+      const tab = page.getByTestId(tabId);
+      const box = await tab.boundingBox();
+      expect(box).not.toBeNull();
+      const centreTestId = await page.evaluate(({ x, y }) => {
+        const hit = document.elementFromPoint(x, y);
+        return hit ? hit.closest("[data-testid]")?.getAttribute("data-testid") ?? null : null;
+      }, { x: (box?.x ?? 0) + (box?.width ?? 0) / 2, y: (box?.y ?? 0) + (box?.height ?? 0) / 2 });
+      expect(centreTestId).toBe(tabId);
+      await tab.click();
+      await expect(tab).toHaveAttribute("aria-current", "page");
+      await expect(page.getByTestId(screenId)).toBeVisible();
+    }
     await page.getByTestId("rev-mobile-tab-trips").click();
-    await expect(page.getByTestId("rev-mobile-empty-trips")).toBeVisible();
     await page.getByTestId("rev-mobile-empty-start").click();
-    await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
-    await page.getByTestId("rev-mobile-tab-me").click();
-    await expect(page.getByTestId("rev-mobile-empty-me")).toBeVisible();
-    await page.getByTestId("rev-mobile-tab-explore").click();
     await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
     expect(providerOrAiPosts).toBe(0);
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
     expect(fits).toBeTruthy();
+  });
+
+  // Ruling P0 (2026-10-25): the sentence and the form carry one set of dates. An untouched form
+  // takes the range the sentence names; a hand-edited form asks before anything is written.
+  test("a date range in the sentence fills the form and the Journey with the same dates", async ({ page }, testInfo) => {
+    const creates: Array<Record<string, unknown>> = [];
+    await page.route("**/api/v1/travelers", (route) => {
+      expect(route.request().method()).toBe("POST");
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ id: "traveler-date-fixture", access_token: "DATE_FIXTURE_TOKEN" }) });
+    });
+    await page.route("**/api/v1/journeys", (route) => {
+      creates.push(route.request().postDataJSON());
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ id: "00000000-0000-4000-8000-000000000901" }) });
+    });
+    await page.goto("/revolution");
+    await page.getByTestId("rev-trip-goal").fill("12 月 3 日到 12 月 4 日在北京玩两天，两个人，每段步行不超过 1 公里。");
+    await page.getByTestId("rev-firstlook-city").fill("北京");
+    await expect(page.getByTestId("rev-trip-start-date")).toHaveValue("2026-12-03");
+    await expect(page.getByTestId("rev-trip-duration")).toHaveValue("2");
+    await expect(page.getByTestId("rev-firstlook-dates-source")).toContainText("2026-12-03");
+    await page.screenshot({ path: testInfo.outputPath("date-truth-auto-390.png"), fullPage: false });
+    await page.getByTestId("rev-firstlook-start").click();
+    await expect.poll(() => creates.length).toBe(1);
+    expect(creates[0].start_at).toBe("2026-12-03T09:00:00+08:00");
+    expect(creates[0].end_at).toBe("2026-12-04T21:00:00+08:00");
+  });
+
+  test("a hand-edited form is never silently overwritten; the screen asks which dates win", async ({ page }) => {
+    const creates: Array<Record<string, unknown>> = [];
+    await page.route("**/api/v1/travelers", (route) => {
+      expect(route.request().method()).toBe("POST");
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ id: "traveler-date-fixture", access_token: "DATE_FIXTURE_TOKEN" }) });
+    });
+    await page.route("**/api/v1/journeys", (route) => {
+      creates.push(route.request().postDataJSON());
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ id: "00000000-0000-4000-8000-000000000902" }) });
+    });
+    await page.goto("/revolution");
+    await page.locator("details.rev-v3-trip-dates > summary").click();
+    // Edit the form the way a traveller can: a number input fill reaches React's onChange, while a
+    // direct value write on a date input is swallowed by React's value tracker. Both fields share the
+    // same onChange branch (datesEdited), so this proves the conflict gate, not the input widget.
+    await page.getByTestId("rev-trip-duration").fill("3");
+    await expect(page.getByTestId("rev-trip-duration")).toHaveValue("3");
+    await page.getByTestId("rev-trip-goal").fill("12 月 3 日到 12 月 4 日在北京玩两天。");
+    await page.getByTestId("rev-firstlook-city").fill("北京");
+    await expect(page.getByTestId("rev-firstlook-dates-conflict")).toBeVisible();
+    await expect(page.getByTestId("rev-trip-duration")).toHaveValue("3");
+    await page.getByTestId("rev-firstlook-dates-use-text").click();
+    await expect(page.getByTestId("rev-trip-start-date")).toHaveValue("2026-12-03");
+    await page.getByTestId("rev-firstlook-start").click();
+    await expect.poll(() => creates.length).toBe(1);
+    expect(creates[0].start_at).toBe("2026-12-03T09:00:00+08:00");
   });
 
   test("hides the AI shortcut when the server has AI disabled", async ({ page }) => {
@@ -169,6 +241,13 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(bar).toBeVisible();
     await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
     await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
+    // The manual geocoder is folded behind an explicit choice now, so this pins both halves: the
+    // fold is on screen, the control only appears once the traveller opens it — and opening it
+    // still submits nothing upstream.
+    const secondary = page.getByTestId("rev-quick-area-secondary");
+    await expect(secondary).toBeVisible();
+    await expect(page.getByTestId("rev-quick-find-city")).toBeHidden();
+    await secondary.locator("> summary").click();
     await expect(page.getByTestId("rev-quick-find-city")).toBeVisible();
     await expect(page.getByTestId("rev-mission-cockpit")).toBeVisible();
     await expect(page.locator("dialog[open]")).toHaveCount(0);
@@ -357,6 +436,8 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     }));
 
     await page.goto("/revolution");
+    // Manual place search is folded behind an explicit choice now, so the traveller opens it first.
+    await page.getByTestId("rev-quick-area-secondary").locator("> summary").click();
     await page.getByTestId("rev-quick-find-city").click();
     await page.getByText("连城县, 龙岩市").click();
     await page.getByTestId("rev-quick-use-approx-center").click();
@@ -416,6 +497,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     });
 
     await page.goto("/revolution");
+    await page.getByTestId("rev-quick-area-secondary").locator("> summary").click();
     await page.getByTestId("rev-quick-find-city").click();
     await page.getByText("连城县, 龙岩市").click();
     await expect(page.getByTestId("rev-quick-use-approx-center")).toBeVisible();
@@ -598,6 +680,25 @@ test.describe("Revolution Mobile-First UI fixture", () => {
       throw new Error("Mobile shell mounted its error boundary: " + (pageErrors.join(" | ") || "no pageerror captured"));
     }
     await page.getByTestId("rev-mobile-tab-trips").click();
+    // P1: the traveller's next stop comes before the Agent's technical panels, and inside the first screen.
+    const nextBox = await page.getByTestId("live-next").boundingBox();
+    const agentBox = await page.getByTestId("rev-mobile-compat-agent").boundingBox();
+    expect(nextBox && agentBox && nextBox.y < agentBox.y).toBe(true);
+    expect((nextBox?.y ?? 9999) < 844).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath("active-trips-trip-first-390.png") });
+    // A single-traveller trip has no co-decision door; the tile says why instead of opening one.
+    await expect(page.getByRole("button", { name: "添加同行者后使用" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "添加同行者后使用" })).toBeDisabled();
+    await page.getByRole("button", { name: "添加同行者后使用" }).scrollIntoViewIfNeeded();
+    await page.screenshot({ path: testInfo.outputPath("single-traveller-tile-390.png") });
+    await page.screenshot({ path: testInfo.outputPath("active-trips-390x844.png") });
+    await page.screenshot({ path: testInfo.outputPath("active-trips-full-390x844.png"), fullPage: true });
+    // P1: the journey's own words first; the platforms' names live inside a closed disclosure.
+    await expect(page.getByTestId("journey-operator-advanced")).not.toHaveAttribute("open", "");
+    await expect(page.getByText("Journey Operator", { exact: true })).not.toBeVisible();
+    await expect(page.getByText("Planning brain", { exact: true })).not.toBeVisible();
+    await expect(page.getByText("WB2API · 行程助手通道", { exact: true })).not.toBeVisible();
+    await expect(page.getByTestId("rev-mobile-compat-agent")).toContainText("行程助手");
     await expect.poll(() => latestRunReads).toBe(1);
     await expect(page.getByTestId("rev-mobile-hermes-empty-state")).toContainText("暂无助手运行记录");
     await page.getByTestId("rev-mobile-hermes-submit").click();
@@ -636,4 +737,85 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
     expect(fits).toBeTruthy();
   });
+});
+
+test("TEST_FIXTURE a multi-member trip's 同行决策 tile jumps to the real collective card", async ({ page }, testInfo) => {
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_ONLY_SIGNED_FIXTURE_TOKEN");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "fixture-traveler-118");
+    window.localStorage.setItem("citynexus.locale", "zh-CN");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "ACTIVE", ownerTravelerId: "fixture-traveler-118",
+    }));
+  }, journeyId);
+  await page.route("**/api/v1/**", (route) => fulfill(route, {}));
+  await page.route("**/api/v1/travelers/session", (route) => fulfill(route, { traveler_id: "fixture-traveler-118" }));
+  await page.route("**/api/v1/agent/runtime-status", (route) => fulfill(route, {
+    runtime_identity: "HERMES_NATIVE_MCP",
+    hermes_native_gateway: { configured: true, reachable: true, ready: true, runs: true, events: true },
+    hermes_compat_configured: false,
+    ai_state: "CONFIGURED_UNVERIFIED",
+  }));
+  await page.route(`${prefix}/bootstrap-shortlist`, (route) => fulfill(route, { journey_id: journeyId, items: [], resume: null, pocket_walk: null }));
+  await page.route(`${prefix}/operator`, (route) => fulfill(route, {
+    journey_id: journeyId, state: "ACTIVE", headline: "TEST_FIXTURE 同行决定", enabled: true,
+    standing_mission_id: "m1", autonomy: "PLAN_ONLY", incident: null, decision: null, approval: null, brain: null,
+    collective: {
+      state: "WAITING_FOR_MEMBERS", mission_id: "m1", required_count: 3, response_count: 2,
+      clarification_id: "c1", viewer_member_id: "b",
+      viewer_has_responded: false, viewer_can_respond: true,
+      members: [
+        { member_id: "a", display_name: "甲", role: "OWNER", responded: true, is_viewer: true },
+        { member_id: "b", display_name: "乙", role: "MEMBER", responded: true, is_viewer: false },
+        { member_id: "c", display_name: "丙", role: "MEMBER", responded: false, is_viewer: false },
+      ],
+      options: [{ proposal_id: "p1", label: "按甲的时间" }, { proposal_id: "p2", label: "按乙的时间" }],
+    },
+    discovery: { state: "IDLE", attempt_count: 0, max_attempts: 1, raw_candidate_count: 0, materialized_place_count: 0 },
+    timeline: [], operator: { watching: true, will_continue_after_approval: false },
+  }));
+  await page.route(`${prefix}/experience`, (route) => fulfill(route, {
+    active_plan: { id: "test-plan", status: "ACTIVE", activities: [], legs: [], disruptions: [] },
+    recovery: null, experience_flags: { needs_review: false, recovery_required: false, staleness: false },
+  }));
+  await page.route(`${prefix}/twin`, (route) => fulfill(route, { id: "test-twin", context: {} }));
+  await page.route(`${prefix}/plans`, (route) => fulfill(route, []));
+  await page.route(`${prefix}/replans`, (route) => fulfill(route, []));
+  await page.route(`${prefix}/guardian/pulse/latest`, (route) => fulfill(route, { pulse: null }));
+  await page.route(`${prefix}/launch-setup`, (route) => fulfill(route, {}));
+  await page.route(`${prefix}/guardian/autopilot/status`, (route) => fulfill(route, { enrollment: { enabled: false }, watch: null, readiness: null }));
+  await page.route(`${prefix}/agent/hermes/latest-run`, (route) => fulfill(route, { journey_id: journeyId, run: null }));
+  let answerBody: Record<string, unknown> | null = null;
+  await page.route(`${prefix}/missions/m1/collective-clarification/b`, async (route) => {
+    expect(route.request().method()).toBe("POST");
+    answerBody = route.request().postDataJSON();
+    return fulfill(route, { status: "RECORDED" });
+  });
+
+  await page.goto("/revolution");
+  await page.getByTestId("rev-mobile-tab-trips").click();
+  await page.getByTestId("rev-mission-layer-timeline").click();
+  const tile = page.getByRole("button", { name: "同行决策（2/3 已答）" });
+  await expect(tile).toBeVisible();
+  await expect(tile).toBeEnabled();
+  const card = page.locator('[data-testid="journey-operator-collective"]');
+  await expect(card).toBeVisible();
+  await expect(card).toContainText("2/3 已回答");
+  await expect(card).toContainText("丙 · 等待中");
+  await page.screenshot({ path: testInfo.outputPath("multi-collective-tile-390.png") });
+  await tile.click();
+  await page.waitForTimeout(300);
+  const cardBox = await card.boundingBox();
+  expect(cardBox && cardBox.y >= 0 && cardBox.y + cardBox.height <= 844).toBe(true);
+  const centreInside = await card.evaluate((node) => {
+    const box = node.getBoundingClientRect();
+    const hit = document.elementFromPoint(box.x + box.width / 2, box.y + Math.min(box.height / 2, 40));
+    return hit ? node.contains(hit) : false;
+  });
+  expect(centreInside).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath("multi-collective-card-390.png") });
+  await page.getByRole("button", { name: "按甲的时间" }).click();
+  await expect.poll(() => answerBody).not.toBeNull();
+  expect(answerBody).toEqual({ clarification_id: "c1", proposal_id: "p1" });
+  await expect(page.getByText("已记录你的选择，正在等待其他成员。", { exact: true })).toBeVisible();
 });

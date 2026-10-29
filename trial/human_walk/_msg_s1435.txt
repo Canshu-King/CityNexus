@@ -1,0 +1,20 @@
+section 14.35: the traveller-facing English has no known route to the screen through these calls
+
+Appended through trial/human_walk/_append_section1435_r327.py, which re-reads both receipts and refuses to
+run if an anchor is not unique. Nothing in the section is typed: the per-request readings (16 owning their
+own sentence, 4 with no catch in the window, 0 showing the server text), the per-panel readings (25 panels,
+64 catch bodies, 1 read, 63 never touch the error, LiveRecovery alone holding 26), the wide-pattern
+agreement, the 11 panels with no catch at all, and the denominator's imported/rendered/JSX triple are all
+parsed and cross-asserted - reads+hides against the catch count, the mounted split against the mounted
+rows, the loose pattern against the strict one.
+
+It also corrects my own draft before it shipped, which is what the appender is for: I had written the
+comment's line number as `at["drops_326"] - 2`, arithmetic standing in for a reading, and the appender
+refuses that shape - the coordinate now comes out of the READS_BUT_DROPS line itself
+(frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:244).
+
+The section states the consequence without taking the ruling: the 21 sentences counted in sections
+14.30-14.32 do not reach the screen along the 20 calls measured here, because the layer above rewrites the
+answer; what is demonstrable on those paths today is a panel that says "refresh and try again" no matter
+what the server said. Which side to cut first is the commander's call, and the read side is now named
+catch by catch. Line endings verified: 217 bare LF before and after. 0 product bytes.

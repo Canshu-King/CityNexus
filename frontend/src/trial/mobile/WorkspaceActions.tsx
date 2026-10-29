@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { travelerErrorMessage } from "./travelerError";
 import { cityNexusApi, type TravelPlanningInput, type BootstrapDiscoveryCandidate, type DraftGoalTask, type DraftGoalTaskEvent, type GoalResearchRoute } from "../../api/citynexus";
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap } from "./WorkspaceMap";
 import { TravelGoalPreferences } from "./MobileAiPrompt";
 import { GoalDraftEditor } from "./GoalDraftEditor";
 import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
+import { AGENT_ASK_MARK, humanDistance, humanDuration, isSafeAmapNavigationUrl } from "./departureGaps";
 import type { GoalResearchLead } from "../../api/citynexus";
 import "./WorkspaceActions.css";
 
@@ -27,6 +29,19 @@ const TASK_STATUS: Record<string, string> = {
   NEEDS_DECISION: "等你决定", RESUMABLE: "可以继续", FAILED_RECOVERABLE: "可以重试",
   CANCELLED: "已取消", COMPLETED: "已完成",
 };
+
+// PARTIAL_READY means "this turn stopped and the next word is the traveller's", not "there are results".
+// Measured on the screen walk-76 left open: two model turns completed, no source was ever queried, the
+// draft still had zero schedule lines, and the panel header read 旅行研究 · 已有阶段成果
+// (trial/results/20261022_v3_human_chrome/research-head-before.txt:1).  A traveller who believes that
+// headline will wait instead of acting, which is how a stalled Agent looks like progress.  The two
+// counts below are the same fields the panel already draws, so nothing here is inferred.
+function researchHeadline(task: DraftGoalTask): string {
+  const label = TASK_STATUS[task.status] ?? task.status;
+  if (task.status !== "PARTIAL_READY") return label;
+  const slots = (task.draft_artifact?.days ?? []).reduce((count, day) => count + day.slots.length, 0);
+  return (task.research_places ?? []).length || slots ? label : "这一轮还没有查到来源";
+}
 const TOOL_NAME: Record<string, string> = {
   ask_traveler: "与你商量安排", research_place_media: "查找地点照片",
   inspect_journey: "读取行程", read_guardian_stream: "查看行程守护记录", save_draft_variants: "比较旅行备选", search_city_services: "搜索城市地点",
@@ -103,11 +118,72 @@ function readTaskPointer(actor: Context): string | null {
 function saveTaskPointer(actor: Context, taskId: string): void {
   try { localStorage.setItem(pointerKey(actor), taskId); } catch { /* server remains the task record */ }
 }
+const STEP_STATUS_TEXT: Record<string, string> = {
+  COMPLETED: "完成", FAILED: "失败", BLOCKED: "被拦下", RUNNING: "进行中", PENDING: "等待",
+};
+
+function toolStepClock(step: { created_at?: string; completed_at?: string | null; result: Record<string, unknown> }): string {
+  const stamp = (typeof step.completed_at === "string" && step.completed_at) || (typeof step.created_at === "string" ? step.created_at : "");
+  // The API sends UTC ISO strings; printing them raw showed 04:23 to a traveller whose clock says 12:23.
+  const at = new Date(stamp);
+  const clock = Number.isNaN(at.getTime())
+    ? ""
+    : `${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")}:${String(at.getSeconds()).padStart(2, "0")}`;
+  const elapsed = typeof step.result.elapsed_ms === "number" ? `${(step.result.elapsed_ms / 1000).toFixed(1)} 秒` : "";
+  return [clock, elapsed].filter(Boolean).join(" · ");
+}
+
+// Who actually answered for a step, read off the row the server wrote when it called the tool
+// (backend/app/agent/goal_amap.py:153 and goal_artifacts.py:262 carry these two keys).  A
+// traveller weighing “太远坐地铁” needs to know whether a walk came from the real map vendor or an
+// unverified public list.  When the row records neither, the panel prints 未记录 instead of going
+// quiet -- a missing disclosure must read as missing, not as if it had already been checked.
+const PROVIDER_NAME: Record<string, string> = {
+  amap: "高德地图", overpass: "OpenStreetMap 公开数据", photon: "公开地点清单",
+  nominatim: "公开地点清单", official_web: "官方网站", valhalla: "路线计算服务",
+  deepseek: "公开检索", searxng: "公开检索",
+};
+const PROVENANCE_NAME: Record<string, string> = {
+  LIVE_PROVIDER: "真供应商已核实", LIVE_OPENSTREETMAP_OVERPASS: "公开地图已核实",
+  UNVERIFIED: "还没核实",
+};
+function toolStepSourceText(result: Record<string, unknown>): string {
+  const provider = typeof result.provider === "string" ? result.provider : "";
+  const provenance = typeof result.provider_provenance === "string" ? result.provider_provenance : "";
+  if (!provider && !provenance) return "";
+  const who = provider ? (PROVIDER_NAME[provider] ?? "未记录的来源") : "未记录的来源";
+  const how = provenance ? (PROVENANCE_NAME[provenance] ?? "核实状态未记录") : "核实状态未记录";
+  return `来源：${who} · ${how}`;
+}
+
+/** What the traveller can do right now, read from the task's own state — never a model sentence. */
+function nextActionSentence(task: { status: string; pending_question?: unknown; draft_artifact?: { days?: Array<{ slots?: unknown[] }> } | null }): string {
+  if (task.status === "WORKING") return "Agent 正在调用工具，等这一轮结束再操作。";
+  if (task.pending_question) return "等你从上面的选项里选一个，或直接按现在的方向开始研究。";
+  if ((task.draft_artifact?.days ?? []).some((day) => (day.slots ?? []).length > 0)) return "草案已保存；确认时间后可以准备正式候选。";
+  if (task.status === "FAILED_RECOVERABLE") return "这一轮没有完成；可以再按一次「按讨论的方向开始研究」重试这一轮。";
+  if (task.status === "CANCELLED") return "任务已取消。";
+  return "可以继续补充要求，或按现在的方向开始研究。";
+}
+
+/** Name the model outcome instead of one generic sentence; both were measured on 2026-10-26. */
+function failureSentence(code: string): string {
+  if (code === "MODEL_HTTP_429") return "现场模型被限流（HTTP 429），这一轮没有跑完，结果也没有保存；等一会儿再试这一轮即可。";
+  if (code === "MODEL_TIMEOUT") return "现场模型这一轮超过三分钟没有回，结果没有保存；可以直接重试这一轮。";
+  if (code.startsWith("MODEL_HTTP_")) return `现场模型这一轮返回失败（HTTP ${code.slice("MODEL_HTTP_".length)}），结果没有保存；可以重试这一轮。`;
+  if (code === "MODEL_EMPTY_RESPONSE" || code === "MODEL_OUTPUT_BUDGET_EXHAUSTED") return "现场模型这一轮没有给出可用内容，结果没有保存；可以重试这一轮。";
+  if (code === "MODEL_RUNTIME_UNAVAILABLE") return "这台演示机上的 Agent 运行时没有启动；请让管理员检查后重试。";
+  return "这次有一部分还没完成，你可以继续告诉我想怎么调整。";
+}
+
 function taskStepText(result: Record<string, unknown>): string {
   const route = result.route && typeof result.route === "object" ? result.route as Record<string, unknown> : null;
   if (route && typeof route.distance_m === "number" && Number.isFinite(route.distance_m) && route.distance_m >= 0
     && typeof route.duration_seconds === "number" && Number.isFinite(route.duration_seconds) && route.duration_seconds >= 0) {
-    return `步行路线 · ${route.distance_m} 米 · ${route.duration_seconds} 秒`;
+    // The row says which door answered it, so the panel says the same thing back.  Naming every route a
+    // walk is how a 180-minute bus ride from 八达岭长城 appeared as footsteps.  The drawer below uses the
+    // same two readers, so a segment never reads as "52185 米" in one place and "52.2 公里" in another.
+    return `${route.mode === "TRANSIT" ? "公共交通路线" : "步行路线"} · ${humanDistance(route.distance_m)} · ${humanDuration(route.duration_seconds)}`;
   }
   if (result.status === "CACHED_ONLY") return Array.isArray(result.cached_references) && result.cached_references.length
     ? `已读取 ${result.cached_references.length} 条已有地点来源` : "已读取已有地点资料";
@@ -125,7 +201,6 @@ function taskStepText(result: Record<string, unknown>): string {
 }
 
 const AMAP_MARKER_URL = /^https:\/\/uri\.amap\.com\/marker(?:\?.*)?$/;
-const AMAP_NAVIGATION_URL = /^https:\/\/uri\.amap\.com\/navigation\?/;
 const ADMIN_ADDRESS_KEYS = ["province", "city", "district", "county", "township", "town"] as const;
 
 function shortAdministrativeAddress(address?: Record<string, string>): string {
@@ -138,14 +213,20 @@ function isAmapLead(place: GoalResearchLead): boolean {
   return typeof place.provider === "string" && place.provider.toLowerCase() === "amap";
 }
 
-function isSafeAmapNavigationUrl(value: string): boolean {
-  if (!AMAP_NAVIGATION_URL.test(value)) return false;
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" && url.hostname === "uri.amap.com" && url.pathname === "/navigation"
-      && !url.username && !url.password && url.searchParams.get("mode") === "walk"
-      && url.searchParams.get("coordinate") === "gaode";
-  } catch { return false; }
+function frozenHopLine(route: GoalResearchRoute): string | null {
+  // A hop the traveller's own walking limit moved onto a bus: the row stays what the walking door
+  // measured, and this line says what this version of the plan froze instead.  Both halves are one
+  // sentence each because the two outcomes are different -- transport answered, or it did not.
+  const cap = typeof route.walking_cap_m === "number" && route.walking_cap_m > 0 ? route.walking_cap_m : null;
+  if (cap === null) return null;
+  const capText = `${(cap / 1000).toFixed(cap % 1000 ? 1 : 0)} 公里`;
+  if (route.frozen_mode === "TRANSIT" && route.mode !== "TRANSIT") {
+    const when = typeof route.frozen_minutes === "number" ? ` · ${humanDuration(route.frozen_minutes * 60)}` : "";
+    const lines = (route.frozen_lines ?? []).slice(0, 2).join(" · ");
+    return `超过你写的${capText}，这版按公共交通核实${typeof route.frozen_distance_m === "number"
+      ? ` ${humanDistance(route.frozen_distance_m)}${when}` : ""}${lines ? `（${lines}）` : ""}`;
+  }
+  return route.frozen_mode === "WALK" ? `超过你写的${capText}，公共交通没有答案，这版仍按步行核实` : null;
 }
 
 function ResearchRoutes({ items }: { items: GoalResearchRoute[] }) {
@@ -156,12 +237,15 @@ function ResearchRoutes({ items }: { items: GoalResearchRoute[] }) {
     && typeof route.to_name === "string" && !!route.to_name.trim()
     && Number.isFinite(route.distance_m) && route.distance_m >= 0
     && Number.isFinite(route.duration_seconds) && route.duration_seconds >= 0
-    && typeof route.source_url === "string" && isSafeAmapNavigationUrl(route.source_url));
+    && isSafeAmapNavigationUrl(route.source_url, route.mode));
   if (!routes.length) return null;
-  return <details className="rev-agent-research-drawer"><summary>高德步行路线（{routes.length}）</summary>
+  return <details className="rev-agent-research-drawer"><summary>高德转场路线（{routes.length}）</summary>
     <ul className="rev-workspace-task-places">{routes.map((route) => <li key={route.id} data-testid="rev-amap-research-route">
       <strong>{route.from_name} → {route.to_name}</strong>
-      <span>步行 · {route.distance_m} 米 · {route.duration_seconds} 秒</span>
+      <span title={`${route.distance_m} 米 · ${route.duration_seconds} 秒`}>{route.mode === "TRANSIT" ? "公共交通" : "步行"} · {humanDistance(route.distance_m)} · {humanDuration(route.duration_seconds)}</span>
+      {route.mode === "TRANSIT" && (route.lines ?? []).length > 0
+        && <small data-testid="rev-amap-research-lines">{route.lines!.slice(0, 3).join(" · ")}</small>}
+      {frozenHopLine(route) && <small data-testid="rev-amap-research-frozen">{frozenHopLine(route)}</small>}
       <a href={route.source_url} target="_blank" rel="noopener noreferrer">在高德地图查看路线 ↗</a>
     </li>)}</ul>
   </details>;
@@ -181,9 +265,39 @@ function ResearchLeads({ items, area = false }: { items: GoalResearchLead[]; are
   </li>)}</ul>;
 }
 
-export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, dialogueActive = true, onTaskChange }: { panel: WorkspacePanel;
+/**
+ * The model writes its answer as markdown, and this screen has no markdown renderer: 「**待核查项**」
+ * and 「- Day1 上午…」 used to land as literal asterisks and dashes inside one long paragraph. The
+ * words are the Agent's and stay untouched — only the line structure is read.
+ */
+function AgentMessageBody({ text }: { text: string }) {
+  const lines = text.split("\n").map((raw) => {
+    const trimmed = raw.trim();
+    return { item: /^[-*]\s+/.test(trimmed), text: trimmed.replace(/^[-*]\s+/, "").replace(/\*+/g, "").trim() };
+  }).filter((line) => line.text.length > 0);
+  return <div className="rev-agent-message-body">
+    {lines.map((line, index) => <p className={line.item ? "is-item" : undefined} key={index}>{line.text}</p>)}
+  </div>;
+}
+
+/**
+ * Whether this reply actually moved the schedule, read off the two revisions the server stored with
+ * it. A sentence can say anything; the version numbers come from the draft on disk, so "已改" that
+ * did not write shows up as 没有改动日程 instead of being believed.
+ */
+function draftReceipt(item: { draft_revision_before?: number | null; draft_revision_after?: number | null }) {
+  const before = item.draft_revision_before;
+  const after = item.draft_revision_after;
+  if (typeof after !== "number") return null;
+  if (typeof before !== "number") return "这一轮保存了第一版日程（版本 " + after + "）";
+  if (after === before) return "这条回复没有改动日程（版本 " + after + "）";
+  return "日程：版本 " + before + " → " + after;
+}
+
+export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, dialogueActive = true, onBrowseFound, onTaskChange }: { panel: WorkspacePanel;
   goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void;
-  embedded?: boolean; chatDockVisible?: boolean; dialogueActive?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
+  embedded?: boolean; chatDockVisible?: boolean; dialogueActive?: boolean; onBrowseFound?: () => void;
+  onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -218,6 +332,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const visible = snapshot && sameContext(snapshot.context, context) ? snapshot : null;
   const visibleTask = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.value : null;
   const visibleEvents = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.events : [];
+  const resumableTask = Boolean(visibleTask && ["RESUMABLE", "FAILED_RECOVERABLE"].includes(visibleTask.status));
   const conversationAnchor = useRef<HTMLDivElement>(null);
   const lastMessageId = visibleTask?.conversation?.at(-1)?.message_id;
   useEffect(() => {
@@ -368,7 +483,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       setRequestError(error instanceof Error && error.name === "AbortError"
         ? "本次响应等待超时；刷新可查看服务端任务进度。"
-        : error instanceof Error ? error.message : "任务未能启动。");
+        : travelerErrorMessage(error, "任务这次没能启动，可以刷新后再试。"));
     } finally {
       window.clearTimeout(timer);
       if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
@@ -394,9 +509,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       await refreshGoalTask(actor, task.task_id);
     } catch (error) {
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
-      setRequestError(error instanceof Error && error.name === "AbortError"
-        ? "本次响应等待超时；刷新可查看服务端任务进度。"
-        : error instanceof Error ? error.message : "任务未能继续。");
+      setRequestError(travelerErrorMessage(error, "任务暂时没能继续，刷新可以看这一轮的进度。"));
     } finally {
       window.clearTimeout(timer);
       if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
@@ -411,7 +524,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       const value = await cityNexusApi.cancelDraftGoalTask(actor.id, task.task_id);
       if (sameContext(actor, readContext())) await refreshGoalTask(actor, value.task_id);
     } catch (error) {
-      setRequestError(error instanceof Error ? error.message : "任务取消失败。");
+      setRequestError(travelerErrorMessage(error, "任务取消这次没有成功，可以刷新后再试。"));
     }
   };
 
@@ -446,7 +559,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         ? "消息还在确认中，刷新任务查看最新进度。"
         : error instanceof Error && error.message.includes("GOAL_TASK_ALREADY_RUNNING")
           ? "Agent 正在处理上一条指令，等这轮结束后可以继续发消息。"
-          : error instanceof Error ? error.message : "当前消息没有确认成功，请检查任务状态。");
+          : travelerErrorMessage(error, "这条消息这次没有确认成功，请刷新后重试。"));
     } finally {
       window.clearTimeout(timer);
       if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
@@ -455,16 +568,32 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
 
   const sendMessage = () => {
     window.dispatchEvent(new CustomEvent("citynexus:mission-panel", { detail: "assistant" }));
-    if (visibleTask && visibleTask.status !== "CANCELLED") void sendFollowup();
+    // 「和 Agent 补齐出发资料」 writes an execution request into this box; sending it as a discussion
+    // round leaves only ask_traveler+inspect_journey (measured on the 430 walk: the round ended
+    // TRAVELER_INPUT_REQUIRED and eight slots still had no place). The mark is the same string the
+    // departure card writes, so the two cannot drift apart.
+    const research = question.includes(AGENT_ASK_MARK);
+    if (visibleTask && visibleTask.status !== "CANCELLED") void sendFollowup(undefined, research ? "RESEARCH" : "DISCUSS");
     else void startNewTask();
   };
 
+  // The two per-trip permissions decide whether 发送 can do anything, so until they are granted they
+  // sit with the button they unlock: behind the ⚙ glyph a first-time traveller presses 发送, sees
+  // nothing happen and has no way to know the screen is waiting for a tick. Once both are granted the
+  // same rows move into 对话设置, where they stay revocable without crowding the composer.
+  const bothGranted = modelConsent && onlineResearchConsent;
+  const consentRows = (
+    <div className="rev-mission-chat-consent" data-testid="rev-mission-consent-strip">
+      <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />本次允许 AI 处理旅行目标（可能产生费用）</label>
+      <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />本次允许查询公开地图和地点来源</label>
+    </div>
+  );
+
   const permissionSettings = (
-<details className="rev-agent-research-settings" open={embedded || !visibleTask}>
-            <summary>{modelConsent ? "AI 与地点来源 · 已连接" : "AI 与地点来源"}</summary>
+    <details className="rev-agent-research-settings" open={embedded || !visibleTask}>
+            <summary>加上时间与偏好</summary>
             <div className="rev-agent-research-settings-body">
-              <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />本次允许 AI 处理旅行目标（可能产生费用）</label>
-              <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />本次允许查询公开地图和地点来源</label>
+              {bothGranted ? consentRows : null}
               <TravelGoalPreferences value={question} busy={busy} onChange={(value) => { followupMessageId.current = null; setQuestion(value); }} />
 
             </div>
@@ -505,7 +634,8 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           {conversation.length > 0 && <div className="rev-agent-conversation" role="log" aria-label="与 Agent 的真实对话">
             {conversation.map((item) => <div className={"rev-agent-message is-" + item.role} key={item.message_id}>
               <span>{item.role === "user" ? "你" : "CityNexus Agent"}</span>
-              <p>{item.text}</p>
+              <AgentMessageBody text={item.text} />
+              {item.role === "assistant" && draftReceipt(item) && <small className="rev-agent-message-receipt">{draftReceipt(item)}</small>}
             </div>)}
             {visibleTask && !conversation.some((item) => item.role === "assistant") &&
               (visibleTask.draft_artifact?.days ?? []).some((day) => day.slots.length > 0) &&
@@ -524,12 +654,22 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             </button>)}
             <small>也可以在下方直接说你的想法。</small>
           </section>}
-          {visibleTask && visibleTask.status !== "WORKING" && visibleTask.status !== "CANCELLED" &&
+          {/* The Agent asks one preference question per turn and every answer buys another question;
+              a pending question also hides the research button, so the discussion screen had no door
+              to research at all. Measured on the canary: six ask_traveler calls, zero draft slots.
+              This is the traveller ending the questions, not the Agent deciding to. */}
+          {visibleTask?.pending_question && <button type="button" className="rev-agent-start-research" data-testid="rev-agent-skip-questions"
+            disabled={busy || !modelConsent || !aiReady}
+            onClick={() => { followupMessageId.current = null; void sendFollowup("按已经定下的方向开始研究：把两天的安排直接保存成草案，不用再问我；缺的资料按未知处理。", "RESEARCH"); }}>
+            不选了，直接按现在的方向开始研究
+          </button>}
+          {visibleTask && !visibleTask.pending_question && visibleTask.status !== "WORKING" && visibleTask.status !== "CANCELLED" &&
             <button type="button" className="rev-agent-start-research" disabled={busy || !modelConsent || !aiReady}
               onClick={() => { followupMessageId.current = null; void sendFollowup(question.trim() || "按我们讨论的方向开始研究，遇到重要取舍先给我选择。", "RESEARCH"); }}>
               按讨论的方向开始研究
             </button>}
           <div ref={conversationAnchor} style={{ height: 1, scrollMarginBottom: 180 }} />
+          {!embedded && !bothGranted && consentRows}
           {!embedded && permissionSettings}
           {!embedded && <form className="rev-agent-nonmodal-form" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
             <label htmlFor="rev-workspace-question">{visibleTask ? "继续和这位 Agent 说话" : COPY.question}</label>
@@ -543,10 +683,10 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         </>}
         {requestError && <p role="alert">{requestError}</p>}
         {visibleTask && <section aria-label="Agent 任务" className="rev-workspace-answer">
-          <h3>旅行研究 · {TASK_STATUS[visibleTask.status] ?? visibleTask.status}</h3>
+          <h3>旅行研究 · {researchHeadline(visibleTask)}</h3>
 
           {visibleTask.assistant_summary && <details><summary>本轮研究摘要</summary><p>{visibleTask.assistant_summary}</p></details>}
-          {visibleTask.failure_code && !["TRAVELER_INPUT_REQUIRED", "MODEL_BUDGET_EXHAUSTED", "TOOL_BUDGET_EXHAUSTED"].includes(visibleTask.failure_code) && <p>这次有一部分还没完成，你可以继续告诉我想怎么调整。</p>}
+          {visibleTask.failure_code && !["TRAVELER_INPUT_REQUIRED", "MODEL_BUDGET_EXHAUSTED", "TOOL_BUDGET_EXHAUSTED"].includes(visibleTask.failure_code) && <p role="alert" data-testid="rev-agent-failure">{failureSentence(visibleTask.failure_code)}</p>}
 
           {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
           {visibleEvents.length > 0 && <details className="rev-workspace-timeline" open={!embedded}>
@@ -560,14 +700,21 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             </ol>
             {visibleEvents.length > 24 && <p>这里只显示最新 24 条；完整事件仍在同一任务的服务端记录中。</p>}
           </details>}
-          {(visibleTask.tool_steps ?? []).length > 0 && <details open={!embedded}><summary>工具结果 · {visibleTask.tool_steps?.length} 次</summary><ol className="rev-workspace-task-steps">
-            {(visibleTask.tool_steps ?? []).map((step) => <li key={`${step.run_id}-${step.sequence_no}`}>
+          {(visibleTask.tool_steps ?? []).length > 0 && <details className="rev-agent-tool-timeline" open={!embedded} data-testid="rev-agent-tool-timeline"><summary>Agent 工具时间线 · {visibleTask.tool_steps?.length} 步</summary><ol className="rev-workspace-task-steps">
+            {(visibleTask.tool_steps ?? []).map((step, index) => <li key={`${step.run_id}-${step.sequence_no}`} data-status={step.status}>
+              <span className="rev-agent-tool-index">{index + 1}</span>
               <strong>{TOOL_NAME[step.tool_name] ?? step.tool_name}</strong>
+              <span className={`rev-agent-tool-status is-${String(step.status || "").toLowerCase()}`} data-testid="rev-agent-tool-status">{STEP_STATUS_TEXT[step.status] ?? step.status}</span>
               {typeof step.result.public_action === "string" && <span>{step.result.public_action}</span>}
               <span>{step.tool_name === "inspect_journey" && step.status === "COMPLETED" ? "行程已读取" : taskStepText(step.result)}</span>
-              {typeof step.result.elapsed_ms === "number" && <small>{(step.result.elapsed_ms / 1000).toFixed(1)} 秒</small>}
+              {(() => {
+                const source = toolStepSourceText(step.result);
+                return source ? <span className="rev-agent-tool-source" data-testid="rev-agent-tool-source">{source}</span> : null;
+              })()}
+              <small>{toolStepClock(step)}</small>
             </li>)}
-          </ol></details>}
+          </ol>
+          <p className="rev-agent-next-action" data-testid="rev-agent-next-action">下一步：{nextActionSentence(visibleTask)}</p></details>}
           {visibleTask.research_routes?.length ? <ResearchRoutes items={visibleTask.research_routes} /> : null}
           {(visibleTask.candidate_places ?? []).length > 0 && <details className="rev-agent-research-drawer"><summary>已核对的正式地点（{visibleTask.candidate_places?.length}）</summary><ul className="rev-workspace-task-places">
             {visibleTask.candidate_places?.map((place) => <li key={place.id}>
@@ -591,7 +738,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               void refreshGoalTask(actor, value.task_id).catch(() => undefined);
             }} />}
           {visibleTask.status === "WORKING" && <button type="button" className="rev-workspace-secondary" onClick={() => void cancelTask()}>取消任务</button>}
-          {["RESUMABLE", "FAILED_RECOVERABLE"].includes(visibleTask.status) &&
+          {resumableTask &&
             <button type="button" disabled={!aiReady || busy || !modelConsent} onClick={() => void resumeTask()}>继续研究</button>}
 
         </section>}
@@ -609,6 +756,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         <button ref={settingsButton} type="button" className="rev-mission-settings-toggle" aria-label="对话设置"
           aria-expanded={settingsOpen} aria-controls="rev-mission-settings" onClick={() => setSettingsOpen(value => !value)}>⚙</button>
         <label htmlFor="rev-mission-chat-input">{visibleTask ? "继续和当前 Agent 对话" : "告诉 CityNexus 你的旅行目标"}</label>
+        {bothGranted ? null : consentRows}
         <div className="rev-mission-chat-row">
           <textarea ref={composer} id="rev-mission-chat-input" value={question} rows={Math.min(4, Math.max(1, question.split("\n").length))} maxLength={2000}
             disabled={busy} onChange={(event) => { followupMessageId.current = null; setQuestion(event.target.value); }}
@@ -618,13 +766,21 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           </button>
         </div>
         <section id="rev-mission-settings" className="rev-mission-settings-panel" hidden={!settingsOpen} aria-label="对话设置">
-          <header><strong>连接与公开地点来源</strong><button type="button" aria-label="关闭对话设置"
+          <header><strong>加上时间与偏好</strong><button type="button" aria-label="关闭对话设置"
             onClick={() => { setSettingsOpen(false); settingsButton.current?.focus(); }}>×</button></header>
           {permissionSettings}
         </section>
-        {(busy || visibleTask?.status === "WORKING" || requestError) && <p role="status">{busy || visibleTask?.status === "WORKING"
+        {(busy || visibleTask?.status === "WORKING" || visibleTask?.status === "FAILED_RECOVERABLE" || requestError) && <p role="status" data-testid="rev-dock-status">{busy || visibleTask?.status === "WORKING"
           ? "Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
-          : requestError}</p>}
+          : (requestError || "Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。")}</p>}
+        {resumableTask && <div className="rev-mission-dock-recovery" data-testid="rev-dock-recovery">
+          {/* A stalled round used to be recoverable only from the panel below the fold, so the fixed dock
+              left the traveller a sentence with nothing to press. */}
+          <button type="button" data-testid="rev-dock-retry-round" disabled={!aiReady || busy || !modelConsent}
+            onClick={() => void resumeTask()}>重试这一轮</button>
+          {onBrowseFound && <button type="button" data-testid="rev-dock-browse-found"
+            onClick={() => onBrowseFound()}>先浏览已找到的地点</button>}
+        </div>}
       </form>, document.body)}
   </>;
   return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"

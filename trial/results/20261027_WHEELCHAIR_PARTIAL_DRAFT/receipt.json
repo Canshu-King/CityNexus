@@ -1,0 +1,222 @@
+{
+  "captured_at": "2026-10-26T16:05:35.644668+00:00",
+  "evidence_grade": "Actual Chrome 390x844 visible send and draft cards + own SQLite read-only verification; not physical/device verification",
+  "backend_product": "e2c893a0115d381abe83e781c448766a1c148b78",
+  "frontend_head_at_start": "8c88c7d95a649cfa67c1b5e2b57c42a345fd70ff",
+  "frontend_source_hashes_at_start": {
+    "frontend\\src\\trial\\RevolutionFirstLook.tsx": "853eb12bd10927d8705417cbecd823f86cf378d399589d10ad084927e3787c32",
+    "frontend\\src\\trial\\mobile\\WorkspaceActions.tsx": "64625266493a5ebc75a321bdc9a0072973d186810ce6cd8334010bd3c0048b7f"
+  },
+  "frontend_scope": "Qoder changing checkout and dirty entry file; mixed stack",
+  "journey": {
+    "id": "dd5f4651-e5f7-424b-b0de-d20adeb26c96",
+    "status": "DRAFT",
+    "active_plan_version_id": null,
+    "budget_amount_minor": 80000,
+    "start_at": "2026-12-05T09:00:00+08:00",
+    "end_at": "2026-12-06T21:00:00+08:00"
+  },
+  "task_id": "9d3beff5-3c34-422d-ab6c-c23f5f78e229",
+  "task_status": "PARTIAL_READY",
+  "consent": {
+    "model": true,
+    "online_research": false
+  },
+  "agent_run": {
+    "id": "dd226bb8-cdea-4d30-9648-a0db49a02d19",
+    "journey_id": "dd5f4651-e5f7-424b-b0de-d20adeb26c96",
+    "mission_id": "9d3beff5-3c34-422d-ab6c-c23f5f78e229",
+    "provider_key": "hermes",
+    "model_key": "auto:cheapest",
+    "status": "COMPLETED",
+    "started_at": "2026-10-26T16:02:27.091943+00:00",
+    "completed_at": "2026-10-26T16:02:58.464944+00:00"
+  },
+  "safe_steps": [
+    {
+      "sequence_no": 1,
+      "tool_name": "inspect_journey",
+      "status": "COMPLETED"
+    },
+    {
+      "sequence_no": 2,
+      "tool_name": "replace_draft_slots",
+      "status": "COMPLETED"
+    }
+  ],
+  "new_user_message": "补充一个实际限制：我对象使用手动轮椅，不能走台阶，每一段步行或推行最多500米；别建议人工抬人上下楼。请只改第一天下午已选的B，仍12:30以后出发，改成室内场馆加附近坐着休息，不再安排傍晚散步。第一天上午的晚起休息和第二天全部条目、顺序、时间、备注一字都不要改，尤其第二天09:00的博物馆预约。仍是两人合计800元，不是每人800元。不要联网、不要重新研究地点、不要买票；电梯、无台阶入口、无障碍卫生间、真实推行距离和票价没有来源就都写未知，不准把愿望当成已经核实。请直接保存这个局部修改，不再问偏好。",
+  "assistant_reply": "已保存这次局部修改（草稿第 3 版），未联网、未购票、未改动其他内容。\n\n**第一天 2026-12-05**\n- 上午：晚起自由休息（原样保留，未动）\n- 下午：**候选B 改为「室内场馆参观＋ 附近坐着休息」，取消傍晚散步**；该时段仍保留「不早于 12:30出发」的约束\n  - 场馆条目的备注已写入轮椅约束：全程不走台阶，每段步行或推行 ≤500 米，不安排人工抬人上下楼；若入口只有台阶则直接放弃该场馆换备选\n  - 休息条目改为场馆出来后就近找有座位的咖啡/室内休息点，推行距离按 ≤500 米规划，超出就改更近的点或就地停留\n\n**第二天 2026-12-06**\n- 09:00 博物馆预约：条目、顺序、时间、备注一字未改；第二天下午/晚间仍为空，等你授权后再补\n\n**仍标为未知（没有来源，未编造）**\n- 具体场馆/咖啡店名称、是否有电梯、无台阶入口、无障碍卫生间、真实推行距离、开放时间、票价、是否需预约、是否可租或带轮椅 ——全部 UNKNOWN\n- 预算口径：两人合计 800 元（非每人 800），全程不代订餐、不代购票\n\n一点提醒（未改动草稿）：第二天 09:00 那家博物馆的入口是否有台阶、电梯和可借轮椅，同样没有来源可查，需要时授权我再核。",
+  "usage_total": {
+    "model_turns": 13,
+    "tool_calls": 10
+  },
+  "counts_before": {
+    "agent_runs": 43,
+    "provider_calls": 117
+  },
+  "counts_after": {
+    "agent_runs": 44,
+    "provider_calls": 117
+  },
+  "before_draft": {
+    "date_constraints": {
+      "2026-12-05": {
+        "afternoon": {
+          "start_not_before": "12:30"
+        }
+      }
+    },
+    "days": [
+      {
+        "date": "2026-12-05",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "前一晚至凌晨3点，睡到自然醒，不安排早起。11:30 之后才出门，午餐自理（不代订餐、不代购票）。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "flexible",
+            "title": "上午自由休息（晚起，不出门）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "12:30 后出发，室内为主：室内场馆参观 → 附近咖啡（坐着休息）→ 傍晚短距离散步。步行量小，适合轻松少走。场馆名称、开放时间、票价、是否需预约、咖啡店与散步距离、实际步行时间与票价占比均未核实＝未知（本次未联网、未代购票，等授权后再查）。预算口径：两人合计 800 元（不是每人 800 元），不代订餐、不代购票。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "候选B：室内场馆＋附近咖啡＋傍晚短距离散步（12:30后出发）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      },
+      {
+        "date": "2026-12-06",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "已预订，不可改。博物馆名称、开放时间、票价、是否可带包/寄存均未核实＝未知；不代为购票。第二天下午与晚间暂不安排，等你授权后再补。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "morning",
+            "title": "09:00 博物馆预约（原样保留）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "revision": 2,
+    "status": "DRAFT"
+  },
+  "after_draft": {
+    "date_constraints": {
+      "2026-12-05": {
+        "afternoon": {
+          "start_not_before": "12:30"
+        }
+      }
+    },
+    "days": [
+      {
+        "date": "2026-12-05",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "前一晚至凌晨3点，睡到自然醒，不安排早起。11:30 之后才出门，午餐自理（不代订餐、不代购票）。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "flexible",
+            "title": "上午自由休息（晚起，不出门）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "候选B（已按轮椅限制调整）：12:30 之后出发，只安排室内场馆参观＋附近坐着休息，取消傍晚散步。具体场馆名称未核实；电梯、无台阶入口、无障碍卫生间、开放时间、票价、是否需预约、是否可租/带轮椅＝未知（本次未联网、未代购票）。轮椅约束写入：全程不走台阶，每一段步行或推行≤500米，不安排人工抬人上下楼；如遇仅有台阶的入口，直接放弃该场馆改备选。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "候选B：室内场馆参观（轮椅可达性未核实，出发不早于12:30）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "场馆出来后就近找有座位的咖啡/室内休息点坐下休息，不再安排傍晚散步。咖啡店名称、与场馆的实际推行距离、途中是否有台阶、无障碍卫生间、票价＝未知（本次未联网、未代购票）。推行距离按每段≤500米规划，超出则改选更近的休息点或就地停留，不建议人工抬人上下楼。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "附近咖啡/室内休息点坐着休息（≤500米内可达，距离未核实）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      },
+      {
+        "date": "2026-12-06",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "已预订，不可改。博物馆名称、开放时间、票价、是否可带包/寄存均未核实＝未知；不代为购票。第二天下午与晚间暂不安排，等你授权后再补。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "morning",
+            "title": "09:00 博物馆预约（原样保留）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "revision": 3,
+    "status": "DRAFT"
+  },
+  "proof": {
+    "day2_deep_equal": true,
+    "day2_sha256_before": "9fbd27f73ce171389e9fa94c3c3f76218920994f7200f82adf5650c8b96eb5e8",
+    "day2_sha256_after": "9fbd27f73ce171389e9fa94c3c3f76218920994f7200f82adf5650c8b96eb5e8",
+    "day1_morning_deep_equal": true,
+    "date_constraints_deep_equal": true,
+    "afternoon_slot_count": 2,
+    "agent_run_delta": 1,
+    "provider_call_delta": 0,
+    "formal_plan_count": 0,
+    "simulation_run_count": 0
+  },
+  "limitations": [
+    "500m and step-free requirements are notes only; no structured distance/accessibility constraint or source measurement",
+    "12:30 start_not_before remains structured",
+    "Rest card says <=500m reachable followed by distance unverified; treat as planning requirement, not confirmed route",
+    "No sources researched, no purchase/booking, no formal plan/ACTIVE/run, actual upstream physical model unknown",
+    "Original Day2 museum reservation remains user-stated placeholder, not verified booking"
+  ],
+  "images": [
+    {
+      "file": "before-send-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "ebcb65697dbacf41d622db0224b2d0df63955a39622b21d6cd5064e175155a22"
+    },
+    {
+      "file": "day1-after-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "dbf9404459ca9e481b75ec2408d0c069c90ebb744df41e5ff4e2e7b41eade4fa"
+    },
+    {
+      "file": "day1-rest-after-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "37456fc68494c3601bbd8bf28cdd3568ba51abb7ed669e35109c6198e9101c5d"
+    },
+    {
+      "file": "day2-after-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "af8a1dc2dd4b54543a6ee6434e00b1afa8bc34505d7831b07fe7d00d8d989d4d"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+bw325-328 re-measured: three faults in my own rulers, plus bw337 pairing refusals to panel sentences
+
+Fault one: catch_body counted braces over the whole line, and this codebase writes `} catch {`, so the net
+was zero and every handler was cut after its first statement - files=163 bodies=322 median=3 longest=80
+lines now. Fault two: the literal scanner's character classes accepted newline, so a quote pair inside a doc
+comment became a sentence; the receipt keeps both readings side by side (old says_zh=27, now 26) and names
+the site it came from. Fault three: bw328 skipped rows it could not parse and still printed no_setter=0, so
+it now aborts unless its parsed rows equal bw327's published says_zh and prints the unread lines.
+Corrected numbers: panels reading the refusal 1 -> 6, hiding it 63 -> 58; self-written Chinese sentences
+19 -> 26; into_state 40 -> 50; nowhere 24 -> 14; rendered 19 -> 26. New bw337 walks each of the 21
+traveller-facing refusals from its frontend caller to the catch behind it: 1 pairs to a listed sentence, 1
+to an unlisted catch, 19 pair to nothing, and 24 of the 26 panel sentences are never reached by any of
+those refusals - the two cut directions barely overlap. Superseded receipts kept as *.before_catch_body_fix.
+The section-14.38 appender now appends at byte level: reading this CRLF-dominant report through a text-mode
+handle had rewritten 3600 line endings, which is why the first run aborted and the report was restored from
+HEAD before redoing it. 0 product bytes.

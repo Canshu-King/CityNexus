@@ -1,0 +1,3 @@
+P1 {"found":true,"label":"重新核实转场","x":241,"y":292,"w":361,"h":44,"centre_hit":true,"topmost":"BUTTON."}
+P2 {"band":"","cap":false,"cap_line":"","transit":[]}
+P3 {"status":["当前展示的是已保存版本。","CityNexu  API 401: /journey /4d775f25-a35d-452a-baaf-a54920197bc3/agent/goal-ta k /ecab708f-771d-40e0-afba-ad3db1aa2250/plan /59b0c5e9-558d-442c-b381-e6212fffa0e8/freeze-route"],"buttons":["选用这份安排","选用这份安排","重新核实转场"],"band":"","tail":"项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。\n\n和 Agent 补齐出发资料\nTRAVEL PLAN\n你的行程方案\n刷新方案\n\n当前账号无法读取这份行程，请重新进入行程。\n\n准备出发\n行程守护\n同行决策\nYOUR TRIP\n我的行程\n\n还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。\n\n去发现地点 →\nAI 助手\nAI 工作动态\nAI 服务\nAI 建议可试\n本次行程\n暂无运行记录\n\n选定真实地点后，在上方确认正式行程。\n\n正式行程开始且 AI 可用时，实际工作记录会显示在这里。\n\n探索\n我的旅程\n我的\nCityNexu  · 地点来源见卡片，到达状态由你确认"}

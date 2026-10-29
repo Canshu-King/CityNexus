@@ -40,6 +40,7 @@ from app.db.models import (
 )
 from app.recovery_epoch import ensure_recovery_epoch
 from app.schemas import AgentToolCall
+from app.execution.clock import execution_clock
 
 ACTIONABLE_EVENT_TYPES = frozenset(
     {"WEATHER", "CLOSURE", "TRAFFIC_DELAY", "SCHEDULE_DELAY", "OPPORTUNITY_WINDOW"}
@@ -48,6 +49,8 @@ SEVERITY_ORDER = {"CRITICAL": 4, "MAJOR": 3, "MINOR": 2, "INFO": 1}
 
 
 def _now() -> datetime:
+    # Lease expiry, model timeouts and audit occurrence use wall time.
+    # Journey phase/intent/feasibility use execution_clock within the persisted scope.
     return datetime.now(timezone.utc)
 
 
@@ -185,20 +188,39 @@ def _recovery_mission(
     """Create a child mission carrying standing authority plus live evidence."""
 
     now = _now().isoformat()
+    recovery_mission_id = str(uuid4())
+    server_owned_recovery_context = {
+        "journey_id": journey.id,
+        "standing_mission_id": standing.id,
+        "recovery_mission_id": recovery_mission_id,
+        "trigger_event_id": trigger.id,
+        "trigger_event_type": trigger.event_type,
+        "trigger_severity": trigger.severity,
+        "affected_activity_id": trigger.affected_activity_id,
+    }
+    resolved_intent = _load(standing.resolved_intent_json, {})
+    if not isinstance(resolved_intent, dict):
+        resolved_intent = {}
+    resolved_intent = dict(resolved_intent)
+    resolved_intent["server_owned_recovery_context"] = server_owned_recovery_context
     mission = JourneyMission(
-        id=str(uuid4()),
+        id=recovery_mission_id,
         journey_id=journey.id,
         traveler_id=journey.traveler_id,
         trigger_event_id=trigger.id,
         user_text=(
             f"{standing.user_text}\n\nLive incident evidence: "
-            f"{trigger.event_type} {trigger.severity} affecting {trigger.affected_activity_id}."
+            f"{trigger.event_type} {trigger.severity} affecting {trigger.affected_activity_id}. "
+            "Server-owned recovery binding JSON (authoritative identifiers only):\n"
+            f"{_json(server_owned_recovery_context)}\n"
+            "These IDs identify this recovery scope; the existing mission, policy, and "
+            "feasibility gates remain authoritative."
         ),
         objective_codes_json=standing.objective_codes_json,
         protected_activity_ids_json=standing.protected_activity_ids_json,
         mutable_activity_ids_json=standing.mutable_activity_ids_json,
         intent_json=standing.intent_json,
-        resolved_intent_json=standing.resolved_intent_json,
+        resolved_intent_json=_json(resolved_intent),
         allowed_action_classes_json=standing.allowed_action_classes_json,
         unresolved_references_json=standing.unresolved_references_json,
         compiler_provider_key=standing.compiler_provider_key,
@@ -324,6 +346,11 @@ def _model_recovery(
                 resume.owner_claim_token = None
                 resume.owner_claimed_at = None
                 resume.updated_at = _now().isoformat()
+            # A classroom retry is a traveller action. Do not leave its failed
+            # attempt RUNNING while silently trying another billable runtime.
+            from app.simulation.clock import simulation_scope_active
+            if simulation_scope_active():
+                raise
             if index + 1 >= len(runtimes):
                 raise
         finally:
@@ -364,6 +391,17 @@ def _model_recovery(
         run.proposal_id = str(accept_arguments["proposal_id"])
     if run.proposal_id is not None:
         proposal = session.get(ReplanProposal, run.proposal_id)
+        if (
+            proposal is None
+            or proposal.journey_id != journey.id
+            or proposal.trigger_event_id != trigger.id
+        ):
+            evidence["rejected_proposal"] = {
+                "id": run.proposal_id,
+                "reason_code": "GUARDIAN_PROPOSAL_EVENT_MISMATCH",
+            }
+            run.proposal_id = None
+            raise AgentRuntimeUnavailable("GUARDIAN_PROPOSAL_EVENT_MISMATCH")
         if proposal is not None:
             diff = json.loads(proposal.diff_json or "{}")
             evidence["solver"] = diff.get("verified_evidence", {}).get("generator")
@@ -631,11 +669,12 @@ def _deterministic_recovery(
     return agent
 
 
-def scan_guardian(
+def _scan_guardian_in_context(
     session: Session,
     journey: Journey,
     *,
     include_opportunity_signals: bool = True,
+    trigger_event_id: str | None = None,
 ) -> dict[str, Any]:
     """Observe persisted journey facts and launch at most one recovery per incident state.
 
@@ -685,6 +724,10 @@ def scan_guardian(
         _ensure_opportunity_window_event(session, journey)
     mission = _standing_mission(session, journey.id)
     events = _open_events(session, journey.id)
+    if trigger_event_id is not None:
+        events = [event for event in events if event.id == trigger_event_id]
+        if not events:
+            raise HTTPException(409, "GUARDIAN_TRIGGER_EVENT_NOT_OPEN")
     actionable_events = [
         event
         for event in events
@@ -705,7 +748,7 @@ def scan_guardian(
             )
             .order_by(GuardianRun.created_at.desc(), GuardianRun.id.desc())
         )
-    if prior_mutation is not None:
+    if prior_mutation is not None and trigger_event_id is None:
         try:
             prior_created = datetime.fromisoformat(str(prior_mutation.created_at))
             has_new_signal = any(
@@ -729,6 +772,9 @@ def scan_guardian(
         journey_id=journey.id,
         recovery_epoch_id=recovery_epoch.id if recovery_epoch is not None else None,
     )
+    if trigger_event_id is not None and resume is not None and resume.event_id != trigger_event_id:
+        # Never reuse an unrelated incident's queued recovery as this scene's result.
+        raise HTTPException(409, "GUARDIAN_OTHER_EVENT_RECOVERY_PENDING")
     resume_due = bool(resume is not None and resume_is_due(resume, now=now))
     # A blocked Operator recovery is a durable queue item.  Pulses during its
     # backoff return the same Guardian lineage and never mint another run.
@@ -778,6 +824,7 @@ def scan_guardian(
             continue
     evidence = {
         "observation": {
+            "business_now": execution_clock.now(journey.timezone).isoformat(),
             "journey_status": journey.status,
             "active_plan_version_id": journey.active_plan_version_id,
             "open_event_ids": [event.id for event in events],
@@ -818,7 +865,7 @@ def scan_guardian(
             id=str(uuid4()),
             journey_id=journey.id,
             standing_mission_id=mission.id if mission else None,
-            trigger_event_id=None,
+            trigger_event_id=trigger_event_id,
             agent_run_id=None,
             proposal_id=None,
             decision=decision,
@@ -873,7 +920,8 @@ def scan_guardian(
             (enrollment := session.get(AutopilotEnrollment, journey.id)) is not None
             and enrollment.enabled
         )
-        if _is_live_context_trigger(trigger) or operator_enabled:
+        from app.simulation.clock import simulation_scope_active
+        if _is_live_context_trigger(trigger) or operator_enabled or simulation_scope_active():
             agent = session.get(AgentRun, run.agent_run_id) if run.agent_run_id else None
             steps = (
                 session.scalars(
@@ -1260,3 +1308,16 @@ def guardian_status(session: Session, journey: Journey) -> dict[str, Any]:
         "latest": guardian_payload(session, runs[0]) if runs else None,
         "runs": [guardian_payload(session, item) for item in runs],
     }
+
+
+
+def scan_guardian(
+    session: Session, journey: Journey, *, include_opportunity_signals: bool = True,
+    trigger_event_id: str | None = None,
+) -> dict[str, Any]:
+    from app.simulation.clock import journey_business_time
+    with journey_business_time(session, journey.id):
+        return _scan_guardian_in_context(
+            session, journey, include_opportunity_signals=include_opportunity_signals,
+            trigger_event_id=trigger_event_id,
+        )

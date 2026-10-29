@@ -1,0 +1,1 @@
+{"amap": {"provider_key": "amap-web-service", "status": "READY", "provenance": "LIVE", "coordinate_crs": "GCJ02", "reason": null}, "transit_realtime": {"status": "NOT_CONFIGURED", "absence_semantics": "UNKNOWN_REALTIME"}}

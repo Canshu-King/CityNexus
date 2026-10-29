@@ -1,0 +1,497 @@
+import json
+from datetime import datetime, timedelta, timezone
+from typing import Literal
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response
+from pydantic import BaseModel, ConfigDict, Field
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.concurrency_guards import journey_write_lock
+from app.core.config import settings
+from app.db.models import AgentRun, Event, GuardianRun, Journey, JourneyMember, JourneyMission, ReplanProposal
+from app.db.session import get_session
+from app.demo_access import require_demo_database, require_demo_presenter
+from app.simulation import runtime as rt
+from app.simulation.models import SimulationRun, SimulationCommand
+from app.simulation.clock import journey_business_time
+from app.simulation.city_catalog import bind_identity, publish_city
+from app.traveler_principal import require_journey_read, member_has_capability
+
+router = APIRouter(prefix="/api/v1/journeys/{journey_id}/simulation", tags=["simulation"])
+
+
+class Input(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class Start(Input):
+    seed: int = Field(ge=0, le=2147483647)
+
+
+class Advance(Input):
+    expected_sequence: int = Field(ge=0)
+    # Omit minutes to visit exactly the next native execution phase.
+    minutes: int | None = Field(default=None, ge=1, le=10080)
+
+
+class Scene(Input):
+    expected_sequence: int = Field(ge=0)
+    scene_id: str = Field(min_length=1, max_length=100)
+    event_type: Literal["CLOSURE", "WEATHER", "SCHEDULE_DELAY"]
+    activity_id: UUID
+    delay_minutes: int = Field(default=0, ge=0, le=1440)
+
+
+class Guardian(Input):
+    expected_sequence: int = Field(ge=0)
+    model_consent: Literal[True]
+
+
+class Resume(Input):
+    expected_sequence: int = Field(ge=0)
+
+
+class CityIdentity(Input):
+    source_task_id: UUID
+
+
+class PublishCity(Input):
+    publish_public_facts: Literal[True]
+
+
+@router.post("/city-identity")
+def bind_city(
+    journey_id: UUID,
+    body: CityIdentity,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        journey, principal = access(session, journey_id, request, write=True)
+        key_value(idempotency_key)
+        member = session.scalar(
+            select(JourneyMember).where(
+                JourneyMember.journey_id == journey.id,
+                JourneyMember.traveler_id == principal.traveler_id,
+            )
+        )
+        result = bind_identity(session, journey, member, body.source_task_id)
+        session.commit()
+        return result
+
+
+@router.post("/cities/publish")
+def publish(
+    journey_id: UUID,
+    body: PublishCity,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        journey, principal = access(session, journey_id, request, write=True)
+        key_value(idempotency_key)
+        result = publish_city(session, journey, principal.traveler_id)
+        session.commit()
+        return result
+
+
+def access(session, journey_id, request, *, write=False):
+    if not settings.simulation_enabled:
+        raise HTTPException(404, "SIMULATION_DISABLED")
+    principal, member = require_journey_read(request, session, str(journey_id))
+    if write and not member_has_capability(session, member, "JOURNEY_EXECUTION_UPDATE"):
+        raise HTTPException(403, "JOURNEY_EXECUTION_UPDATE_REQUIRED")
+    require_demo_database(session)
+    if write:
+        require_demo_presenter(request, session, journey_id=journey_id)
+    journey = session.get(Journey, str(journey_id))
+    if journey is None:
+        raise HTTPException(404, "Journey not found")
+    return journey, principal
+
+
+def run_for(session, journey, run_id):
+    row = session.get(SimulationRun, str(run_id))
+    if row is None or row.journey_id != journey.id:
+        raise HTTPException(404, "SIMULATION_RUN_NOT_FOUND")
+    return row
+
+
+def key_value(key):
+    if not key or not key.strip() or len(key) > 200:
+        raise HTTPException(422, "IDEMPOTENCY_KEY_REQUIRED")
+    return key
+
+
+@router.get("/cities")
+def city_preflight(
+    journey_id: UUID,
+    request: Request,
+    response: Response,
+    seed: int = 0,
+    session: Session = Depends(get_session),
+):
+    _, principal = access(session, journey_id, request)
+    if seed < 0 or seed > 2147483647:
+        raise HTTPException(422, "SIMULATION_SEED_INVALID")
+    from app.simulation.preflight import cities_for
+
+    response.headers["Cache-Control"] = "private, no-store"
+    return cities_for(session, principal.traveler_id, seed)
+
+
+@router.get("/runs/current")
+def current(
+    journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)
+):
+    journey, _ = access(session, journey_id, request)
+    response.headers["Cache-Control"] = "private, no-store"
+    row = session.scalar(select(SimulationRun).where(SimulationRun.journey_id == journey.id))
+    return (
+        rt.payload(row)
+        if row
+        else {"run_id": None, "journey_id": journey.id, "status": "NOT_STARTED"}
+    )
+
+
+@router.get("/runs/{run_id}")
+def read(
+    journey_id: UUID,
+    run_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    journey, _ = access(session, journey_id, request)
+    response.headers["Cache-Control"] = "private, no-store"
+    return rt.payload(run_for(session, journey, run_id))
+
+
+@router.get("/runs/{run_id}/progress")
+def progress(
+    journey_id: UUID,
+    run_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    from app.simulation.progress import run_progress
+
+    journey, _ = access(session, journey_id, request)
+    response.headers["Cache-Control"] = "private, no-store"
+    run = run_for(session, journey, run_id)
+    result = run_progress(session, journey, run, settings)
+    failed = _terminal_guardian_failure(session, journey, run) if run.status == "GUARDIAN_RUNNING" else None
+    result["recovery"] = {
+        "available": failed is not None,
+        "reason_code": "MODEL_REQUEST_FAILED" if failed else None,
+        "requires_signed_post": True,
+        "operation": "recover",
+    }
+    return result
+
+
+@router.post("/runs", status_code=201)
+def start(
+    journey_id: UUID,
+    body: Start,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        journey, principal = access(session, journey_id, request, write=True)
+        key = key_value(idempotency_key)
+        digest = rt.request_hash("start", body.model_dump(mode="json"))
+        prior = rt.replay(session, journey.id, principal.traveler_id, key, digest)
+        if prior is not None:
+            return prior
+        run = rt.start_run(session, journey, principal.traveler_id, body.seed)
+        result = rt.payload(run)
+        rt.remember(session, run, principal.traveler_id, key, digest, result)
+        session.commit()
+        return result
+
+
+def command(session, journey_id, run_id, request, key, operation, body, apply):
+    with journey_write_lock(str(journey_id)):
+        journey, principal = access(session, journey_id, request, write=True)
+        run = run_for(session, journey, run_id)
+        key = key_value(key)
+        digest = rt.request_hash(operation, {"run_id": str(run_id), **body.model_dump(mode="json")})
+        prior = rt.replay(session, journey.id, principal.traveler_id, key, digest)
+        if prior is not None:
+            return prior
+        rt.claim_sequence(session, run, body.expected_sequence)
+        with journey_business_time(session, journey.id):
+            apply(journey, run, principal.traveler_id)
+        result = rt.payload(run)
+        rt.remember(session, run, principal.traveler_id, key, digest, result)
+        session.commit()
+        return result
+
+
+@router.post("/runs/{run_id}/advance")
+def advance(
+    journey_id: UUID,
+    run_id: UUID,
+    body: Advance,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    return command(
+        session,
+        journey_id,
+        run_id,
+        request,
+        idempotency_key,
+        "advance",
+        body,
+        lambda j, r, a: rt.advance(session, j, r, minutes=body.minutes, actor_id=a),
+    )
+
+
+@router.post("/runs/{run_id}/scenes")
+def scene(
+    journey_id: UUID,
+    run_id: UUID,
+    body: Scene,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    def apply(j, r, a):
+        if r.status != "RUNNING":
+            raise HTTPException(409, "SIMULATION_NOT_RUNNING")
+        rt.inject_scene(session, j, r, body.model_dump(mode="json", exclude={"expected_sequence"}))
+
+    return command(session, journey_id, run_id, request, idempotency_key, "scene", body, apply)
+
+
+@router.post("/runs/{run_id}/resume")
+def resume(
+    journey_id: UUID,
+    run_id: UUID,
+    body: Resume,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    def apply(j, r, a):
+        if r.status not in {
+            "PAUSED_FOR_GUARDIAN",
+            "PAUSED_FOR_ACCEPTANCE",
+            "PAUSED_MODEL_UNAVAILABLE",
+        }:
+            raise HTTPException(409, "SIMULATION_NOT_PAUSED")
+        state = json.loads(r.state_json)
+        event = (
+            session.get(Event, state.get("pending_event_id"))
+            if state.get("pending_event_id")
+            else None
+        )
+        if event and event.status not in {"RESOLVED", "IGNORED"}:
+            raise HTTPException(409, "SIMULATION_EVENT_REQUIRES_SIGNED_RESOLUTION")
+        r.status = "RUNNING"
+        rt.append_history(r, "SIM_RESUMED")
+        r.updated_at = rt.wall_now()
+
+    return command(session, journey_id, run_id, request, idempotency_key, "resume", body, apply)
+
+
+@router.post("/runs/{run_id}/guardian")
+def guardian(
+    journey_id: UUID,
+    run_id: UUID,
+    body: Guardian,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    # Persist ownership before invoking a runtime which commits its own AgentRun records.
+    with journey_write_lock(str(journey_id)):
+        journey, principal = access(session, journey_id, request, write=True)
+        run = run_for(session, journey, run_id)
+        key = key_value(idempotency_key)
+        digest = rt.request_hash(
+            "guardian", {"run_id": str(run_id), **body.model_dump(mode="json")}
+        )
+        prior = rt.replay(session, journey.id, principal.traveler_id, key, digest)
+        if prior is not None:
+            return prior
+        if run.status not in {
+            "PAUSED_FOR_GUARDIAN",
+            "PAUSED_MODEL_UNAVAILABLE",
+            "PAUSED_REQUIRES_MISSION",
+        }:
+            raise HTTPException(409, "SIMULATION_GUARDIAN_NOT_PENDING")
+        from app.simulation.progress import scene_event
+
+        pending = scene_event(
+            session, journey, run, json.loads(run.state_json).get("pending_event_id")
+        )
+        if pending.status not in {"DETECTED", "ACKNOWLEDGED"}:
+            raise HTTPException(409, "SIMULATION_SCENE_EVENT_ALREADY_RESOLVED")
+        if not settings.ai_enabled:
+            raise HTTPException(503, "SIMULATION_AI_DISABLED")
+        rt.claim_sequence(session, run, body.expected_sequence)
+        run.status = "GUARDIAN_RUNNING"
+        state = json.loads(run.state_json)
+        state["guardian_attempt_started_at"] = rt.wall_now()
+        state["guardian_lease_expires_at"] = (
+            datetime.now(timezone.utc) + timedelta(minutes=30)
+        ).isoformat()
+        run.state_json = rt.encode(state)
+        rt.append_history(run, "GUARDIAN_REQUESTED", model_consent=True)
+        rt.remember(session, run, principal.traveler_id, key, digest, rt.payload(run))
+        session.commit()
+        from app.agent.guardian import scan_guardian
+
+        try:
+            with journey_business_time(session, journey.id):
+                outcome = scan_guardian(
+                    session, journey, include_opportunity_signals=False,
+                    trigger_event_id=pending.id,
+                )
+            safe = {
+                k: outcome.get(k)
+                for k in ("id", "status", "action_status", "agent_run_id", "proposal_id")
+            }
+            proposal = (
+                session.get(ReplanProposal, safe["proposal_id"])
+                if safe.get("proposal_id") else None
+            )
+            proposal_matches_scene = bool(
+                proposal is not None
+                and proposal.journey_id == journey.id
+                and proposal.trigger_event_id == pending.id
+                and proposal.status == "PRESENTED"
+            )
+            if safe.get("proposal_id") and not proposal_matches_scene:
+                recorded_guardian = session.get(GuardianRun, safe.get("id")) if safe.get("id") else None
+                if recorded_guardian is not None and recorded_guardian.journey_id == journey.id:
+                    recorded_guardian.proposal_id = None
+                    recorded_guardian.action_status = "UNRESOLVED"
+                safe["proposal_id"] = None
+                safe["action_status"] = "UNRESOLVED"
+                safe["error_code"] = "GUARDIAN_PROPOSAL_EVENT_MISMATCH"
+            run.status = (
+                "PAUSED_FOR_ACCEPTANCE"
+                if proposal_matches_scene
+                else "PAUSED_REQUIRES_MISSION"
+                if safe.get("action_status") == "MISSION_REQUIRED"
+                else "PAUSED_MODEL_UNAVAILABLE"
+            )
+            rt.append_history(
+                run,
+                "GUARDIAN_RESULT",
+                guardian=safe,
+                execution_mode="SERVER_GUARDIAN_EXECUTED",
+                model_execution="RUN_REFERENCE" if safe.get("agent_run_id") else "NOT_EXECUTED",
+            )
+        except Exception:
+            session.rollback()
+            session.refresh(run)
+            run.status = "PAUSED_MODEL_UNAVAILABLE"
+            rt.append_history(
+                run, "GUARDIAN_UNAVAILABLE", error_code="GUARDIAN_RUNTIME_UNAVAILABLE"
+            )
+        run.updated_at = rt.wall_now()
+        state = json.loads(run.state_json)
+        state.pop("guardian_lease_expires_at", None)
+        run.state_json = rt.encode(state)
+        result = rt.payload(run)
+        receipt = session.scalar(
+            select(SimulationCommand).where(
+                SimulationCommand.journey_id == journey.id,
+                SimulationCommand.actor_id == principal.traveler_id,
+                SimulationCommand.idempotency_key == key,
+            )
+        )
+        receipt.result_json = rt.encode(result)
+        session.commit()
+        return result
+
+
+@router.post("/runs/{run_id}/recover")
+def recover(
+    journey_id: UUID,
+    run_id: UUID,
+    body: Resume,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    def apply(j, r, a):
+        state = json.loads(r.state_json)
+        lease = state.get("guardian_lease_expires_at")
+        if r.status != "GUARDIAN_RUNNING" or not lease:
+            raise HTTPException(409, "SIMULATION_NO_INTERRUPTED_RUNTIME")
+        failed_agent = _terminal_guardian_failure(session, j, r)
+        if failed_agent is None and datetime.fromisoformat(lease) > datetime.now(timezone.utc):
+            raise HTTPException(409, "SIMULATION_RUNTIME_LEASE_ACTIVE")
+        r.status = "PAUSED_MODEL_UNAVAILABLE"
+        r.updated_at = rt.wall_now()
+        state.pop("guardian_lease_expires_at", None)
+        r.state_json = rt.encode(state)
+        rt.append_history(
+            r, "GUARDIAN_INTERRUPTED",
+            error_code="MODEL_REQUEST_FAILED" if failed_agent else "RUNTIME_LEASE_EXPIRED",
+            agent_run_id=failed_agent.id if failed_agent else None,
+        )
+        if failed_agent:
+            for envelope in session.scalars(select(GuardianRun).where(
+                GuardianRun.journey_id == j.id,
+                GuardianRun.trigger_event_id == state.get("pending_event_id"),
+                GuardianRun.created_at >= state.get("guardian_attempt_started_at", failed_agent.created_at),
+                GuardianRun.status == "RUNNING",
+            )):
+                envelope.status = "INTERRUPTED"
+                envelope.action_status = "RETRYABLE_FAILURE"
+                envelope.agent_run_id = failed_agent.id
+                envelope.completed_at = r.updated_at
+                envelope.cooldown_until = None
+                envelope.evidence_fingerprint = f"{envelope.evidence_fingerprint}:interrupted:{envelope.id}"
+        # Replaying the original submission must not resurrect its stale spinner.
+        for receipt in session.scalars(select(SimulationCommand).where(
+            SimulationCommand.run_id == r.id, SimulationCommand.journey_id == j.id,
+        )):
+            previous = json.loads(receipt.result_json)
+            if previous.get("status") == "GUARDIAN_RUNNING" and previous.get("sequence") == r.sequence - 1:
+                receipt.result_json = rt.encode(rt.payload(r))
+
+    return command(session, journey_id, run_id, request, idempotency_key, "recover", body, apply)
+
+
+def _terminal_guardian_failure(session, journey, run):
+    """A completed failed Agent for this attempt permits explicit early recovery."""
+    from app.simulation.progress import scene_event
+
+    state = json.loads(run.state_json)
+    event_id = state.get("pending_event_id")
+    if not event_id:
+        return None
+    event = scene_event(session, journey, run, event_id)
+    if event.status not in {"DETECTED", "ACKNOWLEDGED"}:
+        return None
+    started = state.get("guardian_attempt_started_at")
+    if not started:
+        requested = [row for row in json.loads(run.history_json) if row.get("event") == "GUARDIAN_REQUESTED"]
+        started = requested[-1].get("recorded_at") if requested else None
+    if not started:
+        return None
+    agent = session.scalar(select(AgentRun).join(JourneyMission, JourneyMission.id == AgentRun.mission_id).where(
+        AgentRun.journey_id == journey.id,
+        JourneyMission.journey_id == journey.id,
+        JourneyMission.trigger_event_id == event.id,
+        JourneyMission.is_standing.is_(False),
+        AgentRun.created_at >= started,
+    ).order_by(AgentRun.created_at.desc(), AgentRun.id.desc()).limit(1))
+    if agent is None or agent.status not in {"FAILED_EXTERNAL", "FAILED", "INTERRUPTED"} or not agent.completed_at:
+        return None
+    return agent

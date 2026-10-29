@@ -1,0 +1,16 @@
+TICKETS 3 journey 2e9cd67d-10ca-4ecd-920b-76c81a350c71
+TRY 0 redeem=[200]
+ENTERED true ticket=0
+TOGGLE_COUNT 1
+ARIA_BEFORE false
+ARIA_AFTER true
+PANEL 1 visible=true
+GUARDIAN_STATE []
+PROPOSAL 1 ACCEPT 1 visible=true
+PANEL_TEXT "行程守护\n检查记录与处理进展\n1 项变化\n1 项影响\n1 项行动\n检查已完成\n\n最近记录：12/3 08:57\n\n当前恢复第 3 轮\n正在处理\n触发记录\n地点或路段暂停服务 · 12/3 08:57\n找到一份可行的调整\n\n移除故宫博物院；路上少 66 分钟。\n\n规则引擎生成 · 不是大模型现场推理\n接受这份调整\n暂不调整\n地点或路段暂停服务\n重要\n待处理\n模拟供应商信号 · 课堂注入，非景区官方公告\n12/3 08:57\n行程影响已记录\n相关因素待核实\n需要调整行程\n问题仍待解决\n完成于 12/3 09:00"
+SHOT_CDP guardian-accept-390-panel ok t=14.7
+ACCEPT_HIT true
+ACCEPT_HTTP [200]
+AFTER_FIRST "第一站：天坛公园 · 12月4日 09:00"
+AFTER_HEAD "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京 · 2日行程\n旅途正在继续。\n换地区 ›\n旅行插画\n行程执行中\n地图\n执行与待办\n课堂演示 · 模拟时间与推进都在课堂控制台里\n去课堂控制台 ↓\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：天坛公园 · 12月4日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：天坛公园\n已找到准确路线 · 约 54 "
+SHOT_CDP guardian-accept-390-after ok t=24.2

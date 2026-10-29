@@ -1,0 +1,69 @@
+CANDIDATE_0 url=http://127.0.0.1:14436/revolution state={"found":3,"viewportH":783,"scrollY":1219,"rowY":67,"rowBottom":113,"origin":"http://127.0.0.1:14436","pointer":"{\"id\":\"0d83a51a-4d7d-44eb-94a6-c85cbd418"}
+JOURNEY_POINTER_CANARY {"id":"0d83a51a-4d7d-44eb-94a6-c85cbd418
+SHAPE 360x780 ARM cold_top where=on_screen state={"found":3,"viewportH":780,"scrollY":0,"rowY":299,"rowBottom":345,"origin":"http://127.0.0.1:14436","pointer":"{\"id\":\"0d83a51a-4d7d-44eb-94a6-c85cbd418"}
+TAP rev-mission-layer-map first_press=true covers_it=false topmost=rev-mission-layer-map centre=[65,322] row_y=299 after_pressed=true RESULT=HIT
+SHOT firsttap3-360x780-cold_top-map.png
+TAP rev-mission-layer-timeline first_press=true covers_it=false topmost=rev-mission-layer-timeline centre=[173,112] row_y=89 after_pressed=true RESULT=HIT
+SHOT firsttap3-360x780-cold_top-timeline.png
+TAP rev-mission-layer-agent first_press=true covers_it=false topmost=rev-mission-layer-agent centre=[280,112] row_y=89 after_pressed=true RESULT=HIT
+SHOT firsttap3-360x780-cold_top-agent.png
+TAP rev-mission-layer-map first_press=false covers_it=false topmost=rev-mission-layer-map centre=[65,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-360x780-cold_top-mapb.png
+FIRST_TAP_SUCCESS=3/3 shape=360x780 arm=cold_top
+JOURNEY_KEPT same pointer={"id":"0d83a51a-4d7d-44eb-94a6-c85cbd418
+SHAPE 360x780 ARM after_scroll where=on_screen state={"found":3,"viewportH":780,"scrollY":600,"rowY":81,"rowBottom":127,"origin":"http://127.0.0.1:14436","pointer":"{\"id\":\"0d83a51a-4d7d-44eb-94a6-c85cbd418"}
+TAP rev-mission-layer-map first_press=true covers_it=false topmost=rev-mission-layer-map centre=[65,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-360x780-after_scroll-map.png
+TAP rev-mission-layer-timeline first_press=true covers_it=false topmost=rev-mission-layer-timeline centre=[173,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-360x780-after_scroll-timeline.png
+TAP rev-mission-layer-agent first_press=true covers_it=false topmost=rev-mission-layer-agent centre=[280,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-360x780-after_scroll-agent.png
+TAP rev-mission-layer-map first_press=false covers_it=false topmost=rev-mission-layer-map centre=[65,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-360x780-after_scroll-mapb.png
+FIRST_TAP_SUCCESS=3/3 shape=360x780 arm=after_scroll
+JOURNEY_KEPT same pointer={"id":"0d83a51a-4d7d-44eb-94a6-c85cbd418
+SHAPE 390x844 ARM cold_top where=on_screen state={"found":3,"viewportH":844,"scrollY":0,"rowY":299,"rowBottom":345,"origin":"http://127.0.0.1:14436","pointer":"{\"id\":\"0d83a51a-4d7d-44eb-94a6-c85cbd418"}
+TAP rev-mission-layer-map first_press=true covers_it=false topmost=rev-mission-layer-map centre=[70,322] row_y=299 after_pressed=true RESULT=HIT
+SHOT firsttap3-390x844-cold_top-map.png
+TAP rev-mission-layer-timeline first_press=true covers_it=false topmost=rev-mission-layer-timeline centre=[188,112] row_y=89 after_pressed=true RESULT=HIT
+SHOT firsttap3-390x844-cold_top-timeline.png
+TAP rev-mission-layer-agent first_press=true covers_it=false topmost=rev-mission-layer-agent centre=[305,112] row_y=89 after_pressed=true RESULT=HIT
+SHOT firsttap3-390x844-cold_top-agent.png
+TAP rev-mission-layer-map first_press=false covers_it=false topmost=rev-mission-layer-map centre=[70,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-390x844-cold_top-mapb.png
+FIRST_TAP_SUCCESS=3/3 shape=390x844 arm=cold_top
+JOURNEY_KEPT same pointer={"id":"0d83a51a-4d7d-44eb-94a6-c85cbd418
+SHAPE 390x844 ARM after_scroll where=on_screen state={"found":3,"viewportH":844,"scrollY":600,"rowY":81,"rowBottom":127,"origin":"http://127.0.0.1:14436","pointer":"{\"id\":\"0d83a51a-4d7d-44eb-94a6-c85cbd418"}
+TAP rev-mission-layer-map first_press=true covers_it=false topmost=rev-mission-layer-map centre=[70,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-390x844-after_scroll-map.png
+TAP rev-mission-layer-timeline first_press=true covers_it=false topmost=rev-mission-layer-timeline centre=[188,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-390x844-after_scroll-timeline.png
+TAP rev-mission-layer-agent first_press=true covers_it=false topmost=rev-mission-layer-agent centre=[305,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-390x844-after_scroll-agent.png
+TAP rev-mission-layer-map first_press=false covers_it=false topmost=rev-mission-layer-map centre=[70,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-390x844-after_scroll-mapb.png
+FIRST_TAP_SUCCESS=3/3 shape=390x844 arm=after_scroll
+JOURNEY_KEPT same pointer={"id":"0d83a51a-4d7d-44eb-94a6-c85cbd418
+SHAPE 430x932 ARM cold_top where=on_screen state={"found":3,"viewportH":932,"scrollY":0,"rowY":299,"rowBottom":345,"origin":"http://127.0.0.1:14436","pointer":"{\"id\":\"0d83a51a-4d7d-44eb-94a6-c85cbd418"}
+TAP rev-mission-layer-map first_press=true covers_it=false topmost=rev-mission-layer-map centre=[77,322] row_y=299 after_pressed=true RESULT=HIT
+SHOT firsttap3-430x932-cold_top-map.png
+TAP rev-mission-layer-timeline first_press=true covers_it=false topmost=rev-mission-layer-timeline centre=[208,112] row_y=89 after_pressed=true RESULT=HIT
+SHOT firsttap3-430x932-cold_top-timeline.png
+TAP rev-mission-layer-agent first_press=true covers_it=false topmost=rev-mission-layer-agent centre=[339,112] row_y=89 after_pressed=true RESULT=HIT
+SHOT firsttap3-430x932-cold_top-agent.png
+TAP rev-mission-layer-map first_press=false covers_it=false topmost=rev-mission-layer-map centre=[77,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-430x932-cold_top-mapb.png
+FIRST_TAP_SUCCESS=3/3 shape=430x932 arm=cold_top
+JOURNEY_KEPT same pointer={"id":"0d83a51a-4d7d-44eb-94a6-c85cbd418
+SHAPE 430x932 ARM after_scroll where=on_screen state={"found":3,"viewportH":932,"scrollY":600,"rowY":81,"rowBottom":127,"origin":"http://127.0.0.1:14436","pointer":"{\"id\":\"0d83a51a-4d7d-44eb-94a6-c85cbd418"}
+TAP rev-mission-layer-map first_press=true covers_it=false topmost=rev-mission-layer-map centre=[77,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-430x932-after_scroll-map.png
+TAP rev-mission-layer-timeline first_press=true covers_it=false topmost=rev-mission-layer-timeline centre=[208,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-430x932-after_scroll-timeline.png
+TAP rev-mission-layer-agent first_press=true covers_it=false topmost=rev-mission-layer-agent centre=[339,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-430x932-after_scroll-agent.png
+TAP rev-mission-layer-map first_press=false covers_it=false topmost=rev-mission-layer-map centre=[77,104] row_y=81 after_pressed=true RESULT=HIT
+SHOT firsttap3-430x932-after_scroll-mapb.png
+FIRST_TAP_SUCCESS=3/3 shape=430x932 arm=after_scroll
+JOURNEY_KEPT same pointer={"id":"0d83a51a-4d7d-44eb-94a6-c85cbd418
+NOTE 动作只有换视口、刷新、滚动到指定位置与中心点真鼠标点击；未写 storage、未调接口、未起新标签页

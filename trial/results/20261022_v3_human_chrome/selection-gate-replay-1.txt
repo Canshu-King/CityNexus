@@ -1,0 +1,21 @@
+plans_with_snapshot_on_this_copy=1
+journey=3908e9b2-1688-4872-8648-eedf4958cceb city=CN-RV-0FDB5FECA2AC status=DRAFT window=2026-12-03T09:00:00+08:00..2026-12-04T21:00:00+08:00 budget=60000 CNY
+plan=36ee2357-4f87-46e7-bbbe-1d34a5ac2b3e v1 status=CANDIDATE snapshot_id=ad4a4346-080f-4df8-b0a1-5270a1e103e2
+places_in_catalogue=40
+authority_blocker=UNRESOLVED_ACTIVITY_FACTS
+staleness=False None
+--- routing key every activity is read under (feasibility._location_key) ---
+seq=1 key=None start=09:00 title=天安门广场 evidence_for_next=PLACE
+seq=2 key=None start=11:00 title=故宫博物院 evidence_for_next=PLACE
+seq=3 key=None start=14:00 title=午餐·四季民福烤鸭店(王府井东安门店) evidence_for_next=PLACE
+seq=4 key=None start=16:00 title=王府井步行街逛街小吃 evidence_for_next=NO_PLACE
+seq=5 key=None start=19:00 title=晚餐及自由活动 evidence_for_next=NO_PLACE
+seq=6 key=None start=09:00 title=颐和园 evidence_for_next=PLACE
+seq=7 key=None start=14:00 title=颐和园·佛香阁/画中游等园中园 evidence_for_next=PLACE
+seq=8 key=None start=19:00 title=晚餐及返程 evidence_for_next=NO_PLACE
+snapshot_pairs_carried=[('real-place-00d9e27cd4cc6c7b28b6509e', 'real-place-62c2e60619da82efebfdea8c'), ('real-place-519a9aa24230d0710177c399', 'real-place-f0886f6808934f9535a0f01f'), ('real-place-62c2e60619da82efebfdea8c', 'real-place-71156f2f76c005e3d88802c2')]
+gate.passed=False
+  FAILURE LOCATION_MISSING:32702222-ac68-40d6-bcf9-e4833741ceb3
+  FAILURE LOCATION_MISSING:d86fe098-2e85-4777-8e38-8fc426545bc0
+  FAILURE LOCATION_MISSING:e4c4cf35-789d-477c-a4fd-4b14b420b6a2
+  FAILURE MOBILITY_CONTEXT_MISSING

@@ -184,6 +184,20 @@ class AgentToolCall(BaseModel):
     # boolean as authorization; approvals are server-issued and user-bound.
     user_confirmed: bool = False
 
+    @field_validator("planning_mode", mode="before")
+    @classmethod
+    def _unknown_planning_mode_means_journey_default(cls, value: object) -> object:
+        """A model's invented mode name must not void the whole tool call.
+
+        ``planning_mode`` is a style preference, not an authorization or truth
+        gate, and the gateway already falls back to the Journey's own mode when
+        the field is None.  An unrecognised label therefore normalises to None
+        instead of rejecting every other argument the call legitimately carried.
+        """
+        if not isinstance(value, str):
+            return value
+        return value if value in {"balanced", "budget", "explore", "strict_schedule"} else None
+
 
 class AgentApprovalRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -231,6 +245,7 @@ class GoalDraftUpdateRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     days: list[dict[str, Any]] = Field(min_length=1, max_length=14)
     expected_revision: int = Field(ge=0)
+    reuse_source_task_id: UUID | None = None
 
 
 class MobileCompatAgentRunStartRequest(BaseModel):

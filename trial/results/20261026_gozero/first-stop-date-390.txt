@@ -1,0 +1,5 @@
+TRY 0 entered=true
+LIVE_NEXT_COUNT 1
+LIVE_NEXT "第一站：故宫博物院 · 12月3日 14:00"
+HEAD "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京 · 2日行程\n旅途正在继续。\n换地区 ›\n旅行插画\n行程执行中\n地图\n执行与待办\n课堂演示 · 模拟时间与推进都在课堂控制台里\n去课堂控制台 ↓\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：故宫博物院 · 12月3日 14:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：故宫博物院\n接下来：天坛公园\n已找到准确路线 · 约 78 分钟\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员"
+SHOT_CDP first-stop-date-390 ok

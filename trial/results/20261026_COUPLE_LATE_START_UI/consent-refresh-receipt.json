@@ -1,0 +1,44 @@
+{
+  "captured_at": "2026-10-26T15:58:45.138763+00:00",
+  "journey_id": "dd5f4651-e5f7-424b-b0de-d20adeb26c96",
+  "task_id": "9d3beff5-3c34-422d-ab6c-c23f5f78e229",
+  "actions": [
+    "Uncheck current AI consent",
+    "Replace composer with explicit no-AI/no-online request",
+    "Press Enter once in composer while send disabled",
+    "Read counts and draft",
+    "Native reload",
+    "Observe old goal restored and AI rechecked/send enabled",
+    "Uncheck AI again; do not send"
+  ],
+  "counts_after": {
+    "agent_runs": 43,
+    "provider_calls": 117
+  },
+  "draft_unchanged": true,
+  "conversation_unchanged": true,
+  "task_usage_unchanged": true,
+  "stored_historical_consent": {
+    "model": true,
+    "online_research": false
+  },
+  "ui_current_choice_restored_after_reload": false,
+  "unsent_revocation_text_restored_after_reload": false,
+  "new_model_execution_observed": false,
+  "scope": "UI per-request opt-out and refresh behavior; no server revocation request was submitted, no charge/duplicate bypass demonstrated",
+  "source_hint": "WorkspaceActions.tsx savedTask hydration sets modelConsent from savedTask.consent.model and question from goalRequest.goal",
+  "images": [
+    {
+      "file": "couple-ai-consent-off-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "029aba0a5863c50115f5eaef1dc3145f743962c47bcec08121f715576248cfdd"
+    },
+    {
+      "file": "couple-ai-off-then-reload-390.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "da33ffea6959d902bc0eef186ac5fc94f490e65da9d6b9cf5a48d7f045583bad"
+    }
+  ]
+}

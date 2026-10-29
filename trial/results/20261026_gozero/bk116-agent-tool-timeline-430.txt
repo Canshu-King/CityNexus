@@ -1,0 +1,52 @@
+PROFILE_USED _chrome_gozero_bk116 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=13.9
+HTTP POST 201 /api/v1/journeys/ff6bb8ab-7289-4602-8107-64edb76a9165/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/ff6bb8ab-7289-4602-8107-64edb76a9165/agent/goal-tasks/49b1959d-c5a6-4b91-becf-1cb94e2c65d5/run
+SKIP t=25.9
+DRAFT_WAIT 1 state=null t=25.9
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" t=44.0
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" t=62.0
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" t=80.0
+DRAFT_WAIT 13 state="旅行研究 · 正在研究" t=98.0
+DRAFT_WAIT 16 state="旅行研究 · 正在研究" t=116.1
+DRAFT_WAIT 19 state="旅行研究 · 正在研究" t=134.1
+DRAFT_WAIT 22 state="旅行研究 · 正在研究" t=152.1
+DRAFT_WAIT 25 state="旅行研究 · 正在研究" t=170.2
+DRAFT_WAIT 28 state="旅行研究 · 正在研究" t=188.2
+DRAFT_WAIT 31 state="旅行研究 · 正在研究" t=206.2
+DRAFT_WAIT 34 state="旅行研究 · 正在研究" t=224.3
+DRAFT_WAIT 37 state="旅行研究 · 正在研究" t=242.3
+DRAFT_WAIT 40 state="旅行研究 · 正在研究" t=260.3
+DRAFT_WAIT 43 state="旅行研究 · 正在研究" t=278.3
+DRAFT_WAIT 46 state="旅行研究 · 正在研究" t=296.4
+DRAFT_WAIT 49 state="旅行研究 · 正在研究" t=314.4
+DRAFT_READY "已整理 2 天 · 9 项安排" t=320.4
+HIT trips-tab true t=320.7
+CARDS 11
+MISS card-0
+MISS card-1
+MISS card-2
+MISS card-3
+MISS card-4
+MISS card-5
+MISS card-6
+MISS card-7
+HIT layer-timeline true t=380.5
+ON_TIMELINE state="当前展示的是已保存版本。" sentence=null
+ON_TIMELINE freeze=null promote="保存为正式候选方案"
+ON_TIMELINE KEY {"id":"rev-v3-travel-gaps","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-diff","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-apply","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-reverify","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-refusal","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfall","count":0}
+HIT layer-agent true t=385.2
+AGENT_LAYER_OPENED true t=386.4
+TIMELINE_BEFORE {"present":true,"open":false,"summary":"Agent 真实工作过程 · 已记录 80 条事件","rows":24,"first_rows":["","","","",""],"last_rows":["",""],"private_markers":[],"leak_api_string":false} t=388.9
+HIT timeline-summary true t=389.3
+SUMMARY_PRESSED true t=390.6
+TIMELINE_AFTER {"present":true,"open":true,"summary":"Agent 真实工作过程 · 已记录 80 条事件","rows":24,"first_rows":["#57 工具返回结果 · 查询步行路线","#58 AI 正在判断下一步 · 第14轮","#59 AI 已完成这一轮分析 · 第14轮","#60 开始调用工具 · 查找公开地点","#61 工具返回结果 · 查找公开地点"],"last_rows":["#79 AI 已完成这一轮分析 · 第19轮","#80 已交付阶段成果"],"private_markers":[],"leak_api_string":false} t=392.1
+FINAL_CLEAN true
+DONE t=392.1

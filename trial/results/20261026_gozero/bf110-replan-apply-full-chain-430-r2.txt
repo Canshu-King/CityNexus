@@ -1,0 +1,64 @@
+PROFILE_USED _chrome_gozero_bf110 after 0 failed
+HTTP POST 201 /api/v1/journeys
+SENT t=14.0
+HTTP POST 201 /api/v1/journeys/3d9715f7-3bac-492e-ba21-08524c6bd15e/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/3d9715f7-3bac-492e-ba21-08524c6bd15e/agent/goal-tasks/f58ef668-39d6-43e7-ad7e-d7681b81bc04/run
+SKIP t=29.1
+DRAFT_WAIT 1 state=null promote=null t=29.1
+DRAFT_WAIT 4 state="旅行研究 · 正在研究" promote=null t=47.1
+DRAFT_WAIT 7 state="旅行研究 · 正在研究" promote=null t=65.2
+DRAFT_WAIT 10 state="旅行研究 · 正在研究" promote=null t=83.2
+DRAFT_READY "已整理 2 天 · 6 项安排" promote=null t=95.2
+HIT bottom-nav true t=95.6
+HIT trips-tab true t=97.2
+HTTP POST 200 /api/v1/journeys/3d9715f7-3bac-492e-ba21-08524c6bd15e/agent/goal-tasks/f58ef668-39d6-43e7-ad7e-d7681b81bc04/resume
+CARDS 8
+MISS card-0
+MISS card-1
+MISS card-2
+MISS card-3
+MISS card-4
+MISS card-5
+HIT layer-timeline true t=142.8
+ON_TIMELINE state="当前展示的是已保存版本。" freeze=null promote="保存为正式候选方案"
+ON_TIMELINE KEY {"id":"rev-v3-travel-gaps","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfalls","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-gap-shortfall","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-refusal","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-diff","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-apply","count":0}
+ON_TIMELINE KEY {"id":"rev-v3-replan-reverify","count":0}
+CONFIRM_KEY found=1 t=147.2
+CONFIRMED true was=false t=149.8
+HIT promote true t=150.1
+HTTP POST 409 /api/v1/journeys/3d9715f7-3bac-492e-ba21-08524c6bd15e/agent/goal-tasks/f58ef668-39d6-43e7-ad7e-d7681b81bc04/prepare-plan BODY {"error":{"code":"CONFLICT","message":"PLACE_NOT_IN_JOURNEY_CITY","message_key":"request.conflict","trace_id":"f9a451ca-6369-48bb-b51c-c2f5672af0f5","details":null,"error_receipt_id":"CNX-CVZ9RFNC"}}
+AFTER_PROMOTE state="当前展示的是已保存版本。" freeze=null promote="保存为正式候选方案"
+AFTER_PROMOTE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-gap-shortfalls","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_PROMOTE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_PROMOTE TEXTS ["当前展示的是已保存版本。","这次未能保存，时间仍留在这里，可以重试。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_PROMOTE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+MISS freeze-routes
+FREEZE_PRESSED false t=179.5
+AFTER_FREEZE state="当前展示的是已保存版本。" freeze=null promote="保存为正式候选方案"
+AFTER_FREEZE KEY {"id":"rev-v3-travel-gaps","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfalls","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-gap-shortfall","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-refusal","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-diff","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-apply","count":0}
+AFTER_FREEZE KEY {"id":"rev-v3-replan-reverify","count":0}
+AFTER_FREEZE TEXTS ["当前展示的是已保存版本。","这次未能保存，时间仍留在这里，可以重试。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。"]
+AFTER_FREEZE LEAK api_in_body=false api_in_band=false uuid_in_band=false
+REPLAN_DOOR replan=0 hit=false box=null reverify=0 t=179.5
+NO_DOOR gaps_block={"id":"rev-v3-travel-gaps","count":0} t=179.5
+FINAL_HAS_SAVED_AGAIN false
+FINAL_CLEAN true
+DONE t=179.6

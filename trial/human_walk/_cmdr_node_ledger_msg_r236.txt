@@ -1,0 +1,14 @@
+Roll the whole red set into one ledger keyed by node id, split by which side a fix belongs to.
+
+Rulings were being asked for bucket by bucket while the buckets were only counts.  This joins
+pytest's crash lines to its FAILED summary -- both lists enforced against the run's own failed
+number, so the pairing cannot slip -- applies today's three measured refinements (the KeyError rows
+that are really the bearer-less family, and the classroom/demo refusals measured under the
+environment arms), and writes every node id under its cause with a fixture-side versus
+product/seed-side split: 130 against 101, summing to the run's own 231.
+
+The ruler also caught a defect in itself: the first node-id pattern dropped parametrised case
+suffixes, collapsing 231 failures to 218 distinct ids, and it aborted rather than publishing a
+silently deduplicated ledger.  That is written into the report so the next instrument does not
+repeat it.  Nothing here was repaired -- the point is to let one ruling cover the fixture-side mass
+instead of fifteen separate ones.

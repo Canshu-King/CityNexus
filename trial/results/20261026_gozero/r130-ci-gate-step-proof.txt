@@ -1,0 +1,18 @@
+CI_STEP_PROVE a commit can only carry the paths it names
+RUN_ID 40756205676
+BRANCH rescue/v3-final-departure-20261022
+GENERATION 4d1eee472aba653434e744e10f9fc7f9014e3c22
+JOB A refused request must never reach the screen verbatim
+STEP_NUMBER 7
+STEP_CONCLUSION success
+LOG_AT 2026-10-28T19:41:32.898Z  (read back with: gh run view 40756205676 --log)
+
+ROOT_ARM True
+COMMIT_PATHS 1 ['mine.txt']
+FOREIGN_STAGED before=1 after=1
+SELFTEST_OK control swept theirs.tsx into the commit; the gate committed only mine.txt, left theirs.tsx staged, and refused a path that is not in the tree
+
+HOW_TO_DISBELIEVE_IT The control arm is the first clause of the last line: in a throwaway repository a
+commit written without a pathspec really does take a file its owner had staged.  If that shape ever
+stops eating the foreign entry, the step fails and says SELFTEST_RED -- the guard cannot pass by doing
+nothing.

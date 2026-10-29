@@ -43,11 +43,20 @@ def empty_media(candidate_id: str, status: str, reason: str) -> dict:
 
 
 def _commons_url(value: object, *, image: bool = False) -> bool:
+    """Wikimedia's own hosts only -- never a URL a client handed us.
+
+    Images live on two of them: the file itself on ``upload.wikimedia.org`` and the resized version
+    Commons' API hands back on ``thumb.wikimedia.org``. Measured 2026-10-22: a 南锣鼓巷 photo arrived
+    with a real author, a ``CC BY 2.0`` licence and a valid file page, and the screen still showed the
+    neutral placeholder, because the only thing the gate disliked was that Wikimedia's own thumbnail
+    host was not the one spelled here. Widening to the second Wikimedia host is not a licence
+    weakening: an outside image URL is still refused, as its own test arm shows.
+    """
     if not isinstance(value, str):
         return False
     url = urlparse(value)
-    return url.scheme == "https" and not url.username and url.hostname in (
-        {"upload.wikimedia.org"} if image else {"commons.wikimedia.org"})
+    allowed = {"upload.wikimedia.org", "thumb.wikimedia.org"} if image else {"commons.wikimedia.org"}
+    return url.scheme == "https" and not url.username and url.hostname in allowed
 
 
 def displayable_media(payload: dict, candidate_id: str) -> dict:
@@ -76,7 +85,11 @@ async def _collect(lead: dict, region: str) -> dict:
         point = gcj02_to_wgs84(*point)
     elif lead.get("coordinate_system", "WGS84") != "WGS84":
         return empty_media(candidate_id, "NO_IMAGE", "SOURCE_LOCATION_UNAVAILABLE")
-    async with httpx.AsyncClient(timeout=5.0, follow_redirects=False,
+    # Measured on this machine with the only working route to Wikimedia: a legitimate chain answers in
+    # about two seconds per hop, and the stored receipts show two calls dying at 3.1 s and 5.0 s --
+    # the second one exactly at the old five-second budget, so the traveller's screen simply had no
+    # picture to show. The budget is per hop, and the whole chain is still bounded by this loop.
+    async with httpx.AsyncClient(timeout=8.0, follow_redirects=False,
             trust_env=trust_environment_for_public_providers()) as client:
         qid = None
         reference = _validated_osm_reference(candidate_id, lead.get("provider"), lead.get("source_url"))

@@ -1,0 +1,34 @@
+READ_ONLY sqlite3 (mode=ro) on D:/moodle/_cmdr_v3_live_1022/citynexus_v3_human21_1022.db
+read at 2026-10-24T03:29:24; table agent_runs; columns id,journey_id,status,outcome,failure_reason,created_at,started_at,completed_at
+no write, no reset, no provider call;  nothing outside these two journeys is quoted
+
+JOURNEY 9aafda16 = walk-101 (pressed 开始研究 at 2026-10-23T18:42:2x, trial/results/20261022_v3_human_chrome/walk-101-log.txt:10)
+JOURNEY 1a2f4474 = walk-102 (pressed 开始研究 at 2026-10-23T19:01:0x, trial/results/20261022_v3_human_chrome/walk-102-log.txt:11)
+
+RUN id=61de0c04-b921-4e26-b311-523145d6c513 journey=9aafda16 status=FAILED_EXTERNAL outcome={"code":"MODEL_HTTP_503","status":"FAILED_RECOVERABLE"} reason=MODEL_HTTP_503 created=2026-10-23T18:42:26.105181+00:00 started=2026-10-23T18:42:26.105181+00:00 completed=2026-10-23T18:43:31.540908+00:00 ran_s=65
+RUN id=1781c34f-583c-4038-a50d-0916e117182e journey=9aafda16 status=FAILED_EXTERNAL outcome={"code":"MODEL_HTTP_503","status":"FAILED_RECOVERABLE"} reason=MODEL_HTTP_503 created=2026-10-23T18:43:36.838981+00:00 started=2026-10-23T18:43:36.838981+00:00 completed=2026-10-23T18:44:24.530716+00:00 ran_s=47
+RUN id=7c7afa1f-2292-451b-b327-934eb227b8af journey=9aafda16 status=PARTIAL outcome={"code":"TRAVELER_INPUT_REQUIRED","status":"NEEDS_DECISION"} reason=TRAVELER_INPUT_REQUIRED created=2026-10-23T18:59:45.022779+00:00 started=2026-10-23T18:59:45.022779+00:00 completed=2026-10-23T19:00:23.410743+00:00 ran_s=38
+RUN id=48f3d023-2fe2-41b6-8d60-57ce8999807e journey=1a2f4474 status=PARTIAL outcome={"code":"TRAVELER_INPUT_REQUIRED","status":"NEEDS_DECISION"} reason=TRAVELER_INPUT_REQUIRED created=2026-10-23T19:01:09.795237+00:00 started=2026-10-23T19:01:09.795237+00:00 completed=2026-10-23T19:01:44.416390+00:00 ran_s=34
+RUN id=68cece4f-bf7b-494e-9d4e-86ada21a64bf journey=1a2f4474 status=COMPLETED outcome={"code":"SUMMARY_READY","status":"PARTIAL_READY"} reason=None created=2026-10-23T19:01:49.855522+00:00 started=2026-10-23T19:01:49.855522+00:00 completed=2026-10-23T19:02:07.378406+00:00 ran_s=17
+RUN id=c48aa5e9-9b39-49f6-a999-9617c125709f journey=1a2f4474 status=FAILED_EXTERNAL outcome={"code":"MODEL_HTTP_503","status":"FAILED_RECOVERABLE"} reason=MODEL_HTTP_503 created=2026-10-23T19:02:10.619381+00:00 started=2026-10-23T19:02:10.619381+00:00 completed=2026-10-23T19:04:20.139165+00:00 ran_s=129
+RUN id=741b2742-a0e7-41ac-9a01-def63574bdc3 journey=1a2f4474 status=PARTIAL outcome={"code":"TRAVELER_INPUT_REQUIRED","status":"NEEDS_DECISION"} reason=TRAVELER_INPUT_REQUIRED created=2026-10-23T19:18:22.848600+00:00 started=2026-10-23T19:18:22.848600+00:00 completed=2026-10-23T19:21:56.650003+00:00 ran_s=213
+
+COUNTS rows=7  failed_external=3  model_503=3
+
+# 下面每一格都由上面那七行现算（不是手写）
+walk-101 press=2026-10-23T18:42:25.874+00:00  首个 run 于 press 后 0.2 秒建档(61de0c04=FAILED_EXTERNAL)  最后一条 503 止于 2026-10-23T18:44:24.530716+00:00  共 2 条 503
+walk-101 之后没有任何 run 自己再起来；旅客第二句话 (见对应 walk 流水的 STEP_07) 之后 920.492 秒起 run 7c7afa1f，38 秒后答 PARTIAL/TRAVELER_INPUT_REQUIRED
+walk-101 静默时长 = next_run_created - last_503_completed = 920 秒 = 15 分 20 秒
+walk-102 press=2026-10-23T19:01:09.748+00:00  首个 run 于 press 后 0.0 秒建档(48f3d023=PARTIAL)  最后一条 503 止于 2026-10-23T19:04:20.139165+00:00  共 1 条 503
+walk-102 之后没有任何 run 自己再起来；旅客第二句话 (见对应 walk 流水的 STEP_07) 之后 842.709 秒起 run 741b2742，213 秒后答 PARTIAL/TRAVELER_INPUT_REQUIRED
+walk-102 静默时长 = next_run_created - last_503_completed = 842 秒 = 14 分 2 秒
+自动重跑候选：9aafda16 上一条 503 止于 2026-10-23T18:43:31.540908+00:00，5 秒后起了 run 1781c34f
+两条 journey 合计 MODEL_HTTP_503 run = 3 条；上一条失败后 60 秒内自己再起来的 run = 1 次
+
+# 追加：walk-103 那一趟（同库、同样 mode=ro，现读于 2026-10-24T04:05:46）
+JOURNEY 80fa5b58 = walk-103（按「开始研究」于 2026-10-23T19:26 档，trial/results/20261022_v3_human_chrome/walk-103-log.txt:13）
+RUN id=5aaca90c-c5e6-4efc-b305-319caf1ebc1e status=PARTIAL outcome={"code":"TRAVELER_INPUT_REQUIRED","status":"NEEDS_DECISION"} reason=TRAVELER_INPUT_REQUIRED created=2026-10-23T19:26:03.570500+00:00 completed=2026-10-23T19:26:21.421062+00:00 ran_s=17
+RUN id=7f39e996-5852-45b3-8a4f-c9ff62480199 status=PARTIAL outcome={"code":"TRAVELER_INPUT_REQUIRED","status":"NEEDS_DECISION"} reason=TRAVELER_INPUT_REQUIRED created=2026-10-23T19:26:25.498774+00:00 completed=2026-10-23T19:28:12.284143+00:00 ran_s=106
+RUN id=3fb3261d-a697-4f7c-aac6-0c8297a446ea status=FAILED_EXTERNAL outcome={"code":"MODEL_HTTP_503","status":"FAILED_RECOVERABLE"} reason=MODEL_HTTP_503 created=2026-10-23T19:28:19.452977+00:00 completed=2026-10-23T19:29:00.791650+00:00 ran_s=41
+RUN id=167e190c-b633-4df8-b0a2-7418021355e9 status=PARTIAL outcome={"code":"TRAVELER_INPUT_REQUIRED","status":"NEEDS_DECISION"} reason=TRAVELER_INPUT_REQUIRED created=2026-10-23T19:44:28.325743+00:00 completed=2026-10-23T19:45:18.293372+00:00 ran_s=49
+walk-103 的 503 条数=1；那条 run 从建档到收队用了 41.3 秒；仪表随后等到 16 分钟预算用尽（walk-103-log.txt:46）

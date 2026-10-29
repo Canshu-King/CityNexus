@@ -1,0 +1,111 @@
+name: V3 rescue integrated release gate
+
+on:
+  push:
+    branches:
+      - rescue/v3-final-departure-20261022
+    paths:
+      - backend/**
+      - frontend/**
+      - contracts/**
+      # The walk arms live under trial/ and the collision ruler reads exactly those files, so a push that
+      # adds a colliding arm has to wake the gate.  Without this line the ruler only runs when someone
+      # touches product code, which is the one case it cannot be wrong about.
+      - trial/**
+      - .github/workflows/v3-rescue-release-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v3-rescue-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-signed-smoke:
+    name: Backend signed journey and classroom integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: |
+          python -m pip install uv
+          uv sync --extra dev --no-install-project
+      - name: Run focused signed and source regressions without live provider
+        run: >-
+          uv run --no-sync python -m pytest -q
+          tests/test_issue49_*.py
+          tests/test_qoder_map_active_plan_stops_r1.py
+          tests/test_wp01_wp03.py
+          tests/test_goal_route_freeze.py
+          --junitxml=v3-release-backend.xml
+      - name: Upload backend results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v3-rescue-backend-results
+          path: backend/v3-release-backend.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
+  frontend-build:
+    name: Frontend typecheck and Vite build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Typecheck current V3 product
+        run: npx tsc -p tsconfig.check.json --noEmit
+      - name: Typecheck every file under src, not the five named ones
+        # tsconfig.check.json lists five files, so the rest of src/ could reach a release while
+        # this job still reported green. The broad config was measured clean at the same tip as
+        # this step was added (receipt trial/results/20261026_gozero/bx172-broad-typecheck.txt),
+        # so carrying it here adds a refusal, not a new red.
+        run: npx tsc -p tsconfig.typecheck.json --noEmit
+      - name: Vite production build
+        run: npm run build
+
+  assistant-screen-text:
+    name: A refused request must never reach the screen verbatim
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The control below reads the file body of one specific past commit.  A depth-1 checkout
+          # cannot see it, and a control that silently cannot run is the same lie as a pass.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scan every screen setter for a raw client error string
+        run: python trial/human_walk/_raw_error_sink_ruler_r1.py
+      - name: Prove the ruler still catches the leak that really reached a traveller
+        run: python trial/human_walk/_raw_error_sink_control_r2.py 840534ec1141b40c20e492f9cee6af12e3da58b4
+      - name: Prove no two walk arms drive one browser or write one receipt
+        # Two arms sharing a Chrome profile directory silently made one "independent" walk read a browser
+        # another arm was still driving, and two arms sharing a receipt name destroyed one run's evidence.
+        # The ruler carries its own positive control, so a pass here means it can still see a collision.
+        run: python trial/human_walk/_arm_collision_ruler_r108.py
+      - name: Prove a commit can only carry the paths it names
+        # Twice in one session `git commit` without a pathspec swept another writer's staged frontend
+        # files under my own message; both had to be undone with reset --soft.  The self-test runs the
+        # mistake first -- a throwaway repository really does lose the foreign staged entry -- then
+        # shows the gate keeping it, and refuses a named path that is not in the tree.
+        run: python trial/human_walk/_cmdr_pathspec_commit_gate_r119.py --selftest

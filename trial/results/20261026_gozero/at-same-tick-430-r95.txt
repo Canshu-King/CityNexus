@@ -1,0 +1,21 @@
+TICK 0 {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"} t=7.4
+TICK 1 {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"} t=11.4
+TICK 2 {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"} t=15.4
+TICK 3 {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"} t=19.4
+TICK 4 {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"} t=23.4
+TICK 5 {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"} t=27.4
+TICK 6 {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"} t=31.4
+TICK 7 {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"} t=35.4
+SHOT 430-at-first-screen t=39.5
+HIT trips-tab true t=39.9
+AFTER_TRIPS {"nav":1,"trips":1,"explore":1,"me":1,"labels":["探索","我的旅程","我的"],"href":"/revolution"}
+SHOT 430-at-trips-list t=45.2
+CARDS 2
+HIT card-0 true t=45.5
+AFTER_CARD 0 save_key=0 text="课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。 C CityNexus 你的智能旅行伙伴 AI 已配置 · 未验证 TRIPS 行程 这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度。 课堂演示：进入示例行程开始探索 → AI 服务 AI 已配置 · 未验证 选好地点并确认行程后，Agent 就会开始工作。 探索 我的旅程 我的 CityNex"
+HIT card-1 true t=52.1
+AFTER_CARD 1 save_key=0 text="课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。 C CityNexus 你的智能旅行伙伴 AI 已配置 · 未验证 TRIPS 行程 这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度。 课堂演示：进入示例行程开始探索 → AI 服务 AI 已配置 · 未验证 选好地点并确认行程后，Agent 就会开始工作。 探索 我的旅程 我的 CityNex"
+NO_SAVE_KEY TEXTS ["课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。"]
+NO_SAVE_KEY LEAK api_in_body=false api_in_band=false uuid_in_band=false
+SHOT 430-at-no-save-key t=58.4
+ABORT no save key on any card this arm could open

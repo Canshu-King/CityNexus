@@ -1,0 +1,16 @@
+HTTP POST 201 /api/v1/journeys
+SENT t=12.5
+HTTP POST 201 /api/v1/journeys/2245f17b-ee72-4b38-99d2-1e254f9f1561/agent/goal-tasks
+HTTP POST 200 /api/v1/journeys/2245f17b-ee72-4b38-99d2-1e254f9f1561/agent/goal-tasks/4296c5c1-3c07-4b9f-8912-1d65bbc44c58/run
+SKIP t=27.6
+SEQ 0 t=27.6 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"}
+SEQ 1 t=30.6 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"旅行研究 · 正在研究"}
+SEQ 79 t=265.3 {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"已整理 2 天 · 7 项安排"}
+SWITCH rev-mission-layer-timeline found=1 t=987.8
+AFTER_SWITCH rev-mission-layer-timeline {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":"当前展示的是已保存版本。"} t=991.9
+SWITCH rev-mission-layer-map found=1 t=991.9
+AFTER_SWITCH rev-mission-layer-map {"key_present":false,"key_visible":false,"key_disabled":null,"key_box":null,"activeLayer":null,"stateLine":null} t=996.1
+NO_KEY_WINDOW TEXTS ["消息还在确认中，刷新任务查看最新进度。","当前展示的是已保存版本。","旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。","消息还在确认中，刷新任务查看最新进度。"]
+NO_KEY_WINDOW LEAK api_in_body=false api_in_band=false uuid_in_band=false
+NO_KEY_WINDOW SENTENCE null
+ABORT the save key never mounted inside the window; the sequence above names the last state seen

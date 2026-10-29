@@ -1,0 +1,54 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:56:1 › named place search waits for explicit submission and keeps the public area
+  1) [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:56:1 › named place search waits for explicit submission and keeps the public area 
+
+    Test timeout of 45000ms exceeded.
+
+    Error: locator.click: Test timeout of 45000ms exceeded.
+    Call log:
+      - waiting for getByTestId('rev-quick-find-city')
+        - locator resolved to <button type="button" data-testid="rev-quick-find-city">查找位置 →</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+          - waiting 100ms
+        83 × waiting for element to be visible, enabled and stable
+           - element is not visible
+         - retrying click action
+           - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+
+
+       97 |   });
+       98 |   await page.goto("/revolution");
+    >  99 |   await page.getByTestId("rev-quick-find-city").click();
+          |                                                 ^
+      100 |   await page.getByRole("button", { name: /连城县.*2.5公里/ }).click();
+      101 |   await page.getByTestId("rev-quick-use-approx-center").click();
+      102 |   await expect(page.getByRole("region", { name: "按关键词查找公开地点" })).toBeVisible();
+        at D:\moodle\_cmdr_rescue_v3_1022\frontend\e2e\revolution-place-card-facts.spec.ts:99:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-place-card-fact-8689d-n-and-keeps-the-public-area-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-place-card-fact-8689d-n-and-keeps-the-public-area-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-place-card-fact-8689d-n-and-keeps-the-public-area-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-place-card-fact-8689d-n-and-keeps-the-public-area-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:56:1 › named place search waits for explicit submission and keeps the public area 

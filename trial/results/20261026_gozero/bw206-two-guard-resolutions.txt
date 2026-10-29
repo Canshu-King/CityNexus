@@ -1,0 +1,27 @@
+TWO GUARD RESOLUTIONS bw206
+TIP d9d4859317c036d991ec7e2613bc6c3c87fcd732
+CREDENTIAL SCANNER (the product's own, called here)
+  verdict=LIVE_CREDENTIAL_IN_ENVIRONMENT env_present=1 hits_total=28 hits_in_product_path=0
+  undeclared_and_outside_product_path 13 files, listed by name only
+    - frontend/e2e/r28-collective-decision-surface.spec.ts
+    - frontend/e2e/r56-in-transit-reroute.spec.ts
+    - frontend/e2e/r57-group-presence.spec.ts
+    - frontend/e2e/revolution-amap-research-ui.spec.ts
+    - frontend/e2e/revolution-dialogue.spec.ts
+    - frontend/e2e/revolution-draft-preparation.spec.ts
+    - frontend/e2e/revolution-draft-variants.spec.ts
+    - frontend/e2e/revolution-human-session-recovery.spec.ts
+    - frontend/e2e/revolution-mobile-plan-workbench.spec.ts
+    - frontend/e2e/revolution-mobile-shell.spec.ts
+    - frontend/e2e/revolution-place-card-facts.spec.ts
+    - frontend/e2e/revolution-start-write-unknown.spec.ts
+    - frontend/e2e/revolution-workspace-actions.spec.ts
+RECEIPT TABLES (what the guard's LIKE matches)
+  tables_in_metadata 93, name contains 'receipt': 3
+    - collective_authority_receipts
+    - journey_rendezvous_buddy_execution_receipts
+    - member_live_moment_scout_receipts
+  files under backend/app that mention error_receipt: 2
+    - backend\app\error_receipt.py
+    - backend\app\main.py
+  tables named for error receipts: 0 -- if this is zero the design claim stands and the guard's LIKE is simply too wide

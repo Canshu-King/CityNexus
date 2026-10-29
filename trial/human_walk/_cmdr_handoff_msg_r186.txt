@@ -1,0 +1,8 @@
+Leave the next shift a handoff that says what not to redo and how to replay each measurement.
+
+Three knives are closed except for what needs a ruling, so the useful remaining object is a short map:
+which artifact proves which claim, the six decisions this shift deliberately did not take, the exact
+commands behind every number (including the two rulers that refuse to print a table they cannot
+reconcile), which stack serves which generation and on which ports, and the traps hit tonight: the
+insertion gate refusing a table whose count rows carried no coordinate on the same line, byte-shape
+preserving appends, and evidence that must be a tracked .txt because gitignore swallows .log.

@@ -1,0 +1,14 @@
+# The gate's own rows parsed on the backend, then worded on the frontend, against the refusal walk-84 actually received (walk-84-log.txt:73).
+## backend parser (app/departure_commit.py:_infeasible_failures)
+PY CASE real :: ['INSUFFICIENT_TRAVEL_GAP:real-place-e76f0237c0983227fcc73fc6|real-place-519a9aa24230d0710177c399']
+PY CASE two :: ['A:1|2', 'BUDGET_CURRENCY_MISMATCH']
+PY CASE no-prefix :: []
+## frontend sentence (frontend/src/trial/mobile/departureGaps.ts infeasibleAtDepartureSentence)
+infeasible_sentences run_at=2026-10-23T05:13:07.827Z cases=7
+CASE walk-84 的真读数 :: 句=这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。 :: 长度=72
+CASE 两段都不够 :: 句=这版方案排不下：两段安排之间留的赶路时间不够（2 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。 :: 长度=72
+CASE 没有实测资料 :: 句=这版方案排不下：有一段路还没有可用的实测资料（1 段）。 :: 长度=28
+CASE 混合 :: 句=这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。另有 1 类原因：LOCATION_MISSING。 :: 长度=98
+CASE 闸给了别的原因 :: 句=这版方案排不下（BUDGET_CURRENCY_MISMATCH）。 :: 长度=34
+CASE 没有行 :: 句=(空句=交给通用那句) :: 长度=0
+CASE 根本不是数组 :: 句=(空句=交给通用那句) :: 长度=0

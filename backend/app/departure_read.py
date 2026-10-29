@@ -53,6 +53,11 @@ GATE_INFEASIBLE = "PLAN_INFEASIBLE"
 GATE_WRONG_STATE = "JOURNEY_NOT_PLANNABLE"
 
 REASON_MEMBER_REQUIRED = "JOURNEY_MEMBER_REQUIRED"
+# The two 401 words below are the resolver's own, stamped at :123 on the raw 401 it gets back
+# from `app.traveler_principal` -- that module on this line raises the sentence and no code, so
+# these two strings had no name and every reader had to retype them. One writer, named here.
+REASON_CREDENTIALS_MISSING = "TRAVELER_CREDENTIALS_MISSING"
+REASON_CREDENTIALS_INVALID = "TRAVELER_CREDENTIALS_INVALID"
 
 
 def _refuse(status: int, message: str, reason_code: str, details: dict[str, Any]) -> HTTPException:
@@ -121,7 +126,9 @@ def _signed_journey(request: Request, session: Session, journey_id: UUID) -> tup
         principal = resolve_traveler_principal(request, session)
     except HTTPException as exc:
         if exc.status_code == 401 and not getattr(exc, "reason_code", None):
-            exc.reason_code = "TRAVELER_CREDENTIALS_MISSING" if not (request.headers.get("Authorization") or request.headers.get("X-CityNexus-Traveler-Token")) else "TRAVELER_CREDENTIALS_INVALID"
+            missing = not (request.headers.get("Authorization")
+                             or request.headers.get("X-CityNexus-Traveler-Token"))
+            exc.reason_code = REASON_CREDENTIALS_MISSING if missing else REASON_CREDENTIALS_INVALID
         raise
 
     journey = session.get(Journey, str(journey_id))

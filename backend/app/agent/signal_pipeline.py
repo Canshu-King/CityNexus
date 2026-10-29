@@ -644,6 +644,9 @@ def refresh_demo_signals(
 
     stamp = captured_at or _now()
     fixture = ensure_fixture(session, journey.id)
+    if json.loads(fixture.payload_json or '{}').get('simulation_run_id'):
+        from app.simulation.signals import refresh_run_signals
+        return refresh_run_signals(session, journey, fixture)
     state = fixture.state
     activities = _active_activities(session, journey)
     current_activity = next(
