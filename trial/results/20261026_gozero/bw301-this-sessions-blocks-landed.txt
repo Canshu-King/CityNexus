@@ -1,6 +1,6 @@
 BLOCKS THIS SESSION REPORTED AS INSERTED - RE-READ AGAINST THE LEDGER bw301
 LEDGER D:\moodle\CITYNEXUS_AGENT_CONTROL.md
-SESSION 494abfd7 | archive files dated 2026-10-29: 37
+SESSION 494abfd7 | archive files dated 2026-10-29: 39
   494abfd7_0055.md.inserted_085947  (2026-10-29)
       heading '号令者 · 第二刀 2a 交齐、提交门装闸、本班后端证书与最大红块归因'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0055.md.inserted_085947'] | STILL_IN_INBOX none | VERDICT GREEN
@@ -112,14 +112,20 @@ SESSION 494abfd7 | archive files dated 2026-10-29: 37
   494abfd7_1537.md.inserted_153724  (2026-10-29)
       heading '494abfd7 复算「本班报过的 36 笔插入」账账相符 36/36，并自报一格我自己造成的假红灯（#367）'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1537.md.inserted_153724'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2145.md.inserted_214617  (2026-10-29)
+      heading '494abfd7 交「会问的那二十处里哪几处真挂在面板上」的逐枚归属（#368，接 §14.34）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2145.md.inserted_214617'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2203.md.inserted_220343  (2026-10-29)
+      heading '494abfd7 交「旅客面英文拒绝句到不了屏：面板层把话换掉了」的逐枚读数（#369，接 §14.35）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2203.md.inserted_220343'] | STILL_IN_INBOX none | VERDICT GREEN
 NEGATIVE_CONTROL unseen title reads RED as required (LEDGER_HITS 0 | ARCHIVED none | STILL_IN_INBOX none | VERDICT RED
 HINT the title matched nothing in the ledger; these are the 5 most recent landed blocks (a wrong --title reads as a typo, not as an accident):
+     ### 494abfd7 交「旅客面英文拒绝句到不了屏：面板层把话换掉了」的逐枚读数（#369，接 §14.35）  <- 494abfd7_2203.md.inserted_220343
+     ### 494abfd7 交「会问的那二十处里哪几处真挂在面板上」的逐枚归属（#368，接 §14.34）  <- 494abfd7_2145.md.inserted_214617
      ### 494abfd7 复算「本班报过的 36 笔插入」账账相符 36/36，并自报一格我自己造成的假红灯（#367）  <- 494abfd7_1537.md.inserted_153724
      ### 494abfd7 交「21 处里哪几处前端会问」的逐枚映射（#366，接 §14.33）  <- 494abfd7_1528.md.inserted_152839
-     ### 494abfd7 交「旅客面 ∩ 内部词汇」= 21 处的逐枚清单（#365，接 §14.32）  <- 494abfd7_1516.md.inserted_151731
-     ### 494abfd7 交「45 处内部词汇」的逐词分布与各自坐标（#364，接 §14.31 那条待裁）  <- 494abfd7_1500.md.inserted_150109
-     ### 494abfd7 交「221 处里旅客最先撞到的头几条」可点单清单（#363，接 §14.29 那条待裁）  <- 494abfd7_1450.md.inserted_145101)
-TALLY checked=37 green=37 red=0
+     ### 494abfd7 交「旅客面 ∩ 内部词汇」= 21 处的逐枚清单（#365，接 §14.32）  <- 494abfd7_1516.md.inserted_151731)
+TALLY checked=39 green=39 red=0
 BLOCKS_THAT_DID_NOT_LAND none
 VERDICT every block this session claimed as delivered is in the ledger, and the gate can still see a red
-INSTRUMENT_FAULT no - 0 of 37 blocks read RED, nothing to chase
+INSTRUMENT_FAULT no - 0 of 39 blocks read RED, nothing to chase
