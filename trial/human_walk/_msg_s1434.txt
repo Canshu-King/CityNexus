@@ -1,0 +1,19 @@
+section 14.34: 13 of bw318's 20 caller rows sit on a registry-rendered panel, and they land on 2 files
+
+Appended through trial/human_walk/_append_section1434_r323.py, which refuses to run twice and aborts if
+any anchor is not unique - it bit once already on a USED_BY_APP_SHELL needle that matched 4 rows, so the
+citation was changed to a unique one rather than relaxed.
+
+Every number in the section is parsed from the bw322 receipt while it runs and cross-checked: the row
+count against bw318's published caller_found, the five verdicts against the row count, the concentration
+pairs against the mounted count, and the ruler's own earlier readings (16, 12, 13) out of the REVISION
+line instead of typing them. NAME_UNIQUENESS's shared-name count is parsed too.
+
+The section states the concentrated finding rather than the flattering one: 13 rows rest on 2 files, the
+registry imports 25 modules and renders all 25, and 5 rows are issued from inside the app shell rather
+than from any panel. It keeps the sentence the ruler cannot say - a registry render is not proof a
+traveller opens that panel - and ends with the new cut option for the commander: cut by panel (those two
+files) or stay with the 21 / 45 / 132 denominators of section 14.32, either way after the case-sensitivity
+ruling from section 14.31. Line endings verified unchanged: 217 bare LF before and after the append.
+
+0 product bytes.

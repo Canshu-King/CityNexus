@@ -1,0 +1,3 @@
+LIVE ANCHORS {'same_source': 2, 'tally': 43, 'mount_table': 45, 'concentration': 44, 'match': 46, 'revision': 47, 'counting': 51, 'coverage': 52, 'control': 50, 'uniqueness': 48, 'row_self_mounted': 5, 'row_moved': 24, 'bw318_tally': 70, 'ruler': 50, 'prev_section': 3765}
+LIVE NUMBERS rows=20 mounted=13 shell=5 off=2 shared=0 none=0 imported=25 rendered=25 history=16>12>13 moved=11
+APPENDED bytes_added=3486 heading_hits=1 crlf_lines_now=3567

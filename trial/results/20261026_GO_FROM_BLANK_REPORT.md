@@ -3771,3 +3771,14 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 待裁（不代裁）：要不要把这一腿走完——把 20 处有调用者的接成「哪个面板 / 哪枚按钮 → 哪句英文」，还是就此按 §14.32 的三档直接点文案刀。本班 0 改产品字节。
 - 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3757。
 
+14.34 补（10-29 午后）：20 处调用者里 13 处落在注册表渲染的面板上，而它们只集中在 2 枚面板
+
+- 这一腿接 §14.33 留下的那句待裁（其正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3765）：把 20 处有调用者的接成「哪个面板会发这一句」。尺 trial/human_walk/_cmdr_panel_ask_r322.py:50 里「挂上面板」的定义是注册表 import 了该模块、且把它当 JSX 组件渲染，两条都要成立；只看使用者不够——该行构建文件自己就是被渲染的那个组件时也算（回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:5 那一行标了这种行）。
+- 读数（回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:43，行数与 trial/results/20261026_gozero/bw318-which-of-these-has-a-button.txt:70 的 caller_found 同源对账）：13 处落在挂得上注册表的面板、5 处由 app/ 壳自己发、2 处由注册表从不渲染的组件发、0 处只剩共用 API 层、0 处无人问。
+- 集中度才是这一格要看的数（回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:44）：13 处只压在 2 枚文件上——`frontend/src/features/execution/LiveRecovery.tsx`（10 处）、`frontend/src/features/trash/JourneyTrashPanel.tsx`（3 处）。注册表 import 25 枚模块、渲染其中 25 枚（回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:45），所以面板名录本身比行数更有用。
+- 同一把尺改了四遍，读数跟着动（回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:47 逐档写明原因）：16→12→13，第四遍把第 11 行从「无人问」改判成应用壳。第一版把注册表里任何文字（含注释）当挂载；第二版只认 import 边、漏掉「构建文件本身就是被渲染的组件」；第三版要求 import 加 JSX；第四版承认「路径在 app/ 文件里就地拼出来，别处永远不可能提到那个局部名字」这种沉默不说明没人问。定义写在回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:51，所以这几个数必须连着定义读。被改判那行见回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:24。
+- 另有一条判别臂专治「文字算成挂载」（回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:46）：注册表文字里出现、却没有 import 边的模块被点名剔掉，import 了却从不渲染的也算不上面板。自疑两臂（回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:50、trial/results/20261026_gozero/bw322-which-panel-asks.txt:48）：整名搜索换一个谁都没定义的名字必须命中 0 枚文件；7 行共用同一个函数名是实测数，不是我把共用对象当成了调用者。
+- 这把尺不能说的那句话（不替它补）：注册表渲染 ≠ 旅客会打开那一屏，整名命中 ≠ 真发生了调用（注释与再导出都算）。极限写在回执 trial/results/20261026_gozero/bw322-which-panel-asks.txt:52——它只把「哪几屏可能显出这句英文」收窄，代替不了真走一遍。
+- 待裁（不代裁）：文案刀由此多了一档切法——按面板切，先切承载这 13 处的那两枚（见上行具名文件），还是照 §14.32 的三档按 21 / 45 / 132 处切；两档都要先定 §14.31 那句大小写口径。本班 0 改产品字节。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3765。
+
