@@ -1,0 +1,11 @@
+Track the KeyError-family evidence as an artifact, and correct the two counts quoted in the section.
+
+The attribution in section 14.13 rested on per-file marker counts and the failing call lines, both of
+which had only existed in console output.  A new ruler writes them out per site, enforces that its
+own row count equals the census's row count for that class, and quotes the call that raised so a
+reader can see for themselves that no credential is attached at that line.
+
+Switching from a line-counting ruler to an occurrence-counting ruler moved one file's number, so the
+section gets a dated erratum pointing at the artifact.  The conclusion is unchanged: the failing read
+is a private journey door answered without a bearer, which is the same family the ACL probe already
+measured.

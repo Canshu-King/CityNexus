@@ -3327,3 +3327,9 @@ runner 上也仍在咬。宽的这步是加闸不是放闸：窄的那步（只�
   那是改夹具的动作，等点单，没自取。
 - 零产品字节、零测试改动：本节全部来自现读计数、引用行与 grep 出处。
 
+14.13 勘误（同班次）：那两枚「auth 痕迹计数」用的是按行数数的尺（grep -c），换到落盘的那把按出现次数数的尺上读数不同 ——
+`tests/test_agent_mission_runtime.py` 现读两处（不是正文写的一处），`tests/test_v12_authoritative_trip_execution.py` 三处不变；
+逐枚计数与出事那一行的调用原文都在 `trial/results/20261026_gozero/bw213-keyerror-family-evidence.txt:5` 往下
+（分家闸：那一族在普查表里的行数 `trial/results/20261026_gozero/bw213-keyerror-family-evidence.txt:2` 读数为十，
+与本尺点数强制相等）。正文结论不动：出事那一行本身没挂任何头，所以是同一族私有读口的 401 体。
+

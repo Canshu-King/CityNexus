@@ -1,0 +1,16 @@
+KEYERROR FAMILY EVIDENCE bw213
+CENSUS_ROWS_FOR_CLASS 10 (read from bw195, enforced equal here)
+AUTH_MARKER = Authorization|_auth|bearer|traveler_token
+SITES
+  tests/test_agent_mission_runtime.py:448 key=current_activity_id auth_markers_in_file=2 call_nearest=assert started.status_code == 200, started.text current_activity_id = client.get(f"/api/v1/journeys/{journey_id}").json()[ "current_activity_id"
+  tests/test_agent_mission_runtime.py:1238 key=budget auth_markers_in_file=2 call_nearest=assert "selection remains separate" in body["warning"] assert body["estimate"]["cost_evidence"]["currency"] == client.get( f"/api/v1/journeys/{journey
+  tests/test_r14_terminal_disruption_recovery.py:69 key=current_activity_id auth_markers_in_file=0 call_nearest=assert completed.status_code == 200, completed.text current = client.get(f"/api/v1/journeys/{journey_id}").json()["current_activity_id"] assert curren
+  tests/test_wp04_endpoints.py:221 key=traveler_id auth_markers_in_file=0 call_nearest=source = client.get(f"/api/v1/journeys/{journey_id}").json() created = client.post( "/api/v1/journeys", json={ "traveler_id": source["traveler_id"], "
+  tests/test_v12_authoritative_trip_execution.py:249 key=context auth_markers_in_file=3 call_nearest=for _ in range(12): execution = client.get(f"/api/v1/journeys/{journey_id}/twin").json()["context"]["execution"] action = actions.get(execution["now_s
+  tests/test_wp06_twin_v2_gate.py:58 key=context auth_markers_in_file=0 call_nearest=twin = client.get( f"/api/v1/journeys/{journey_id}/twin", params={"now": "2026-10-10T13:00:00+08:00"}, ).json() context = twin["context"] assert conte
+  tests/test_v16_integration.py:282 key=trip auth_markers_in_file=0 call_nearest=suggested_payload = client.get(f"/api/v1/journeys/{suggested.json()['id']}/experience").json() assert suggested_payload["trip"]["occupancy"] == { "adu
+  tests/test_wp06_postgate_hardening_next.py:171 key=projection_status auth_markers_in_file=0 call_nearest=twin = client.get( f"/api/v1/journeys/{jid}/twin", params={"now": "2026-10-10T13:00:00+08:00"} ).json() assert twin["projection_status"] == "DEGRADED"
+  tests/test_wp07_foundation_assist.py:144 key=projection_status auth_markers_in_file=0 call_nearest=degraded = client.get( f"/api/v1/journeys/{jid}/twin", params={"now": "2026-10-10T13:00:00+08:00"} ).json() assert degraded["projection_status"] == "D
+  tests/test_qoder_anywhere_matrix_truth.py:466 key=error_type auth_markers_in_file=0 call_nearest=
+FILES_WITH_ANY_AUTH 3 of 10 site files
+PRODUCT_SIDE (the one key that is not about credentials): error_type is assigned only on exception paths -- see app/integrations/mobility/runtime.py:189, :318, :383
