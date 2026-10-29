@@ -1,0 +1,10 @@
+Ask whether every artifact the documents cite can actually be retrieved, and print the inventory.
+
+The coordinate gate watches ledger blocks, not the result documents, so nothing so far asked whether
+a cited receipt exists in the repository at all. Resolving 389 distinct cited names against the
+tracked file list: 167 answer at the cited path, 169 answer under a different path because the
+document wrote only a short name, 33 exist in the worktree but were never committed, one is swallowed
+by gitignore, and 19 are names this scanner cannot resolve because its own pattern breaks a long
+filename at CJK punctuation. Those last 19 are reported as a scanner limit, not as missing evidence.
+The 33 untracked ones are mostly older shifts' screenshots and a concurrent writer's in-flight files,
+so nothing here stages them; collecting them is a named decision, not an add-all.
