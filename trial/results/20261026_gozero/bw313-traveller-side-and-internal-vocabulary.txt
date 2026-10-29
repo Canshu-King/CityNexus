@@ -66,6 +66,7 @@ INTERSECTION the job a traveller-facing text fix would actually touch: 21 处
      route: app /api/v1/journeys/{journey_id}/events
      screen: provider_key is server-assigned for public event input
 WHERE THE REST SITS internal vocabulary outside a traveller path: 24 处 (agent or admin surface)
+CASE SENSITIVITY the same intersection read without case would be 57 处 (36 more); both 21 and the parent bucket 45 are case-sensitive figures
 COUNTING_RULE row identity is (path, line); a module-wide helper counts by its own raise and carries no invented URL
 NAMED CONTROL backend/app/main.py:1932 asserted to be on a traveller path and to carry a term from the vocabulary
 COVERAGE_LIMIT static source reading: it cannot say which of these a live session reaches, only which would show internal vocabulary on a traveller URL.

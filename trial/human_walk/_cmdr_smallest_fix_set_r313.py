@@ -78,6 +78,13 @@ def main() -> int:
     only_jargon = len(jargon_keys) - len(intersection)
     out.append("WHERE THE REST SITS internal vocabulary outside a traveller path: %d 处"
                " (agent or admin surface)" % only_jargon)
+    jargon_ci = {(row["path"], row["line"]) for row in reachable
+                 if any(word.lower() in row["text"].lower() for word in reader.INTERNAL_JARGON)}
+    intersection_ci = len(traveller_keys & jargon_ci)
+    out.append("CASE SENSITIVITY the same intersection read without case would be %d 处 (%d more); "
+               "both %d and the parent bucket %d are case-sensitive figures"
+               % (intersection_ci, intersection_ci - len(intersection),
+                  len(intersection), len(jargon)))
     out.append("COUNTING_RULE row identity is (path, line); a module-wide helper counts by its own "
                "raise and carries no invented URL")
     out.append("NAMED CONTROL %s asserted to be on a traveller path and to carry a term from the "

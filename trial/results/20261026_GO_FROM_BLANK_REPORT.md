@@ -3754,3 +3754,11 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 待裁仍是 §14.30 那两刀，只是甲现在能按词点单：先动 journey 这一族 10 处，还是 45 处一并动；乙（配具名键）不受本次读数影响。本班 0 改产品字节。
 - 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3738。
 
+14.32 补（10-29 午后）：真正要动的最小集是 21 处——旅客面 ∩ 内部词汇的句子级交集
+
+- 为什么前两节都不够用：§14.30 报 132 处（旅客路径），§14.31 报 45 处（内部词汇），两把尺各按各的口径数句子，逐词相加还会把同一句数两次。要改文案的人需要的是「既在旅客面上、又端出内部词汇」那一部分。尺 trial/human_walk/_cmdr_smallest_fix_set_r313.py 复用同一份 collect()（trial/human_walk/_cmdr_surface_of_english_refusals_r302.py:73）与同一份旅客面判定（trial/human_walk/_cmdr_what_traveller_reads_r307.py:46），三枚同源读数现读一致：221 / 132 / 45（回执 trial/results/20261026_gozero/bw313-traveller-side-and-internal-vocabulary.txt:2，父回执 trial/results/20261026_gozero/bw307-what-a-traveller-would-read.txt:62）。
+- 交集 21 处，另有 24 处内部词汇落在非旅客面（Agent 或管理面），21 + 24 = 45 对账闭合（回执 :3、:68）。行身份取 (文件, 行)，模块级 helper 按自己那枚 raise 计、不替它编 URL（回执 :70）。逐枚清单在 trial/results/20261026_gozero/bw313-traveller-side-and-internal-vocabulary.txt:5 起，第一枚是 backend/app/main.py:1932（回执具名对照 :71 同时证明它落在旅客面且带词表术语）。
+- 这一格也带口径（与 §14.31 同一毛病，先自己说清）：21 是大小写敏感的读法，同一词表改成不区分大小写会把交集撑到 57 处（多 36 处）——回执 :69。所以「就 21 处」这句话在当前口径内成立。
+- 待裁（并入 §14.31 那两刀，不另开新目）：甲的可选面现在有了第三档——只动这 21 处、动 45 处全桶、或动 132 处旅客面全量；乙不受影响。本班 0 改产品字节。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3746。
+
