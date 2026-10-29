@@ -1,0 +1,4 @@
+committed_path arm: ON ref=refs/remotes/origin/mirror/integration-frontend-apple-pass1 paths=15209 | ok
+ADVISORY (verdict unchanged) quantities vouched only by a source line number: 1 -> ['QUANTITY_VOUCHED_ONLY_BY_A_SOURCE_LINE_NUMBER']
+version Q43_r7 | input D:/moodle/_qoder_ledger_inbox/494abfd7_1537.md 1912 B
+claims checked 5 | exempt {"PORT": 4, "HTTP_STATUS": 2, "DIMENSION": 1} | overall Q43_GATE_GREEN | findings 0 []
