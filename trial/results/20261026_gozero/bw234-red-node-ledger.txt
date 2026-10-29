@@ -1,0 +1,255 @@
+RED NODE LEDGER bw234
+SUITE bw163-backend-full-tbline.txt failed=231 passed=2569 errors=12
+DISTINCT_NODE_IDS 231 (must equal failed, enforced above)
+BUCKETS 18 sum=231 (enforced equal failed above)
+FIXTURE_SIDE_TOTAL 130 rows across 7 buckets
+PRODUCT_OR_SEED_SIDE_TOTAL 101 rows across 11 buckets
+BUCKET not yet attributed | 39 rows | product/seed-side
+    tests/test_agent_runtime_gate.py::test_agt16_accept_time_gate_remains_authoritative
+    tests/test_guardian_model_evidence.py::test_live_context_conflict_refuses_deterministic_guardian_fallback
+    tests/test_guardian_model_evidence.py::test_model_path_evidence_names_the_accepted_proposal
+    tests/test_guardian_v4.py::test_guardian_flagship_executes_once_and_survives_reload
+    tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+    tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+    tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+    tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
+    tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today
+    tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table
+    tests/test_qoder_ord0383_undelete_write_lock.py::test_the_single_tap_path_is_unchanged_by_the_predicate
+    tests/test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes
+    tests/test_qoder_ord0402_recycle_bin.py::test_the_generated_client_carries_every_operation_the_contract_declares
+    tests/test_qoder_ord0434_share_grants.py::test_an_in_force_member_reads_an_invitees_only_grant
+    tests/test_qoder_ord0434_share_grants.py::test_the_acl_table_answers_the_product_own_question_about_a_role
+    tests/test_qoder_ord0434_share_grants.py::test_the_anonymous_read_bytes_are_unchanged_from_the_base_tip
+    tests/test_qoder_ord0434_share_grants.py::test_the_bin_scopes_to_an_owner_and_answers_the_same_without_one
+    tests/test_qoder_ord0434_share_grants.py::test_the_member_set_is_one_row_per_traveller_and_says_so_by_name
+    tests/test_qoder_ord0434_share_grants.py::test_withdrawal_is_immediate_and_not_repeatable
+    tests/test_qoder_simulation_mode.py::test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set
+    tests/test_r88_real_poi_exploration.py::test_r88_overpass_504_is_recorded_as_failure_not_database_500
+    tests/test_r88_real_poi_exploration.py::test_r88_unknown_opening_has_consent_bound_public_map_preview
+    tests/test_r89_member_shared_osm_identity.py::test_r89_same_public_osm_identity_gets_private_member_scopes
+    tests/test_r90_private_exploration_board.py::test_r90_shortlist_is_private_persistent_and_reauthorizes_after_receipt_expiry
+    tests/test_r90_private_exploration_board.py::test_r91_shortlist_limit_is_serialized_under_concurrent_saves
+    tests/test_r90_private_exploration_board.py::test_r92_resume_intent_is_member_private_and_clears_after_saved_place_removal
+    tests/test_r93_explicit_city_center_and_private_session.py::test_r93_requires_an_explicit_public_center_and_keeps_signed_shortlists_private
+    tests/test_r96_intent_driven_first_outing.py::test_r96_shared_osm_identity_keeps_member_request_grade
+    tests/test_revolution_r77_recovery.py::test_japanese_admission_does_not_budget_rental_hours_or_headcounts
+    tests/test_v13_integrity.py::test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth
+    tests/test_v14_trial_readiness.py::test_non_tianjin_live_unavailable_never_injects_tianjin_replay
+    tests/test_v1922_six_fix_regressions.py::test_generic_compose_spreads_multi_day_stops_across_days
+    tests/test_v5_autopilot.py::test_v5_provider_fixture_wakes_autopilot_and_semantically_deduplicates
+    tests/test_v6_predictive_real_city.py::test_v6_predictive_real_city_twin_prevents_failure_before_hard_break
+    tests/test_v7_traveler_twin.py::test_v7_flagship_journey_a_to_b_to_c_traveler_twin_loop
+    tests/test_v7_traveler_twin.py::test_v7_second_cross_journey_dimension_learns_low_walking_soft_evidence
+    tests/test_wp04a0_bridge.py::test_planned_journey_currency_change_is_rejected_without_hard_budget_constraint
+    tests/test_wp06_followup_assist.py::test_f3_family_is_backed_by_next_c4_window_evidence
+    tests/test_wp06_postgate_hardening_next.py::test_replan_accept_requires_header_and_same_key_replay_is_audit_idempotent
+BUCKET bearer-less private read (measured this shift) | 39 rows | fixture-side
+    tests/test_backend_connected_golden_contract.py::test_backend_connected_golden_scenario_contract
+    tests/test_event_resolution_projection.py::test_event_api_exposes_server_resolution_time_and_reason
+    tests/test_gpt_adversarial_provider_hardening.py::test_twin_reports_effective_provider_for_fallback_pair
+    tests/test_provider_runtime_gate.py::test_prt06_twin_reads_persisted_snapshot_without_runtime_capture
+    tests/test_provider_runtime_gate.py::test_prt09_twin_reports_selected_plan_frozen_mobility_without_c4_commitment
+    tests/test_qoder_ord0383_journey_soft_delete.py::test_a_deleted_trip_is_still_readable_because_the_row_is_the_bin_s_content
+    tests/test_qoder_ord0383_journey_soft_delete.py::test_the_list_answers_with_exactly_the_rows_the_store_calls_not_deleted
+    tests/test_qoder_ord0399_journey_undelete.py::test_a_replayed_tap_is_the_refusal_and_cannot_undo_the_first_undelete
+    tests/test_qoder_ord0399_journey_undelete.py::test_bringing_a_trip_back_puts_it_in_the_list_without_moving_any_content_row
+    tests/test_qoder_ord0402_recycle_bin.py::test_live_rows_and_bin_rows_partition_the_whole_store
+    tests/test_qoder_ord0402_recycle_bin.py::test_the_bin_answers_with_the_stored_moment_and_one_named_state
+    tests/test_qoder_ord0402_recycle_bin.py::test_the_bin_orders_newest_deletion_first
+    tests/test_qoder_ord0402_recycle_bin.py::test_the_panels_one_constant_and_field_names_match_the_route_that_was_landed
+    tests/test_qoder_ord0402_recycle_bin.py::test_undeleting_moves_the_row_out_of_the_bin_and_back_into_the_list
+    tests/test_qoder_rejection_message_keys.py::test_a_missing_resource_is_named_without_baking_its_id_into_the_key
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_a_cny_budget_is_still_compared_against_the_floor
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_a_journey_with_no_budget_says_so_instead_of_sharing_zero
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_a_non_cny_budget_keeps_its_own_currency_and_loses_the_cny_floor
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_a_same_day_trip_is_one_day_and_the_allowance_is_budget_over_party
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_a_stored_trip_over_the_window_is_disclosed_instead_of_500_or_truncated
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_an_inverted_window_is_named_as_invalid_rather_than_one_day
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_cross_midnight_and_multi_day_windows_use_the_documented_rule
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_naive_against_offset_anchors_reports_no_count_rather_than_one_day
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_the_journey_schema_still_carries_the_raw_window_it_always_carried
+    tests/test_qoder_trip_shape_and_budget_reference.py::test_the_projection_and_the_pricing_path_return_the_same_shape_object
+    tests/test_r55_live_progress_drift_product.py::test_r55_one_authenticated_late_completion_flows_to_protected_commitment
+    tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable
+    tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_never_resolves_or_hides_recovery
+    tests/test_v1923_final_code_gate.py::test_v1923_feasible_replacement_resolves_recovery
+    tests/test_v1923_final_code_gate.py::test_v1923_infeasible_plan_cannot_be_reselected_to_fake_resolution
+    tests/test_v1923_final_code_gate.py::test_v1923_stale_start_stays_blocked
+    tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative
+    tests/test_v1924_final_truth_gate.py::test_v1924_feasible_replacement_still_resolves_recovery
+    tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised
+    tests/test_v1924_final_truth_gate.py::test_v1924_unvalidated_candidates_are_not_advertised
+    tests/test_v192_shadow_trial_gate.py::test_v192_defect_midtrip_hard_need_produces_a_review
+    tests/test_v192_shadow_trial_gate.py::test_v192_defect_start_refuses_expired_evidence
+    tests/test_v8_stay_mobility.py::test_v8_flagship_stay_aware_multimodal_lifecycle
+    tests/test_v9_real_trip_operations.py::test_v9_generic_city_graph_unknown_cost_and_expiry_gates
+BUCKET door answers 401 where the test expects 200 | 32 rows | fixture-side
+    tests/test_qoder_ord0434_share_grants.py::test_a_revoked_grant_does_not_change_what_the_anonymous_read_answers
+    tests/test_r51_live_journey_intent.py::test_authenticated_live_steering_persists_temporary_intent_without_mutating_twin
+    tests/test_r52_decision_inbox.py::test_one_bounded_intent_answer_resumes_the_same_lineage
+    tests/test_r53_journey_inbox_product.py::test_r53_exact_pasted_schedule_change_updates_truth_and_replay_is_idempotent
+    tests/test_r54_reality_reconciliation_product.py::test_r54_fresh_reservation_time_conflict_pauses_until_one_user_resolution
+    tests/test_r57_group_presence_operator.py::test_r57_advisory_member_risk_never_creates_guardian_event
+    tests/test_r57_group_presence_operator.py::test_r57_close_member_locations_are_together_and_other_journey_observation_is_rejected
+    tests/test_r57_group_presence_operator.py::test_r57_expired_members_and_historical_unbound_locations_are_not_projected
+    tests/test_r57_group_presence_operator.py::test_r57_location_identity_cannot_be_claimed_in_body_and_route_is_member_bound
+    tests/test_r57_group_presence_operator.py::test_r57_location_rows_bind_to_signed_members_and_operator_hides_coordinates
+    tests/test_r57_group_presence_operator.py::test_r57_missing_member_location_is_unknown_not_a_split
+    tests/test_r57_group_presence_operator.py::test_r57_operator_does_not_infer_presence_for_unidentified_viewer
+    tests/test_r57_group_presence_operator.py::test_r57_stale_member_location_is_visible_as_stale_but_cannot_start_route
+    tests/test_r57_group_presence_operator.py::test_r57_trusted_member_risk_is_one_event_and_one_guardian_handoff
+    tests/test_r57_group_presence_operator.py::test_r57_without_an_exact_active_plan_place_has_no_invented_rendezvous
+    tests/test_r57_group_presence_operator.py::test_r58_advisory_adjust_is_one_plan_only_hermes_run_and_not_a_gps_disruption
+    tests/test_r57_group_presence_operator.py::test_r58_mock_route_cannot_become_member_eta_or_recovery_truth
+    tests/test_r57_group_presence_operator.py::test_r58_replay_eta_is_visible_with_exact_non_live_provenance
+    tests/test_r57_group_presence_operator.py::test_r58_trusted_location_row_projects_trusted_authority_not_browser_advisory
+    tests/test_r57_group_presence_operator.py::test_r58_unavailable_native_agent_is_durable_blocked_without_plan_mutation
+    tests/test_r60_collective_recovery_apply.py::test_r60_signed_apply_spends_only_server_selected_recovery_once
+    tests/test_r63_planned_separation.py::test_advisory_planned_route_does_not_request_group_recovery
+    tests/test_r63_planned_separation.py::test_changed_parent_or_completed_rendezvous_stops_claiming_current_split
+    tests/test_r63_planned_separation.py::test_ending_member_intent_does_not_claim_reunion_or_cancel_another_member_intent
+    tests/test_r63_planned_separation.py::test_grounded_safe_return_projects_on_track_without_recovery_or_mutation
+    tests/test_r63_planned_separation.py::test_planned_route_uses_member_rendezvous_and_trusted_live_risk_hands_off_to_guardian
+    tests/test_r63_planned_separation.py::test_replacing_one_members_split_does_not_supersede_another_members_intent
+    tests/test_r63_planned_separation.py::test_signed_member_can_create_only_their_own_plan_bound_side_trip
+    tests/test_v1924_final_truth_gate.py::test_v1924_experience_get_does_not_resolve_recovery
+    tests/test_weather_runtime_gate_gpt.py::test_wrt09_provider_failure_records_one_degradation_and_no_fake_weather_event
+    tests/test_weather_runtime_gate_gpt.py::test_wrt10_clean_poll_after_outage_resolves_degradation_and_twin_returns_ready
+    tests/test_wp04_hardening_wp05.py::test_journey_twin_start_and_activity_completion_projection
+BUCKET seeded clock expired | 26 rows | product/seed-side
+    tests/test_r64_member_side_quest.py::test_r66_moment_scout_is_private_read_only_and_revalidates_explicit_selection
+    tests/test_r64_member_side_quest.py::test_r67_live_osm_selection_materializes_only_after_owner_confirmation_and_is_idempotent
+    tests/test_r64_member_side_quest.py::test_r67_live_scout_cannot_select_after_shared_rendezvous_has_passed
+    tests/test_r64_member_side_quest.py::test_r67_live_scout_excludes_shared_plan_stops_and_rendezvous
+    tests/test_r64_member_side_quest.py::test_r67_live_zero_and_provider_failure_are_distinct_and_unnamed_osm_is_not_actionable
+    tests/test_r64_member_side_quest.py::test_r71_acceptance_cas_blocks_fresh_duplicate_and_recovers_after_lease
+    tests/test_r64_member_side_quest.py::test_r71_feasibility_token_is_invalidated_by_rendezvous_change
+    tests/test_r64_member_side_quest.py::test_r71_missing_origin_is_unknown_and_preview_is_recipient_scoped
+    tests/test_r64_member_side_quest.py::test_r71_preview_token_expires_and_withdrawal_invalidates_acceptance
+    tests/test_r64_member_side_quest.py::test_r71_reuses_captured_route_and_protected_commitment_evaluators[10-55-60-False-AT_RISK]
+    tests/test_r64_member_side_quest.py::test_r71_reuses_captured_route_and_protected_commitment_evaluators[10-55-60-True-BLOCKED]
+    tests/test_r64_member_side_quest.py::test_r71_reuses_captured_route_and_protected_commitment_evaluators[5-5-90-False-CAN_MAKE_IT]
+    tests/test_r64_member_side_quest.py::test_r71_stale_captured_routes_remain_unknown
+    tests/test_r64_member_side_quest.py::test_r72_invited_micro_group_progress_is_opt_in_member_bound_and_persistent
+    tests/test_r64_member_side_quest.py::test_r72_joined_member_can_share_after_inviter_finishes_own_split
+    tests/test_r64_member_side_quest.py::test_r72_late_joiner_does_not_inherit_prior_opt_in_status
+    tests/test_r64_member_side_quest.py::test_r73_read_only_collaborator_sees_no_fake_promote_authority
+    tests/test_r64_member_side_quest.py::test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_successor
+    tests/test_r64_member_side_quest.py::test_r73_shared_stop_without_grounded_route_evidence_stays_blocked
+    tests/test_r64_member_side_quest.py::test_r75_expired_group_share_receipt_cannot_offer_or_project_a_place
+    tests/test_r64_member_side_quest.py::test_r75_group_share_confirm_rejects_audience_plan_and_source_drift
+    tests/test_r64_member_side_quest.py::test_r75_group_share_confirm_rejects_member_leave_after_preview
+    tests/test_r64_member_side_quest.py::test_r75_source_consent_gates_grants_projection_and_withdrawal
+    tests/test_r64_member_side_quest.py::test_r75_source_split_change_invalidates_preview_confirmation
+    tests/test_r64_member_side_quest.py::test_r75_uninvited_admin_cannot_sponsor_or_learn_source_place
+    tests/test_r64_member_side_quest.py::test_r75_withdrawal_before_sponsor_offer_keeps_uninvited_member_blind
+BUCKET bearer-less private read (measured this shift) -- KeyError shape off the 401 body (bw213) | 25 rows | fixture-side
+    tests/test_agent_mission_runtime.py::test_agent_command_reuses_existing_actionable_event_for_same_current_activity
+    tests/test_agent_mission_runtime.py::test_estimate_place_facts_is_explicitly_non_authoritative
+    tests/test_qoder_activity_identity_contract.py::test_experience_and_canonical_plan_agree_on_activity_identity
+    tests/test_qoder_activity_identity_contract.py::test_replacement_activity_is_not_left_anonymous
+    tests/test_r14_terminal_disruption_recovery.py::test_active_closure_can_accept_terminal_prefix_replan
+    tests/test_r64_member_side_quest.py::test_r69_meetup_handshake_requires_peer_and_ends_only_the_owners_split
+    tests/test_r64_member_side_quest.py::test_r69_one_peer_ack_in_three_person_journey_does_not_claim_group_together
+    tests/test_sol_concurrency_and_remap.py::test_a_recovery_cannot_be_accepted_over_a_duplicated_protected_anchor
+    tests/test_sol_concurrency_and_remap.py::test_accept_then_capture_keeps_the_c4_on_the_active_plan
+    tests/test_sol_concurrency_and_remap.py::test_capture_after_an_accept_does_not_promote_a_stale_pointer
+    tests/test_sol_concurrency_and_remap.py::test_capture_and_accept_racing_leave_no_stranded_commitment
+    tests/test_sol_concurrency_and_remap.py::test_competing_proposals_can_never_both_become_active
+    tests/test_sol_concurrency_and_remap.py::test_concurrent_acceptance_of_the_same_proposal_produces_one_transition
+    tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_two_sessions_replays_without_the_lock
+    tests/test_sol_concurrency_and_remap.py::test_replaying_the_same_idempotency_key_never_transitions_twice
+    tests/test_sol_concurrency_and_remap.py::test_two_sessions_without_the_lock_still_cannot_produce_two_active_plans
+    tests/test_sol_execution_cursor.py::test_experience_projection_reports_the_cursor_state_next_to_the_cursor
+    tests/test_sol_plan_handover.py::test_selecting_a_replacement_retires_the_plan_being_executed
+    tests/test_v12_authoritative_trip_execution.py::test_v12_autonomous_recovery_uses_preauthorized_envelope
+    tests/test_v16_integration.py::test_v16_creation_suggests_rooms_but_respects_an_explicit_override
+    tests/test_v9_real_trip_operations.py::test_v9_flagship_real_world_trip_operations_e2e
+    tests/test_wp04_endpoints.py::test_wp04_cross_journey_targets_and_draft_precondition_fail_before_provider
+    tests/test_wp06_postgate_hardening_next.py::test_twin_aggregates_unresolved_provider_degradation_and_marks_projection_degraded
+    tests/test_wp06_twin_v2_gate.py::test_twin_v2_derives_envelope_opportunity_and_degradation_at_injected_time
+    tests/test_wp07_foundation_assist.py::test_provider_recovery_resolves_outage_and_restores_twin_ready_projection
+BUCKET fake settings missing a field | 16 rows | fixture-side
+    tests/test_bootstrap_photon_draft_exploration.py::test_single_photon_candidate_returns_partial_live_result_without_fabricating_another
+    tests/test_bootstrap_photon_draft_exploration.py::test_unknown_photon_cost_cannot_materialize_formal_candidate
+    tests/test_in_transit_reroute.py::test_reroute_endpoint_uses_current_observation_and_keeps_active_plan
+    tests/test_journey_intent.py::test_next_stop_scope_expires_when_its_server_resolved_target_is_terminal
+    tests/test_qoder_live_hard_fallback.py::test_live_configured_hard_capture_does_not_fall_back_to_mock
+    tests/test_qoder_live_hard_fallback.py::test_live_configured_soft_capture_still_degrades_to_mock
+    tests/test_qoder_live_replans_endpoint.py::test_L1_live_failure_on_mock_explicit_leg_is_not_rescued
+    tests/test_qoder_live_replans_endpoint.py::test_L2_fully_live_candidate_survives_when_another_is_live_failed
+    tests/test_qoder_live_replans_endpoint.py::test_L3_all_candidates_unavailable_reports_data_not_no_alternative
+    tests/test_qoder_live_replans_endpoint.py::test_L4_accepted_hard_evidence_contains_no_mock_fallback
+    tests/test_qoder_live_replans_endpoint.py::test_live_provider_healthy_control_produces_proposal
+    tests/test_r102_shared_city_outing.py::test_r102_native_selection_reads_member_scope_not_first_shared_row
+    tests/test_r21_autonomous_future_synthesis.py::test_r21_model_context_does_not_leak_trigger_identity_or_strategy_hint
+    tests/test_r26_decision_critical_clarification.py::test_r26_take_now_is_rejected_when_reality_moved_since_answer
+    tests/test_rx2_mock_hard_laundering_gate.py::test_hard_capture_has_no_mock_fallback_for_an_explicit_fixture_leg
+    tests/test_rx2_mock_hard_laundering_gate.py::test_soft_capture_may_still_degrade_to_the_explicit_fixture_leg
+BUCKET plan version refused as not authoritative | 15 rows | product/seed-side
+    tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor]
+    tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[DEPARTURE-departure-anchor]
+    tests/test_v13_integrity.py::test_v13_concurrent_accepts_have_one_authoritative_winner
+    tests/test_v13_integrity.py::test_v13_execution_rejects_illegal_transitions_without_mutation
+    tests/test_v13_integrity.py::test_v13_execution_rejects_terminal_wrong_activity_and_old_plan_mutation
+    tests/test_v13_integrity.py::test_v13_guardian_model_failure_is_persisted_as_retryable
+    tests/test_v13_integrity.py::test_v13_guardian_reuses_a_signal_only_with_its_matching_mobility_pair
+    tests/test_v13_integrity.py::test_v13_mid_trip_c4_is_fixed_and_bound_to_selected_activity_via_inbox_api
+    tests/test_v13_integrity.py::test_v13_protected_current_activity_cannot_be_skipped
+    tests/test_v13_integrity.py::test_v13_repeated_non_noop_accept_cannot_create_a_second_plan
+    tests/test_v13_integrity.py::test_v13_trip_studio_rejects_a_missing_frozen_matrix_pair
+    tests/test_v13_integrity.py::test_v13_trip_studio_rejects_mutated_or_expired_frozen_evidence_on_accept
+    tests/test_v13_integrity.py::test_v13_trip_studio_rejects_stale_preview_without_creating_plan
+    tests/test_v13_integrity.py::test_v13_trip_studio_repeated_noop_accept_is_idempotent
+    tests/test_v13_integrity.py::test_v13_trip_studio_replays_frozen_evidence_and_preserves_progress
+BUCKET body iterated as a list (the measured 401 shape) | 10 rows | fixture-side
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[0]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[10]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[1]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[2]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[3]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[5]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[6]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[7]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[8]
+    tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[9]
+BUCKET demo scene setup refused | 9 rows | product/seed-side
+    tests/test_qoder_anywhere_discovery_truth.py::test_g16a_the_counting_client_sees_every_outbound_call_or_the_zero_proves_nothing
+    tests/test_qoder_anywhere_discovery_truth.py::test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside
+    tests/test_qoder_anywhere_discovery_truth.py::test_g16c_an_expired_candidate_set_must_go_back_to_the_provider
+    tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls
+    tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+    tests/test_qoder_anywhere_lock_duration.py::test_g9c_hydration_network_does_not_starve_a_concurrent_plan_generate
+    tests/test_qoder_anywhere_matrix_truth.py::test_g15a_a_leg_with_no_sourced_fact_has_no_number_at_any_door
+    tests/test_qoder_anywhere_matrix_truth.py::test_g15c_coverage_counts_the_unusable_leg_instead_of_guessing_it
+    tests/test_qoder_anywhere_matrix_truth.py::test_g15d_the_scene_read_reports_the_same_two_counts
+BUCKET classroom/demo door refuses (fixture declares neither isolation nor presenter) | 7 rows | fixture-side
+    tests/test_qoder_anywhere_gates.py::test_g2_an_existing_journey_becomes_plannable_without_being_recreated
+    tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
+    tests/test_qoder_catalog_hydration.py::test_the_projection_carries_the_lifecycle_and_never_a_percentage
+    tests/test_qoder_simulation_mode.py::test_a_naive_projection_instant_is_refused_by_name_instead_of_500
+    tests/test_qoder_simulation_mode.py::test_reset_leaves_a_bookable_stage_and_start_scenario_makes_it_executable
+    tests/test_qoder_simulation_mode.py::test_the_scene_clock_moves_with_the_scenario_and_never_with_the_device
+    tests/test_qoder_simulation_mode.py::test_the_scene_read_reports_the_scenario_clock_and_not_this_machine
+BUCKET autonomy decided differently than the test expects | 3 rows | product/seed-side
+    tests/test_agent_runtime_gate.py::test_agt04_assisted_low_risk_auto_accept_and_agt24_refreshes_twin_preserving_c4
+    tests/test_agent_runtime_gate.py::test_agt04b_ai_only_semantic_target_can_auto_execute_inside_safe_envelope
+    tests/test_agent_runtime_gate.py::test_agt17_idempotent_accept_and_agt18_ai_audit
+BUCKET route function called with dependencies unbound | 3 rows | product/seed-side
+    tests/test_v13_3_real_city_intelligence.py::test_v133_golden_real_city_intelligence_replay_preserves_cruise
+    tests/test_v14_grounded_adaptive_recovery.py::test_v14_traffic_recovery_uses_separate_incident_matrix
+    tests/test_v14_grounded_adaptive_recovery.py::test_v14_weather_recovery_freezes_incident_evidence_and_child_plan
+BUCKET commitment anchor rejected by the v13 planner | 2 rows | product/seed-side
+    tests/test_v13_integrity.py::test_v13_impossible_mid_trip_c4_is_a_deterministic_compose_conflict[v12-test-place-2-2026-10-03T06:00:00+00:00-V13_COMMITMENT_ANCHOR]
+    tests/test_v13_integrity.py::test_v13_impossible_mid_trip_c4_is_a_deterministic_compose_conflict[v12-test-place-not-selected-2026-10-03T17:30:00+00:00-V13_C4_ANCHOR_NOT_IN_INPUT]
+BUCKET test reads a router shape that changed | 1 rows | product/seed-side
+    tests/test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface
+BUCKET stale field-list contract | 1 rows | product/seed-side
+    tests/test_dsh_list_replans_bound.py::test_list_replans_on_an_ordinary_journey_keeps_the_full_shape
+BUCKET answer lacks a key the test reads (KeyError off the server body) | 1 rows | fixture-side
+    tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+BUCKET crash lands in library code, not repo code | 1 rows | product/seed-side
+    tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+BUCKET replay city does not match | 1 rows | product/seed-side
+    tests/test_v14_trial_readiness.py::test_non_tianjin_captured_replay_is_rejected
