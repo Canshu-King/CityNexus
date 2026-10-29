@@ -1,0 +1,71 @@
+TRAVELLER SIDE AND INTERNAL VOCABULARY bw313
+SAME-SOURCE CHECK route-reachable = 221, traveller path = 132, internal vocabulary = 45
+INTERSECTION the job a traveller-facing text fix would actually touch: 21 处
+  # coordinate / terms / route
+  1. backend/app/main.py:1932  terms=provider
+     route: app /api/v1/journeys/{journey_id}/agent/mobile-compat-runs
+     screen: provider consent is required
+  2. backend/app/main.py:3424  terms=place_id
+     route: app /api/v1/journeys/{journey_id}/launch-origin
+     screen: place_id is required for PLACE
+  3. backend/app/main.py:3715  terms=journey
+     route: app /api/v1/journeys/{journey_id}/in-transit/reroute
+     screen: journey must have an ACTIVE plan
+  4. backend/app/main.py:5507  terms=payload
+     route: app /api/v1/journeys/{journey_id}/missions/{mission_id}/clarification
+     screen: clarification payload is invalid
+  5. backend/app/main.py:5606  terms=Journey member
+     route: app /api/v1/journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id}
+     screen: authenticated traveler cannot answer for another Journey member
+  6. backend/app/main.py:7691  terms=journey
+     route: app /api/v1/journeys/{journey_id}
+     screen: f'Journey {journey_id} was not found'
+  7. backend/app/main.py:7696  terms=journey
+     route: app /api/v1/journeys/{journey_id}
+     screen: f'Journey {journey_id} is already deleted'
+  8. backend/app/main.py:7756  terms=journey
+     route: app /api/v1/journeys/{journey_id}/undelete
+     screen: f'Journey {journey_id} was not found'
+  9. backend/app/main.py:7762  terms=journey
+     route: app /api/v1/journeys/{journey_id}/undelete
+     screen: f'Journey {journey_id} was not in the recycle bin'
+  10. backend/app/main.py:7783  terms=journey
+     route: app /api/v1/journeys/{journey_id}/undelete
+     screen: f'Journey {journey_id} is still in the recycle bin'
+  11. backend/app/main.py:11042  terms=payload
+     route: app /api/v1/journeys/{journey_id}/stay-options/{option_id}/mode
+     screen: f'mode {payload.mode} is unavailable for the requested leg'
+  12. backend/app/main.py:11519  terms=provider
+     route: app /api/v1/journeys/{journey_id}/operator/reality/provider-replay
+     screen: captured provider replay was not found
+  13. backend/app/main.py:16917  terms=idempotency
+     route: app /api/v1/journeys/{journey_id}/group-recovery/apply
+     screen: group recovery idempotency record is invalid
+  14. backend/app/main.py:17621  terms=place_id
+     route: app /api/v1/journeys/{journey_id}/plans/generate
+     screen: Select different bootstrap candidates without additional place_ids
+  15. backend/app/main.py:18152  terms=journey
+     route: app /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select
+     screen: f'Journey {journey_id} was not found'
+  16. backend/app/main.py:18167  terms=plan_version
+     route: app /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select
+     screen: f'PlanVersion {plan_version_id} was not found'
+  17. backend/app/main.py:18221  terms=authority
+     route: app /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select
+     screen: f'PlanVersion {plan.id} is not authoritative: {authority_blocker}'
+  18. backend/app/main.py:20012  terms=Journey member
+     route: app /api/v1/journeys/{journey_id}/start
+     screen: Journey member role cannot start execution
+  19. backend/app/main.py:20020  terms=journey
+     route: app /api/v1/journeys/{journey_id}/start
+     screen: journey must be PLANNED with a selected plan
+  20. backend/app/main.py:20046  terms=authority
+     route: app /api/v1/journeys/{journey_id}/start
+     screen: f'PlanVersion {plan.id} is not authoritative: {start_authority_blocker}'
+  21. backend/app/main.py:21498  terms=provider
+     route: app /api/v1/journeys/{journey_id}/events
+     screen: provider_key is server-assigned for public event input
+WHERE THE REST SITS internal vocabulary outside a traveller path: 24 处 (agent or admin surface)
+COUNTING_RULE row identity is (path, line); a module-wide helper counts by its own raise and carries no invented URL
+NAMED CONTROL backend/app/main.py:1932 asserted to be on a traveller path and to carry a term from the vocabulary
+COVERAGE_LIMIT static source reading: it cannot say which of these a live session reaches, only which would show internal vocabulary on a traveller URL.
