@@ -73,6 +73,11 @@
   ⇒ 主人按「每段步行不超过 1 公里」那一格时，屏上只能靠当场真捕获、或走「未知／估算」那句；
   那是库里没证据，不是屏坏了。要带真路线进课堂得先让那一栈真捕一次（要有键且 provider 可达），
   这一条按口径没代跑 —— 尺：`trial/human_walk/_cmdr_classroom_preflight_r219.py`。
+  补一条决定性的好消息：课堂那栈自己报 `amap` 状态为 `READY`、`provenance=LIVE`、坐标系 `GCJ02`
+  （只读探针 `trial/human_walk/_cmdr_classroom_provider_probe_r221.py`，掩码后的回执
+  `trial/results/20261026_gozero/bw221-classroom-provider-readiness.txt:4`）—— 所以「零事实」是**还没捕**，
+  不是**捕不到**：主人按下去的那一趟真能长出路线证据。回执里十三字符以上的串全部掩码，
+  尺本身带一道泄漏闸（出现长十六进制/基六十四形状就 ABORT 不落盘），键值从未进文件。
 - 高德键只从 User 级环境变量 `CITYNEXUS_AMAP_WEB_KEY` 进进程，不打印、不落盘。
 - 旅客 bearer 在 sessionStorage（设计如此，不是缺陷）；行程指针在 localStorage 带 `ownerTravelerId`。
 

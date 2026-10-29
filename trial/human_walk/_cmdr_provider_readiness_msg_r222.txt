@@ -1,0 +1,10 @@
+Settle what the empty mobility tables mean: the classroom stack reports its provider as ready.
+
+Zero frozen facts could have meant "this stack cannot capture" -- which would have made tomorrow's
+walking-distance cell unanswerable -- or merely "nothing has been captured yet".  A read-only probe of
+the stack's own provider status answers the question: amap comes back READY with LIVE provenance in
+GCJ02, so the operator's walk can grow real route evidence on the spot.
+
+The probe masks every run of thirteen or more token characters before writing and aborts if any
+long hex or base64-shaped survivor remains, so the committed receipt describes the key's existence
+and never its value.

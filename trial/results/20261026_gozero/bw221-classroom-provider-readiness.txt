@@ -1,0 +1,7 @@
+CLASSROOM PROVIDER READINESS bw221
+URL http://127.0.0.1:60362/api/v1/providers/v9
+HTTP_STATUS 200 bytes_before_mask=356
+AMAP_AS_REPORTED_BY_THE_STACK amap=READY
+ALL_STATUS_PAIRS amap=READY
+MASK runs of 13+ token characters replaced; leak check found no long hex/base64 survivor
+MASKED_BODY {"<masked>":{"CN-*":"<masked>","global":"<masked>"},"amap":{"provider_key":"<masked>","status":"READY","provenance":"LIVE","<masked>":"GCJ02","reason":null},"<masked>":{"status":"<masked>","<masked>":"<masked>"},"otp":{"status":"<masked>"},"duffel":{"status":"<masked>"}}
