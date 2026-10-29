@@ -1,0 +1,8 @@
+Put the whole-tree frontend typecheck on the release gate instead of five files.
+
+The gate's frontend job ran tsconfig.check.json, whose include list names five source files, so a
+type error anywhere else in src/ could ride into a release while the job still reported success. The
+broad config already existed and was measured clean at this tip: exit code zero over two hundred and
+one files under src, recorded in trial/results/20261026_gozero/bx172-broad-typecheck.txt. The narrow
+step is kept so the five named files remain individually accountable, and the broad step was placed
+before the production build so a refusal stops the release. This adds a door, not a red.

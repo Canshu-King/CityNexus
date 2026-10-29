@@ -72,6 +72,12 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Typecheck current V3 product
         run: npx tsc -p tsconfig.check.json --noEmit
+      - name: Typecheck every file under src, not the five named ones
+        # tsconfig.check.json lists five files, so the rest of src/ could reach a release while
+        # this job still reported green. The broad config was measured clean at the same tip as
+        # this step was added (receipt trial/results/20261026_gozero/bx172-broad-typecheck.txt),
+        # so carrying it here adds a refusal, not a new red.
+        run: npx tsc -p tsconfig.typecheck.json --noEmit
       - name: Vite production build
         run: npm run build
 

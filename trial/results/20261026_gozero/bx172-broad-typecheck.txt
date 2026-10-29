@@ -1,0 +1,10 @@
+BROAD FRONTEND TYPECHECK bx172
+TIP 9cc526383be7b60f799c7bf98482b0a96fc4ba6c
+NODE v24.14.0
+COMMAND C:\Program Files\nodejs\npx.CMD tsc -p tsconfig.typecheck.json --noEmit
+EXIT_CODE 0
+LISTED_FILES_TOTAL 958
+LISTED_FILES_UNDER_SRC 201
+CONFIG_INCLUDE ["src/**/*.ts", "src/**/*.tsx"]
+NARROW_CONFIG_INCLUDE_COUNT 5 (frontend/tsconfig.check.json lists five files by name)
+OUTPUT_HEAD ''
