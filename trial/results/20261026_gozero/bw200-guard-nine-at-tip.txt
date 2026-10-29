@@ -1,0 +1,26 @@
+GUARD NINE AT TIP bw200
+TIP 4e039fa20488f30b6ff0f38bb81c97811cbaa1ee
+INTERPRETER Python 3.12.14
+---
+FFFFFFFFF                                                                [100%]
+================================== FAILURES ===================================
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_matrix_truth.py:375: AssertionError: 期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，那样这条门什么都能通过）；实际：CAPTURED
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_provider_independence.py:70: AssertionError: 期望：backend/tests/** 里没有对 provider 域名的真实调用（§17C，live 只能走 backend/live_checks/ 的 opt-in smoke）；实际：backend\tests\test_qoder_catalog_hydration.py:609: httpx.get("https://photon.komoot.io/api/?q=instrument-selftest", timeout=1.0) ; backend\tests\test_qoder_provider_identity.py:363: status, headers, body = transport.get("https://photon.komoot.io/api/", {"q": "x"})
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_provider_truth.py:78: AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_key', 'destination_resolution', 'destination_state', 'fingerprint', 'hard_gaps', 'malformed_candidates']
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0296_write_deadline.py:212: AssertionError: {'app\\catalog_hydration_operations.py': ['session.execute(text("PRAGMA busy_timeout = 500"))'], 'app\\core\\config.py...settings.write_busy_timeout_ms)', 'def busy_timeout_seconds() -> float:', 'return busy_timeout_ms() / 1000', ...], ...}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0307_credential_gate.py:187: AssertionError: {'env_present': 0, 'expect': 'CREDENTIAL_GATE_CLEAR', 'verdict': 'CREDENTIAL_LITERAL_OUTSIDE_PRODUCT_PATH'}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0332_error_receipt.py:207: AssertionError: 回执不落库是设计：失败的写会回滚，同事务存的号会跟着一起消失
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:160: AssertionError: list_journeys moved - the order forbids changing this door
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:295: AssertionError: 6 contract operations are absent from api.ts: ['accept_unknown_price_route_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__accept_unknown_price_post', 'answerJourneyClarification', 'freeze_plan_routes_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__freeze_routes_post', 'read_travel_gaps_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__travel_gaps_get', 'research_goal_places', 'resumeJourneyMission']
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0434_share_grants.py:238: AssertionError: ORD-0434 promised the anonymous read would not move one word; it moved
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+FAILED tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+FAILED tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
+FAILED tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today
+FAILED tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_the_generated_client_carries_every_operation_the_contract_declares
+FAILED tests/test_qoder_ord0434_share_grants.py::test_the_anonymous_read_bytes_are_unchanged_from_the_base_tip
+9 failed in 5.00s
