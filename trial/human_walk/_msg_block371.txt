@@ -1,0 +1,15 @@
+block 371: an erratum moving block 370's body-text coordinate from 14.35 to 14.36
+
+trial/human_walk/_cmdr_write_block_371_r333.py emitted the block that landed as
+_qoder_ledger_inbox/_processed/494abfd7_2217.md.inserted_221722. Block #370 pointed its body text at
+report section 14.35, which was the only honest pointer at the time because the sentence readings lived
+solely in the bw327 receipt; now that section 14.36 carries them, the old pointer is imprecise, so this is
+a new post rather than an edit of the old one.
+
+The generator refuses to write unless it can read the facts it cites: the heading it corrects must appear
+exactly once in the ledger (it does, and that count is printed in the block itself), and both report
+coordinates come out of live anchor lookups rather than from my memory of what line the appender landed
+on. says_zh is parsed from bw327's TALLY, not typed.
+
+Q43 read it before the inbox (6 claims, 0 findings, GREEN, one advisory left visible) and landing was
+confirmed from the ledger: one hit, archived copy present, nothing pending. 0 product bytes.
