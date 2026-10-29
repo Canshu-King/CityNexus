@@ -3827,3 +3827,13 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 还欠一把尺（不装已补）：判「读没读拒绝」的正则只认 detail/message/response/data/statusText 这几个属性名，而现读到的真实写法是 `cause.body as { detail?... }`、`refusalReasonCode(cause)`、`cause.facts`。读了字段不等于把那句显在屏上——DestinationPreparationPanel 与 RealCityDiscoveryPanel 就是把 detail 当码比。这条我另开一尺分三档（读字段／把字段交出去显／只拿来比），不在本节里含糊过去。
 - 这三处都是量具的错，不是产品的错：本节自始至终 0 改产品字节；被改的是我自己的尺与读数。留底份（.before_catch_body_fix）与新份同目录并存，谁都能自己比。
 - 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3808。
+
+### 14.39 补（10-30 零点）：第四处量具错（把注释里的 catch 当成 handler）＋「读到的字段到底去了哪」的三档尺
+
+- 第四处错：catch 的正则扫的是文本行，而 RecoveryRequiredPanel.tsx 的文件头注释里就写着一段 `catch { … }` 作为「以前怎么错的」的说明——它被当成了 handler。尺 trial/human_walk/_cmdr_screen_text_r325.py:46 现在先用状态机认块注释区间（`//` 早于 `/*` 的那一行不算开注释，字符串里的 URL 不受影响），三把共用这把切刀的尺（bw325/bw326/bw337）与全文 catch 跨度扫描一起接上。现读：本树 163 个文件里 313 枚 catch body，最短 1 行、中位 3 行、最长 80 行（回执 trial/results/20261026_gozero/bw325-what-the-screen-says.txt:4 的 body 形状行）；挂载面板的分母 64 处→63 处（回执 trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:28 对同目录 .before_catch_body_fix 留底）。
+- 这一处改口改的是次轴，不改主句：读到拒绝句 1 处→5 处、藏起来 63 处→58 处；面板自造中文句仍 26 处、被标记读到仍 26 处（回执 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:3 与 trial/results/20261026_gozero/bw328-is-that-sentence-on-screen.txt:30），所以 #373 那格的「十九→廿六」照旧成立。次轴另动三处：只说英文 14 处、交给 state 50 处、两头都不是 13 处、带重试句形 10 处（同一回执 :3）。还要老实记一句：第一次修复与第二次修复之间该读数是否另有其值，已无工件可查（bw326 的回执被第二次修复覆盖），所以本节只报留底可证的 1→5，不拿中间态当证据。
+- 新尺 trial/human_walk/_cmdr_field_destination_r340.py:127 答的是 §14.38 应下的那一问：读字段不等于把那句显出来。它把字段分文本（detail/message/quote/statusText）与结构（facts/envelope/body/code/status/data/errors）两组，认一次派生名（`const detail = body?.detail ?? …` 这种写法），再看 setter 的实参与比较行。现读 63 枚 body：4 处把文本交进 state、8 处只交结构化事实、1 处只拿去比对、0 处读了不用、50 处根本没读（回执 trial/results/20261026_gozero/bw338-where-a-read-field-actually-goes.txt:3）。
+- 判别力在三枚各自落不同档的控制上（回执 trial/results/20261026_gozero/bw338-where-a-read-field-actually-goes.txt:4 起三行）：DestinationPreparationPanel 那处判交文本、RealCityDiscoveryPanel 那处判只交结构（它的注释自己写明「匹配的是机器码、丢的是句子」）、LiveRecovery 那处 `} catch {` 无绑定判没读。三枚中任一落进源码不认可的档，尺就 ABORT。
+- 顺出来的一条新缺陷面（不是文案面）：那 4 处交进 state 的 `error.message` 追到了出处——四处的 try 里点的都是 cityNexusApi 的调用（现读 4/4），而 api 层在 frontend/src/api/citynexus.ts:2892 抛错时把 message 拼成 `"CityNexus API " + response.status + ": " + path`。所以旅客在这四格里看到的是本机拼装串（带状态码与路径），既不是服务端的拒绝句，也不是一句能看懂的话。「屏上有英文」这件事，在这 63 枚面板 handler 里现读为 4 处，而那 4 处显的是内部诊断——这一格是第四档，不在 §14.32 的三档里，请一并点。
+- 这把尺不能说的那句：provenance 只证明该 catch 的 try 文本里出现了 api 层的调用名，不证明那次 message 一定由 api 层那行拼装而来（同一个 try 里若有本地 throw，就会走别的路径）；要钉死得真按一次把这四格逼到屏上，本尺不替它做。它也不看 JSX 插值（归 bw328）、不追跨组件的 prop。全程 0 改产品字节、0 点击。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3819。
