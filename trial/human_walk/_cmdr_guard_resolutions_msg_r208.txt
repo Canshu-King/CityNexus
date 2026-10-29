@@ -1,0 +1,13 @@
+Resolve the last two ambiguous guard reds, and bolt the never-print rule into the measuring door.
+
+Both guards were red without naming what they hit.  Calling the product's own credential scanner and
+reading the product's own table metadata settles them: no credential literal sits inside a product
+path, while thirteen e2e spec files carry undeclared credential-shaped literals outside it -- and the
+same scanner returns a third verdict when this shell happens to hold a live key, which shows the
+guard's reading is environment-dependent rather than a product fact.  The "receipts are never
+persisted" design claim also stands: zero tables are named for error receipts, so the guard's
+LIKE '%receipt%' was simply counting three tables belonging to other features.
+
+The instrument that measured this refuses to write its own report if any value currently held in a
+credential-shaped environment variable appears anywhere in that report.  The rule about never printing
+the key is now enforced by the door that writes, not by my care.
