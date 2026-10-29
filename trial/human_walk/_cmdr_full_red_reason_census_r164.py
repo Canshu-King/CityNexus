@@ -83,6 +83,8 @@ def classify(reason, outside_tree):
         return "seeded clock expired"
     if "'Depends' object has no attribute" in reason:
         return "route function called with dependencies unbound"
+    if "DEMO_START_REFUSED" in reason:
+        return "demo journey cannot start without a selected plan"
     if "demo/scene 实际 503" in reason or "scene 里没有 journey_id" in reason:
         return "demo scene setup refused"
     if "is not authoritative" in reason:

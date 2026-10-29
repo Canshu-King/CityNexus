@@ -1,0 +1,7 @@
+Split the demo refusal class and record where the census cannot see a failure.
+
+The classifier now names DEMO_START_REFUSED separately from a demo scene that answers 503, because
+the two need different repairs: one says the seeded journey is not PLANNED with a selected plan, the
+other says the scene endpoint itself refused. In this generation the DEMO_START_REFUSED text appears
+only on pytest's E-prefixed assertion lines, which are not file:line tails, so the census does not
+count those and the shift says that out loud rather than claiming coverage it does not have.
