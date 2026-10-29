@@ -1,0 +1,85 @@
+REPORT COORDINATE RETRIEVABILITY CENSUS bw342 | TALLY_LINE 83 | coordinates 468 distinct 420 ok 439 missing_prefix 29 out_of_range 0 nowhere 0
+report trial/results/20261026_GO_FROM_BLANK_REPORT.md lines=3859
+
+BUCKET ok = 439
+  report:21  frontend/src/trial/mobile/WorkspaceActions.tsx:595  opens as cited
+  report:23  backend/app/agent/goal_tasks.py:1333  opens as cited
+  report:308  backend/app/core/config.py:111  opens as cited
+  report:473  backend/app/planning/travel_brief.py:150  opens as cited
+  report:479  frontend/src/trial/mobile/WorkspaceMap.tsx:25  opens as cited
+  report:481  backend/app/execution/bootstrap_discovery.py:719  opens as cited
+  report:481  backend/app/execution/bootstrap_discovery.py:711  opens as cited
+  report:481  backend/app/integrations/discovery/photon_poi.py:36  opens as cited
+  report:491  frontend/e2e/revolution-amap-research-ui.spec.ts:128  opens as cited
+  report:505  backend/app/main.py:28439  opens as cited
+  report:518  frontend/src/trial/mobile/WorkspaceMap.tsx:171  opens as cited
+  report:520  frontend/src/trial/mobile/MissionCockpit.tsx:273  opens as cited
+  report:524  frontend/src/trial/mobile/MissionCockpit.tsx:278  opens as cited
+  report:561  frontend/src/trial/mobile/MobilePlanWorkbench.tsx:249  opens as cited
+  report:561  frontend/src/trial/mobile/ClassroomPresenterPanel.tsx:350  opens as cited
+  report:561  frontend/src/trial/mobile/DraftDepartureCard.tsx:132  opens as cited
+  report:561  frontend/src/trial/mobile/MissionCockpit.tsx:250  opens as cited
+  report:563  frontend/src/trial/mobile/MobilePlanWorkbench.tsx:258  opens as cited
+  report:580  frontend/src/trial/mobile/DraftDepartureCard.tsx:183  opens as cited
+  report:580  backend/app/agent/goal_travel_gaps.py:185  opens as cited
+  report:580  backend/app/agent/goal_preparation.py:158  opens as cited
+  report:583  trial/human_walk/_restart_gozero_backend_r1.py:82  opens as cited
+  report:599  backend/app/agent/goal_preparation.py:343  opens as cited
+  report:600  backend/app/agent/goal_opening_date.py:264  opens as cited
+  report:601  backend/app/agent/goal_travel_gaps.py:167  opens as cited
+  report:602  backend/app/agent/goal_travel_gaps.py:105  opens as cited
+  report:603  frontend/src/trial/mobile/DraftDepartureCard.tsx:183  opens as cited
+  report:603  frontend/src/trial/mobile/departureGaps.ts:484  opens as cited
+  report:613  frontend/src/trial/mobile/DraftDepartureCard.tsx:226  opens as cited
+  report:619  frontend/src/trial/mobile/DraftDepartureCard.tsx:344  opens as cited
+  report:627  frontend/src/trial/mobile/MobilePlanWorkbench.tsx:348  opens as cited
+  report:628  frontend/src/trial/mobile/DraftDepartureCard.tsx:261  opens as cited
+  report:629  frontend/src/trial/mobile/DraftDepartureCard.tsx:342  opens as cited
+  report:630  backend/app/agent/goal_preparation.py:426  opens as cited
+  report:658  frontend/src/trial/mobile/MissionCockpit.tsx:317  opens as cited
+  report:678  backend/app/services.py:992  opens as cited
+  report:680  backend/app/services.py:742  opens as cited
+  report:681  backend/app/services.py:743  opens as cited
+  report:696  frontend/src/trial/mobile/MobilePlanWorkbench.tsx:70  opens as cited
+  report:697  backend/app/services.py:742  opens as cited
+  (399 more in this bucket, printed count capped at 40)
+
+BUCKET missing_prefix = 29
+  report:2040  tests/test_sol_concurrency_and_remap.py:1005  retrieves as backend/tests/test_sol_concurrency_and_remap.py
+  report:2272  trial/mobile/GuardianRealityPanel.tsx:356  retrieves as frontend/src/trial/mobile/GuardianRealityPanel.tsx
+  report:2281  trial/mobile/GuardianRealityPanel.tsx:350  retrieves as frontend/src/trial/mobile/GuardianRealityPanel.tsx
+  report:2283  trial/mobile/MissionCockpit.tsx:206  retrieves as frontend/src/trial/mobile/MissionCockpit.tsx
+  report:2283  trial/mobile/WorkspaceActions.tsx:332  retrieves as frontend/src/trial/mobile/WorkspaceActions.tsx
+  report:2406  trial/mobile/DraftDepartureCard.tsx:324  retrieves as frontend/src/trial/mobile/DraftDepartureCard.tsx
+  report:3002  tests/test_r64_member_side_quest.py:338  retrieves as backend/tests/test_r64_member_side_quest.py
+  report:3059  tests/test_r64_member_side_quest.py:1840  retrieves as backend/tests/test_r64_member_side_quest.py
+  report:3228  tests/test_wp06_followup_assist.py:223  retrieves as backend/tests/test_wp06_followup_assist.py
+  report:3229  tests/test_revolution_r77_recovery.py:1333  retrieves as backend/tests/test_revolution_r77_recovery.py
+  report:3230  tests/test_v14_trial_readiness.py:71  retrieves as backend/tests/test_v14_trial_readiness.py
+  report:3231  tests/test_wp06_postgate_hardening_next.py:90  retrieves as backend/tests/test_wp06_postgate_hardening_next.py
+  report:3232  tests/test_v7_traveler_twin.py:275  retrieves as backend/tests/test_v7_traveler_twin.py
+  report:3233  tests/test_v5_autopilot.py:104  retrieves as backend/tests/test_v5_autopilot.py
+  report:3234  tests/test_wp04a0_bridge.py:116  retrieves as backend/tests/test_wp04a0_bridge.py
+  report:3235  tests/test_qoder_simulation_mode.py:293  retrieves as backend/tests/test_qoder_simulation_mode.py
+  report:3236  tests/test_qoder_ord0434_share_grants.py:377  retrieves as backend/tests/test_qoder_ord0434_share_grants.py
+  report:3258  tests/test_qoder_anywhere_matrix_truth.py:375  retrieves as backend/tests/test_qoder_anywhere_matrix_truth.py
+  report:3259  tests/test_qoder_anywhere_provider_independence.py:70  retrieves as backend/tests/test_qoder_anywhere_provider_independence.py
+  report:3260  tests/test_qoder_anywhere_provider_truth.py:78  retrieves as backend/tests/test_qoder_anywhere_provider_truth.py
+  report:3261  tests/test_qoder_ord0296_write_deadline.py:212  retrieves as backend/tests/test_qoder_ord0296_write_deadline.py
+  report:3262  tests/test_qoder_ord0307_credential_gate.py:187  retrieves as backend/tests/test_qoder_ord0307_credential_gate.py
+  report:3263  tests/test_qoder_ord0332_error_receipt.py:207  retrieves as backend/tests/test_qoder_ord0332_error_receipt.py
+  report:3264  tests/test_qoder_ord0402_recycle_bin.py:160  retrieves as backend/tests/test_qoder_ord0402_recycle_bin.py
+  report:3265  tests/test_qoder_ord0402_recycle_bin.py:295  retrieves as backend/tests/test_qoder_ord0402_recycle_bin.py
+  report:3266  tests/test_qoder_ord0434_share_grants.py:238  retrieves as backend/tests/test_qoder_ord0434_share_grants.py
+  report:3314  tests/test_agent_mission_runtime.py:447  retrieves as backend/tests/test_agent_mission_runtime.py
+  report:3315  tests/test_v12_authoritative_trip_execution.py:248  retrieves as backend/tests/test_v12_authoritative_trip_execution.py
+  report:3320  tests/test_qoder_anywhere_matrix_truth.py:466  retrieves as backend/tests/test_qoder_anywhere_matrix_truth.py
+
+BUCKET out_of_range = 0
+
+BUCKET nowhere = 0
+
+VERDICT the buckets cover every coordinate scanned; a coordinate reading ok here only means a reader can open it, not that the reading it supports is right
+TALLY coordinates=468 distinct=420 ok=439 missing_prefix=29 out_of_range=0 nowhere=0
+GENERATION 447eeef5ddb9f88b1f0e5083b8cadc048a8753bb
+

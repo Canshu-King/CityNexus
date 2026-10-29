@@ -3847,3 +3847,12 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 新尺把旧形状关在门外：把 DAYS_BACK 强设回 0（即旧口径）再跑，尺自己拒绝出表，原话见 trial/results/20261026_gozero/bw339-census-window-old-vs-new-vs-narrow.txt:21 那一行——「窗口外那一枚距窗口内最老一枚只隔一天，这看起来是把一个班切成了两半」。这条拒绝本身就是对照：同一份数据，旧尺静默数 1，新尺要么数全要么不作答。
 - 该说没工件的地方：00:1x 那一次的原始打印件已被修后回执覆盖，本机只剩会话流水可查。所以本节引的是「同一进程里重放旧尺得到 checked=1」（trial/results/20261026_gozero/bw339-census-window-old-vs-new-vs-narrow.txt:7，两代尺的 git 对象见同文件 :3），不引那次已经不在的表。
 - 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3831。本班 0 改产品字节、0 点击。
+
+### 14.41 补（10-30 凌晨）：坐标门只认形制的四档实测——以及这块地界该谁守
+
+- 测法：同一句 claim（「共 46 条记录，逐条坐标见 …:148，另有 12 条待点单」）配四枚不同坐标目标，各跑一次门；四档定义见 trial/human_walk/_cmdr_q43_shape_probe_r351.py:34（其中不存在那枚的文件名写在 :32）。逐档原判落盘 trial/results/20261026_gozero/bw341-what-the-q43-door-accepts-as-a-coordinate.txt：真路径 :7、目录写重 :14、文件不存在 :21、真文件越界行 :28；合计行 :40 现读 arms=4 green=4 red=0。
+- 读数：四档都回 Q43_GATE_GREEN。「文件不存在」那档 os.path.exists 实测 False，「越界行」那档文件在而 :99999 不在文件长度内（回执 :28 起两行自己写着 True / False）。所以这道门的坐标臂判的是形制：数字挨着一个像文件名的东西就算落了锚，不去问那路径在不在盘上、也不问那文件有没有那么多行。整句结论见 trial/results/20261026_gozero/bw341-what-the-q43-door-accepts-as-a-coordinate.txt:35。
+- 这解释上一格：#375 有 6 枚坐标把 gozero 那层目录连写两遍，过门时仍是绿的——「目录写重」那档就是那个形状（trial/results/20261026_gozero/bw341-what-the-q43-door-accepts-as-a-coordinate.txt:14 起）。不是门漏咬，是它本就不咬这个面。
+- 我这边守的：本班交块脚本落盘前逐枚现读——路径不在盘上就拒（trial/human_walk/_cmdr_write_block_376_r350.py:315），行号越过文件末尾就拒（trial/human_walk/_cmdr_write_block_376_r350.py:317），现读号写进块里而不引记忆。装上它第一次自咬就咬到了模板里重复的目录前缀，改后的对照见 trial/results/20261026_gozero/bw339-census-window-old-vs-new-vs-narrow.txt 与 #376 的逐枚表。
+- 待点单（三档并列，不代裁）：甲＝给坐标门加一条「路径须在盘上、行号须在界内」的臂（那是号令者那把尺，本班 0 改它；四档样本与原判都在这张回执里，可直接复放）；乙＝不加，这条留给各家生成器自查（本班已按乙执行，代价是每个车道各自装）；丙＝只加「路径在盘上」不加「行号界内」（咬住写重与虚构，放过越界）。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3841。本班 0 改产品字节、0 点击、0 改门。代次 git 对象 447eeef5ddb9f88b1f0e5083b8cadc048a8753bb。

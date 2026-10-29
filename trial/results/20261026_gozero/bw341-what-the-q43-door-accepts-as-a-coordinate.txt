@@ -1,0 +1,40 @@
+Q43 COORDINATE DOOR - WHAT A GREEN VERDICT DOES AND DOES NOT CHECK  bw341
+door D:/moodle/_qoder_cmdr_ref_20260921\live_checks\claim_coordinate_check_r7.py (bytes=31982, sha1 of these local bytes 88824d4928ff945a56236efc37330416a6053db0)
+generation of the tree holding these artifacts: git object 447eeef5ddb9f88b1f0e5083b8cadc048a8753bb
+
+one claim sentence, four coordinate targets; the sentence is identical in every arm:
+
+ARM real_path
+  cited as            trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt:148
+  path on disk here   True
+  that line in file   True
+  door verdict        Q43_GATE_GREEN  claims=4 rc=0
+  claim sentence      - 读数：共 46 条记录，逐条坐标见 trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt:148，另有 12 条待点单
+
+ARM doubled_directory
+  cited as            trial/results/20261026_gozero/trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt:148
+  path on disk here   False
+  that line in file   n/a (no file)
+  door verdict        Q43_GATE_GREEN  claims=5 rc=0
+  claim sentence      - 读数：共 46 条记录，逐条坐标见 trial/results/20261026_gozero/trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt:148，另有 12 条待点单
+
+ARM no_such_file
+  cited as            trial/results/no-such-file-here.txt:148
+  path on disk here   False
+  that line in file   n/a (no file)
+  door verdict        Q43_GATE_GREEN  claims=3 rc=0
+  claim sentence      - 读数：共 46 条记录，逐条坐标见 trial/results/no-such-file-here.txt:148，另有 12 条待点单
+
+ARM line_out_of_range
+  cited as            trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt:99999
+  path on disk here   True
+  that line in file   False
+  door verdict        Q43_GATE_GREEN  claims=4 rc=0
+  claim sentence      - 读数：共 46 条记录，逐条坐标见 trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt:99999，另有 12 条待点单
+
+READ: all 4 arms came back Q43_GATE_GREEN, including the arm whose file does not exist and the arm whose line number is beyond the end of a real file. So this door's coordinate arm judges shape only: it asks whether a number is written next to something that looks like a file name, not whether that path is on disk or how long the file is.
+WHAT THAT EXPLAINS: block #375 carried coordinates whose directory was written twice and still passed this door green - the doubled_directory arm above is that exact shape. The per-coordinate list is in the erratum block that followed it.
+NOT A JUDGEMENT ABOUT THE DOOR'S SCOPE: it is a shape gate by design elsewhere (it pins retrievable git objects and anchors per claim); whether it should grow a path-exists arm is the commander's call, not mine, and nothing here was changed in the door itself.
+WHERE MY SIDE NOW CHECKS IT: the block generator for this shift refuses to post a block whose cited path is missing or whose cited line is past the end of the file.
+
+TALLY arms=4 green=4 red=0
