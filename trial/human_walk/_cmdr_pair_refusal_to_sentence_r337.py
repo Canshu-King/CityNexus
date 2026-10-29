@@ -153,9 +153,10 @@ def scan_catches(rel):
     """
     lines = source_lines(rel)
     spans = []
+    commented = r325.comment_spans(lines)
     index = 0
     while index < len(lines):
-        match = r325.CATCH.search(lines[index])
+        match = None if index + 1 in commented else r325.CATCH.search(lines[index])
         if not match:
             index += 1
             continue

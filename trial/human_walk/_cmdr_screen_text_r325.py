@@ -43,6 +43,37 @@ def read(rel):
     return io.open(path, encoding="utf-8", errors="replace").read()
 
 
+def comment_spans(lines):
+    """Line numbers (one-based) that sit inside a block comment.
+
+    A doc comment in this codebase quotes handler code - RecoveryRequiredPanel.tsx opens with
+    ``* `catch { "check your connection" }` blamed the network`` - and the catch pattern matched it, so the
+    first body this ruler reports for that file was a sentence from a comment, not a handler.
+    """
+    inside = set()
+    opened = False
+    for index, cell in enumerate(lines):
+        position = 0
+        while position <= len(cell):
+            if opened:
+                closer = cell.find("*/", position)
+                if closer < 0:
+                    inside.add(index + 1)
+                    break
+                inside.add(index + 1)
+                opened = False
+                position = closer + 2
+                continue
+            opener = cell.find("/*", position)
+            line_comment = cell.find("//", position)
+            if opener < 0 or (0 <= line_comment < opener):
+                break
+            inside.add(index + 1)
+            opened = True
+            position = opener + 2
+    return inside
+
+
 def catch_body(lines, start):
     """The text of the first catch at or after `start`, from its opener to the line that closes it.
 
@@ -50,9 +81,12 @@ def catch_body(lines, start):
     where the leading brace closes the try and the trailing one opens the handler, so a whole-line count is
     zero and the body used to stop after the very next line - which silently cut multi-statement handlers
     down to their first sentence. The handler's own closer is instead the first line at handler depth one
-    that begins with a brace.
+    that begins with a brace. A `catch` that only appears inside a block comment is not a handler.
     """
+    commented = comment_spans(lines)
     for index in range(start, min(start + WINDOW, len(lines))):
+        if index + 1 in commented:
+            continue
         match = CATCH.search(lines[index])
         if not match:
             continue
@@ -153,8 +187,9 @@ def body_span_histogram(files):
     for rel, text in files:
         lines = text.splitlines()
         index = 0
+        commented = comment_spans(lines)
         while index < len(lines):
-            if CATCH.search(lines[index]):
+            if index + 1 not in commented and CATCH.search(lines[index]):
                 caught_at, body = catch_body(lines, index)
                 if caught_at:
                     spans.append(len(body.splitlines()))

@@ -1,0 +1,29 @@
+WHERE A READ FIELD ACTUALLY GOES bw338
+SAME-SOURCE CHECK bodies read here = 63, equal to bw326's published catch=63 (its tally sits at trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:28); the cutter, the mounted-panel set and the file list are imported from those rulers, not retyped
+TALLY bodies=63 hands_server_text_to_state=4 hands_server_structure_to_state=8 compares_only=1 reads_and_leaves_it_unused=0 never_reads_a_server_field=50
+  text reaches state → frontend/src/features/discovery/DestinationPreparationPanel.tsx:132 判 HANDS_SERVER_TEXT_TO_STATE（允许：HANDS_SERVER_TEXT_TO_STATE）
+  prose dropped, facts kept → frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:242 判 HANDS_SERVER_STRUCTURE_TO_STATE（允许：HANDS_SERVER_STRUCTURE_TO_STATE, COMPARES_ONLY, READS_AND_LEAVES_IT_UNUSED）
+  nothing bound → frontend/src/features/execution/LiveRecovery.tsx:418 判 NEVER_READS_A_SERVER_FIELD（允许：NEVER_READS_A_SERVER_FIELD）
+API_MESSAGE_PROVENANCE of the 4 bodies that hand a text field to state, 4 sit in a try whose own text names an api-layer call (cityNexusApi.getCatalogHydration / cityNexusApi.getDestinationCapability). That layer throws at `frontend/src/api/citynexus.ts:2892` with its message assembled as: response.status, body, "CityNexus API " + response.status + ": " + path, requestMethod, - which makes what reaches the traveller's line a locally built diagnostic string, not the server's refusal sentence.
+HANDS_SERVER_TEXT_TO_STATE = 4
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:87  交进 setter 的字段 error.message  比较行 0 条  该 body 首枚字面量「读取准备进度失败。」
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:111  交进 setter 的字段 error.message  比较行 0 条  该 body 首枚字面量「这次没有读到能力判定。」
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:132  交进 setter 的字段 error.message  比较行 0 条  该 body 首枚字面量「没能开始准备。」
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:150  交进 setter 的字段 error.message  比较行 0 条  该 body 首枚字面量「没能停止这次准备。」
+HANDS_SERVER_STRUCTURE_TO_STATE = 8
+  frontend/src/features/access/AccessPanel.tsx:119  交进 setter 的字段 cause.facts  比较行 0 条  该 body 首枚字面量「failed」
+  frontend/src/features/access/AccessPanel.tsx:138  交进 setter 的字段 cause.facts  比较行 0 条  该 body 首枚字面量「failed」
+  frontend/src/features/access/AccessPanel.tsx:150  交进 setter 的字段 cause.facts  比较行 0 条  该 body 首枚字面量「failed」
+  frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:242  交进 setter 的字段 cause.envelope / cause.facts  比较行 1 条  该 body 首枚字面量「V13_DISCOVERY_NO_FEASIBLE_PLACE_SET」
+  frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:335  交进 setter 的字段 cause.envelope / cause.facts  比较行 0 条  该 body 首枚字面量「V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW」
+  frontend/src/features/execution/LiveRecovery.tsx:762  交进 setter 的字段 code  比较行 4 条  该 body 首枚字面量「object」
+  frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:95  交进 setter 的字段 error.envelope / error.facts  比较行 0 条  该 body 首枚字面量「这步接受没有得到可确认的答复，结果未知。」
+  frontend/src/features/trash/JourneyTrashPanel.tsx:97  交进 setter 的字段 facts  比较行 2 条  该 body 首枚字面量「JOURNEY_NOT_DELETED」
+COMPARES_ONLY = 1
+  frontend/src/features/execution/LiveRecovery.tsx:822  交进 setter 的字段 (无)  比较行 2 条  该 body 首枚字面量「请切换到自己的行程成员账号。」
+READS_AND_LEAVES_IT_UNUSED = 0
+NEVER_READS_A_SERVER_FIELD = 50 处（不逐枚列，清单归 bw326）
+FIELD_GROUPS text fields are detail, message, quote, statusText; structured fields are facts, envelope, body, code, status, data, errors. The split matters because one of these panels hands a structured object to state while dropping the prose, and counting that as 'showing the server's words' would be exactly the mistake the last two rulers made.
+COUNTING_RULE a body counts as reading the server when it touches a field of either group on an error-shaped name (err / error / e / cause / exception / it / rejection / failure). A name assigned from such a read is followed one hop. HANDS_*_TO_STATE requires the needle to sit inside a setter's own arguments; text outranks structure when both are handed; COMPARES_ONLY is a needle that appears on a line holding a comparison operator and never in a setter; READS_AND_LEAVES_IT_UNUSED is everything else that still touched a field.
+COVERAGE_LIMIT four things this cannot see: a value that leaves the catch and is rendered by a shared component elsewhere; a JSX interpolation outside the catch body (bw328 owns render sites); a setter whose arguments run past this pattern's window; and `error.message` on a locally thrown Error, which is not a server sentence at all - the two DestinationPreparationPanel sites flagged here build their own Error objects. Nothing here was clicked.
+READ THIS WITH bw326 (which bodies read, which hide), bw327 (what the hiding ones say instead), bw328 (which of those sentences markup reads) and bw337 (which refusal sits behind which panel line).

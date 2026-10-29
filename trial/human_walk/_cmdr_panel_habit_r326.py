@@ -43,7 +43,7 @@ def bodies(rel):
     found = []
     index = 0
     while index < len(lines):
-        if screen.CATCH.search(lines[index]):
+        if index + 1 not in screen.comment_spans(lines) and screen.CATCH.search(lines[index]):
             caught_at, body = screen.catch_body(lines, index)
             found.append((caught_at, body))
             index = caught_at
