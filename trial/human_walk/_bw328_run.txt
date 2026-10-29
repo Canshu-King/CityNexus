@@ -1,6 +1,10 @@
 IS THAT SENTENCE ON SCREEN bw328
-SAME-SOURCE CHECK rows read from bw327 = 19 (the says_zh list of trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt)
+SAME-SOURCE CHECK rows read from bw327 = 26 (the says_zh list of trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt)
 CONTROLS the LiveRecovery handler hands 「无法记录这个选择，请刷新后重试。」 to state 'message', read at lines 661, 2136, 2138; a state name nobody defines yields 0 render sites
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:87  1 枚中文句子，读取准备进度失败。 → RENDERED；「读取准备进度失败。」state=actionError 渲染点=595, 597
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:111  1 枚中文句子，这次没有读到能力判定。 → RENDERED；「这次没有读到能力判定。」state=capabilityError 渲染点=419, 421
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:132  1 枚中文句子，没能开始准备。 → RENDERED；「没能开始准备。」state=actionError 渲染点=595, 597
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:150  1 枚中文句子，没能停止这次准备。 → RENDERED；「没能停止这次准备。」state=actionError 渲染点=595, 597
   frontend/src/features/execution/LiveRecovery.tsx:222  1 枚中文句子，暂时无法开启行程托管。 → RENDERED；「暂时无法开启行程托管。」state=message 渲染点=661, 2136
   frontend/src/features/execution/LiveRecovery.tsx:240  1 枚中文句子，暂时无法调整这趟行程，请稍后再试。 → RENDERED；「暂时无法调整这趟行程，请稍后再试。」state=intentResult 渲染点=1727
   frontend/src/features/execution/LiveRecovery.tsx:259  1 枚中文句子，无法处理这条预订信息，请稍后重试。 → RENDERED；「无法处理这条预订信息，请稍后重试。」state=inboxResult 渲染点=1701
@@ -13,14 +17,17 @@ CONTROLS the LiveRecovery handler hands 「无法记录这个选择，请刷新�
   frontend/src/features/execution/LiveRecovery.tsx:418  1 枚中文句子，暂时无法保存出发点。 → RENDERED；「暂时无法保存出发点。」state=message 渲染点=661, 2136
   frontend/src/features/execution/LiveRecovery.tsx:438  1 枚中文句子，暂时无法检查这段路线。 → RENDERED；「暂时无法检查这段路线。」state=message 渲染点=661, 2136
   frontend/src/features/execution/LiveRecovery.tsx:479  1 枚中文句子，暂时无法确认出发。 → RENDERED；「暂时无法确认出发。」state=message 渲染点=661, 2136
+  frontend/src/features/execution/LiveRecovery.tsx:672  1 枚中文句子，连不上服务器，请重试。 → RENDERED；「连不上服务器，请重试。」state=message 渲染点=661, 2136
   frontend/src/features/execution/LiveRecovery.tsx:762  5 枚中文句子，共同选择已存档。该方案已失效，请重新规划后再发起集体… → RENDERED；「共同选择已存档。该方案已失效，请重新规划」state=message 渲染点=661, 2136; 「原来的共同选择已过期或现实已变化；我刷新」state=message 渲染点=661, 2136; 「当前登录成员没有应用这项共享行程变更的权」state=message 渲染点=661, 2136; 「暂时无法应用这项共享调整。」state=message 渲染点=661, 2136; 「提交状态待更新，请刷新行程查看。」state=message 渲染点=661, 2136
   frontend/src/features/execution/LiveRecovery.tsx:822  3 枚中文句子，请切换到自己的行程成员账号。 / 行程或成员状态已更… → RENDERED；「请切换到自己的行程成员账号。」state=message 渲染点=661, 2136; 「行程或成员状态已更新，当前会合信息已刷新」state=message 渲染点=661, 2136; 「暂时无法记录会合确认，请刷新后重试。」state=message 渲染点=661, 2136
   frontend/src/features/execution/LiveRecovery.tsx:862  1 枚中文句子，暂时无法计算会合路线。 → RENDERED；「暂时无法计算会合路线。」state=message 渲染点=661, 2136
   frontend/src/features/execution/LiveRecovery.tsx:893  1 枚中文句子，暂时无法启动分组恢复。 → RENDERED；「暂时无法启动分组恢复。」state=message 渲染点=661, 2136
+  frontend/src/features/execution/LiveRecovery.tsx:920  1 枚中文句子，暂时无法重新计算路线。请按原计划前往或返回共同会合点… → RENDERED；「暂时无法重新计算路线。请按原计划前往或返」state=message 渲染点=661, 2136
   frontend/src/features/execution/LiveRecovery.tsx:939  1 枚中文句子，请先登录后确认这一步。 → RENDERED；「请先登录后确认这一步。」state=message 渲染点=661, 2136
   frontend/src/features/planning/PlanComparison.tsx:114  1 枚中文句子，连不上服务器，请重试。 → RENDERED；「连不上服务器，请重试。」state=error 渲染点=270, 272
+  frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:95  1 枚中文句子，这步接受没有得到可确认的答复，结果未知。 → RENDERED；「这步接受没有得到可确认的答复，结果未知。」state=message 渲染点=184, 186
   frontend/src/features/stay/HotelsPanel.tsx:132  1 枚中文句子，连不上服务器，请重试。 → RENDERED；「连不上服务器，请重试。」state=error 渲染点=250, 251
-TALLY rows=19 rendered=19 set_but_not_rendered=0 no_setter_for_text=0
+TALLY rows=26 rendered=26 set_but_not_rendered=0 no_setter_for_text=0
 COUNTING_RULE the setter is the setXxx(...) call whose own arguments contain this exact literal; its state name is the setter with the leading Set removed and the first letter lowered; a render site is a line where that name appears inside a {...} expression or as a && / || / ternary condition in front of one
 COVERAGE_LIMIT a render site proves the state is read by markup, not that the traveller was looking at that panel when the failure happened, and a sentence can be rendered by a shared component that receives it as a prop - this ruler only follows the same-file state path. Nothing here was clicked.
 WROTE D:\moodle\_cmdr_rescue_v3_1022\trial\results\20261026_gozero\bw328-is-that-sentence-on-screen.txt

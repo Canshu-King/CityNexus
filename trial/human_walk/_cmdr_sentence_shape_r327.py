@@ -38,7 +38,7 @@ BILINGUAL = re.compile(r"\bzh\s*\?")
 SETTER = re.compile(r"\bset[A-Z]\w*\s*\(")
 CONSOLE = re.compile(r"console\.\w+\s*\(")
 RETRY = re.compile(r"重试|再试|刷新|try again|refresh", re.I)
-STRING = re.compile(r'"((?:[^"\\]|\\.)*)"|\'((?:[^\'\\]|\\.)*)\'|`((?:[^`\\]|\\.)*)`')
+STRING = re.compile(r'"((?:[^"\\\n]|\\.)*)"|\'((?:[^\'\\\n]|\\.)*)\'|`((?:[^`\\\n]|\\.)*)`')
 
 
 def read(rel):
@@ -58,9 +58,48 @@ def published_catch_total():
     return int(match.group(1))
 
 
+BLOCK_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+
+
+def strip_comments(body):
+    """Drop block comments, and a line comment when no quote opens before it on that line.
+
+    The string scanner used to accept newline inside its character classes, so a quote pair split across a
+    documentation block read as one literal: the sentence 「s exact defect. */」 came out of the doc comment
+    above the very first body this ruler looks at. A URL inside a real literal keeps its `//` because a quote
+    opens before it.
+    """
+    body = BLOCK_COMMENT.sub(" ", body)
+    kept = []
+    for line in body.splitlines():
+        slash = line.find("//")
+        quotes = [position for position in (line.find('"'), line.find("'"), line.find("`"))
+                  if position >= 0]
+        first_quote = min(quotes) if quotes else len(line)
+        kept.append(line[:slash] if 0 <= slash < first_quote else line)
+    return "\n".join(kept)
+
+
 def literals(body):
     out = []
-    for match in STRING.finditer(body):
+    for match in STRING.finditer(strip_comments(body)):
+        text = next((group for group in match.groups() if group is not None), "")
+        if len(text.strip()) >= 4:
+            out.append(text.strip())
+    return out
+
+
+STRING_OLDCUT = re.compile(r'"((?:[^"\\]|\\.)*)"|\'((?:[^\'\\]|\\.)*)\'|`((?:[^`\\]|\\.)*)`')
+
+
+def literals_oldday(body):
+    """What the scanner read before the two fixes: no comment stripping, quotes may span lines.
+
+    Kept on purpose. Without it the corrected count is just a different number; with it the receipt shows
+    which single body the old scanner misread, and what fake sentence it produced.
+    """
+    out = []
+    for match in STRING_OLDCUT.finditer(body):
         text = next((group for group in match.groups() if group is not None), "")
         if len(text.strip()) >= 4:
             out.append(text.strip())
@@ -87,6 +126,9 @@ def main() -> int:
                          "says_nothing": not literals(body), "shape": bool(BILINGUAL.search(body)),
                          "state": bool(SETTER.search(body)), "console": bool(CONSOLE.search(body)),
                          "retry": bool(RETRY.search(body)), "reads": reads,
+                         "zh_old": any(CJK.search(text) for text in literals_oldday(body)),
+                         "old_first": next((text for text in literals_oldday(body)
+                                            if CJK.search(text)), ""),
                          "sentences": [text for text in literals(body) if CJK.search(text)]})
     total = len(rows)
     if total != expected:
@@ -102,6 +144,11 @@ def main() -> int:
     en_only = sum(1 for item in rows if item["en_only"])
     says_nothing = sum(1 for item in rows if item["says_nothing"])
     zh_no_shape = sum(1 for item in rows if item["zh"] and not item["shape"])
+    old_zh = sum(1 for item in rows if item["zh_old"])
+    fake = [item for item in rows if item["zh_old"] and not item["zh"]]
+    if not fake:
+        raise SystemExit("ABORT the comment-stripping fix changed no count at all, so the control that is "
+                         "meant to show what the old scanner read has nothing to show")
     shape_no_zh = sum(1 for item in rows if item["shape"] and not item["zh"])
     if zh + en_only + says_nothing != total:
         raise SystemExit("ABORT the three sentence axes do not cover every body")
@@ -133,6 +180,14 @@ def main() -> int:
            "into_console=%d nowhere=%d retry_shaped=%d reads_the_error=%d"
            % (total, zh, en_only, says_nothing, shape, state, console, nowhere, retry,
               sum(1 for item in rows if item["reads"])),
+           "LITERAL_SCANNER_CONTROL under the scanner this ruler used before (comments left in, a quote pair "
+           "allowed to span lines) the same %d bodies would publish says_zh=%d instead of %d. The extra %d "
+           "is/are %s, and the sentence the old scanner lifts out of the doc comment above that handler is "
+           "「%s」 - prose nobody shows a traveller. The ruler aborts if this set is empty, so the fix cannot "
+           "be reported as a change without the change being visible."
+           % (total, old_zh, zh, len(fake),
+              ", ".join("%s:%d" % (item["rel"], item["line"]) for item in fake),
+              " ".join(fake[0]["old_first"].split()) + " [this literal spans lines - that is the fault]"),
            "REVERSE_CHECK zh-without-the-`zh ?`-shape = %d and shape-without-any-Chinese = %d; the two "
            "counts above being equal is only meaningful because both reverse sets read %s"
            % (zh_no_shape, shape_no_zh,

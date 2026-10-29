@@ -2,11 +2,11 @@ WHAT THE PANELS DO WITH A REFUSAL bw326
 DENOMINATOR the registry imports 25 module(s), 25 of them rendered as a component, so 25 mounted files are read here; the registry's own JSX names 33 components in total, which is a wider set than modules because one module can render several
   frontend/src/features/execution/LiveRecovery.tsx  catch 26 处，读服务端原文 0 处，吞掉 26 处
   frontend/src/features/inbox/JourneyInboxWorkbench.tsx  catch 9 处，读服务端原文 0 处，吞掉 9 处
-  frontend/src/features/discovery/DestinationPreparationPanel.tsx  catch 4 处，读服务端原文 0 处，吞掉 4 处
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx  catch 4 处，读服务端原文 4 处，吞掉 0 处
   frontend/src/features/access/AccessPanel.tsx  catch 3 处，读服务端原文 0 处，吞掉 3 处
   frontend/src/features/agent/AgentComposer.tsx  catch 3 处，读服务端原文 0 处，吞掉 3 处
   frontend/src/features/discovery/RealCityDiscoveryPanel.tsx  catch 3 处，读服务端原文 1 处，吞掉 2 处
-  frontend/src/features/recovery/RecoveryRequiredPanel.tsx  catch 3 处，读服务端原文 0 处，吞掉 3 处
+  frontend/src/features/recovery/RecoveryRequiredPanel.tsx  catch 3 处，读服务端原文 1 处，吞掉 2 处
   frontend/src/features/stay/HotelsPanel.tsx  catch 3 处，读服务端原文 0 处，吞掉 3 处
   frontend/src/features/trip/TripItinerary.tsx  catch 3 处，读服务端原文 0 处，吞掉 3 处
   frontend/src/features/trash/JourneyTrashPanel.tsx  catch 2 处，读服务端原文 0 处，吞掉 2 处
@@ -25,10 +25,15 @@ DENOMINATOR the registry imports 25 module(s), 25 of them rendered as a componen
   frontend/src/features/studio/PlanVersionHistoryPanel.tsx  catch 0 处，读服务端原文 0 处，吞掉 0 处
   frontend/src/features/studio/V12TripStudioPanel.tsx  catch 0 处，读服务端原文 0 处，吞掉 0 处
   frontend/src/features/traveler-twin/TwinPanel.tsx  catch 0 处，读服务端原文 0 处，吞掉 0 处
-TALLY panels=25 catch=64 reads_the_refusal=1 hides_the_refusal=63
-READS_THE_REFUSAL_AT `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:242`
+TALLY panels=25 catch=64 reads_the_refusal=6 hides_the_refusal=58
+READS_THE_REFUSAL_AT `frontend/src/features/discovery/DestinationPreparationPanel.tsx:87`, `frontend/src/features/discovery/DestinationPreparationPanel.tsx:111`, `frontend/src/features/discovery/DestinationPreparationPanel.tsx:132`, `frontend/src/features/discovery/DestinationPreparationPanel.tsx:150`, `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:242`, `frontend/src/features/recovery/RecoveryRequiredPanel.tsx:17`
+READS_KEEP_UNKNOWN `frontend/src/features/discovery/DestinationPreparationPanel.tsx:87` reads the error and no statement about dropping it appears in the lines after it, so this ruler claims neither outcome
+READS_KEEP_UNKNOWN `frontend/src/features/discovery/DestinationPreparationPanel.tsx:111` reads the error and no statement about dropping it appears in the lines after it, so this ruler claims neither outcome
+READS_KEEP_UNKNOWN `frontend/src/features/discovery/DestinationPreparationPanel.tsx:132` reads the error and no statement about dropping it appears in the lines after it, so this ruler claims neither outcome
+READS_KEEP_UNKNOWN `frontend/src/features/discovery/DestinationPreparationPanel.tsx:150` reads the error and no statement about dropping it appears in the lines after it, so this ruler claims neither outcome
 READS_BUT_DROPS `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:242` - the body says at `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:244` that the sentence is dropped and only a machine token is matched, so reading the error here is not the same as putting it on screen
-WIDE_PATTERN_CHECK the same bodies tested with a deliberately loose pattern (`.message`, `.detail`, `instanceof Error` or `V8Rejection`, `String(err)`, `as Error).message`) read the refusal 1 time(s) against the strict pattern's 1, so the count is not an artifact of the attribute names I picked
+READS_KEEP_UNKNOWN `frontend/src/features/recovery/RecoveryRequiredPanel.tsx:17` reads the error and no statement about dropping it appears in the lines after it, so this ruler claims neither outcome
+WIDE_PATTERN_CHECK the same bodies tested with a deliberately loose pattern (`.message`, `.detail`, `instanceof Error` or `V8Rejection`, `String(err)`, `as Error).message`) read the refusal 6 time(s) against the strict pattern's 6, so the count is not an artifact of the attribute names I picked
 SHAPE most catch bodies never touch the caught error, so the panel habit is to replace the server's words with its own
 NO_CATCH_AT_ALL 11 of the 25 mounted files hold no catch block, so a refusal there is handled by whoever called them, not by the panel: frontend/src/features/checklist/PretripChecklistPanel.tsx, frontend/src/features/execution/V10LiveExecutionPanel.tsx, frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx, frontend/src/features/inbox/BookingArtifactScanner.tsx, frontend/src/features/intelligence/ControlTowerPanel.tsx, frontend/src/features/pending/PendingSetPanel.tsx, frontend/src/features/planning/PlanRankingPanel.tsx, frontend/src/features/stay/StayExplorer.tsx, frontend/src/features/studio/PlanVersionHistoryPanel.tsx, frontend/src/features/studio/V12TripStudioPanel.tsx, frontend/src/features/traveler-twin/TwinPanel.tsx
 CONTROLS `frontend/src/app/V8Experience.tsx:1027` before a catch that reads the error classified as reading it; `frontend/src/main.tsx` with no catch classified as having no answer; the LiveRecovery handler that assigns its own bilingual sentence classified as hiding it. The ruler aborts if any disagrees.

@@ -1,0 +1,57 @@
+WHICH CHINESE SENTENCE SITS ON WHICH REFUSAL bw337
+SAME-SOURCE CHECK bw313 refusals=21 bw318 rows=21; every rank's backend coordinate matches across the two receipts; the join key is (frontend file, catch line) and bw327 (26) and bw328 (26) agree on it
+METHOD the window from caller to catch is imported from the bw325 ruler (trial/human_walk/_cmdr_screen_text_r325.py:46 def catch_body) and the literal scanner from bw327 (trial/human_walk/_cmdr_sentence_shape_r327.py:83 def literals); the catch set is bw327's own rows. Nothing here is a second opinion on the same question - it is the same ruler used one hop further.
+TALLY refusals=21 paired to a listed self-written sentence=1 paired only to an unlisted catch sentence=1 unpaired=19; caller windows scanned=56 (PAIRED_TO_LISTED_SENTENCE=2 PAIRED_TO_UNLISTED_CATCH=2 CATCH_WITHOUT_OWN_SENTENCE=4 NO_CATCH_IN_WINDOW=48 NO_FRONTEND_CALLER=0); of those windows, the caller line was already inside the catch it was charged to 0 times, and behind it 56 times - the first shape is what bw318's copy: coordinates are, so a forward-only window would blame the next catch
+REFUSAL_TO_SCREEN_ROWS every refusal appears once; the caller column is bw318's own coordinate
+  #1 backend/app/main.py:1932  「provider consent is required」  /api/v1/journeys/{journey_id}/agent/mobile-compat-runs -> 无配对（caller 1 枚，窗口内无自造句子的 catch）
+  #2 backend/app/main.py:3424  「place_id is required for PLACE」  /api/v1/journeys/{journey_id}/launch-origin -> frontend/src/features/execution/LiveRecovery.tsx:409  catch 在 caller 之后  catch=frontend/src/features/execution/LiveRecovery.tsx:418 面板自造句「暂时无法保存出发点。」 state=message 渲染行=661, 2136
+  #2 backend/app/main.py:3424  「place_id is required for PLACE」  /api/v1/journeys/{journey_id}/launch-origin -> frontend/src/features/execution/LiveRecovery.tsx:419  catch 在 caller 之后  catch=frontend/src/features/execution/LiveRecovery.tsx:438 面板自造句「暂时无法检查这段路线。」 state=message 渲染行=661, 2136
+  #3 backend/app/main.py:3715  「journey must have an ACTIVE plan」  /api/v1/journeys/{journey_id}/in-transit/reroute -> 无配对（caller 1 枚，窗口内无自造句子的 catch）
+  #4 backend/app/main.py:5507  「clarification payload is invalid」  /api/v1/journeys/{journey_id}/missions/{mission_id}/clarification -> frontend/src/features/execution/MemberPlaceInvitationPanel.tsx:328  catch 在 caller 之后  catch=frontend/src/features/execution/MemberPlaceInvitationPanel.tsx:332 自造句「决策轮已过期或行程已更新，请刷新后重试。」（此 catch 不在 bw327 那 26 行里）
+  #5 backend/app/main.py:5606  「authenticated traveler cannot answer for another Journey member」  /api/v1/journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id} -> 无配对（caller 1 枚，窗口内无自造句子的 catch）
+  #6 backend/app/main.py:7691  「f'Journey {journey_id} was not found'」  /api/v1/journeys/{journey_id} -> 无配对（caller 3 枚，窗口内无自造句子的 catch）
+  #7 backend/app/main.py:7696  「f'Journey {journey_id} is already deleted'」  /api/v1/journeys/{journey_id} -> 无配对（caller 3 枚，窗口内无自造句子的 catch）
+  #8 backend/app/main.py:7756  「f'Journey {journey_id} was not found'」  /api/v1/journeys/{journey_id}/undelete -> 无配对（caller 2 枚，窗口内无自造句子的 catch）
+  #9 backend/app/main.py:7762  「f'Journey {journey_id} was not in the recycle bin'」  /api/v1/journeys/{journey_id}/undelete -> 无配对（caller 2 枚，窗口内无自造句子的 catch）
+  #10 backend/app/main.py:7783  「f'Journey {journey_id} is still in the recycle bin'」  /api/v1/journeys/{journey_id}/undelete -> 无配对（caller 2 枚，窗口内无自造句子的 catch）
+  #11 backend/app/main.py:11042  「f'mode {payload.mode} is unavailable for the requested leg'」  /api/v1/journeys/{journey_id}/stay-options/{option_id}/mode -> 无配对（caller 2 枚，窗口内无自造句子的 catch）
+  #12 backend/app/main.py:11519  「captured provider replay was not found」  /api/v1/journeys/{journey_id}/operator/reality/provider-replay -> 无配对（caller 0 枚，窗口内无自造句子的 catch）
+  #13 backend/app/main.py:16917  「group recovery idempotency record is invalid」  /api/v1/journeys/{journey_id}/group-recovery/apply -> 无配对（caller 2 枚，窗口内无自造句子的 catch）
+  #14 backend/app/main.py:17621  「Select different bootstrap candidates without additional place_ids」  /api/v1/journeys/{journey_id}/plans/generate -> 无配对（caller 3 枚，窗口内无自造句子的 catch）
+  #15 backend/app/main.py:18152  「f'Journey {journey_id} was not found'」  /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select -> 无配对（caller 4 枚，窗口内无自造句子的 catch）
+  #16 backend/app/main.py:18167  「f'PlanVersion {plan_version_id} was not found'」  /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select -> 无配对（caller 4 枚，窗口内无自造句子的 catch）
+  #17 backend/app/main.py:18221  「f'PlanVersion {plan.id} is not authoritative: {authority_blocker}'」  /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select -> 无配对（caller 4 枚，窗口内无自造句子的 catch）
+  #18 backend/app/main.py:20012  「Journey member role cannot start execution」  /api/v1/journeys/{journey_id}/start -> 无配对（caller 4 枚，窗口内无自造句子的 catch）
+  #19 backend/app/main.py:20020  「journey must be PLANNED with a selected plan」  /api/v1/journeys/{journey_id}/start -> 无配对（caller 4 枚，窗口内无自造句子的 catch）
+  #20 backend/app/main.py:20046  「f'PlanVersion {plan.id} is not authoritative: {start_authority_blocker}'」  /api/v1/journeys/{journey_id}/start -> 无配对（caller 4 枚，窗口内无自造句子的 catch）
+  #21 backend/app/main.py:21498  「provider_key is server-assigned for public event input」  /api/v1/journeys/{journey_id}/events -> 无配对（caller 3 枚，窗口内无自造句子的 catch）
+REVERSE_CHECK the 26 catch sites bw327 listed, reached by this join: 2, never reached by any of the 21 traveller-facing refusals: 24
+NEVER_REACHED_BY_A_LISTED_REFUSAL rows, so their sentence comes from some other failure
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:87  「读取准备进度失败。」
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:111  「这次没有读到能力判定。」
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:132  「没能开始准备。」
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx:150  「没能停止这次准备。」
+  frontend/src/features/execution/LiveRecovery.tsx:222  「暂时无法开启行程托管。」
+  frontend/src/features/execution/LiveRecovery.tsx:240  「暂时无法调整这趟行程，请稍后再试。」
+  frontend/src/features/execution/LiveRecovery.tsx:259  「无法处理这条预订信息，请稍后重试。」
+  frontend/src/features/execution/LiveRecovery.tsx:270  「无法绑定这项预订，请刷新后重试。」
+  frontend/src/features/execution/LiveRecovery.tsx:281  「无法记录这个选择，请刷新后重试。」
+  frontend/src/features/execution/LiveRecovery.tsx:297  「无法提交这个选择，请刷新后重试。」
+  frontend/src/features/execution/LiveRecovery.tsx:316  「这项变更暂时无法批准。」
+  frontend/src/features/execution/LiveRecovery.tsx:332  「暂时无法保留当前行程。」
+  frontend/src/features/execution/LiveRecovery.tsx:354  「这次选择已过期或暂时无法提交。」
+  frontend/src/features/execution/LiveRecovery.tsx:479  「暂时无法确认出发。」
+  frontend/src/features/execution/LiveRecovery.tsx:672  「连不上服务器，请重试。」
+  frontend/src/features/execution/LiveRecovery.tsx:762  「共同选择已存档。该方案已失效，请重新规划后再发起集体决定。 / 原来的共同选择已过期或现实已变化；我刷新了当前状态，没有」
+  frontend/src/features/execution/LiveRecovery.tsx:822  「请切换到自己的行程成员账号。 / 行程或成员状态已更新，当前会合信息已刷新。 / 暂时无法记录会合确认，请刷新后重试。」
+  frontend/src/features/execution/LiveRecovery.tsx:862  「暂时无法计算会合路线。」
+  frontend/src/features/execution/LiveRecovery.tsx:893  「暂时无法启动分组恢复。」
+  frontend/src/features/execution/LiveRecovery.tsx:920  「暂时无法重新计算路线。请按原计划前往或返回共同会合点。」
+  frontend/src/features/execution/LiveRecovery.tsx:939  「请先登录后确认这一步。」
+  frontend/src/features/planning/PlanComparison.tsx:114  「连不上服务器，请重试。」
+  frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:95  「这步接受没有得到可确认的答复，结果未知。」
+  frontend/src/features/stay/HotelsPanel.tsx:132  「连不上服务器，请重试。」
+NEGATIVE_CONTROL /api/v1/journeys/{journey_id}/no-such-route-bw337: a path the machine does not have, searched with the same code, must reach no row - CONTROL_PATH_ABSENT_FROM_RECEIPTS
+COUNTING_RULE one refusal may print several callers and every printed caller is scanned; the first caller whose window holds a catch that writes a Chinese sentence wins the row, and a refusal with several such callers prints one line per winner. Counts are per caller window, not per refusal, and the two are stated separately in TALLY.
+COVERAGE_LIMIT bw318 prints at most three callers per refusal (row %d of that receipt advertises 30), so a refusal whose panel caller sits fourth in the list is scored UNPAIRED here while it may pair on a real screen. This ruler reads source text: it does not click, and it cannot tell whether the traveller was on that panel when the refusal happened.
+READ THIS WITH bw313 (server sentences), bw318 (who asks), bw327 (what the panels say instead) and bw328 (what markup reads it).

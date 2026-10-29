@@ -44,18 +44,26 @@ def read(rel):
 
 
 def catch_body(lines, start):
-    """The text of the first catch at or after `start`, with its brace-balanced body."""
+    """The text of the first catch at or after `start`, from its opener to the line that closes it.
+
+    The brace balance cannot be counted over the whole line. This codebase writes handlers as `} catch {`,
+    where the leading brace closes the try and the trailing one opens the handler, so a whole-line count is
+    zero and the body used to stop after the very next line - which silently cut multi-statement handlers
+    down to their first sentence. The handler's own closer is instead the first line at handler depth one
+    that begins with a brace.
+    """
     for index in range(start, min(start + WINDOW, len(lines))):
         match = CATCH.search(lines[index])
         if not match:
             continue
-        depth = lines[index].count("{") - lines[index].count("}")
-        body = [lines[index][match.start():]]
+        depth = 1
+        body = [lines[index][match.end():]]
         for follow in range(index + 1, min(index + WINDOW, len(lines))):
-            body.append(lines[follow])
-            depth += lines[follow].count("{") - lines[follow].count("}")
-            if depth <= 0:
-                return index + 1, "\n".join(body)
+            line = lines[follow]
+            if depth == 1 and line.lstrip().startswith("}"):
+                break
+            body.append(line)
+            depth += line.count("{") - line.count("}")
         return index + 1, "\n".join(body)
     return 0, ""
 
@@ -139,10 +147,35 @@ def classify_first(row):
     return "NO_CATCH_IN_WINDOW", rel, line, 0, ""
 
 
+def body_span_histogram(files):
+    """How many lines each catch body in the scanned tree really holds, under the current cutter."""
+    spans = []
+    for rel, text in files:
+        lines = text.splitlines()
+        index = 0
+        while index < len(lines):
+            if CATCH.search(lines[index]):
+                caught_at, body = catch_body(lines, index)
+                if caught_at:
+                    spans.append(len(body.splitlines()))
+                index = caught_at
+            else:
+                index += 1
+    spans.sort()
+    return spans
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     rows = blk.parsed_rows()
     files = list(reach.source_files())
+    spans = body_span_histogram(files)
+    if not spans:
+        print("ABORT the scanned tree has no catch body to measure, so the body cutter cannot be proven")
+        return 8
+    shape = "files=%d bodies=%d shortest=%d median=%d longest=%d" % (
+        len(files), len(spans), spans[0], spans[len(spans) // 2], spans[-1])
+    print("CATCH BODY SHAPE %s" % shape)
 
     # three controls taken from the source itself: one catch that assigns its own sentence, one catch
     # that reads the error, one file that has no catch at all
@@ -171,6 +204,12 @@ def main() -> int:
            "that reads the error read SHOWS_SERVER_TEXT; `%s` has no catch in it and read "
            "NO_CATCH_IN_WINDOW. The ruler aborts if any of the three disagrees."
            % (show_rel, show_line, bare_rel or "(none)")]
+    out.append("CATCH_BODY_REVISION a handler's text is now cut at the line that closes it. The whole-line "
+               "brace count this ruler used before counts zero for the `} catch {` shape this codebase "
+               "writes, so every body stopped after its first statement; the same scan over the tree now "
+               "measures %s (one-based lines per body). The superseded reading of this receipt is kept "
+               "beside it as bw325-what-the-screen-says.txt.before_catch_body_fix, and the four rulers that "
+               "share this cutter (bw325, bw326, bw327, bw328) were all re-run." % shape)
     counts = {"SHOWS_SERVER_TEXT": 0, "OWNS_ITSOWN_TEXT": 0, "NO_CATCH_IN_WINDOW": 0}
     mounted_counts = dict(counts)
     for row in rows:

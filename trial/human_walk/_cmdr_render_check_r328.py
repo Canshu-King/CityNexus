@@ -69,12 +69,20 @@ def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     files = dict(reach.source_files())
     rows = []
+    unread = []
     for cell in read(BW327_REL).split("\n"):
         match = ROW.match(cell)
         if match:
             rows.append((match.group(1), int(match.group(2)), match.group(3)))
+        elif cell.startswith("  frontend/") and "交state=" in cell:
+            unread.append(cell)
     if not rows:
         raise SystemExit("ABORT bw327 lists no per-site rows, so there is nothing to check")
+    says_zh = int(re.search(r"says_zh=(\d+)", read(BW327_REL)).group(1))
+    if len(rows) != says_zh or unread:
+        raise SystemExit("ABORT this ruler parsed %d of bw327's published %d rows and left these unread: %s "
+                         "- a row that does not parse must never be dropped silently"
+                         % (len(rows), says_zh, " || ".join(unread[:3]) or "(none unread)"))
 
     control_body = dict(habit.bodies("frontend/src/features/execution/LiveRecovery.tsx")).get(281, "")
     control_state = setter_for("无法记录这个选择，请刷新后重试。", control_body)

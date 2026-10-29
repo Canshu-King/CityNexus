@@ -1,9 +1,11 @@
+CATCH BODY SHAPE files=163 bodies=322 shortest=1 median=3 longest=80
 CONTROL_OWS OWNS_ITSOWN_TEXT
 CONTROL_SHOWS SHOWS_SERVER_TEXT from frontend/src/app/V8Experience.tsx:1027
 CONTROL_CATCHLESS NO_CATCH_IN_WINDOW from frontend/src/main.tsx
 WHAT THE SCREEN SAYS bw325
 SAME-SOURCE CHECK rows read from bw322 = 20 (that ruler's own TALLY covers the same 20)
 CONTROLS a catch that assigns its own sentence read OWNS_ITSOWN_TEXT; `frontend/src/app/V8Experience.tsx:1027` before a catch that reads the error read SHOWS_SERVER_TEXT; `frontend/src/main.tsx` has no catch in it and read NO_CATCH_IN_WINDOW. The ruler aborts if any of the three disagrees.
+CATCH_BODY_REVISION a handler's text is now cut at the line that closes it. The whole-line brace count this ruler used before counts zero for the `} catch {` shape this codebase writes, so every body stopped after its first statement; the same scan over the tree now measures files=163 bodies=322 shortest=1 median=3 longest=80 (one-based lines per body). The superseded reading of this receipt is kept beside it as bw325-what-the-screen-says.txt.before_catch_body_fix, and the four rulers that share this cutter (bw325, bw326, bw327, bw328) were all re-run.
  1. /api/v1/journeys/{journey_id}/agent/mobile-compat-runs  站 `frontend/src/api/citynexus.ts:3457`（bw322 判 USED_OFF_PANEL）→ OWNS_ITSOWN_TEXT；调用处 frontend/src/trial/mobile/MobileCompatAgentActivity.tsx:117，接住处 frontend/src/trial/mobile/MobileCompatAgentActivity.tsx:138；那句起手 if (readTravelerBearer() !== startingBearer) return;
  2. /api/v1/journeys/{journey_id}/launch-origin  站 `frontend/src/features/execution/LiveRecovery.tsx:409`（bw322 判 ON_A_MOUNTED_PANEL）→ OWNS_ITSOWN_TEXT；调用处 frontend/src/features/execution/LiveRecovery.tsx:409，接住处 frontend/src/features/execution/LiveRecovery.tsx:418；那句起手 setMessage(zh ? "暂时无法保存出发点。" : "We couldn't save that starting point yet.");
  3. /api/v1/journeys/{journey_id}/in-transit/reroute  站 `frontend/src/api/citynexus.ts:4682`（bw322 判 ON_A_MOUNTED_PANEL）→ OWNS_ITSOWN_TEXT；调用处 frontend/src/features/execution/LiveRecovery.tsx:909，接住处 frontend/src/features/execution/LiveRecovery.tsx:920；那句起手 setMessage(
