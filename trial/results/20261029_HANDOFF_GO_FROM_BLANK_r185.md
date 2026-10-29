@@ -87,3 +87,25 @@
   改法是行号一律现读、量词同行挂 `文件:行`，或改中文数词。
 - 文档追加一律走"字节保形"小尺（报告是 CRLF 为主、交付件是 LF），并断言插入点之前逐字节未变。
 - 屏证与收据只能是 `.txt`（`.log` 被 .gitignore 吞），文件名带完整前缀（短名会让取回普查认不出）。
+## 六、10-29 午前补：那三十九枚「方案不是权威」已经落到某一臂，待点的是一格声明
+
+- 归因（正文 `trial/results/20261026_GO_FROM_BLANK_REPORT.md:3464`）：三十九次拒绝全部出自
+  `backend/app/services.py:799`，命中维度只有一处 —— 营业时间那个词。夹具 helper 在
+  `backend/tests/test_v12_authoritative_trip_execution.py:104` 写 `NORMALIZED`，判据只认
+  `backend/app/services.py:599` 的四个词；成本那一维 132 处地点行全部已解（回执
+  `trial/results/20261026_gozero/bw245-sealed-arm-state-v13.txt:10`）。封套豁免读的键在
+  `backend/app/services.py:791`，那批行的 metadata 全没写（同一回执 `:7`）。
+- 待点二选一，动的都只是夹具字节：甲＝compose 之后补一次
+  `backend/tests/test_v12_authoritative_trip_execution.py:122` 那步封套（同树先例
+  `backend/tests/test_r28_execution_truth.py:80`、`backend/tests/test_r55_live_progress_drift_product.py:88`）；
+  乙＝把 `:104` 那个词换成判据认的四词之一。没人点单就不动，也别把它算进"产品坏了"。
+- 只登记不判死：`backend/app/operations/v9.py:358` 也写同一个词，而
+  `backend/app/main.py:19305` 把它的 provider 归成服务器自有结构、选用门却没排除它
+  （排除条件 `backend/app/services.py:768`）。真路由那一臂实测根本没走到这扇门
+  （`trial/results/20261026_gozero/bw245-sealed-arm-state-staylife.txt:3`），所以这条留给裁决，不写成用户面缺陷。
+- 本班踩到的仪表坑（接班直接用）：同一把尺跑多条臂，回执必须按臂分文件。这一条原本没做，
+  第二臂直接把第一臂的读数覆盖了一次；补救是给探针加一枚 tag（
+  `trial/human_walk/_cmdr_sealed_arm_state_r245.py:25`，用 `CITYNEXUS_PROBE_RECEIPT_TAG`），
+  再把三臂全部重放，三份回执各自现读才敢写进正文。
+- 观察-only 的自证方式记一次：判"探针没改变判定"用的是同数对照（带与不带插件都是
+  18 条失败加 9 条通过），只承认耗时变长，不认"应该没影响"。
