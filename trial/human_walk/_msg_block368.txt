@@ -1,0 +1,21 @@
+block 368 generator: the per-row panel attribution, written from the bw322 receipt only
+
+trial/human_walk/_cmdr_write_block_368_r324.py emits the ledger block that landed as
+_qoder_ledger_inbox/_processed/494abfd7_2145.md.inserted_214617, and it cannot say anything the receipt
+does not already carry: 20 rows parsed from bw322, reconciled four ways against bw318's caller_found, the
+receipt's own TALLY and the concentration pairs, with per-row verdict counts checked against the TALLY
+before a single byte is written.
+
+Two gates bit during authoring and the block is better for them. Row 11 has no users at all, so the rule
+now reads: a row that claims users must locate them, a row that claims none is already located by its own
+building-file coordinate - rather than aborting or, worse, printing an empty cell. And the bullet that
+self-reports my four口径 had a format placeholder the script was feeding one argument for, which
+TypeError'd loudly instead of shipping a half-filled sentence.
+
+Q43 read the generated block before it went into the inbox: 88 claims checked, 0 findings, GREEN, with one
+advisory this block does not hide - 49 of those quantities are vouched only by a source line number rather
+than a receipt line, which is true of the per-row listing because each row's coordinate is the place in the
+frontend that builds or issues the call.
+
+Landing was verified by reading the ledger back (one hit, archived copy present, nothing pending), not by
+the applier's exit code. 0 product bytes.
