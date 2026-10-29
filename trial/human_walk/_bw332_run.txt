@@ -1,0 +1,3 @@
+LIVE ANCHORS {'tally': 3, 'same_source': 2, 'reverse': 4, 'distinct': 5, 'reused': 6, 'rows_head': 20, 'coverage': 41, 'counting': 40, 'tally_326': 28, 'ruler': 61, 'prev_section': 3785}
+LIVE NUMBERS catch=64 zh=19 en_only=6 nothing=39 state=40 console=0 nowhere=24 retry=9 distinct=24 occurrences=25
+APPENDED bytes_added=2272 heading_hits=1 bare_lf_now=217

@@ -3795,3 +3795,13 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 待裁（不代裁，这条改了「先动哪一侧」的算式）：§14.30–§14.32 那 20 处旅客面英文拒绝句，在本班量到的 20 条调用路上没有一条已知能到屏；今天在这些路上可证的是另一件缺陷——面板不论服务端说什么都给同一句「刷新后重试」，把拒绝理由整条吞掉。要按这条开单（读侧已备：64 处 catch 具名可查），还是仍按 §14.32 的三档先动后端文案，请点。本班 0 改产品字节。
 - 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3774。
 
+14.36 补（10-29 夜）：19 处面板自己写的句子逐枚点名——不是万能句刷屏，也没有一句带得出理由
+
+- 这一节补的是 §14.35 之后、也是账本块 #370 指向的那段正文。尺 trial/human_walk/_cmdr_sentence_shape_r327.py:61 读的还是 trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:28 那同批 catch body（对账句在回执 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:2）。
+- 三轴读数（回执 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:3）：64 处 catch 里，说中文 19 处、只有英文 6 处、不带任何字面量 39 处（三者相加＝64）；交给组件 state 40 处、交给 console 0 处、两者都不是 24 处；重试句形 9 处。
+- 「旅客-facing 的失败话只有一种写法」是量出来的：说中文的 19 处全都带 `zh ?` 双语形，而两个反集都为 0（0 与 0，回执 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:4）——只数正集不能证同一集合，反集才证。
+- 也不是同一句复读：24 枚不同中文句铺在 25 次出现上，被重复最多的一句也只落到 2 处——「连不上服务器，请重试。」（回执 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:5、trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:6）。这把 §14.35 的结论磨得更利：每处失败都各写了一句像样的话，而其中没有一句能带出服务端给的理由。
+- 靶面已逐枚列在回执 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:20 起（19 行，每行一枚 catch 坐标＋该句原文），账本块 #370 把它整表搬进账本。「这句到底点没点名被拒的那一项」我不做关键词代理——句子原文都在，请读。极限与判据写在回执 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:41 与 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:40。
+- 待裁（不代裁）：#369 那三档里的甲，靶面就是上面这 19 行（每行一枚 catch、一句话、一个坐标）。本班 0 改产品字节。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3785。
+

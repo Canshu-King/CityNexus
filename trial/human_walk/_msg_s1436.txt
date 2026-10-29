@@ -1,0 +1,15 @@
+section 14.36: the sentences the panels write instead, with the receipt line each one came from
+
+Appended through trial/human_walk/_append_section1436_r332.py so that ledger block #370 points at a real
+paragraph: it cites report section 14.35 as the body of this beat, and until now the sentence findings
+lived only in the receipt. The appender parses bw327 and refuses to write unless the sentence axes sum to
+the catch count, bw326 counts the same population (catch=64 on both), both REVERSE_CHECK sets are empty,
+and the per-site lines it lists match says_zh exactly.
+
+Two hardcoded strings were replaced with readings before this shipped, which is the point of building the
+appenders instead of editing prose: the reused sentence is now parsed off the MOST_REUSED line (with its
+count), and the "listing 19 rows" number is counted out of the receipt rather than assumed. The remaining
+claim that needs a reverse set to hold - that traveller-facing failure text is written in exactly one
+shape - is stated together with both reverse counts so a reader can see it is measured, not inferred.
+
+Report line endings verified unchanged (217 bare LF before and after). 0 product bytes.
