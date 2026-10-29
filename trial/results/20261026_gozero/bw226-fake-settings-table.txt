@@ -1,0 +1,24 @@
+FAKE SETTINGS REPAIR TABLE bw226
+SUITE bw163-backend-full-tbline.txt failed=231 passed=2569 errors=12
+ZIP_VERIFIED crash-line order equals FAILED-summary order because both count 231 (enforced above)
+ROWS 16 (census counted 16 for this class)
+DROPPED_BY_THIS_RULER 0 none
+TABLE
+  attribute=intent_kind  product_frame=app/agent/journey_intent.py:391  test=tests/test_journey_intent.py::test_next_stop_scope_expires_when_its_server_resolved_target_is_terminal
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_qoder_live_hard_fallback.py::test_live_configured_hard_capture_does_not_fall_back_to_mock
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_qoder_live_hard_fallback.py::test_live_configured_soft_capture_still_degrades_to_mock
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_qoder_live_replans_endpoint.py::test_live_provider_healthy_control_produces_proposal
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_qoder_live_replans_endpoint.py::test_L1_live_failure_on_mock_explicit_leg_is_not_rescued
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_qoder_live_replans_endpoint.py::test_L3_all_candidates_unavailable_reports_data_not_no_alternative
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_qoder_live_replans_endpoint.py::test_L2_fully_live_candidate_survives_when_another_is_live_failed
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_qoder_live_replans_endpoint.py::test_L4_accepted_hard_evidence_contains_no_mock_fallback
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_rx2_mock_hard_laundering_gate.py::test_hard_capture_has_no_mock_fallback_for_an_explicit_fixture_leg
+  attribute=live_valhalla_test_provider  product_frame=app/integrations/mobility/runtime.py:174  test=tests/test_rx2_mock_hard_laundering_gate.py::test_soft_capture_may_still_degrade_to_the_explicit_fixture_leg
+  attribute=objective_codes_json  product_frame=app/agent/runtime.py:454  test=tests/test_r21_autonomous_future_synthesis.py::test_r21_model_context_does_not_leak_trigger_identity_or_strategy_hint
+  attribute=objective_codes_json  product_frame=app/agent/gateway.py:683  test=tests/test_r26_decision_critical_clarification.py::test_r26_take_now_is_rejected_when_reality_moved_since_answer
+  attribute=simulation_enabled  product_frame=app/main.py:28442  test=tests/test_in_transit_reroute.py::test_reroute_endpoint_uses_current_observation_and_keeps_active_plan
+  attribute=traveler_id  product_frame=app/agent/goal_artifacts.py:33  test=tests/test_bootstrap_photon_draft_exploration.py::test_unknown_photon_cost_cannot_materialize_formal_candidate
+  attribute=traveler_id  product_frame=app/agent/goal_artifacts.py:33  test=tests/test_bootstrap_photon_draft_exploration.py::test_single_photon_candidate_returns_partial_live_result_without_fabricating_another
+  attribute=traveler_id  product_frame=app/agent/goal_artifacts.py:33  test=tests/test_r102_shared_city_outing.py::test_r102_native_selection_reads_member_scope_not_first_shared_row
+DISTINCT_ATTRIBUTES 5  intent_kind live_valhalla_test_provider objective_codes_json simulation_enabled traveler_id
+TEST_FILES_TOUCHED 9
