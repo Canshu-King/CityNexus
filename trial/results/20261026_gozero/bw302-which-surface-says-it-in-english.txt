@@ -1,0 +1,42 @@
+WHICH SURFACE SAYS IT IN ENGLISH bw302
+DENOMINATOR this census reads 1113 raises (only inside function bodies, and only where the detail is literal text); bw293 read 1187 because it also walks module level and lambdas and records details built at runtime. The two are not the same denominator and the residual has not been reconciled raise by raise - see trial/results/20261026_gozero/bw293-bare-english-refusals.txt:3
+ENGLISH SENTENCES 330 split by surface: AGENT_SURFACE=91, INTERNAL=18, ROUTE_REACHABLE=221
+ROUTE-REACHABLE SPLIT by how the binding was found: route_decorator=145, same_module_has_routes=76
+NAMED CONTROL 'Trip Studio requires an active plan' -> ROUTE_REACHABLE at backend/app/main.py:18394 via same_module_has_routes - the helper itself has no decorator; its module carries 288 routes, so no single URL is claimed for it
+ROUTE-REACHABLE ENGLISH SENTENCES BY FILE
+  backend/app/main.py  220 sentences on real routes
+      backend/app/main.py:1054  in require bound to  | f'{label} {identifier} was not found'
+      backend/app/main.py:1169  in get_native_hermes_run bound to app /api/v1/agent/hermes/runs/{run_id} | native Hermes run status is unavailable
+      backend/app/main.py:1446  in _require_native_hermes_run_member bound to  | native Hermes run is not available to this Journey member
+      backend/app/main.py:1457  in _require_native_hermes_run_member bound to  | native Hermes run is not available to this Journey member
+      backend/app/main.py:1460  in _require_native_hermes_run_member bound to  | native Hermes run is not available to this Journey member
+      backend/app/main.py:1483  in _require_native_agent_run_member bound to  | native Hermes run is not available to this Journey member
+      backend/app/main.py:1508  in _require_unscoped_native_hermes_run_member bound to  | native Hermes run is not available to this traveler
+      backend/app/main.py:1770  in _mobile_compat_run_projection bound to  | Agent run was not found
+  backend/app/simulation/api.py  1 sentences on real routes
+      backend/app/simulation/api.py:113  in access bound to  | Journey not found
+AGENT-SURFACE ENGLISH SENTENCES (the assistant walks these, not a traveller)
+      backend/app/agent/approval.py:173  in approve_action_approval | agent approval has expired
+      backend/app/agent/approval.py:177  in approve_action_approval | agent approval is no longer usable
+      backend/app/agent/approval.py:181  in approve_action_approval | verified step-up proof is required
+      backend/app/agent/approval.py:184  in approve_action_approval | step-up verifier is not configured
+      backend/app/agent/approval.py:186  in approve_action_approval | step-up proof was not verified
+      backend/app/agent/approval.py:188  in approve_action_approval | approval method does not match the required proof
+      backend/app/agent/approval.py:229  in consume_action_approval | agent approval does not match this action
+      backend/app/agent/approval.py:231  in consume_action_approval | agent approval was issued for a different action
+      backend/app/agent/approval.py:240  in consume_action_approval | agent approval scope does not match this action
+      backend/app/agent/approval.py:244  in consume_action_approval | agent approval has expired
+  AGENT_SURFACE total 91
+INTERNAL (no HTTP binding found on the holding function)
+      backend/app/departure_read.py:136  in _signed_journey | f'Journey {journey_id} was not found'
+      backend/app/traveler_principal.py:44  in _secret | CityNexus traveler principal verifier is not configured
+      backend/app/traveler_principal.py:46  in _secret | CityNexus traveler principal secret is too short
+      backend/app/traveler_principal.py:101  in resolve_traveler_principal | authenticated traveler credentials are required
+      backend/app/traveler_principal.py:103  in resolve_traveler_principal | traveler credentials are invalid
+      backend/app/traveler_principal.py:110  in resolve_traveler_principal | traveler credentials are invalid
+      backend/app/traveler_principal.py:117  in resolve_traveler_principal | traveler credentials are invalid
+      backend/app/traveler_principal.py:125  in resolve_traveler_principal | traveler credentials are expired or invalid
+      backend/app/traveler_principal.py:127  in resolve_traveler_principal | traveler principal no longer exists
+      backend/app/traveler_principal.py:107  in resolve_traveler_principal | traveler credentials are invalid
+  INTERNAL total 18
+COVERAGE_LIMIT the surface is decided inside one module: a helper called by a route in the same file counts as reachable (level same_module_has_routes), but a helper living in another module and called only from a route stays INTERNAL, and raises outside any function body are not enumerated. So INTERNAL is an upper bound on 'no traveller reaches it', not a proof.
