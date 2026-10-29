@@ -652,7 +652,11 @@ class Builder:
                 lab = self._text(px, py, w_used, txt, size=size, color="#334D66")
                 self._cell(lab, "FillForegnd", _rgb("#FFFFFF"))
                 self._cell(lab, "FillPattern", "1")
-                self._cell(lab, "FillForegndTrans", "0.35")
+                # R5: 0.35 transparency let the line read as a faint grey strip
+                # under the caption (R4.2 self-review, nit 1); opaque white is
+                # the cleaner read and the gate still measures label clearance
+                # from the same rectangle.
+                self._cell(lab, "FillForegndTrans", "0")
                 self.parked.append({"kind": "label", "x": px, "y": py,
                                     "w": w_used, "h": h_used,
                                     "for": "%s->%s" % (e["from"], e["to"])})
@@ -777,9 +781,16 @@ class Builder:
 
     def add_legend(self, items, origin):
         x, y = origin
-        self._text(x, y, 2.0, "Legend", size=8.5, bold=True, color="#12263F",
+        title = (self.cur.get("legendTitle") or self.spec.get("legendTitle")
+                 or "Legend")
+        t_size = float(self.cur.get("legendTitleSize")
+                       or self.spec.get("legendTitleSize") or 8.5)
+        t_body = float(self.cur.get("legendTextSize")
+                       or self.spec.get("legendTextSize") or 7.2)
+        pitch = max(0.235, t_body * 1.55 / 72.0)
+        self._text(x, y, 2.0, title, size=t_size, bold=True, color="#12263F",
                    align="0")
-        cy = y + 0.20
+        cy = y + t_size * 1.4 / 72.0 + 0.06
         for it in items:
             fill, line = PALETTE.get(it["state"], PALETTE["verified"])
             sw = self.page.DrawRectangle(x, self._flip_y(cy, 0.15) - 0.075,
@@ -789,9 +800,9 @@ class Builder:
             self._cell(sw, "LineWeight", "0.013in")
             self._cell(sw, "LinePattern", DASH if it["state"] == "planned" else SOLID)
             self._cell(sw, "Rounding", "0.03in")
-            self._text(x + 0.42, cy - 0.02, it.get("w", 3.4), it["text"], size=7.2,
-                       color="#22323F")
-            cy += 0.235
+            self._text(x + 0.42, cy - 0.02, it.get("w", 3.4), it["text"],
+                       size=t_body, color="#22323F")
+            cy += pitch
         self.chrome.append({"kind": "legend", "x": x, "y": y - 0.06,
                             "w": 0.42 + max([it.get("w", 3.4) for it in items] or [3.4]),
                             "h": (cy - y) + 0.10})

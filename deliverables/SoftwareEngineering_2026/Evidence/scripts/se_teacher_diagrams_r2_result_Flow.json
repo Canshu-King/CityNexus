@@ -1,0 +1,64 @@
+[
+ {
+  "file": "Teacher_02_Agent_User_Flow.vsdx",
+  "failures": [],
+  "nodes": 9,
+  "edges": 9,
+  "pages": [
+   {
+    "name": "用户流程",
+    "nodes": 9,
+    "edges": 9,
+    "connects": 18,
+    "expectedConnects": 18,
+    "propsWritten": 36,
+    "propsExpected": 36
+   },
+   {
+    "name": "附注",
+    "nodes": 0,
+    "edges": 0,
+    "connects": 0,
+    "expectedConnects": 0,
+    "propsWritten": 0,
+    "propsExpected": 0
+   }
+  ],
+  "activePageFixed": true,
+  "png": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow.png",
+  "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow.pdf",
+  "pngBytes": 45384,
+  "sha256_16": "03bc9e138a62ef38"
+ },
+ {
+  "file": "Teacher_02_Agent_User_Flow_EN.vsdx",
+  "failures": [],
+  "nodes": 9,
+  "edges": 9,
+  "pages": [
+   {
+    "name": "User Flow",
+    "nodes": 9,
+    "edges": 9,
+    "connects": 18,
+    "expectedConnects": 18,
+    "propsWritten": 36,
+    "propsExpected": 36
+   },
+   {
+    "name": "Appendix",
+    "nodes": 0,
+    "edges": 0,
+    "connects": 0,
+    "expectedConnects": 0,
+    "propsWritten": 0,
+    "propsExpected": 0
+   }
+  ],
+  "activePageFixed": true,
+  "png": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow_EN.png",
+  "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow_EN.pdf",
+  "pngBytes": 40398,
+  "sha256_16": "8997b1ef9f262868"
+ }
+]

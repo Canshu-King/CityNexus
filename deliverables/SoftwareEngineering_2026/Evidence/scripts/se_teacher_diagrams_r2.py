@@ -261,8 +261,24 @@ APX_SIZE = 13.5
 
 
 def _spec(stem_en, state, page_name, page_title, subtitle, docid, nodes, edges,
-          apx_title, apx_subtitle, notes, min_body):
+          apx_title, apx_subtitle, notes, min_body, legend=None):
     top_title, top_sub = page_title, subtitle
+    # R5.1: Teacher_02 的左下角在注记出画面后空了出来，放一个小颜色图例，
+    # 讲解人不用逐格解释配色。Teacher_01 的六种颜色一列放不下（页界），
+    # 且框内两行文字已自说明，不放。
+    page1 = {
+        "name": page_name,
+        "title": page_title, "subtitle": subtitle, "subtitleSize": 14.0,
+        "docid": docid, "revline": "generated %s" % REV,
+        "nodes": nodes, "edges": edges, "bands": [], "legend": [],
+        "edgeRule": "none",
+    }
+    if legend:
+        page1["legend"] = legend["items"]
+        page1["legendOrigin"] = legend["origin"]
+        page1["legendTitle"] = legend["title"]
+        page1["legendTitleSize"] = legend.get("legendTitleSize", 8.5)
+        page1["legendTextSize"] = legend.get("legendTextSize", 7.2)
     return {
         "file": stem_en,
         "pageW": PW, "pageH": PH,
@@ -274,13 +290,7 @@ def _spec(stem_en, state, page_name, page_title, subtitle, docid, nodes, edges,
         "docid": docid, "revline": "generated %s" % REV,
         "bodySize": BODY, "subSize": SUB, "titleSize": TITLE,
         "sheets": [
-            {
-                "name": page_name,
-                "title": page_title, "subtitle": subtitle, "subtitleSize": 14.0,
-                "docid": docid, "revline": "generated %s" % REV,
-                "nodes": nodes, "edges": edges, "bands": [], "legend": [],
-                "edgeRule": "none",
-            },
+            page1,
             {
                 "name": "附注" if state == "zh" else "Appendix",
                 "title": apx_title, "subtitle": apx_subtitle,
@@ -320,6 +330,33 @@ spec01e = _spec(
     "Notes moved off the classroom page; the main layout is untouched.",
     NOTES_T1_EN, BODY_EN_MIN)
 
+LEGEND_T2_ZH = {
+    "title": "图例",
+    "legendTitleSize": 12.0,
+    "legendTextSize": 11.0,
+    "origin": (0.40, 4.85),
+    "items": [
+        {"state": "user", "text": "用户 / 入口"},
+        {"state": "agent", "text": "Agent 工具与判定"},
+        {"state": "built", "text": "生成的方案（可对比）"},
+        {"state": "verified", "text": "展示与确认"},
+        {"state": "data", "text": "写入与审计"},
+    ],
+}
+LEGEND_T2_EN = {
+    "title": "Legend",
+    "legendTitleSize": 12.0,
+    "legendTextSize": 11.0,
+    "origin": (0.40, 4.85),
+    "items": [
+        {"state": "user", "text": "User / entry"},
+        {"state": "agent", "text": "Agent tools & decision"},
+        {"state": "built", "text": "Built options"},
+        {"state": "verified", "text": "Display & confirm"},
+        {"state": "data", "text": "Write & audit"},
+    ],
+}
+
 spec02 = _spec(
     "Teacher_02_Agent_User_Flow.vsdx", "zh", "用户流程",
     "CityNexus   |   一次出行请求怎么走完",
@@ -328,7 +365,7 @@ spec02 = _spec(
     n02, e02,
     "CityNexus   |   附注（不投屏）",
     "回环与分支的代码依据原先印在课堂页左下，现在移到本页备查。",
-    NOTES_T2_ZH, BODY)
+    NOTES_T2_ZH, BODY, legend=LEGEND_T2_ZH)
 
 spec02e = _spec(
     "Teacher_02_Agent_User_Flow_EN.vsdx", "en", "User Flow",
@@ -338,7 +375,7 @@ spec02e = _spec(
     n02e, e02e,
     "CityNexus   |   Appendix (not projected)",
     "Code evidence for the loop and branches, moved off the classroom page.",
-    NOTES_T2_EN, BODY_EN_MIN)
+    NOTES_T2_EN, BODY_EN_MIN, legend=LEGEND_T2_EN)
 
 os.makedirs(CLS, exist_ok=True)
 os.makedirs(os.path.join(CLS, "previews"), exist_ok=True)

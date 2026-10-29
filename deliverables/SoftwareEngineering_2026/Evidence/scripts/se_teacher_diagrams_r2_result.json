@@ -27,8 +27,8 @@
   "activePageFixed": true,
   "png": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_01_System_Overview.png",
   "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_01_System_Overview.pdf",
-  "pngBytes": 40859,
-  "sha256_16": "069929aa1666580d"
+  "pngBytes": 40574,
+  "sha256_16": "447e710744df5ec3"
  },
  {
   "file": "Teacher_02_Agent_User_Flow.vsdx",
@@ -58,8 +58,8 @@
   "activePageFixed": true,
   "png": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow.png",
   "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow.pdf",
-  "pngBytes": 42761,
-  "sha256_16": "b5f9392370d22f05"
+  "pngBytes": 46068,
+  "sha256_16": "8d6f2dc4132b9b85"
  },
  {
   "file": "Teacher_01_System_Overview_EN.vsdx",
@@ -89,8 +89,8 @@
   "activePageFixed": true,
   "png": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_01_System_Overview_EN.png",
   "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_01_System_Overview_EN.pdf",
-  "pngBytes": 33223,
-  "sha256_16": "7ea95c28576f5a83"
+  "pngBytes": 32985,
+  "sha256_16": "f6e233083b473a7d"
  },
  {
   "file": "Teacher_02_Agent_User_Flow_EN.vsdx",
@@ -120,7 +120,7 @@
   "activePageFixed": true,
   "png": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow_EN.png",
   "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Classroom\\previews\\Teacher_02_Agent_User_Flow_EN.pdf",
-  "pngBytes": 38016,
-  "sha256_16": "1044e869d607d097"
+  "pngBytes": 40999,
+  "sha256_16": "8a40cfd63ee298cd"
  }
 ]

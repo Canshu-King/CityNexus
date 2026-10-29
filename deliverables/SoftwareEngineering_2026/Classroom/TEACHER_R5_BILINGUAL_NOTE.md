@@ -46,12 +46,15 @@ R4.2 补的回环箭头。投影只放第 1 页；备查时翻第 2 页或看形
 
 | 文件 | sha256/16 |
 |---|---|
-| `Teacher_01_System_Overview.vsdx` | `069929aa1666580d` |
-| `Teacher_02_Agent_User_Flow.vsdx` | `b5f9392370d22f05` |
-| `Teacher_01_System_Overview_EN.vsdx` | `7ea95c28576f5a83` |
-| `Teacher_02_Agent_User_Flow_EN.vsdx` | `1044e869d607d097` |
+| `Teacher_01_System_Overview.vsdx` | `447e710744df5ec3` |
+| `Teacher_02_Agent_User_Flow.vsdx` | `8d6f2dc4132b9b85` |
+| `Teacher_01_System_Overview_EN.vsdx` | `f6e233083b473a7d` |
+| `Teacher_02_Agent_User_Flow_EN.vsdx` | `8a40cfd63ee298cd` |
 | `Teacher_03_Project_Overview_R4.mpp`（冻结） | `30af900a34a46f0d` |
-| `Teacher_03_Project_Overview_R4_EN.mpp` | `deeb1500b4cd257d` |
+| `Teacher_03_Project_Overview_R4_EN.mpp` | `5eb7b1e7122c7fc6` |
+
+（R6 更新：R5 首发的 SHA 是 069929aa/b5f9392370d22f05/7ea95c28576f5a83/1044e869d607d097
+与 deeb1500b4cd257d，R6 加图例与列宽后全部轮换，见下节。）
 
 ## 五、没有做与不做
 
@@ -67,3 +70,20 @@ R4.2 补的回环箭头。投影只放第 1 页；备查时翻第 2 页或看形
 生成器与全部证据：`Evidence/scripts/se_teacher_diagrams_r2.py`、
 `se_r43_project_en_r1.py`、`se_r43_{loop_proof_*,roundtrip_*,eye_r2,fidelity_en}` 等，
 日志与 JSON 在 `Evidence/logs/`、`Evidence/scripts/*_result*.json`。
+
+## 六、R6 追加（2026-10-29 清晨，操作者点名批评后补的主动项）
+
+1. **连线标签改不透明白底**：R4.2 自曝的毛病①——`FillForegndTrans=0.35` 会让
+   线在标签底下透出一段淡灰。改 0 后四个图的所有「是/否/用户确认后/once
+   confirmed」标签都是实底白，正文门禁照常量测标签净空。
+2. **Teacher_02 中英加颜色图例**（12pt 标题 / 11pt 条目，左下角注记挪走后的
+   空位）：白=用户入口、橙=Agent 工具与判定、黄=生成的方案、蓝=展示与确认、
+   绿=写入与审计。Teacher_01 不加——六种颜色一列放不下页界，且框内文字自说明。
+3. **英文 mpp 首屏修满**：查明视图登记的"课堂总览"表定义不存在（R4.1 只在
+   探针中间态建过），任何表编辑都被"该表已被删除"挡死。解法是先
+   `TableApply("项")` 把视图指回活表再改—— healed 之后在"项"表上把
+   任务名称列加宽到 32 字。**首屏 8 行 → 11 行全见**，名称最多两行换行；
+   65×10 保真 0 差异（`se_r43_fidelity_en_r1.json`，新 SHA `5eb7b1e7122c7fc6`）。
+   中英文件用的都是"项"表这一事实也已写进脚本注释。
+4. 全套门禁复跑：cross_check 4/4、loop proof 中英 2/2、roundtrip 中英 2/2、
+   eye 6/6、EN mpp 保真 0 差异、冻结脚本（se_r43_freeze_r1.py）随下笔提交复跑。
