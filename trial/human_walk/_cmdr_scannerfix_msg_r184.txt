@@ -1,0 +1,10 @@
+Fix the retrieval scanner's own two shape defects and recount.
+
+The extension alternation listed ts before tsx, so every cited .tsx file was looked up under a .ts
+name that no file answers to, which inflated the unresolvable column to fifty-five. Longest extension
+first, and templates and globs like ${DIR}/x.png or */.mjs now get counted in their own column instead
+of joining the missing list. The recount over the same documents: 402 cited names, 169 tracked at the
+cited path, 173 tracked under another path because the document wrote only a short name, 33 present in
+the worktree but never committed, 2 swallowed by gitignore, 13 templates and globs, and 12 that stay
+unresolvable because they are abbreviated with an ellipsis in prose or are literal examples. Only the
+33 are a real gap, and committing them stays a named decision.

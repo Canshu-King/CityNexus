@@ -21,7 +21,18 @@ DOCS = [
     r"trial\results\20261029_SESSION_RECOVERY_IS_BY_DESIGN.md",
     r"trial\results\20261029_BACKEND_CERTIFICATE_24a342198d.md",
 ]
-CITED = re.compile(r"[\w./\\-]*\.(?:txt|md|py|mjs|json|png|yml|ts|tsx)\b")
+# A citation written straight after Chinese punctuation used to be cut at the first non-word
+# character, so 'aw39-390-x-2.png' arrived as '-2.png' and was reported as a name no file answers to.
+# A cited name now runs to the next delimiter instead.
+CITED = re.compile(
+    # Longest extension first: with 'ts' ahead of 'tsx' the alternation stopped at 'ts' and every
+    # cited .tsx file came back as a .ts name that no file answers to.
+    r"[^\s`'\"()（）,，。;：、|]*\.(?:tsx|ts|txt|md|mjs|py|json|png|yml)"
+)
+# Documents also contain paths that were never meant as evidence citations: shell templates like
+# ${DIR}/x.png, globs like */.mjs, and names that start with a dash because a prefix was hyphenated
+# in prose. Those are counted apart, so a scanner artefact never inflates the missing-evidence count.
+NON_CITATION = re.compile(r"[$<>*{}|]|^-|\S[ -]?[^/\\]*\$\{")
 RECEIPT = os.path.join(TREE, "trial", "results", "20261026_gozero", "by179-cited-artifact-audit.txt")
 
 
@@ -60,6 +71,9 @@ def main():
     bad = []
     shortened = 0
     for name in sorted(citations):
+        if NON_CITATION.search(os.path.basename(name)):
+            states["not-a-citation-template-or-glob"] = states.get("not-a-citation-template-or-glob", 0) + 1
+            continue
         if name in tracked_set:
             state = "tracked-at-cited-path"
         elif os.path.basename(name) in by_basename:
