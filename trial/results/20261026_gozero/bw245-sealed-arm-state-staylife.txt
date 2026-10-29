@@ -1,0 +1,4 @@
+SEALED-ARM STATE PROBE bw245
+TARGET app\services.py :: plan_authority_blocker  return line 799
+REFUSALS_RECORDED 0 (sealed arm 0, other arms 0)
+NO_SEALED_ARM_REFUSAL recorded - nothing to attribute

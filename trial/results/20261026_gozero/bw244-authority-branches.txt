@@ -1,0 +1,43 @@
+AUTHORITY BLOCKER BRANCH PROBE bw244
+TARGET app\services.py :: plan_authority_blocker
+REFUSALS_RECORDED 39 (positive control: zero means the probe did not bite)
+BY_RETURN_LINE services.py:799=39
+  line=799   node=tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-01T22:00:00+00:00-1-0]
+  line=799   node=tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-03T22:00:00+00:00-3-2]
+  line=799   node=tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-04T22:00:00+00:00-4-3]
+  line=799   node=tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-05T22:00:00+00:00-5-4]
+  line=799   node=tests/test_v13_integrity.py::test_v13_mixed_provider_matrix_is_not_reported_as_full_capture
+  line=799   node=tests/test_v13_integrity.py::test_v13_mixed_provider_matrix_is_not_reported_as_full_capture
+  line=799   node=tests/test_v13_integrity.py::test_v13_mid_trip_c4_is_fixed_and_bound_to_selected_activity_via_inbox_api
+  line=799   node=tests/test_v13_integrity.py::test_v13_mid_trip_c4_is_fixed_and_bound_to_selected_activity_via_inbox_api
+  line=799   node=tests/test_v13_integrity.py::test_v13_execution_rejects_illegal_transitions_without_mutation
+  line=799   node=tests/test_v13_integrity.py::test_v13_execution_rejects_illegal_transitions_without_mutation
+  line=799   node=tests/test_v13_integrity.py::test_v13_protected_current_activity_cannot_be_skipped
+  line=799   node=tests/test_v13_integrity.py::test_v13_protected_current_activity_cannot_be_skipped
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_replays_frozen_evidence_and_preserves_progress
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_replays_frozen_evidence_and_preserves_progress
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_rejects_stale_preview_without_creating_plan
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_rejects_stale_preview_without_creating_plan
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_repeated_noop_accept_is_idempotent
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_repeated_noop_accept_is_idempotent
+  line=799   node=tests/test_v13_integrity.py::test_v13_repeated_non_noop_accept_cannot_create_a_second_plan
+  line=799   node=tests/test_v13_integrity.py::test_v13_repeated_non_noop_accept_cannot_create_a_second_plan
+  line=799   node=tests/test_v13_integrity.py::test_v13_concurrent_accepts_have_one_authoritative_winner
+  line=799   node=tests/test_v13_integrity.py::test_v13_concurrent_accepts_have_one_authoritative_winner
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_rejects_mutated_or_expired_frozen_evidence_on_accept
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_rejects_mutated_or_expired_frozen_evidence_on_accept
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_rejects_a_missing_frozen_matrix_pair
+  line=799   node=tests/test_v13_integrity.py::test_v13_trip_studio_rejects_a_missing_frozen_matrix_pair
+  line=799   node=tests/test_v13_integrity.py::test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth
+  line=799   node=tests/test_v13_integrity.py::test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth
+  line=799   node=tests/test_v13_integrity.py::test_v13_guardian_reuses_a_signal_only_with_its_matching_mobility_pair
+  line=799   node=tests/test_v13_integrity.py::test_v13_guardian_reuses_a_signal_only_with_its_matching_mobility_pair
+  line=799   node=tests/test_v13_integrity.py::test_v13_guardian_model_failure_is_persisted_as_retryable
+  line=799   node=tests/test_v13_integrity.py::test_v13_guardian_model_failure_is_persisted_as_retryable
+  line=799   node=tests/test_v13_integrity.py::test_v13_execution_rejects_terminal_wrong_activity_and_old_plan_mutation
+  line=799   node=tests/test_v13_integrity.py::test_v13_execution_rejects_terminal_wrong_activity_and_old_plan_mutation
+  line=799   node=tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor]
+  line=799   node=tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor]
+  line=799   node=tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[DEPARTURE-departure-anchor]
+  line=799   node=tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[DEPARTURE-departure-anchor]
+  line=799   node=tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_role_owns_its_semantic_node_even_if_input_supplies_another_one

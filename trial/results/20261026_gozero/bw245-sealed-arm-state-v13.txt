@@ -1,0 +1,60 @@
+SEALED-ARM STATE PROBE bw245
+TARGET app\services.py :: plan_authority_blocker  return line 799
+REFUSALS_RECORDED 39 (sealed arm 39, other arms 0)
+ARM_STATE SHAPE (sealed, coursework, cost_unknown, per-place dims) -> refusals
+  sealed=False coursework=False cost_unknown=False O?C  <- 39
+DISTINCT PLACE ROWS READ 132
+metadata authority_envelope: {"<absent>": 132}
+opening_hours_json status: {"NORMALIZED": 132}
+opening status key: {"status key present": 132}
+cost_evidence: {"cost_evidence present": 132}
+cost_evidence status: {"KNOWN": 132}
+cost amount_minor is None: {"False": 132}
+AUTHORITY_STATE ON THE PLAN
+  <absent>                         39
+PLAN authority_envelope: {"<absent>": 39}
+FIRST THREE REFUSALS IN FULL
+  tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-01T22:00:00+00:00-1-0] used=8 content=6 sealed=False
+    v12-test | Water Park | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Five Avenues | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Design Library | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Italian Gallery | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Tea House | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Riverside Eye | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+  tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-03T22:00:00+00:00-3-2] used=12 content=6 sealed=False
+    v12-test | Italian Gallery | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Five Avenues | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Design Library | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Water Park | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Tea House | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Riverside Eye | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+  tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-04T22:00:00+00:00-4-3] used=13 content=6 sealed=False
+    v12-test | Italian Gallery | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Water Park | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Design Library | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Riverside Eye | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Tea House | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+    v12-test | Five Avenues | envelope=<absent> | opening=NORMALIZED | cost_present=True cost=KNOWN | amount_minor_none=False | product says O?=True C?=False
+BY_TEST distinct tests that refused from the sealed arm: 22
+  tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor]
+  tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[DEPARTURE-departure-anchor]
+  tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_role_owns_its_semantic_node_even_if_input_supplies_another_one
+  tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-01T22:00:00+00:00-1-0]
+  tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-03T22:00:00+00:00-3-2]
+  tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-04T22:00:00+00:00-4-3]
+  tests/test_v13_integrity.py::test_v13_authoritative_compose_derives_day_and_night_shape[2026-10-01T08:00:00+00:00-2026-10-05T22:00:00+00:00-5-4]
+  tests/test_v13_integrity.py::test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth
+  tests/test_v13_integrity.py::test_v13_concurrent_accepts_have_one_authoritative_winner
+  tests/test_v13_integrity.py::test_v13_execution_rejects_illegal_transitions_without_mutation
+  tests/test_v13_integrity.py::test_v13_execution_rejects_terminal_wrong_activity_and_old_plan_mutation
+  tests/test_v13_integrity.py::test_v13_guardian_model_failure_is_persisted_as_retryable
+  tests/test_v13_integrity.py::test_v13_guardian_reuses_a_signal_only_with_its_matching_mobility_pair
+  tests/test_v13_integrity.py::test_v13_mid_trip_c4_is_fixed_and_bound_to_selected_activity_via_inbox_api
+  tests/test_v13_integrity.py::test_v13_mixed_provider_matrix_is_not_reported_as_full_capture
+  tests/test_v13_integrity.py::test_v13_protected_current_activity_cannot_be_skipped
+  tests/test_v13_integrity.py::test_v13_repeated_non_noop_accept_cannot_create_a_second_plan
+  tests/test_v13_integrity.py::test_v13_trip_studio_rejects_a_missing_frozen_matrix_pair
+  tests/test_v13_integrity.py::test_v13_trip_studio_rejects_mutated_or_expired_frozen_evidence_on_accept
+  tests/test_v13_integrity.py::test_v13_trip_studio_rejects_stale_preview_without_creating_plan
+  tests/test_v13_integrity.py::test_v13_trip_studio_repeated_noop_accept_is_idempotent
+  tests/test_v13_integrity.py::test_v13_trip_studio_replays_frozen_evidence_and_preserves_progress
