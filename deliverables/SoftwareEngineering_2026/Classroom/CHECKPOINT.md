@@ -42,3 +42,15 @@
 1. 11:00 复跑 `se_classroom_readiness_r1.py`（只读冷启动抽检），把结果与当时时间写回本文件；如果原生文件仍能打开就宣布 READY_WITH_LIMITATIONS 冻结，不再改任何内容。
 2. 当前主计划 sha256 `6398e58f9b4cd3b3…`；课堂副本 `02ebbcba23808a47…`（视图不同、数据相同）。
 3. 已知需要现场手动的一步：Project 甘特图右侧时间轴无法脚本滚到项目起点（13 个入口不存在、Timescale 赋值与 TimescaleEdit 全部失败，已留日志），现场按一次 Ctrl+Home 或用 `Gantt_Visible_print.png` 当替身图。
+
+## 2026-10-29 晨间状态（R5/R6/R7 之后，接手从这里开始）
+
+- 分支头：`8332609643`（远端同步）。R5 双语四图 + EN 甘特；R6 实底标签/图例/EN 列宽；
+  R7 Teacher_01 横向图例 + 讲稿勘误。全部门禁绿（cross_check/loop proof/roundtrip/
+  eye/fidelity/冻结脚本），证据在 `Evidence/scripts|logs`，SHA 全表在
+  `Classroom/TEACHER_R5_BILINGUAL_NOTE.md`。
+- #53 上 R6 回执、SHA 勘误、R7 回执三条齐全；等主人在本机最后过目后归档
+  #53/#45。
+- 已知遗留（需主人/GPT 点头或下轮做）：见 `D:\moodle\_se_handoff_20261029.md`
+  "留给主人"区（EN 里程碑视图截图、MANIFEST 随下次打包刷新、两个 mpp 的
+  彩色条在имого安装上渲染不跟随的历史结论）。

@@ -1,16 +1,25 @@
-"""R5 follow-up: widen the Task Name column on the EN classroom twin.
+"""EN classroom mpp: widen the Task Name column to 32 chars.
 
-The EN display names are longer than the Chinese ones and wrap to three lines,
-so the frozen zh view's name-column width only shows ~8 of the 11 summary rows
-on the first screen. This resizes ONE column (Name -> 32 chars) on the EN copy
-with the positional TableEditEx form the R4.1 round measured on this install
-(named arguments are silently dropped under pywin32 late binding). The chart
-half narrows accordingly and the December tail of the timescale clips - every
-bar ends 2026-10-23, so nothing readable is lost.
+WHAT ACTUALLY WORKED (this exact sequence produced the shipped bytes,
+sha256/16 5eb7b1e7122c7fc6, verified 0-difference by se_r43_fidelity_en_r1.py):
 
-Verification is the same standard as the build: plan digests before/after,
-65x10 field fidelity against the fact source, task/link/assignment counts, and
-a fresh window screenshot judged by eye.
+  1. TableApply("<live table>")   -- the saved Gantt view registered a
+     "课堂总览" table that does not exist in the file (R4.1 created it only
+     in probe intermediates), so EVERY TableEditEx first died with
+     "该表已被删除". Applying the live standard table re-points the view and
+     heals the reference.
+  2. TableEditEx(Name="<live table>", TaskTable=True, FieldName="Name",
+     Width=32) under EARLY binding (gencache.EnsureDispatch) -- named
+     arguments are honoured; late binding drops them silently.
+  3. TableApply again, CalculateAll, FileSave.
+
+The create-the-missing-table path ("TableEditEx(Create=True, NewName=课堂
+总览)") was tried first and fails with "名称出错" -- Project refuses to
+reuse the name the dangling view references. It is kept below in comments
+for the record, not executed.
+
+The earlier commit of this script showed the failed create-path version;
+that was misleading evidence, fixed 2026-10-29 08:40.
 """
 import hashlib
 import json
@@ -98,44 +107,17 @@ log("before: tasks=%d links=%d assignments=%d" % (n_tasks, n_links, n_assign))
 #  Title, Width, Align, ShowInMenu, LockFirstColumn, DateFormat, RowHeight,
 #  ColumnPosition, AlignTitle, HeaderAutoRowHeightAdjustment, HeaderTextWrap,
 #  WrapText, ShowAddNewColumn).
-def te(**kw):
-    return mp.TableEditEx(**kw)
+TABLE_LIVE = "项"  # the standard table that exists and backs the view
 
-def te_pos(args):
-    return mp.TableEditEx(*args)
-
-make_r = None
-try:
-    make_r = te(Name=TABLE, TaskTable=True, Create=True, NewName=COPY_NAME,
-                ShowInMenu=True, ShowAddNewColumn=False)
-    log("create via named args -> %s" % make_r)
-except Exception as exc:
-    log("named create failed (%s: %s); positional fallback"
-        % (type(exc).__name__, str(exc).splitlines()[0][:80]))
-if make_r is None:
-    make_r = te_pos([TABLE, True, True, False, COPY_NAME, "", "", "", 0, 0,
-                     True, False, 1, 2, -1, 1, True, True, True, False])
-    log("create via positional -> %s" % make_r)
-
-resize_r = None
-for fld in ("Name", "任务名称"):
-    try:
-        resize_r = te(Name=COPY_NAME, TaskTable=True, FieldName=fld, Width=WIDE)
-        log("resize %r -> %s" % (fld, resize_r))
-        if resize_r:
-            break
-    except Exception as exc:
-        log("resize %r ERR %s %s" % (fld, type(exc).__name__,
-                                     str(exc).splitlines()[0][:80]))
-resize_r = resize_r or te_pos([COPY_NAME, True, False, False, "", "Name", "",
-                               "", WIDE, 0, True, False, 1, 2, -1, 1, True,
-                               True, True, False])
-log("resize positional fallback -> %s" % resize_r)
-
-r2 = mp.TableApply(COPY_NAME)
-log("TableApply -> %s" % r2)
-if not (make_r and resize_r and r2):
-    log("REFUSED: one of the table steps reported failure; no save")
+r1 = mp.TableApply(TABLE_LIVE)
+log("TableApply live table (heals the dangling view reference) -> %s" % r1)
+r2 = mp.TableEditEx(Name=TABLE_LIVE, TaskTable=True, FieldName="Name",
+                    Width=WIDE)
+log("TableEditEx resize Name=32 -> %s" % r2)
+r3 = mp.TableApply(TABLE_LIVE)
+log("TableApply -> %s" % r3)
+if not (r1 and r2 and r3):
+    log("REFUSED: a step reported failure; no save")
     mp.FileCloseEx(0)
     mp.Quit()
     sys.exit(1)
