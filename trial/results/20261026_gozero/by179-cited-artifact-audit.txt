@@ -1,55 +1,25 @@
 CITED ARTIFACT RETRIEVABILITY AUDIT by179
-TIP 6f9debd48f665678e213afd65e03edfe8fc35eea
+TIP b423f66abec0fd74683140cb682cc0c4664a7aed
 DOCS_SCANNED 5
-TRACKED_FILES_IN_REPO 11775
-DISTINCT_CITED_NAMES 497
-BY_STATE gitignored-so-never-committed=2, no-file-answers-to-the-name=12, not-a-citation-template-or-glob=17, present-but-untracked=33, tracked-at-cited-path=228, tracked-under-a-different-path=205
-SHORT_FORM_CITATIONS 205 (retrievable, but the document names no directory)
-NOT_RETRIEVABLE 47
-  present-but-untracked  390-go-cold.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  430-r54-plan-blocked.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md,20261027_GO_FROM_BLANK_DELIVERY.md)
+TRACKED_FILES_IN_REPO 11812
+DISTINCT_CITED_NAMES 502
+BY_STATE gitignored-so-never-committed=2, no-file-answers-to-the-name=12, not-a-citation-template-or-glob=17, present-but-untracked=3, tracked-at-cited-path=236, tracked-under-a-different-path=232
+SHORT_FORM_CITATIONS 232 (retrievable, but the document names no directory)
+NOT_RETRIEVABLE 17
   present-but-untracked  LegacyApp.tsx  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  _arm_collision_ruler_r109.py  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  _go_to_active_chrome_r6.mjs  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  bf110…-r4.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md,20261027_GO_FROM_BLANK_DELIVERY.md)
   no-file-answers-to-the-name  bj115….txt  (cited by 20261027_GO_FROM_BLANK_DELIVERY.md)
   no-file-answers-to-the-name  bn122…390.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   present-but-untracked  cityNamed.ts  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  dinner-430-after.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  dinner-430-before.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   gitignored-so-never-committed  error-context.md  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   present-but-untracked  frontend/src/features/setup/cityNamed.ts  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  go-active-390-full.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  go-active-390.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  go-live-430-after.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  go-live-430.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  guardian-diff-390-after.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  guardian-diff-390-panel.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  half-day-430-after.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  half-day-430-before.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  half-day-430-r34.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  half-day-430.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  json  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  map-after-accept-390.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  map-planned-390-r50.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  mine.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  my-trips-430-plan.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  my-trips-430-reloaded.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  my-trips-430.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  outer-after-runaccept-390-a/b.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  plan-open-hand-390-r54.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  py/.yml/.sh/.mjs  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  resolved-note-390.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  run-diff-390-after.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  run-diff-390-block.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  run-diff-390.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  select-430-after.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  select-430-before.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  select-430.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   gitignored-so-never-committed  test-results/…47ad9…/error-context.md  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  theirs.tsx  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  trial/results/20261026_gozero/aq3-clean-chain-430-r92.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  trial/results/20261026_gozero/half-day-390.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  present-but-untracked  trial/results/20261026_gozero/plan-open-hand-390-r54.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  ts  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  tsx  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
