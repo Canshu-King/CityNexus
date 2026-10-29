@@ -1,0 +1,39 @@
+ACCEPT WITH FROZEN EVIDENCE AGAINST THE SHARED AUTHORITY BLOCKER bw288
+DATABASE sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_r288_rrhrnutf/probe.db (temporary, produced only through the product's own POST routes)
+ANSWERS RECORDED 2 rows during the walk (0 refusals) - refusals alone are not the denominator
+  accept context             asked=2 (walk=2)
+  shared authority blocker   asked=1 (walk=0)
+EVERY ANSWER BY STEP
+  step:preview (freezes the evidence for this draft or accept context             line=18483  used=0   returned 
+  step:accept                                          accept context             line=18483  used=0   returned 
+  control: shared blocker asked directly about the pro shared authority blocker   line=799    used=7   REFUSED  UNRESOLVED_ACTIVITY_FACTS
+STEPS
+  POST /demo/reset -> http_status=200
+  POST /journeys -> http_status=201
+  POST /journeys/36fef5c3-06e5-4dec-8778-3b1b5864e34e/stays/offers/capture -> http_status=200
+  POST /journeys/36fef5c3-06e5-4dec-8778-3b1b5864e34e/stay-options/generate -> http_status=200
+  POST /journeys/36fef5c3-06e5-4dec-8778-3b1b5864e34e/stay-options/10c46f02-61a4-4f00-b9ec-8ade60ef41a7/select -> http_status=200
+  JOURNEY_STATUS_AFTER_STAY_SELECT ACTIVE
+  ACTIVITIES ON THE PLAN 7
+  POST /journeys/36fef5c3-06e5-4dec-8778-3b1b5864e34e/trip-studio/preview -> http_status=503
+  PREVIEW http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for a3ce2769-64b3-5029-96f9-b0d55ed91d4a|b9c2001e-8de0-5ddc-a05f-33ea0a1c7640: KeyError","message_key":"error.request_error","trace_id":"93e68a88-7789-4888-8124-f913c585efca","details":null,"
+  POST /journeys/36fef5c3-06e5-4dec-8778-3b1b5864e34e/trip-studio/accept -> http_status=503
+  ACCEPT http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for a3ce2769-64b3-5029-96f9-b0d55ed91d4a|b9c2001e-8de0-5ddc-a05f-33ea0a1c7640: KeyError","message_key":"error.request_error","trace_id":"8c92719a-673b-4639-b626-846da7bb0a3c","details":null,"error_receipt_id":"CNX-QTJYAS85"}}
+CONTROLS
+  accept_http = 503
+  city = CN-BEIJING
+  journey_active_plan_is_promoted = True
+  journey_status = ACTIVE
+  new_plan_id = None
+  plan_asked_about = e655dfc3-494b-4d8c-880b-7a8cf4a2d78f
+  plan_was_produced_by_accept = False
+  preview_http = 503
+  promoted_plan_status = ACTIVE
+  provider_keys = ['citynexus-v9-domain']
+  shared_answer = UNRESOLVED_ACTIVITY_FACTS
+  shared_seen = True
+  used_place_ids = 7
+SHARED_BLOCKER_ASKED_DURING_WALK NO (0 times)
+SHARED_BLOCKER_REFUSES_THE_PROMOTED_PLAN YES (answer=UNRESOLVED_ACTIVITY_FACTS)
+ACCEPT_LANDED_A_NEW_PLAN_IN_A_DEPARTURE_STATE NO (accept produced plan=no; the plan this probe finally asked the shared door about had status=ACTIVE, journey=ACTIVE, is the journey pointer=True)
+ACCEPT_GATE_LOOKED_AT_PLACE_FACTS NO

@@ -1,0 +1,23 @@
+WHY NO EVIDENCE CAN BE FROZEN FOR A STAY-MATERIALIZED PLAN bw289
+READ-ONLY SOURCE C:/Users/仓鼠王/AppData/Local/Temp/cnx_r288_rrhrnutf/probe.db (the temporary database bw288 produced for itself)
+ORIGINAL: journey_status=ACTIVE city=CN-BEIJING plan=e655dfc3… activities=7 used_place_ids=7
+ORIGINAL: provider_keys=['citynexus-v9-domain']
+ORIGINAL: mobility_facts rows=30 (for this journey=30), endpoint columns=['from_key', 'to_key'], distinct endpoints=7
+ORIGINAL: route_acquisition_operations rows=0
+ORIGINAL: plan mobility_snapshot_id=v12-stay-1fea5521eacef1a33962c1649715b895, facts inside its own evidence json=6
+ORIGINAL: first used place ids=['a3ce2769…', 'fe0bbcf1…']
+ORIGINAL: first evidence endpoint ids=['arrival-…', 'stay:bei…']
+ORIGINAL: INTERSECT used place ids with mobility_fact endpoints = 0
+CONTROL COPY C:/Users/仓鼠王/AppData/Local/Temp/cnx_r289_yktihp43/copy.db (this ruler's own scratch file; the original stays read-only)
+CONTROL: tables carrying mobility endpoints = ['mobility_facts', 'route_acquisition_operations', 'private_buddy_route_location_bindings']
+CONTROL: inserted 1 synthetic mobility row into the copy whose from_key and to_key are the first two place ids the walk actually uses (id=control-row-1, provider_key=control-synthetic, 14 columns filled: id,journey_id,from_key,to_key,mode,duration_min,distance_m,cost_status,walking_min,weather_exposure,reliability_score,provider_key,provenance,captured_at); the copy is this ruler's own scratch file, not a shared database
+CONTROL-COPY-AFTER-INJECT: journey_status=ACTIVE city=CN-BEIJING plan=e655dfc3… activities=7 used_place_ids=7
+CONTROL-COPY-AFTER-INJECT: provider_keys=['citynexus-v9-domain']
+CONTROL-COPY-AFTER-INJECT: mobility_facts rows=31 (for this journey=31), endpoint columns=['from_key', 'to_key'], distinct endpoints=9
+CONTROL-COPY-AFTER-INJECT: route_acquisition_operations rows=0
+CONTROL-COPY-AFTER-INJECT: plan mobility_snapshot_id=v12-stay-1fea5521eacef1a33962c1649715b895, facts inside its own evidence json=6
+CONTROL-COPY-AFTER-INJECT: first used place ids=['a3ce2769…', 'fe0bbcf1…']
+CONTROL-COPY-AFTER-INJECT: first evidence endpoint ids=['a3ce2769…', 'fe0bbcf1…']
+CONTROL-COPY-AFTER-INJECT: INTERSECT used place ids with mobility_fact endpoints = 2
+RULER_BITES_ON_THE_COPY YES (original intersect=0, copy intersect=2, injected=1)
+VERDICT The join works and reports an intersection when the endpoints exist, so the zero on the original database is a fact about what the product ever captured: the places a stay-materialised plan walks are not present as endpoints in any mobility evidence row.
