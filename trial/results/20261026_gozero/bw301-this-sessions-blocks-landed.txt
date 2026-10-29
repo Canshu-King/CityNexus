@@ -1,6 +1,6 @@
 BLOCKS THIS SESSION REPORTED AS INSERTED - RE-READ AGAINST THE LEDGER bw301
 LEDGER D:\moodle\CITYNEXUS_AGENT_CONTROL.md
-SESSION 494abfd7 | archive files dated 2026-10-29: 30
+SESSION 494abfd7 | archive files dated 2026-10-29: 36
   494abfd7_0055.md.inserted_085947  (2026-10-29)
       heading '号令者 · 第二刀 2a 交齐、提交门装闸、本班后端证书与最大红块归因'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0055.md.inserted_085947'] | STILL_IN_INBOX none | VERDICT GREEN
@@ -46,6 +46,12 @@ SESSION 494abfd7 | archive files dated 2026-10-29: 30
   494abfd7_0452.md.inserted_125303  (2026-10-29)
       heading '494abfd7 交「屏上拿到英文原句」的分母与那条键的真实产地（#360，附一条撤回）'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0452.md.inserted_125303'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0537.md.inserted_133500  (2026-10-29)
+      heading '494abfd7 交「旅客真能撞到的英文句是 221 处」的分面读数（#361，接 §14.28 那条待裁）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0537.md.inserted_133500'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0549.md.inserted_134817  (2026-10-29)
+      heading '494abfd7 交「17 枚取不回引用」的逐枚清单与四档修法（#362，#347 的续）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0549.md.inserted_134817'] | STILL_IN_INBOX none | VERDICT GREEN
   494abfd7_1013.md.inserted_101450  (2026-10-29)
       heading '课堂栈定档、全量类型门已在 CI 跑过一代、引用件可取回普查在册（494abfd7 · 2026-10-29 10:13）'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1013.md.inserted_101450'] | STILL_IN_INBOX none | VERDICT GREEN
@@ -91,7 +97,26 @@ SESSION 494abfd7 | archive files dated 2026-10-29: 30
   494abfd7_1111.md.inserted_111152  (2026-10-29)
       heading '八枚「答复被验口拒绝」并成一句：缺的是同一枚必填字段；顺带查出契约对六枚字段一言不发（494abfd7 · 2026-10-29 11:11）'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1111.md.inserted_111152'] | STILL_IN_INBOX none | VERDICT GREEN
-NEGATIVE_CONTROL unseen title reads RED as required (LEDGER_HITS 0 | ARCHIVED none | STILL_IN_INBOX none | VERDICT RED)
-TALLY checked=30 green=30 red=0
+  494abfd7_1450.md.inserted_145101  (2026-10-29)
+      heading '494abfd7 交「221 处里旅客最先撞到的头几条」可点单清单（#363，接 §14.29 那条待裁）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1450.md.inserted_145101'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1500.md.inserted_150109  (2026-10-29)
+      heading '494abfd7 交「45 处内部词汇」的逐词分布与各自坐标（#364，接 §14.31 那条待裁）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1500.md.inserted_150109'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1516.md.inserted_151731  (2026-10-29)
+      heading '494abfd7 交「旅客面 ∩ 内部词汇」= 21 处的逐枚清单（#365，接 §14.32）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1516.md.inserted_151731'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_1528.md.inserted_152839  (2026-10-29)
+      heading '494abfd7 交「21 处里哪几处前端会问」的逐枚映射（#366，接 §14.33）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_1528.md.inserted_152839'] | STILL_IN_INBOX none | VERDICT GREEN
+NEGATIVE_CONTROL unseen title reads RED as required (LEDGER_HITS 0 | ARCHIVED none | STILL_IN_INBOX none | VERDICT RED
+HINT the title matched nothing in the ledger; these are the 5 most recent landed blocks (a wrong --title reads as a typo, not as an accident):
+     ### 494abfd7 交「21 处里哪几处前端会问」的逐枚映射（#366，接 §14.33）  <- 494abfd7_1528.md.inserted_152839
+     ### 494abfd7 交「旅客面 ∩ 内部词汇」= 21 处的逐枚清单（#365，接 §14.32）  <- 494abfd7_1516.md.inserted_151731
+     ### 494abfd7 交「45 处内部词汇」的逐词分布与各自坐标（#364，接 §14.31 那条待裁）  <- 494abfd7_1500.md.inserted_150109
+     ### 494abfd7 交「221 处里旅客最先撞到的头几条」可点单清单（#363，接 §14.29 那条待裁）  <- 494abfd7_1450.md.inserted_145101
+     ### 494abfd7 交「17 枚取不回引用」的逐枚清单与四档修法（#362，#347 的续）  <- 494abfd7_0549.md.inserted_134817)
+TALLY checked=36 green=36 red=0
 BLOCKS_THAT_DID_NOT_LAND none
 VERDICT every block this session claimed as delivered is in the ledger, and the gate can still see a red
+INSTRUMENT_FAULT no - 0 of 36 blocks read RED, nothing to chase

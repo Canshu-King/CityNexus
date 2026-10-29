@@ -7,6 +7,11 @@ RED is named.
 
 Selftest: the census must also be able to call a title that nobody ever posted RED, otherwise a whole
 sheet of GREENs would mean nothing.
+
+Exit codes: 0 every block landed, 7 some claim has no ledger hit, 8 every single block read RED at once.
+That third one is not a delivery verdict - rc=8 fired once when the landing gate grew a second return
+value and this census was still comparing a tuple to zero.  A uniformly red sheet is an instrument fault,
+so it is called out separately instead of being reported as lost work.
 """
 
 import datetime
@@ -32,7 +37,7 @@ def heading_of(path):
     return ""
 
 
-def main() -> int:
+def main(receipt=RECEIPT) -> int:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     today = datetime.date.today().isoformat()
     rows = []
@@ -55,7 +60,7 @@ def main() -> int:
         printed = io.StringIO()
         real, sys.stdout = sys.stdout, printed
         try:
-            rc = gate.check(heading)
+            rc, _hinted = gate.check(heading)
         finally:
             sys.stdout = real
         verdict = "GREEN" if rc == 0 else "RED"
@@ -68,7 +73,7 @@ def main() -> int:
     printed = io.StringIO()
     real, sys.stdout = sys.stdout, printed
     try:
-        bogus_rc = gate.check(bogus)
+        bogus_rc, _bogus_hinted = gate.check(bogus)
     finally:
         sys.stdout = real
     bites = bogus_rc == 7
@@ -83,15 +88,55 @@ def main() -> int:
     else:
         out.append("BLOCKS_THAT_DID_NOT_LAND none")
     verdict_ok = bites and not red
+    # every block red at once is the shape a broken call produces, not the shape of lost work:
+    # this census read all rows RED for exactly that reason once (the gate grew a second return value)
+    fault = bool(rows) and len(red) == len(rows)
     out.append("VERDICT %s" % ("every block this session claimed as delivered is in the ledger, and "
                                "the gate can still see a red" if verdict_ok else
                                "see the RED rows above - a reported insertion without a ledger hit"))
-    io.open(RECEIPT, "w", encoding="utf-8", newline="\n").write("\n".join(out) + "\n")
+    out.append("INSTRUMENT_FAULT %s"
+               % ("YES - all %d blocks read RED at once, which is what a broken call looks like; run "
+                  "the gate standalone (its --selftest and one real --title) before re-inserting "
+                  "anything" % len(rows) if fault
+                  else "no - %d of %d blocks read RED%s"
+                       % (len(red), len(rows),
+                          ", nothing to chase" if not red else
+                          ", and each red above is an individual claim to chase")))
+    io.open(receipt, "w", encoding="utf-8", newline="\n").write("\n".join(out) + "\n")
     for row in out:
         print(row)
-    print("WROTE %s" % RECEIPT)
-    return 0 if verdict_ok else 7
+    print("WROTE %s" % receipt)
+    return 8 if fault else (0 if verdict_ok else 7)
+
+
+def selftest():
+    """The fault sentinel has to bite, or a real loss would read the same as a broken call."""
+    import tempfile
+    rows = [name for name in os.listdir(PROCESSED)
+            if name.startswith(SESSION) and ".inserted_" in name]
+    if not rows:
+        print("SELFTEST_RED no archived blocks to test against")
+        return 9
+    box = tempfile.mkdtemp()
+    empty = os.path.join(box, "empty_ledger.md")
+    io.open(empty, "w", encoding="utf-8").write("# a ledger that holds nothing\n")
+    real_ledger = gate.LEDGER
+    try:
+        gate.LEDGER = empty
+        rc = main(receipt=os.path.join(box, "selftest_receipt.txt"))
+    finally:
+        gate.LEDGER = real_ledger
+    if rc != 8:
+        print("SELFTEST_RED with an empty ledger every block must read RED and the census must "
+              "answer 8 (instrument fault), but it answered %d" % rc)
+        return 10
+    print("SELFTEST_OK with the ledger swapped for an empty file all %d archived blocks read RED at "
+          "once and the census answered 8 (instrument fault) instead of reporting lost work"
+          % len(rows))
+    return 0
 
 
 if __name__ == "__main__":
+    if "--selftest" in sys.argv[1:]:
+        sys.exit(selftest())
     sys.exit(main())
