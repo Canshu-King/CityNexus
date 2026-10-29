@@ -1,0 +1,7 @@
+PRIVATE JOURNEY READ ARMS bv165 (read-only)
+STACK http://127.0.0.1:60364/api/v1/journeys/
+JOURNEY 5d019c5b-7d45-493d-9fee-925803677b64 db_status=DRAFT
+ARM no credential -> {"status": 401, "body_head": "{\"error\":{\"code\":\"REQUEST_ERROR\",\"message\":\"authenticated traveler credentials are require"}
+ARM bogus bearer -> {"status": 401, "body_head": "{\"error\":{\"code\":\"REQUEST_ERROR\",\"message\":\"traveler credentials are invalid\",\"message_key"}
+ARM sixty-four-zero bearer -> {"status": 401, "body_head": "{\"error\":{\"code\":\"REQUEST_ERROR\",\"message\":\"traveler credentials are invalid\",\"message_key"}
+ALL_ARMS_401 True
