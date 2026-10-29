@@ -1,0 +1,97 @@
+UNATTRIBUTED RED INVENTORY bw194
+CENSUS_BUCKET 54 (read from the published census receipt)
+INVENTORY_TOTAL 54 (enforced equal above)
+DISTINCT_UNATTRIBUTED_GROUPS 54
+FILES_TOUCHED 36
+GROUPS
+    1 x tests/test_agent_mission_runtime.py:448  KeyError: 'current_activity_id'
+    1 x tests/test_agent_mission_runtime.py:1238  KeyError: 'budget'
+    1 x tests/test_agent_runtime_gate.py:374  assert 200 == 409
+    1 x tests/test_guardian_model_evidence.py:227  AttributeError: <module 'app.agent.guardian' from 'D:\\moodle\\_cmdr_rescue_v3_1022\\backend\\app\\agent\\guardian.py'> has no attribute 'configured_journey_age
+    1 x tests/test_guardian_model_evidence.py:263  AttributeError: <module 'app.agent.guardian' from 'D:\\moodle\\_cmdr_rescue_v3_1022\\backend\\app\\agent\\guardian.py'> has no attribute 'configured_journey_age
+    1 x tests/test_guardian_v4.py:89  AssertionError: assert 'REQUIRE_CONFIRMATION' == 'EXECUTED'
+    1 x tests/test_qoder_anywhere_matrix_truth.py:375  AssertionError: 期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，那样这条门什么都能通过）；实际：CAPTURED
+    1 x tests/test_qoder_anywhere_matrix_truth.py:466  KeyError: 'error_type'
+    1 x tests/test_qoder_anywhere_provider_independence.py:70  AssertionError: 期望：backend/tests/** 里没有对 provider 域名的真实调用（§17C，live 只能走 backend/live_checks/ 的 opt-in smoke）；实际：backend\tests\test_qoder_catalog_hydration.py:60
+    1 x tests/test_qoder_anywhere_provider_truth.py:78  AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog
+    1 x tests/test_qoder_catalog_hydration.py:289  AssertionError: SETUP 失败：种子里没有 journey，实际 {'error': {'code': 'REQUEST_ERROR', 'message': 'DEMO_DATABASE_NOT_ISOLATED', 'message_key': 'error.request_error', 'tr
+    1 x tests/test_qoder_ord0296_write_deadline.py:212  AssertionError: {'app\\catalog_hydration_operations.py': ['session.execute(text("PRAGMA busy_timeout = 500"))'], 'app\\core\\config.py...settings.write_busy_tim
+    1 x tests/test_qoder_ord0307_credential_gate.py:187  AssertionError: {'env_present': 0, 'expect': 'CREDENTIAL_GATE_CLEAR', 'verdict': 'CREDENTIAL_LITERAL_OUTSIDE_PRODUCT_PATH'}
+    1 x tests/test_qoder_ord0332_error_receipt.py:207  AssertionError: 回执不落库是设计：失败的写会回滚，同事务存的号会跟着一起消失
+    1 x tests/test_qoder_ord0383_undelete_write_lock.py:295  TypeError: string indices must be integers, not 'str'
+    1 x tests/test_qoder_ord0402_recycle_bin.py:160  AssertionError: list_journeys moved - the order forbids changing this door
+    1 x tests/test_qoder_ord0402_recycle_bin.py:295  AssertionError: 6 contract operations are absent from api.ts: ['accept_unknown_price_route_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_v
+    1 x tests/test_qoder_ord0434_share_grants.py:238  AssertionError: ORD-0434 promised the anonymous read would not move one word; it moved
+    1 x tests/test_qoder_ord0434_share_grants.py:305  AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","message_key":"error.request_error","trace_id":"974f190e
+    1 x tests/test_qoder_ord0434_share_grants.py:305  AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","message_key":"error.request_error","trace_id":"ae45b8ca
+    1 x tests/test_qoder_ord0434_share_grants.py:305  AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","message_key":"error.request_error","trace_id":"1bf28f1b
+    1 x tests/test_qoder_ord0434_share_grants.py:377  AssertionError: assert {'JOURNEY_EXE...GRANT_MANAGE'} == {'JOURNEY_REA...GRANT_MANAGE'}
+    1 x tests/test_qoder_ord0434_share_grants.py:402  TypeError: string indices must be integers, not 'str'
+    1 x tests/test_qoder_simulation_mode.py:57  AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.request_error","trace_id":"47d6cdd2-8cb2-4ff5-a7ce-
+    1 x tests/test_qoder_simulation_mode.py:57  AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.request_error","trace_id":"63c02fa7-5af2-4134-a9ae-
+    1 x tests/test_qoder_simulation_mode.py:57  AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.request_error","trace_id":"90da16f2-6e55-447f-818a-
+    1 x tests/test_qoder_simulation_mode.py:57  AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.request_error","trace_id":"2e9cb7e2-963e-4e31-86e5-
+    1 x tests/test_qoder_simulation_mode.py:293  AssertionError: {'advance': {'journey_status': 'DRAFT', 'selected_plan_version_id': None, 'steps': [{'ms': 21.7, 'ok': True, 'step': '...: 21.7}, 'journey_id':
+    1 x tests/test_r14_terminal_disruption_recovery.py:69  KeyError: 'current_activity_id'
+    1 x tests/test_r88_real_poi_exploration.py:139  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"aa3a55ce-c6e2-4776-b98f-a8
+    1 x tests/test_r88_real_poi_exploration.py:302  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"86ac78eb-890b-48be-91cb-5f
+    1 x tests/test_r89_member_shared_osm_identity.py:131  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"546fb448-ddb2-45f0-a696-bc
+    1 x tests/test_r90_private_exploration_board.py:121  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"85e43dae-8378-4362-b69d-81
+    1 x tests/test_r90_private_exploration_board.py:304  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"0bcc852a-cbfd-43a1-a0de-03
+    1 x tests/test_r90_private_exploration_board.py:464  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"981bd52c-102d-458d-97b0-d2
+    1 x tests/test_r93_explicit_city_center_and_private_session.py:114  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"76221d4c-e5d4-420b-b190-2d
+    1 x tests/test_r96_intent_driven_first_outing.py:172  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"c2ea6c55-5b7b-4fe8-a98e-f6
+    1 x tests/test_revolution_r77_recovery.py:1333  assert 500 == 50000
+    1 x tests/test_v12_authoritative_trip_execution.py:249  KeyError: 'context'
+    1 x tests/test_v13_integrity.py:624  AssertionError: assert 409 == 200
+    1 x tests/test_v14_trial_readiness.py:71  AssertionError: assert 'NOT_CALLED' == 'UNAVAILABLE'
+    1 x tests/test_v16_integration.py:282  KeyError: 'trip'
+    1 x tests/test_v1922_six_fix_regressions.py:231  AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"GENERIC_COMPOSE_INFEASIBLE:GENERIC_COMPOSE_UNKNOWN_COST:gen-491f3182-0","message_key":"request.in
+    1 x tests/test_v5_autopilot.py:104  assert None is not None
+    1 x tests/test_v6_predictive_real_city.py:141  AssertionError: assert 'REQUIRE_CONFIRMATION' == 'EXECUTED'
+    1 x tests/test_v7_traveler_twin.py:74  AssertionError: assert 409 == 200
+    1 x tests/test_v7_traveler_twin.py:275  AssertionError: assert 0.0 > 0.0
+    1 x tests/test_wp04_endpoints.py:221  KeyError: 'traveler_id'
+    1 x tests/test_wp04a0_bridge.py:116  AssertionError: assert {'error': {'c...quired', ...}} == {'error': {'c...quired', ...}}
+    1 x tests/test_wp06_followup_assist.py:223  AssertionError: assert 'amap_walking' == 'mock-mobility'
+    1 x tests/test_wp06_postgate_hardening_next.py:90  AssertionError: assert 'RESOLVED' == 'ACKNOWLEDGED'
+    1 x tests/test_wp06_postgate_hardening_next.py:171  KeyError: 'projection_status'
+    1 x tests/test_wp06_twin_v2_gate.py:58  KeyError: 'context'
+    1 x tests/test_wp07_foundation_assist.py:144  KeyError: 'projection_status'
+BY FILE
+    6 x tests/test_qoder_ord0434_share_grants.py
+    5 x tests/test_qoder_simulation_mode.py
+    3 x tests/test_r90_private_exploration_board.py
+    2 x tests/test_agent_mission_runtime.py
+    2 x tests/test_guardian_model_evidence.py
+    2 x tests/test_qoder_anywhere_matrix_truth.py
+    2 x tests/test_qoder_ord0402_recycle_bin.py
+    2 x tests/test_r88_real_poi_exploration.py
+    2 x tests/test_v7_traveler_twin.py
+    2 x tests/test_wp06_postgate_hardening_next.py
+    1 x tests/test_agent_runtime_gate.py
+    1 x tests/test_guardian_v4.py
+    1 x tests/test_qoder_anywhere_provider_independence.py
+    1 x tests/test_qoder_anywhere_provider_truth.py
+    1 x tests/test_qoder_catalog_hydration.py
+    1 x tests/test_qoder_ord0296_write_deadline.py
+    1 x tests/test_qoder_ord0307_credential_gate.py
+    1 x tests/test_qoder_ord0332_error_receipt.py
+    1 x tests/test_qoder_ord0383_undelete_write_lock.py
+    1 x tests/test_r14_terminal_disruption_recovery.py
+    1 x tests/test_r89_member_shared_osm_identity.py
+    1 x tests/test_r93_explicit_city_center_and_private_session.py
+    1 x tests/test_r96_intent_driven_first_outing.py
+    1 x tests/test_revolution_r77_recovery.py
+    1 x tests/test_v12_authoritative_trip_execution.py
+    1 x tests/test_v13_integrity.py
+    1 x tests/test_v14_trial_readiness.py
+    1 x tests/test_v16_integration.py
+    1 x tests/test_v1922_six_fix_regressions.py
+    1 x tests/test_v5_autopilot.py
+    1 x tests/test_v6_predictive_real_city.py
+    1 x tests/test_wp04_endpoints.py
+    1 x tests/test_wp04a0_bridge.py
+    1 x tests/test_wp06_followup_assist.py
+    1 x tests/test_wp06_twin_v2_gate.py
+    1 x tests/test_wp07_foundation_assist.py

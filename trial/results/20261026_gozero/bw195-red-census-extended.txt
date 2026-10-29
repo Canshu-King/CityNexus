@@ -1,0 +1,76 @@
+WHOLE-SUITE RED CENSUS, EXTENDED CLASSES bw195
+SOURCE bw163-backend-full-tbline.txt
+SUMMARY failed=231 passed=2569 errors=12
+STACK_TAIL_RECORDS 231 (must equal failed, enforced above)
+PREVIOUS_NOT_ATTRIBUTED 54 (re-used ruler r164, grouping imported from it)
+MOVED_TO_NAMED_CAUSE_CLASSES 36 (needle proved present in each message)
+MOVED_TO_INVARIANT_GUARD_BUCKET 9 (message names the broken invariant, cause not yet read per case)
+STILL_UNEXPLAINED 9
+RED BY CAUSE {"bearer-less private read (measured this shift)": 55, "door answers 401 where the test expects 200": 32, "seeded clock expired": 26, "fake settings missing a field": 16, "plan version refused as not authoritative": 15, "demo scene setup refused": 11, "body iterated as a list (the measured 401 shape)": 10, "answer lacks a key the test reads (KeyError off the server body)": 10, "invariant guard prints its own drift; cause still needs the per-case read": 9, "still unexplained after the extended classes": 9, "request body rejected by validation (VALIDATION_ERROR in the server answer)": 8, "demo door refused: product gate answers DEMO_DATABASE_NOT_ISOLATED": 5, "autonomy decided differently than the test expects": 3, "private door refused: product gate answers TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED": 3, "route function called with dependencies unbound": 3, "test patches a module symbol the module no longer exports": 2, "autonomy decided EXECUTED where the test expects confirmation": 2, "answer iterated as a mapping when the body is a string": 2, "commitment anchor rejected by the v13 planner": 2, "door answers 409 where the test expects 200": 2, "door answers 200 where the test expects 409": 1, "test reads a router shape that changed": 1, "stale field-list contract": 1, "crash lands in library code, not repo code": 1, "replay city does not match": 1, "generic compose refused because a cost is unknown": 1, "not yet attributed": 0}
+NEEDLES THAT EARNED EACH NEW LABEL
+  answer iterated as a mapping when the body is a string  <-  'string indices must be integers'
+  answer lacks a key the test reads (KeyError off the server body)  <-  'KeyError:'
+  autonomy decided EXECUTED where the test expects confirmation  <-  "'REQUIRE_CONFIRMATION' == 'EXECUTED'"
+  demo door refused: product gate answers DEMO_DATABASE_NOT_ISOLATED  <-  'DEMO_DATABASE_NOT_ISOLATED'
+  door answers 200 where the test expects 409  <-  'assert 200 == 409'
+  door answers 409 where the test expects 200  <-  'assert 409 == 200'
+  generic compose refused because a cost is unknown  <-  'GENERIC_COMPOSE_INFEASIBLE'
+  invariant guard prints its own drift; cause still needs the per-case read  <-  'promised the anonymous read would not move one word'
+  private door refused: product gate answers TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED  <-  'TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED'
+  request body rejected by validation (VALIDATION_ERROR in the server answer)  <-  '"code":"VALIDATION_ERROR"'
+  test patches a module symbol the module no longer exports  <-  'AttributeError: <module '
+NEWLY ATTRIBUTED GROUPS
+    1 x tests/test_qoder_ord0383_undelete_write_lock.py:295 [answer iterated as a mapping when the body is a string] TypeError: string indices must be integers, not 'str'
+    1 x tests/test_qoder_ord0434_share_grants.py:402 [answer iterated as a mapping when the body is a string] TypeError: string indices must be integers, not 'str'
+    1 x tests/test_agent_mission_runtime.py:448 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'current_activity_id'
+    1 x tests/test_agent_mission_runtime.py:1238 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'budget'
+    1 x tests/test_qoder_anywhere_matrix_truth.py:466 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'error_type'
+    1 x tests/test_r14_terminal_disruption_recovery.py:69 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'current_activity_id'
+    1 x tests/test_v12_authoritative_trip_execution.py:249 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'context'
+    1 x tests/test_v16_integration.py:282 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'trip'
+    1 x tests/test_wp04_endpoints.py:221 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'traveler_id'
+    1 x tests/test_wp06_postgate_hardening_next.py:171 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'projection_status'
+    1 x tests/test_wp06_twin_v2_gate.py:58 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'context'
+    1 x tests/test_wp07_foundation_assist.py:144 [answer lacks a key the test reads (KeyError off the server body)] KeyError: 'projection_status'
+    1 x tests/test_guardian_v4.py:89 [autonomy decided EXECUTED where the test expects confirmation] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'EXECUTED'
+    1 x tests/test_v6_predictive_real_city.py:141 [autonomy decided EXECUTED where the test expects confirmation] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'EXECUTED'
+    1 x tests/test_qoder_catalog_hydration.py:289 [demo door refused: product gate answers DEMO_DATABASE_NOT_ISOLATED] AssertionError: SETUP 失败：种子里没有 journey，实际 {'error': {'code': 'REQUEST_ERROR', 'message': 'DEMO_DATABASE_NOT_IS
+    1 x tests/test_qoder_simulation_mode.py:57 [demo door refused: product gate answers DEMO_DATABASE_NOT_ISOLATED] AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.r
+    1 x tests/test_qoder_simulation_mode.py:57 [demo door refused: product gate answers DEMO_DATABASE_NOT_ISOLATED] AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.r
+    1 x tests/test_qoder_simulation_mode.py:57 [demo door refused: product gate answers DEMO_DATABASE_NOT_ISOLATED] AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.r
+    1 x tests/test_qoder_simulation_mode.py:57 [demo door refused: product gate answers DEMO_DATABASE_NOT_ISOLATED] AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.r
+    1 x tests/test_agent_runtime_gate.py:374 [door answers 200 where the test expects 409] assert 200 == 409
+    1 x tests/test_v13_integrity.py:624 [door answers 409 where the test expects 200] AssertionError: assert 409 == 200
+    1 x tests/test_v7_traveler_twin.py:74 [door answers 409 where the test expects 200] AssertionError: assert 409 == 200
+    1 x tests/test_v1922_six_fix_regressions.py:231 [generic compose refused because a cost is unknown] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"GENERIC_COMPOSE_INFEASIBLE:GENERIC_COMPOSE_UNKN
+    1 x tests/test_qoder_anywhere_matrix_truth.py:375 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: 期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，那样这条门什么都能通过）；实际：CAPTURED
+    1 x tests/test_qoder_anywhere_provider_independence.py:70 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: 期望：backend/tests/** 里没有对 provider 域名的真实调用（§17C，live 只能走 backend/live_checks/ 的 opt-in smoke）；实
+    1 x tests/test_qoder_anywhere_provider_truth.py:78 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 
+    1 x tests/test_qoder_ord0296_write_deadline.py:212 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: {'app\\catalog_hydration_operations.py': ['session.execute(text("PRAGMA busy_timeout = 500"))'
+    1 x tests/test_qoder_ord0307_credential_gate.py:187 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: {'env_present': 0, 'expect': 'CREDENTIAL_GATE_CLEAR', 'verdict': 'CREDENTIAL_LITERAL_OUTSIDE_P
+    1 x tests/test_qoder_ord0332_error_receipt.py:207 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: 回执不落库是设计：失败的写会回滚，同事务存的号会跟着一起消失
+    1 x tests/test_qoder_ord0402_recycle_bin.py:160 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: list_journeys moved - the order forbids changing this door
+    1 x tests/test_qoder_ord0402_recycle_bin.py:295 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: 6 contract operations are absent from api.ts: ['accept_unknown_price_route_api_v1_journeys__jo
+    1 x tests/test_qoder_ord0434_share_grants.py:238 [invariant guard prints its own drift; cause still needs the per-case read] AssertionError: ORD-0434 promised the anonymous read would not move one word; it moved
+    1 x tests/test_qoder_ord0434_share_grants.py:305 [private door refused: product gate answers TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED] AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","messa
+    1 x tests/test_qoder_ord0434_share_grants.py:305 [private door refused: product gate answers TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED] AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","messa
+    1 x tests/test_qoder_ord0434_share_grants.py:305 [private door refused: product gate answers TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED] AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","messa
+    1 x tests/test_r88_real_poi_exploration.py:139 [request body rejected by validation (VALIDATION_ERROR in the server answer)] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"reque
+    1 x tests/test_r88_real_poi_exploration.py:302 [request body rejected by validation (VALIDATION_ERROR in the server answer)] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"reque
+    1 x tests/test_r89_member_shared_osm_identity.py:131 [request body rejected by validation (VALIDATION_ERROR in the server answer)] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"reque
+    1 x tests/test_r90_private_exploration_board.py:121 [request body rejected by validation (VALIDATION_ERROR in the server answer)] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"reque
+    1 x tests/test_r90_private_exploration_board.py:304 [request body rejected by validation (VALIDATION_ERROR in the server answer)] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"reque
+    1 x tests/test_r90_private_exploration_board.py:464 [request body rejected by validation (VALIDATION_ERROR in the server answer)] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"reque
+    1 x tests/test_r93_explicit_city_center_and_private_session.py:114 [request body rejected by validation (VALIDATION_ERROR in the server answer)] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"reque
+    1 x tests/test_r96_intent_driven_first_outing.py:172 [request body rejected by validation (VALIDATION_ERROR in the server answer)] AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"reque
+    1 x tests/test_qoder_ord0434_share_grants.py:377 [still unexplained after the extended classes] AssertionError: assert {'JOURNEY_EXE...GRANT_MANAGE'} == {'JOURNEY_REA...GRANT_MANAGE'}
+    1 x tests/test_qoder_simulation_mode.py:293 [still unexplained after the extended classes] AssertionError: {'advance': {'journey_status': 'DRAFT', 'selected_plan_version_id': None, 'steps': [{'ms': 21.
+    1 x tests/test_revolution_r77_recovery.py:1333 [still unexplained after the extended classes] assert 500 == 50000
+    1 x tests/test_v14_trial_readiness.py:71 [still unexplained after the extended classes] AssertionError: assert 'NOT_CALLED' == 'UNAVAILABLE'
+    1 x tests/test_v5_autopilot.py:104 [still unexplained after the extended classes] assert None is not None
+    1 x tests/test_v7_traveler_twin.py:275 [still unexplained after the extended classes] AssertionError: assert 0.0 > 0.0
+    1 x tests/test_wp04a0_bridge.py:116 [still unexplained after the extended classes] AssertionError: assert {'error': {'c...quired', ...}} == {'error': {'c...quired', ...}}
+    1 x tests/test_wp06_followup_assist.py:223 [still unexplained after the extended classes] AssertionError: assert 'amap_walking' == 'mock-mobility'
+    1 x tests/test_wp06_postgate_hardening_next.py:90 [still unexplained after the extended classes] AssertionError: assert 'RESOLVED' == 'ACKNOWLEDGED'
+    1 x tests/test_guardian_model_evidence.py:227 [test patches a module symbol the module no longer exports] AttributeError: <module 'app.agent.guardian' from 'D:\\moodle\\_cmdr_rescue_v3_1022\\backend\\app\\agent\\guar
+    1 x tests/test_guardian_model_evidence.py:263 [test patches a module symbol the module no longer exports] AttributeError: <module 'app.agent.guardian' from 'D:\\moodle\\_cmdr_rescue_v3_1022\\backend\\app\\agent\\guar
