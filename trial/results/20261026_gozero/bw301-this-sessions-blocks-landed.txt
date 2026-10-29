@@ -1,11 +1,17 @@
-BLOCKS THIS SESSION REPORTED AS INSERTED - RE-READ AGAINST THE LEDGER bw301
+BLOCKS THIS SESSION REPORTED AS INSERTED - RE-READ AGAINST THE LEDGER bw301 | STABLE_ANCHOR line 1 | TALLY_LINE 148 | checked 46 green 46 red 0
 LEDGER D:\moodle\CITYNEXUS_AGENT_CONTROL.md
-SESSION 494abfd7 | window = today and the 1 day(s) before it, 10-29 08:55:20 .. 10-30 00:14:08 = 44 blocks
-  stretch 1: 10-29 23:34:00 .. 10-30 00:14:08 = 3 blocks
+SESSION 494abfd7 | window = today and the 1 day(s) before it, 10-29 08:55:20 .. 10-30 00:48:50 = 46 blocks
+  stretch 1: 10-29 23:34:00 .. 10-30 00:48:50 = 5 blocks
   stretch 2: 10-29 21:45:12 .. 10-29 22:17:05 = 4 blocks
   stretch 3: 10-29 14:50:37 .. 10-29 15:37:04 = 5 blocks
   stretch 4: 10-29 08:55:20 .. 10-29 13:47:31 = 32 blocks
 WINDOW_EDGE first block excluded: 494abfd7_2002.md.inserted_201740  (10-25 20:17:23)
+  494abfd7_0048.md.inserted_004911  (archived 10-30 00:48:50)
+      heading '494abfd7 勘误：把「普查回执与尺」那几枚会漂的坐标逐枚现读，并交出第 1 行的自指锚（本块接上一格）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0048.md.inserted_004911'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_0029.md.inserted_002944  (archived 10-30 00:29:23)
+      heading '494abfd7 交「管落地的普查自己跨零点数不到全」这第五处量具错的对照与改法（本块接前两格）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0029.md.inserted_002944'] | STILL_IN_INBOX none | VERDICT GREEN
   494abfd7_0014.md.inserted_001434  (archived 10-30 00:14:08)
       heading '494abfd7 交「读到的字段各去了哪」的逐枚靶面：十三处 handler 四档归置，并补一次次轴改口（本块接前两格勘误）'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0014.md.inserted_001434'] | STILL_IN_INBOX none | VERDICT GREEN
@@ -138,14 +144,8 @@ WINDOW_EDGE first block excluded: 494abfd7_2002.md.inserted_201740  (10-25 20:17
   494abfd7_0055.md.inserted_085947  (archived 10-29 08:55:20)
       heading '号令者 · 第二刀 2a 交齐、提交门装闸、本班后端证书与最大红块归因'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0055.md.inserted_085947'] | STILL_IN_INBOX none | VERDICT GREEN
-NEGATIVE_CONTROL unseen title reads RED as required (LEDGER_HITS 0 | ARCHIVED none | STILL_IN_INBOX none | VERDICT RED
-HINT the title matched nothing in the ledger; these are the 5 most recent landed blocks (a wrong --title reads as a typo, not as an accident):
-     ### 494abfd7 交「读到的字段各去了哪」的逐枚靶面：十三处 handler 四档归置，并补一次次轴改口（本块接前两格勘误）  <- 494abfd7_0014.md.inserted_001434
-     ### 494abfd7 勘误：前两格交靶面与闭链时用的「十九处」读数作废，改口为廿六处（本块源于三把我自己的尺量错过）  <- 494abfd7_2354.md.inserted_235528
-     ### 494abfd7 交「面板自造的话句句被标记读到」的逐枚闭链：十九处 catch 各自的 state 与渲染行（#372，接 #370）  <- 494abfd7_2334.md.inserted_233424
-     ### 494abfd7 勘误：把「屏上改写成什么话」那格的正文坐标从 §14.35 挪到 §14.36（#371）  <- 494abfd7_2217.md.inserted_221722
-     ### 494abfd7 交「屏上改写成什么话」的逐枚靶面：十九处自造句子的 catch（#370，接 #369）  <- 494abfd7_2213.md.inserted_221414)
-TALLY checked=44 green=44 red=0
+NEGATIVE_CONTROL unseen title reads RED as required (LEDGER_HITS 0 | ARCHIVED none | STILL_IN_INBOX none | VERDICT RED HINT the title matched nothing in the ledger; these are the 5 most recent landed blocks (a wrong --title reads as a typo, not as an accident): ### 494abfd7 勘误：把「普查回执与尺」那几枚会漂的坐标逐枚现读，并交出第 1 行的自指锚（本块接上一格） <- 494abfd7_0048.md.inserted_004911 ### 494abfd7 交「管落地的普查自己跨零点数不到全」这第五处量具错的对照与改法（本块接前两格） <- 494abfd7_0029.md.inserted_002944 ### 494abfd7 交「读到的字段各去了哪」的逐枚靶面：十三处 handler 四档归置，并补一次次轴改口（本块接前两格勘误） <- 494abfd7_0014.md.inserted_001434 ### 494abfd7 勘误：前两格交靶面与闭链时用的「十九处」读数作废，改口为廿六处（本块源于三把我自己的尺量错过） <- 494abfd7_2354.md.inserted_235528 ### 494abfd7 交「面板自造的话句句被标记读到」的逐枚闭链：十九处 catch 各自的 state 与渲染行（#372，接 #370） <- 494abfd7_2334.md.inserted_233424)
+TALLY checked=46 green=46 red=0
 BLOCKS_THAT_DID_NOT_LAND none
 VERDICT every block this session claimed as delivered is in the ledger, and the gate can still see a red
-INSTRUMENT_FAULT no - 0 of 44 blocks read RED, nothing to chase
+INSTRUMENT_FAULT no - 0 of 46 blocks read RED, nothing to chase

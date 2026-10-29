@@ -3837,3 +3837,13 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 顺出来的一条新缺陷面（不是文案面）：那 4 处交进 state 的 `error.message` 追到了出处——四处的 try 里点的都是 cityNexusApi 的调用（现读 4/4），而 api 层在 frontend/src/api/citynexus.ts:2892 抛错时把 message 拼成 `"CityNexus API " + response.status + ": " + path`。所以旅客在这四格里看到的是本机拼装串（带状态码与路径），既不是服务端的拒绝句，也不是一句能看懂的话。「屏上有英文」这件事，在这 63 枚面板 handler 里现读为 4 处，而那 4 处显的是内部诊断——这一格是第四档，不在 §14.32 的三档里，请一并点。
 - 这把尺不能说的那句：provenance 只证明该 catch 的 try 文本里出现了 api 层的调用名，不证明那次 message 一定由 api 层那行拼装而来（同一个 try 里若有本地 throw，就会走别的路径）；要钉死得真按一次把这四格逼到屏上，本尺不替它做。它也不看 JSX 插值（归 bw328）、不追跨组件的 prop。全程 0 改产品字节、0 点击。
 - 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3819。
+
+### 14.40 补（10-30 凌晨）：第五处量具错——管别人落地的普查自己跨零点就瞎了
+
+- 错在哪一行：尺 trial/human_walk/_cmdr_blocks_landed_census_r301.py 的上一代（git 对象 e5530e8386）第 49 行写的是 `if stamp != today: continue`，取数按「归档文件修改日 == 今天」。00:14 落了最后一格之后时钟进了新的一天，于是这把尺只看得到 10-30 的归档件。对照回执 trial/results/20261026_gozero/bw339-census-window-old-vs-new-vs-narrow.txt:7 现读同一进程里的重放：旧尺 checked=1 green=1 red=0 rc=0——它数到 1 枚仍把表收尾成「零枚红」，且整张表里没有一行说自己丢了什么。
+- 为什么这是第五处而不是第一处：前四处（切刀、字面量、注释里的 catch、坐标漂移）都在「读产品源码」那侧，这一处在「复核我自己交过的东西」那侧。同一夜我拿它证明过落账复算，那类读数的取数窗口若错了，绿灯只会比红牌更贵。
+- 怎么改的：窗口换成「今天＋前一天」（trial/human_walk/_cmdr_blocks_landed_census_r301.py:63 的 session_window），并加三道自证：trial/human_walk/_cmdr_blocks_landed_census_r301.py:83 起把窗口内按停顿切成 4 段逐段落表（真歇过的地方要看得见，不能装作一直在跑）；trial/human_walk/_cmdr_blocks_landed_census_r301.py:111 起打印被排除的第一枚归档件与其秒级时刻（现读 trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt:8）；空窗与「边界切在班中」两种情形直接 ABORT。先试过纯间隙阈值（相邻两块相隔过久即断），它把本班从五小时半的休息处切成两半——那是休息不是换班，所以否了。
+- 修后现读：同一份归档、同一本账本、同一进程，尺从数到 1 枚变成数到 44 枚（trial/results/20261026_gozero/bw339-census-window-old-vs-new-vs-narrow.txt:26 那行记 44-1=43）；出厂回执 trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt:148 为 checked=44 green=44 red=0。负对照（一张从未投过的标题）仍判红，空账本自检仍答「仪表故障」码而不是「活丢了」。
+- 新尺把旧形状关在门外：把 DAYS_BACK 强设回 0（即旧口径）再跑，尺自己拒绝出表，原话见 trial/results/20261026_gozero/bw339-census-window-old-vs-new-vs-narrow.txt:21 那一行——「窗口外那一枚距窗口内最老一枚只隔一天，这看起来是把一个班切成了两半」。这条拒绝本身就是对照：同一份数据，旧尺静默数 1，新尺要么数全要么不作答。
+- 该说没工件的地方：00:1x 那一次的原始打印件已被修后回执覆盖，本机只剩会话流水可查。所以本节引的是「同一进程里重放旧尺得到 checked=1」（trial/results/20261026_gozero/bw339-census-window-old-vs-new-vs-narrow.txt:7，两代尺的 git 对象见同文件 :3），不引那次已经不在的表。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3831。本班 0 改产品字节、0 点击。

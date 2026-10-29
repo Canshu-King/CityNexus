@@ -15,6 +15,11 @@ so the receipt also prints every stretch wider than STRETCH_MINUTES, with the bl
 instead of pretending the shift ran without a pause.  The first excluded block is named too: a boundary
 with no visible neighbour on the far side is not a boundary.
 
+Line one also carries the tally's own line number and its three counts, and after the file lands the
+receipt is re-read to prove that pointer hits.  This sheet is re-run after every landing, so every other
+line number in it moves and a block citing one of them cites a snapshot - block #375 did exactly that and
+needed an erratum.  Cite line one.
+
 Exit codes: 0 every block landed, 7 some claim has no ledger hit, 8 every single block read RED at once.
 That third one is not a delivery verdict - rc=8 fired once when the landing gate grew a second return
 value and this census was still comparing a tuple to zero.  A uniformly red sheet is an instrument fault,
@@ -24,6 +29,7 @@ so it is called out separately instead of being reported as lost work.
 import datetime
 import io
 import os
+import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -37,6 +43,15 @@ DAYS_BACK = 1
 STRETCH_MINUTES = 60
 RECEIPT = os.path.join(ROOT, "trial", "results", "20261026_gozero",
                        "bw301-this-sessions-blocks-landed.txt")
+
+
+def flat(text):
+    """One receipt line per reading: a wrapped value would move every line number under it.
+
+    The self-anchor on line one is arithmetic over this list, so a gate print that itself
+    spans lines silently shifts the tally away from the pointer that claims to name it.
+    """
+    return " ".join(text.split())
 
 
 def heading_of(path):
@@ -120,7 +135,7 @@ def main(receipt=RECEIPT) -> int:
         finally:
             sys.stdout = real
         verdict = "GREEN" if rc == 0 else "RED"
-        out.append("      gate: %s  %s" % (verdict, printed.getvalue().strip()))
+        out.append("      gate: %s  %s" % (verdict, flat(printed.getvalue())))
         if rc != 0:
             red.append((name, heading))
 
@@ -135,7 +150,13 @@ def main(receipt=RECEIPT) -> int:
     bites = bogus_rc == 7
     out.append("NEGATIVE_CONTROL unseen title reads %s (%s)"
                % ("RED as required" if bites else "GREEN - the gate is blind",
-                  printed.getvalue().strip()))
+                  flat(printed.getvalue())))
+    # line one carries the tally's own line number: this receipt is re-run after every landing, so every
+    # other line number under it moves and a block that cites one of them cites a snapshot.
+    tally_line = len(out) + 1
+    out[0] = ("BLOCKS THIS SESSION REPORTED AS INSERTED - RE-READ AGAINST THE LEDGER bw301"
+              " | STABLE_ANCHOR line 1 | TALLY_LINE %d | checked %d green %d red %d"
+              % (tally_line, len(rows), len(rows) - len(red), len(red)))
     out.append("TALLY checked=%d green=%d red=%d" % (len(rows), len(rows) - len(red), len(red)))
     if red:
         out.append("BLOCKS THAT DID NOT LAND (re-insert required):")
@@ -159,6 +180,15 @@ def main(receipt=RECEIPT) -> int:
                           ", nothing to chase" if not red else
                           ", and each red above is an individual claim to chase")))
     io.open(receipt, "w", encoding="utf-8", newline="\n").write("\n".join(out) + "\n")
+    landed = io.open(receipt, encoding="utf-8", errors="replace").read().split("\n")
+    anchor = re.search(r"TALLY_LINE (\d+) \| checked (\d+) green (\d+) red (\d+)", landed[0])
+    if not anchor:
+        raise SystemExit("ABORT line one of the receipt lost the self-anchor blocks are told to cite")
+    pointed = landed[int(anchor.group(1)) - 1]
+    if pointed != "TALLY checked=%s green=%s red=%s" % anchor.groups()[1:]:
+        raise SystemExit("ABORT the self-anchor on line one points at %r instead of at its own tally"
+                         % pointed[:70])
+    print("STABLE_ANCHOR line 1 -> line %s reads %s" % (anchor.group(1), pointed))
     for row in out:
         print(row)
     print("WROTE %s" % receipt)
