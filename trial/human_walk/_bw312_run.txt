@@ -1,0 +1,4 @@
+LIVE ANCHORS {'same_source': 2, 'recon': 31, 'case_row': 32, 'silent_row': 33, 'journey_coords': 6, 'guard': 79, 'key_synthesiser': 784, 'vocab': 32, 'section': 3746, 'prev_section': 3738, 'bw307_shapes': 62}
+LIVE NUMBERS bucket=45 rows=10 sum=45 ci=95 silent=7/17
+PENDING_INBOX_BEFORE_WRITE 0
+WROTE D:/moodle/_qoder_ledger_inbox\494abfd7_1500.md bytes=3227
