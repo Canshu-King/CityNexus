@@ -1,0 +1,3 @@
+LIVE ANCHORS {'tally_325': 24, 'split_325': 25, 'controls_325': 3, 'coverage_325': 28, 'counting_325': 26, 'denom_326': 2, 'tally_326': 28, 'site_326': 29, 'drops_326': 30, 'wide_326': 31, 'nocatch_326': 33, 'coverage_326': 36, 'hook_site': 2599, 'own_words': 281, 'shell_throw': 309, 'prev_section': 3774}
+LIVE NUMBERS rows=20 shows=0 owns=16 nocatch=4 | panels=25 catch=64 reads=1 hides=63 wide=1 live_catch=26 no_catch_files=11 drop_at=frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:244
+APPENDED bytes_added=4535 heading_hits=1 bare_lf_now=217

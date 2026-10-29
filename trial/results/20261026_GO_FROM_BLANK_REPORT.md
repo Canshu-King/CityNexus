@@ -3782,3 +3782,16 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 待裁（不代裁）：文案刀由此多了一档切法——按面板切，先切承载这 13 处的那两枚（见上行具名文件），还是照 §14.32 的三档按 21 / 45 / 132 处切；两档都要先定 §14.31 那句大小写口径。本班 0 改产品字节。
 - 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3765。
 
+14.35 补（10-29 夜）：那 1 处旅客面英文在这 20 条调用路上没有一条已知能上屏——面板先把话换掉了
+
+- 为什么要再两把尺：§14.34 说 13 处挂在注册表渲染的面板上，但「面板会发」不等于「屏上显这句」。中间那层是 catch。尺 trial/human_walk/_cmdr_screen_text_r325.py 从面板自己的调用处走向接住它的 catch，看它读不读 error；尺 trial/human_walk/_cmdr_panel_habit_r326.py 不再按请求回答，改成按文件回答——把注册表 import 且渲染的 25 枚模块整个读一遍。
+- 按请求的读数（回执 trial/results/20261026_gozero/bw325-what-the-screen-says.txt:24、trial/results/20261026_gozero/bw325-what-the-screen-says.txt:25）：16 处由面板自己造句子、4 处窗内没有 catch、0 处显服务端原文。只看挂在面板上那 13 处也是同一个形状：13 造句子、0 无 catch、0 显原文。
+- 按面板的读数（回执 trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:28）：25 枚面板共 64 处 catch，读 error 的 1 处、从不碰 error 的 63 处；单是 `frontend/src/features/execution/LiveRecovery.tsx` 一枚文件就占 26 处 catch（回执 trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:3）。另有 11 枚面板整个文件没有 catch，拒绝不归它管（回执 trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:33）。分母同源：注册表 import 25 枚、其中 25 枚确被当组件渲染，回执另点明文件里 JSX 组件名共 33 个，比模块数宽，别再混着念。
+- 唯一读 error 的那处也不算上屏（回执 trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:29 点名 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:244`）：它在那里读 `cause.message`，而同一文件 :244 的注释自己写明匹配的是机器码、句子是被丢掉的；回执把这条写成 READS_BUT_DROPS（trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:30），不是我口头补的。
+- 这数不是我挑正则挑出来的（回执 trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:31）：把判据放宽成 `.message`/`.detail`/`instanceof Error 或 V8Rejection`/`String(err)`/`as Error).message`，命中数仍是 1——与严格判据同数。控制三枚都取自源码本身（回执 :3）：一处真读 error 的、一处全文件无 catch 的、一处明知故写自己句子的；任一不合就 ABORT。
+- 我这一腿自己改过三处，都记在回执里而不是私下改：窗口起点原本开在「URL 写在哪一行」，而那行多数在 frontend/src/api/ 里、后面根本没有调用方的 catch，于是 4 行报了「窗内无 catch」；控制点原本瞄在一行已经位于 catch 内部的坐标上，自己把自己 ABORT 掉（rc=7）；bw326 的分母一度写成「渲染 25 中的 33 枚」，33 其实是文件里 JSX 组件名的数，比模块数宽。站点选取规则见回执 trial/results/20261026_gozero/bw325-what-the-screen-says.txt:26。
+- 屏上真正会说什么，举一枚现读的例子：LiveRecovery.tsx:281 的 catch 不论服务端说了什么都答「无法记录这个选择，请刷新后重试。」；而 4 行「无 catch」那几处是渲染期 hook（frontend/src/app/V8Experience.tsx:2599 的 `data ?? []`），失败时连句子都没有，只剩空列表。
+- 这把尺不能说的那句话（不替它补）：接住不等于显示——读了 error 又丢掉的也算「读」；拒绝若在共用 hook 或应用壳的抛出路径（frontend/src/app/V8Experience.tsx:309 把 `body.detail` 装进抛出消息）里被处理，本尺不记在那枚面板头上。极限写在回执 trial/results/20261026_gozero/bw325-what-the-screen-says.txt:28 与 trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:36。
+- 待裁（不代裁，这条改了「先动哪一侧」的算式）：§14.30–§14.32 那 20 处旅客面英文拒绝句，在本班量到的 20 条调用路上没有一条已知能到屏；今天在这些路上可证的是另一件缺陷——面板不论服务端说什么都给同一句「刷新后重试」，把拒绝理由整条吞掉。要按这条开单（读侧已备：64 处 catch 具名可查），还是仍按 §14.32 的三档先动后端文案，请点。本班 0 改产品字节。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3774。
+
