@@ -1,0 +1,15 @@
+Measure the seven demo-door reds under three environment arms: the gate moves, nothing greens.
+
+The classroom/demo doors refuse with DEMO_DATABASE_NOT_ISOLATED, which could be an environment-setup
+gap or a product defect.  Running the same two files under three arms that differ only by environment
+variables separates them: declaring the test database and mirroring it into
+CITYNEXUS_DEMO_DATABASE_PATH with demo mode on moves the refusal to DEMO_PRESENTER_REQUIRED, and
+adding a filler presenter key changes nothing further.  All seven rows stay red in every repetition,
+so the environment cannot be presented as a repair -- the ruler aborts if any stable row ever turns
+green -- and the real gap is named: the fixtures neither declare the isolation path nor send the
+presenter header that the product's two gates require.
+
+One catalogue-hydration threading row failed in a single run out of nine, in arms with and without
+the key, so it is reported as timing-sensitive rather than tallied as a cause.  The throwaway
+database the arms wrote lives only under backend/.cmdr_demo_iso and was removed afterwards; the real
+and classroom databases were not written by this measurement.
