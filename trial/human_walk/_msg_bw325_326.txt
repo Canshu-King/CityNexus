@@ -1,0 +1,34 @@
+bw325 and bw326: the 20 caller rows never show the server sentence, and neither does any mounted panel
+
+trial/human_walk/_cmdr_screen_text_r325.py walks each bw322 row from the panel's own call site to the
+catch that handles it; trial/human_walk/_cmdr_panel_habit_r326.py then stops answering per request and
+answers per file - all 25 modules the registry imports and renders, every catch body in them.
+
+Readings, computed in the receipts: 16 of 20 rows are answered by the panel's own sentence, 4 have no
+catch in the window (all four are the render-time useCandidateRejections hook at
+frontend/src/app/V8Experience.tsx:2599, which the source itself describes as giving "no rows, no claims"),
+and 0 show the server text. Repo-wide, the 25 mounted files hold 64 catch bodies; 1 reads an attribute of
+the caught error and 63 never touch it, LiveRecovery.tsx alone accounting for 26 of the hiding ones.
+
+Three things were fixed rather than reported:
+- the first bw325 run opened its window at the line where the URL is written, which lives in
+  frontend/src/api/ where no caller-side catch follows, so 19 of 20 rows answered "no catch". The site
+  rule is now best-first, from the panel's own call or JSX line, and stated in COUNTING_RULE.
+- its pass-through control was aimed at a line already inside a catch, so it read NO_CATCH and aborted
+  the ruler (rc=7). All three controls now come out of the source: the V8Experience.tsx:1027 site that
+  reads the error, frontend/src/main.tsx which has no catch at all, and LiveRecovery.tsx:270 that assigns
+  its own bilingual sentence.
+- bw326's denominator first claimed the registry "renders 33 of 25 modules", which cannot be true: 33 is
+  the count of JSX component names in the file, a wider set than modules. Corrected and labelled.
+
+That 1 reading site is not a pass-through either, and the receipt says so from the file rather than from
+me: RealCityDiscoveryPanel.tsx:242 reads cause.message at :243, and the comment at :244 states the machine
+token is what is matched while the sentence is what is dropped (READS_BUT_DROPS). A deliberately loose
+pattern - .message, .detail, instanceof Error or V8Rejection, String(err), as Error).message - finds the
+same single site, so 63 hiding bodies is not an artifact of the attribute names I picked.
+
+Consequence for the pending rulings, stated as measurement and not as a decision: the 21 traveller-facing
+English refusals counted in section 14.32 have no known route to the screen through these 20 calls,
+because the layer above refuses to relay them. What is demonstrable today on those paths is a different
+defect - the panel answers "refresh and try again" whatever the server said - which is the same shape the
+commander already ruled on for other screens. 0 product bytes.
