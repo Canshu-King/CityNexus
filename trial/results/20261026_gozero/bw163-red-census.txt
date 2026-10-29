@@ -3,11 +3,12 @@ SOURCE bw163-backend-full-tbline.txt
 SUMMARY failed=231 passed=2569 errors=12
 STACK_TAIL_RECORDS 231 (must equal failed, enforced above)
 OUTSIDE_REPO_FRAMES 22
-DISTINCT_TAIL_GROUPS 156
-RED BY CAUSE {"bearer-less private read (measured this shift)": 55, "body iterated as a list (the measured 401 shape)": 10, "crash lands in library code, not repo code": 1, "demo scene setup refused": 11, "door answers 401 where the test expects 200": 32, "fake settings missing a field": 16, "not yet attributed": 76, "route function called with dependencies unbound": 3, "seeded clock expired": 26, "stale field-list contract": 1}
+DISTINCT_TAIL_GROUPS 143
+RED BY CAUSE {"autonomy decided differently than the test expects": 3, "bearer-less private read (measured this shift)": 55, "body iterated as a list (the measured 401 shape)": 10, "commitment anchor rejected by the v13 planner": 2, "crash lands in library code, not repo code": 1, "demo scene setup refused": 11, "door answers 401 where the test expects 200": 32, "fake settings missing a field": 16, "not yet attributed": 54, "plan version refused as not authoritative": 15, "replay city does not match": 1, "route function called with dependencies unbound": 3, "seeded clock expired": 26, "stale field-list contract": 1, "test reads a router shape that changed": 1}
 TOP GROUPS
    21 x (library) D:/moodle/CityNexus/.venv/Lib/site-packages/sqlalchemy/engine/default.py:952 [seeded clock expired] sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
    15 x tests/test_r57_group_presence_operator.py:44 [door answers 401 where the test expects 200] AssertionError: assert 401 == 200
+   12 x tests/test_v13_integrity.py:50 [plan version refused as not authoritative] AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion <id> is not authoritative: UNRESOLVED_ACTIVITY_FACTS","messag
    10 x tests/stateful/test_journey_truth_state_machine.py:267 [body iterated as a list (the measured 401 shape)] AttributeError: 'str' object has no attribute 'get'
     9 x app/integrations/mobility/runtime.py:174 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
     9 x tests/test_sol_concurrency_and_remap.py:1005 [bearer-less private read (measured this shift)] KeyError: 'active_plan'
@@ -17,28 +18,27 @@ TOP GROUPS
     3 x tests/test_qoder_anywhere_discovery_truth.py:167 [demo scene setup refused] AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
     3 x tests/test_qoder_anywhere_lock_duration.py:193 [demo scene setup refused] AssertionError: SETUP 失败：reset 之后 scene 里没有 journey_id
     3 x tests/test_qoder_anywhere_matrix_truth.py:786 [demo scene setup refused] AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+    2 x tests/test_qoder_anywhere_gates.py:104 [demo scene setup refused] AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503 / {'error': {'code': 'REQUEST_ERROR', 'message': 'DEMO_DATABASE_NOT_ISOLATED', 'message_key': 'error.request_
+    2 x tests/test_v13_1_2_structural_anchor_integrity.py:97 [plan version refused as not authoritative] AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion <id> is not authoritative: UNRESOLVED_ACTIVITY_FACTS","messag
     1 x (library) C:/Users/仓鼠王/AppData/Roaming/uv/python/cpython-3.12.14-windows-x86_64-none/Lib/urllib/request.py:1347 [crash lands in library code, not repo code] urllib.error.URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>
     1 x app/agent/gateway.py:683 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'objective_codes_json'
     1 x app/agent/journey_intent.py:391 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'intent_kind'
     1 x app/agent/runtime.py:454 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'objective_codes_json'
-    1 x app/integrations/discovery/real_city.py:1747 [not yet attributed] ValueError: CAPTURED_REPLAY_CITY_MISMATCH: Tianjin replay cannot be used for CN-FUZHOU
+    1 x app/integrations/discovery/real_city.py:1747 [replay city does not match] ValueError: CAPTURED_REPLAY_CITY_MISMATCH: Tianjin replay cannot be used for CN-FUZHOU
     1 x app/main.py:28442 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'simulation_enabled'
-    1 x app/planning/authoritative_v12.py:1057 [not yet attributed] ValueError: V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER:v12-test-place-2
-    1 x app/planning/authoritative_v12.py:1335 [not yet attributed] ValueError: V13_C4_ANCHOR_NOT_IN_INPUT:v12-test-place-not-selected
+    1 x app/planning/authoritative_v12.py:1057 [commitment anchor rejected by the v13 planner] ValueError: V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER:v12-test-place-2
+    1 x app/planning/authoritative_v12.py:1335 [commitment anchor rejected by the v13 planner] ValueError: V13_C4_ANCHOR_NOT_IN_INPUT:v12-test-place-not-selected
     1 x tests/test_agent_mission_runtime.py:448 [not yet attributed] KeyError: 'current_activity_id'
     1 x tests/test_agent_mission_runtime.py:1238 [not yet attributed] KeyError: 'budget'
-    1 x tests/test_agent_runtime_gate.py:114 [not yet attributed] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
-    1 x tests/test_agent_runtime_gate.py:146 [not yet attributed] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
-    1 x tests/test_agent_runtime_gate.py:374 [not yet attributed] assert 200 == 409
-    1 x tests/test_agent_runtime_gate.py:403 [not yet attributed] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+    1 x tests/test_agent_runtime_gate.py:114 [autonomy decided differently than the test expects] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
 TOP NOT-ATTRIBUTED GROUPS
-    1 x app/integrations/discovery/real_city.py:1747 ValueError: CAPTURED_REPLAY_CITY_MISMATCH: Tianjin replay cannot be used for CN-FUZHOU
-    1 x app/planning/authoritative_v12.py:1057 ValueError: V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER:v12-test-place-2
-    1 x app/planning/authoritative_v12.py:1335 ValueError: V13_C4_ANCHOR_NOT_IN_INPUT:v12-test-place-not-selected
     1 x tests/test_agent_mission_runtime.py:448 KeyError: 'current_activity_id'
     1 x tests/test_agent_mission_runtime.py:1238 KeyError: 'budget'
-    1 x tests/test_agent_runtime_gate.py:114 AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
-    1 x tests/test_agent_runtime_gate.py:146 AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
     1 x tests/test_agent_runtime_gate.py:374 assert 200 == 409
-    1 x tests/test_agent_runtime_gate.py:403 AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
-    1 x tests/test_contract.py:73 AttributeError: '_IncludedRouter' object has no attribute 'path'
+    1 x tests/test_guardian_model_evidence.py:227 AttributeError: <module 'app.agent.guardian' from 'D:\\moodle\\_cmdr_rescue_v3_1022\\backend\\app\\agent\\guardian.py'> has no attribute 'configured_journey_age
+    1 x tests/test_guardian_model_evidence.py:263 AttributeError: <module 'app.agent.guardian' from 'D:\\moodle\\_cmdr_rescue_v3_1022\\backend\\app\\agent\\guardian.py'> has no attribute 'configured_journey_age
+    1 x tests/test_guardian_v4.py:89 AssertionError: assert 'REQUIRE_CONFIRMATION' == 'EXECUTED'
+    1 x tests/test_qoder_anywhere_matrix_truth.py:375 AssertionError: 期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，那样这条门什么都能通过）；实际：CAPTURED
+    1 x tests/test_qoder_anywhere_matrix_truth.py:466 KeyError: 'error_type'
+    1 x tests/test_qoder_anywhere_provider_independence.py:70 AssertionError: 期望：backend/tests/** 里没有对 provider 域名的真实调用（§17C，live 只能走 backend/live_checks/ 的 opt-in smoke）；实际：backend\tests\test_qoder_catalog_hydration.py:60
+    1 x tests/test_qoder_anywhere_provider_truth.py:78 AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog

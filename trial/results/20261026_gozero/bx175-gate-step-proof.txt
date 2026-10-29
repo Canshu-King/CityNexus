@@ -1,0 +1,31 @@
+RELEASE GATE STEP PROOF bx175
+RUN_ID 40801751920
+HEAD_SHA 47a463e018d8bc01166ce74ae553fd817a9cdce8
+RUN_STATUS completed RUN_CONCLUSION success
+URL https://github.com/Canshu-King/CityNexus/actions/runs/40801751920
+JOBS 3 STEPS 29
+NEW_STEP_HITS 1
+  JOB Frontend typecheck and Vite build | STEP Typecheck every file under src, not the five named ones | CONCLUSION success
+  step | Set up job | success
+  step | Run actions/checkout@v4 | success
+  step | Run actions/setup-python@v5 | success
+  step | Install test dependencies | success
+  step | Run focused signed and source regressions without live provider | success
+  step | Upload backend results | success
+  step | Complete job | success
+  step | Set up job | success
+  step | Run actions/checkout@v4 | success
+  step | Run actions/setup-python@v5 | success
+  step | Scan every screen setter for a raw client error string | success
+  step | Prove the ruler still catches the leak that really reached a traveller | success
+  step | Prove no two walk arms drive one browser or write one receipt | success
+  step | Prove a commit can only carry the paths it names | success
+  step | Complete job | success
+  step | Set up job | success
+  step | Run actions/checkout@v4 | success
+  step | Run actions/setup-node@v4 | success
+  step | Install dependencies | success
+  step | Typecheck current V3 product | success
+  step | Typecheck every file under src, not the five named ones | success
+  step | Vite production build | success
+  step | Complete job | success

@@ -23,10 +23,13 @@ FAKE_SETTINGS = "SimpleNamespace"
 
 
 def normalise(reason):
-    text = reason.strip()
-    text = re.sub(r"\{.*$", "", text).strip()
-    text = re.sub(r"trace_id\S*", "", text)
-    return text[:110]
+    """Collapse whitespace but keep the message body.
+
+    An earlier version cut at the first brace, which is exactly where a JSON error body starts, so
+    every 'AssertionError: {\"error\": ...}' group printed an empty reason and fell into 'not yet
+    attributed'.  The body is the finding, so it stays.
+    """
+    return " ".join(reason.split())[:160]
 
 
 def logical_lines(text):
@@ -43,6 +46,23 @@ def logical_lines(text):
         else:
             joined.append(raw)
     return "\n".join(joined)
+
+
+UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
+TRACE = re.compile(r"CNX-[A-Z0-9]{8}")
+
+
+def signature(reason):
+    """Group by the message shape, not by the identifiers inside it.
+
+    Keeping the JSON body was necessary to classify at all, but a body that carries a plan version id
+    makes every failure its own group, which hides the size of the cause.  Identifiers are masked so
+    twelve copies of one refusal count as twelve.
+    """
+    text = normalise(reason)
+    text = UUID.sub("<id>", text)
+    text = TRACE.sub("<receipt>", text)
+    return re.sub(r"\b[0-9a-f]{16,}\b", "<id>", text)
 
 
 def classify(reason, outside_tree):
@@ -64,6 +84,18 @@ def classify(reason, outside_tree):
     if "'Depends' object has no attribute" in reason:
         return "route function called with dependencies unbound"
     if "demo/scene 实际 503" in reason or "scene 里没有 journey_id" in reason:
+        return "demo scene setup refused"
+    if "is not authoritative" in reason:
+        return "plan version refused as not authoritative"
+    if "V13_COMMITMENT_ANCHOR" in reason or "V13_C4_ANCHOR" in reason:
+        return "commitment anchor rejected by the v13 planner"
+    if "REQUIRE_CONFIRMATION" in reason and "ALLOW_AUTO" in reason:
+        return "autonomy decided differently than the test expects"
+    if "'_IncludedRouter' object has no attribute" in reason:
+        return "test reads a router shape that changed"
+    if "CAPTURED_REPLAY_CITY_MISMATCH" in reason:
+        return "replay city does not match"
+    if "demo scene setup refused" in reason:
         return "demo scene setup refused"
     if outside_tree:
         return "crash lands in library code, not repo code"
@@ -97,7 +129,7 @@ def main():
     for match in TAIL.finditer(text):
         file_name, outside_tree = repo_relative(match.group("path"))
         reason = match.group("reason")
-        key = (file_name, int(match.group("line")), reason, outside_tree)
+        key = (file_name, int(match.group("line")), signature(reason), outside_tree)
         groups[key] = groups.get(key, 0) + 1
     total_records = sum(groups.values())
     if total_records != failed:
