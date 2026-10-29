@@ -148,6 +148,7 @@
     4 枚、`time_state 'PAST'` 1 枚、`KeyError: 'active_plan'` 2 枚 —— 四类相加正好 28（生成脚本硬要求）。
     前 26 枚是刀三那族「过期断言」：demo 种子行程的时刻与夹具写入的 now 谁跟着谁没定过口径，
     **这条口径我不自取**（它影响所有共用 demo 重置的臂）；后 2 枚是另一类，未挖。
+    **10-29 晨补（报告 §14.5）**：那 2 枚已挖到底，且这一族比 2 大。一把现读四枚文件（`tests/test_r64_member_side_quest.py`、`tests/stateful/test_journey_truth_state_machine.py`、`tests/test_provider_runtime_gate.py`、`tests/test_qoder_activity_identity_contract.py`）末行`42 failed, 42 passed in 14.21s`；观察探针 `trial/human_walk/_cmdr_unsigned_experience_probe_r155.py`包 `TestClient.get`，只记状态与 body 顶层键，不改请求、不改响应、不改产品字节；回执`trial/results/20261026_gozero/bu155-unsigned-experience-probe.txt`）：套件里 44 次私有读（`/experience` 34 次、`/events` 10 次）**一次带凭证的都没有**，全部 `401`，body 顶层只有 `error`。同一条腿里的分辨对照：`/experience` 不带 bearer ⇒ `401 body_keys=['error']`，带 ⇒ `200` 且 `active_plan` 在（id 见回执）；`/events` 不带 ⇒ `401` 的 dict，逐一遍历拿到的是 `str`（正是 stateful 那 10 枚`AttributeError: 'str' object has no attribute 'get'` 的成因），带 ⇒ `200` 的 list。所以这 16 枚（r64 2＋activity 身份契约 2＋provider 运行时门 2＋stateful 10）是同一族**夹具裸读**，不是契约改名、不是产品少发键（`active_plan` 由 `app/stay_mobility.py:2052` 无条件发出，挡人的 `app/main.py:10323` 拒得对）。16＋26＝42 与本次末行对齐。修法要给这些读补 bearer，而 stateful 整枚模块没有签名臂，属具名的夹具改动；**这一刀仍不自取**（超出刀三划下的范围）。
     blocker 6 那十五枚另说：逐条对表仍是 9／5／1，一条未变、未上膛成产品缺陷。
 ## 8. 纯净树上的账（截至 2026-10-28 晚 · 报告 §74–§82）
 

@@ -1,0 +1,12 @@
+Sixteen reds in four files are one fixture family: private reads issued without a bearer.
+
+An observation-only probe wrapped TestClient.get and counted every /experience and /events read in
+tests/test_r64_member_side_quest.py, tests/stateful/test_journey_truth_state_machine.py,
+tests/test_provider_runtime_gate.py and tests/test_qoder_activity_identity_contract.py: 44 reads,
+none carrying a credential, every one answered 401 with a body whose only top-level key is error.
+A control in the same arm reads the same journey twice, and the two shapes differ: unsigned gives
+401 {error}, signed gives 200 with active_plan present, and for /events unsigned hands back a dict
+whose iterated members are strings, which is exactly the AttributeError those ten reds carry.
+So the earlier "2 KeyError, another class, unexplored" line was an undercount of the same family;
+the contract never renamed the key and the product still emits it unconditionally.
+No product byte moved, and the fixture repair itself is not taken: it exceeds knife three's scope.
