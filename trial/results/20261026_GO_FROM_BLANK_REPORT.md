@@ -3435,3 +3435,10 @@ runner 上也仍在咬。宽的这步是加闸不是放闸：窄的那步（只�
 另外记一条尺自己的过程：这次改动第一版把 `unknown` 定义放在了使用之后，跑当场抛 `UnboundLocalError`
 且**没写回执** —— 所以那几秒钟账本文件里仍是上一版有效数，没出现"半新半旧"的第三种数。
 
+14.17 补二（同班次）：两把尺对同一枚数各说一套的隐患也一并收了 —— node id 账现在直接 import §14.10 那把扩展尺的类别表，
+不再自带一份「未定性」桶。现读：账本里 `not yet attributed` 这一桶行数为零
+（`trial/results/20261026_gozero/bw234-red-node-ledger.txt:4` 现读二十七个桶求和仍等于 pytest 自报的那枚数），
+而原来那三十九枚的去向逐桶可查：带因未定侧的（如答复被服务端判 `VALIDATION_ERROR` 那八枚，
+`trial/results/20261026_gozero/bw234-red-node-ledger.txt:208`）、护壁句自报漂移的、以及两把尺都读不出因的。
+桶头字样也从 `side unknown` 改成 `side not measured`，因为缺的是侧别判据、不是因 —— 名字骗人比空桶更坏。
+

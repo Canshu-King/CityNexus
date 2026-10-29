@@ -1,0 +1,8 @@
+Reconcile the node ledger with the extended census ruler so both publish one story.
+ 
+The census reported zero unattributed rows while the ledger still carried its own unattributed bucket,
+because the two rulers kept separate class tables. The ledger now imports the extended ruler's
+refinements, which empties that bucket to zero without inventing anything: rows with a named cause but
+an unmeasured side sit in clearly labelled buckets, and the label was corrected from 'side unknown' to
+'side not measured' since what is missing is the side, not the cause. Sums still close against the run's
+own failed count, which the ruler enforces before writing.

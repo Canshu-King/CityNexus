@@ -26,6 +26,7 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE)
 
 import _cmdr_full_red_reason_census_r164 as census  # noqa: E402
+import _cmdr_full_red_reason_census_r195 as extended  # noqa: E402
 
 RECEIPT = os.path.join(ROOT, "trial", "results", "20261026_gozero", "bw234-red-node-ledger.txt")
 NODE = re.compile(r"^FAILED (\S+)")
@@ -34,11 +35,23 @@ KEYERR = "answer lacks a key the test reads (KeyError off the server body)"
 CREDENTIAL = "bearer-less private read (measured this shift)"
 
 
+GUARD = "invariant guard names its own drift (side per-case, section 14.11)"
+NAMED_NOT_MEASURED = "cause named by the extended ruler, side not measured"
+UNEXPLAINED = "neither cause nor side measured"
+
+
 def refined_class(reason, base_class):
     if "DEMO_DATABASE_NOT_ISOLATED" in reason or "DEMO_PRESENTER_REQUIRED" in reason:
         return DEMO_DOOR
     if "KeyError:" in reason or base_class == KEYERR:
         return KEYERR if "error_type" in reason else CREDENTIAL + " -- KeyError shape off the 401 body (bw213)"
+    if base_class == "not yet attributed":
+        # cross-read the extended ruler so the two published artifacts cannot disagree about the same row
+        extra = extended.classify_extra(reason)
+        if extra is None:
+            return UNEXPLAINED
+        label, _counted, _needle = extra
+        return GUARD if label.startswith("invariant guard") else NAMED_NOT_MEASURED + " (" + label + ")"
     return base_class
 
 
@@ -74,7 +87,9 @@ def main():
     fixture_side = [name for name in buckets if name.startswith(("bearer-less", "door answers 401",
                   "body iterated", "answer lacks a key", "classroom/demo", "fake settings",
                   "credential refused"))]
-    unknown = [name for name in buckets if name.startswith("not yet attributed")]
+    unknown = [name for name in buckets if name.startswith("not yet attributed")
+                 or name.startswith("neither cause") or name.startswith("cause named by")
+                 or name.startswith("invariant guard")]
     lines = [
         "RED NODE LEDGER bw234",
         "SUITE %s failed=%d passed=%d errors=%d" % (os.path.basename(census.SUITE_OUT), failed, passed, errors),
@@ -85,8 +100,8 @@ def main():
         "PRODUCT_OR_SEED_SIDE_TOTAL %d rows across %d buckets (identified cause, product or seed side)" % (
             failed - sum(len(buckets[n]) for n in fixture_side) - sum(len(buckets[n]) for n in unknown),
             len(buckets) - len(fixture_side) - len(unknown)),
-        "SIDE_UNKNOWN_TOTAL %d rows across %d buckets -- no cause was measured for these, so they are"
-        " not counted as a product defect either" % (
+        "SIDE_UNKNOWN_TOTAL %d rows across %d buckets -- the side was not measured for these (some"
+        " carry a named cause from the extended ruler), so none is counted as a product defect" % (
             sum(len(buckets[n]) for n in unknown), len(unknown)),
     ]
     for name in sorted(buckets, key=lambda key: -len(buckets[key])):
@@ -94,7 +109,7 @@ def main():
         if name in fixture_side:
             tag = "fixture-side"
         elif name in unknown:
-            tag = "side unknown"
+            tag = "side not measured"
         else:
             tag = "product/seed-side"
         lines.append("BUCKET %s | %d rows | %s" % (name, len(members), tag))

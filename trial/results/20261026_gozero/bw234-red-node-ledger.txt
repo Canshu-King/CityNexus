@@ -1,50 +1,10 @@
 RED NODE LEDGER bw234
 SUITE bw163-backend-full-tbline.txt failed=231 passed=2569 errors=12
 DISTINCT_NODE_IDS 231 (must equal failed, enforced above)
-BUCKETS 18 sum=231 (enforced equal failed above)
+BUCKETS 27 sum=231 (enforced equal failed above)
 FIXTURE_SIDE_TOTAL 130 rows across 7 buckets
 PRODUCT_OR_SEED_SIDE_TOTAL 62 rows across 10 buckets (identified cause, product or seed side)
-SIDE_UNKNOWN_TOTAL 39 rows across 1 buckets -- no cause was measured for these, so they are not counted as a product defect either
-BUCKET not yet attributed | 39 rows | side unknown
-    tests/test_agent_runtime_gate.py::test_agt16_accept_time_gate_remains_authoritative
-    tests/test_guardian_model_evidence.py::test_live_context_conflict_refuses_deterministic_guardian_fallback
-    tests/test_guardian_model_evidence.py::test_model_path_evidence_names_the_accepted_proposal
-    tests/test_guardian_v4.py::test_guardian_flagship_executes_once_and_survives_reload
-    tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
-    tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
-    tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
-    tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
-    tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today
-    tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table
-    tests/test_qoder_ord0383_undelete_write_lock.py::test_the_single_tap_path_is_unchanged_by_the_predicate
-    tests/test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes
-    tests/test_qoder_ord0402_recycle_bin.py::test_the_generated_client_carries_every_operation_the_contract_declares
-    tests/test_qoder_ord0434_share_grants.py::test_an_in_force_member_reads_an_invitees_only_grant
-    tests/test_qoder_ord0434_share_grants.py::test_the_acl_table_answers_the_product_own_question_about_a_role
-    tests/test_qoder_ord0434_share_grants.py::test_the_anonymous_read_bytes_are_unchanged_from_the_base_tip
-    tests/test_qoder_ord0434_share_grants.py::test_the_bin_scopes_to_an_owner_and_answers_the_same_without_one
-    tests/test_qoder_ord0434_share_grants.py::test_the_member_set_is_one_row_per_traveller_and_says_so_by_name
-    tests/test_qoder_ord0434_share_grants.py::test_withdrawal_is_immediate_and_not_repeatable
-    tests/test_qoder_simulation_mode.py::test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set
-    tests/test_r88_real_poi_exploration.py::test_r88_overpass_504_is_recorded_as_failure_not_database_500
-    tests/test_r88_real_poi_exploration.py::test_r88_unknown_opening_has_consent_bound_public_map_preview
-    tests/test_r89_member_shared_osm_identity.py::test_r89_same_public_osm_identity_gets_private_member_scopes
-    tests/test_r90_private_exploration_board.py::test_r90_shortlist_is_private_persistent_and_reauthorizes_after_receipt_expiry
-    tests/test_r90_private_exploration_board.py::test_r91_shortlist_limit_is_serialized_under_concurrent_saves
-    tests/test_r90_private_exploration_board.py::test_r92_resume_intent_is_member_private_and_clears_after_saved_place_removal
-    tests/test_r93_explicit_city_center_and_private_session.py::test_r93_requires_an_explicit_public_center_and_keeps_signed_shortlists_private
-    tests/test_r96_intent_driven_first_outing.py::test_r96_shared_osm_identity_keeps_member_request_grade
-    tests/test_revolution_r77_recovery.py::test_japanese_admission_does_not_budget_rental_hours_or_headcounts
-    tests/test_v13_integrity.py::test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth
-    tests/test_v14_trial_readiness.py::test_non_tianjin_live_unavailable_never_injects_tianjin_replay
-    tests/test_v1922_six_fix_regressions.py::test_generic_compose_spreads_multi_day_stops_across_days
-    tests/test_v5_autopilot.py::test_v5_provider_fixture_wakes_autopilot_and_semantically_deduplicates
-    tests/test_v6_predictive_real_city.py::test_v6_predictive_real_city_twin_prevents_failure_before_hard_break
-    tests/test_v7_traveler_twin.py::test_v7_flagship_journey_a_to_b_to_c_traveler_twin_loop
-    tests/test_v7_traveler_twin.py::test_v7_second_cross_journey_dimension_learns_low_walking_soft_evidence
-    tests/test_wp04a0_bridge.py::test_planned_journey_currency_change_is_rejected_without_hard_budget_constraint
-    tests/test_wp06_followup_assist.py::test_f3_family_is_backed_by_next_c4_window_evidence
-    tests/test_wp06_postgate_hardening_next.py::test_replan_accept_requires_header_and_same_key_replay_is_audit_idempotent
+SIDE_UNKNOWN_TOTAL 39 rows across 10 buckets -- the side was not measured for these (some carry a named cause from the extended ruler), so none is counted as a product defect
 BUCKET bearer-less private read (measured this shift) | 39 rows | fixture-side
     tests/test_backend_connected_golden_contract.py::test_backend_connected_golden_scenario_contract
     tests/test_event_resolution_projection.py::test_event_api_exposes_server_resolution_time_and_reason
@@ -225,6 +185,35 @@ BUCKET demo scene setup refused | 9 rows | product/seed-side
     tests/test_qoder_anywhere_matrix_truth.py::test_g15a_a_leg_with_no_sourced_fact_has_no_number_at_any_door
     tests/test_qoder_anywhere_matrix_truth.py::test_g15c_coverage_counts_the_unusable_leg_instead_of_guessing_it
     tests/test_qoder_anywhere_matrix_truth.py::test_g15d_the_scene_read_reports_the_same_two_counts
+BUCKET invariant guard names its own drift (side per-case, section 14.11) | 9 rows | side not measured
+    tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+    tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+    tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+    tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
+    tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today
+    tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table
+    tests/test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes
+    tests/test_qoder_ord0402_recycle_bin.py::test_the_generated_client_carries_every_operation_the_contract_declares
+    tests/test_qoder_ord0434_share_grants.py::test_the_anonymous_read_bytes_are_unchanged_from_the_base_tip
+BUCKET neither cause nor side measured | 9 rows | side not measured
+    tests/test_qoder_ord0434_share_grants.py::test_the_acl_table_answers_the_product_own_question_about_a_role
+    tests/test_qoder_simulation_mode.py::test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set
+    tests/test_revolution_r77_recovery.py::test_japanese_admission_does_not_budget_rental_hours_or_headcounts
+    tests/test_v14_trial_readiness.py::test_non_tianjin_live_unavailable_never_injects_tianjin_replay
+    tests/test_v5_autopilot.py::test_v5_provider_fixture_wakes_autopilot_and_semantically_deduplicates
+    tests/test_v7_traveler_twin.py::test_v7_second_cross_journey_dimension_learns_low_walking_soft_evidence
+    tests/test_wp04a0_bridge.py::test_planned_journey_currency_change_is_rejected_without_hard_budget_constraint
+    tests/test_wp06_followup_assist.py::test_f3_family_is_backed_by_next_c4_window_evidence
+    tests/test_wp06_postgate_hardening_next.py::test_replan_accept_requires_header_and_same_key_replay_is_audit_idempotent
+BUCKET cause named by the extended ruler, side not measured (request body rejected by validation (VALIDATION_ERROR in the server answer)) | 8 rows | side not measured
+    tests/test_r88_real_poi_exploration.py::test_r88_overpass_504_is_recorded_as_failure_not_database_500
+    tests/test_r88_real_poi_exploration.py::test_r88_unknown_opening_has_consent_bound_public_map_preview
+    tests/test_r89_member_shared_osm_identity.py::test_r89_same_public_osm_identity_gets_private_member_scopes
+    tests/test_r90_private_exploration_board.py::test_r90_shortlist_is_private_persistent_and_reauthorizes_after_receipt_expiry
+    tests/test_r90_private_exploration_board.py::test_r91_shortlist_limit_is_serialized_under_concurrent_saves
+    tests/test_r90_private_exploration_board.py::test_r92_resume_intent_is_member_private_and_clears_after_saved_place_removal
+    tests/test_r93_explicit_city_center_and_private_session.py::test_r93_requires_an_explicit_public_center_and_keeps_signed_shortlists_private
+    tests/test_r96_intent_driven_first_outing.py::test_r96_shared_osm_identity_keeps_member_request_grade
 BUCKET classroom/demo door refuses (fixture declares neither isolation nor presenter) | 7 rows | fixture-side
     tests/test_qoder_anywhere_gates.py::test_g2_an_existing_journey_becomes_plannable_without_being_recreated
     tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
@@ -237,13 +226,31 @@ BUCKET autonomy decided differently than the test expects | 3 rows | product/see
     tests/test_agent_runtime_gate.py::test_agt04_assisted_low_risk_auto_accept_and_agt24_refreshes_twin_preserving_c4
     tests/test_agent_runtime_gate.py::test_agt04b_ai_only_semantic_target_can_auto_execute_inside_safe_envelope
     tests/test_agent_runtime_gate.py::test_agt17_idempotent_accept_and_agt18_ai_audit
+BUCKET cause named by the extended ruler, side not measured (private door refused: product gate answers TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED) | 3 rows | side not measured
+    tests/test_qoder_ord0434_share_grants.py::test_an_in_force_member_reads_an_invitees_only_grant
+    tests/test_qoder_ord0434_share_grants.py::test_the_member_set_is_one_row_per_traveller_and_says_so_by_name
+    tests/test_qoder_ord0434_share_grants.py::test_withdrawal_is_immediate_and_not_repeatable
 BUCKET route function called with dependencies unbound | 3 rows | product/seed-side
     tests/test_v13_3_real_city_intelligence.py::test_v133_golden_real_city_intelligence_replay_preserves_cruise
     tests/test_v14_grounded_adaptive_recovery.py::test_v14_traffic_recovery_uses_separate_incident_matrix
     tests/test_v14_grounded_adaptive_recovery.py::test_v14_weather_recovery_freezes_incident_evidence_and_child_plan
+BUCKET cause named by the extended ruler, side not measured (test patches a module symbol the module no longer exports) | 2 rows | side not measured
+    tests/test_guardian_model_evidence.py::test_live_context_conflict_refuses_deterministic_guardian_fallback
+    tests/test_guardian_model_evidence.py::test_model_path_evidence_names_the_accepted_proposal
+BUCKET cause named by the extended ruler, side not measured (autonomy decided EXECUTED where the test expects confirmation) | 2 rows | side not measured
+    tests/test_guardian_v4.py::test_guardian_flagship_executes_once_and_survives_reload
+    tests/test_v6_predictive_real_city.py::test_v6_predictive_real_city_twin_prevents_failure_before_hard_break
+BUCKET cause named by the extended ruler, side not measured (answer iterated as a mapping when the body is a string) | 2 rows | side not measured
+    tests/test_qoder_ord0383_undelete_write_lock.py::test_the_single_tap_path_is_unchanged_by_the_predicate
+    tests/test_qoder_ord0434_share_grants.py::test_the_bin_scopes_to_an_owner_and_answers_the_same_without_one
 BUCKET commitment anchor rejected by the v13 planner | 2 rows | product/seed-side
     tests/test_v13_integrity.py::test_v13_impossible_mid_trip_c4_is_a_deterministic_compose_conflict[v12-test-place-2-2026-10-03T06:00:00+00:00-V13_COMMITMENT_ANCHOR]
     tests/test_v13_integrity.py::test_v13_impossible_mid_trip_c4_is_a_deterministic_compose_conflict[v12-test-place-not-selected-2026-10-03T17:30:00+00:00-V13_C4_ANCHOR_NOT_IN_INPUT]
+BUCKET cause named by the extended ruler, side not measured (door answers 409 where the test expects 200) | 2 rows | side not measured
+    tests/test_v13_integrity.py::test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth
+    tests/test_v7_traveler_twin.py::test_v7_flagship_journey_a_to_b_to_c_traveler_twin_loop
+BUCKET cause named by the extended ruler, side not measured (door answers 200 where the test expects 409) | 1 rows | side not measured
+    tests/test_agent_runtime_gate.py::test_agt16_accept_time_gate_remains_authoritative
 BUCKET test reads a router shape that changed | 1 rows | product/seed-side
     tests/test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface
 BUCKET stale field-list contract | 1 rows | product/seed-side
@@ -254,3 +261,5 @@ BUCKET crash lands in library code, not repo code | 1 rows | product/seed-side
     tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
 BUCKET replay city does not match | 1 rows | product/seed-side
     tests/test_v14_trial_readiness.py::test_non_tianjin_captured_replay_is_rejected
+BUCKET cause named by the extended ruler, side not measured (generic compose refused because a cost is unknown) | 1 rows | side not measured
+    tests/test_v1922_six_fix_regressions.py::test_generic_compose_spreads_multi_day_stops_across_days
