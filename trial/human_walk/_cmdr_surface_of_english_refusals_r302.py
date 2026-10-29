@@ -70,8 +70,8 @@ def detail_text(call):
     return None
 
 
-def main() -> int:
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+def collect() -> list:
+    """The walk the published receipt is built from, kept importable so other rulers share it."""
     rows = []
     for base, _dirs, names in os.walk(APP):
         for name in sorted(names):
@@ -114,6 +114,12 @@ def main() -> int:
                                  "text": text[:120]})
             # raises outside any function body are reported as a coverage limit, not silently counted
 
+    return rows
+
+
+def main() -> int:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    rows = collect()
     english = [r for r in rows if r["kind"] == "ENGLISH_SENTENCE"]
     surfaces = {}
     via_counts = {}

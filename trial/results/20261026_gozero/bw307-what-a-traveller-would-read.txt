@@ -1,0 +1,64 @@
+WHAT A TRAVELLER WOULD READ bw307
+SAME-SOURCE CHECK route-reachable English sentences = 221, matching bw302 exactly
+RANKED worst-first: traveller path before other paths, then internal vocabulary, then bare identifiers, then length
+ 1. backend/app/main.py:20046  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/start
+     screen would show: f'PlanVersion {plan.id} is not authoritative: {start_authority_blocker}'
+     internal terms: 1, identifier slots: 2
+ 2. backend/app/main.py:18221  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select
+     screen would show: f'PlanVersion {plan.id} is not authoritative: {authority_blocker}'
+     internal terms: 1, identifier slots: 2
+ 3. backend/app/main.py:7783  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/undelete
+     screen would show: f'Journey {journey_id} is still in the recycle bin'
+     internal terms: 1, identifier slots: 1
+ 4. backend/app/main.py:7762  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/undelete
+     screen would show: f'Journey {journey_id} was not in the recycle bin'
+     internal terms: 1, identifier slots: 1
+ 5. backend/app/main.py:18167  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select
+     screen would show: f'PlanVersion {plan_version_id} was not found'
+     internal terms: 1, identifier slots: 1
+ 6. backend/app/main.py:7691  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}
+     screen would show: f'Journey {journey_id} was not found'
+     internal terms: 1, identifier slots: 1
+ 7. backend/app/main.py:7696  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}
+     screen would show: f'Journey {journey_id} is already deleted'
+     internal terms: 1, identifier slots: 1
+ 8. backend/app/main.py:7756  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/undelete
+     screen would show: f'Journey {journey_id} was not found'
+     internal terms: 1, identifier slots: 1
+ 9. backend/app/main.py:18152  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select
+     screen would show: f'Journey {journey_id} was not found'
+     internal terms: 1, identifier slots: 1
+10. backend/app/main.py:11042  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/stay-options/{option_id}/mode
+     screen would show: f'mode {payload.mode} is unavailable for the requested leg'
+     internal terms: 1, identifier slots: 0
+11. backend/app/main.py:21498  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/events
+     screen would show: provider_key is server-assigned for public event input
+     internal terms: 1, identifier slots: 0
+12. backend/app/main.py:5606  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id}
+     screen would show: authenticated traveler cannot answer for another Journey member
+     internal terms: 1, identifier slots: 0
+13. backend/app/main.py:17621  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/plans/generate
+     screen would show: Select different bootstrap candidates without additional place_ids
+     internal terms: 1, identifier slots: 0
+14. backend/app/main.py:20020  (route_decorator)
+     route: app /api/v1/journeys/{journey_id}/start
+     screen would show: journey must be PLANNED with a selected plan
+     internal terms: 1, identifier slots: 0
+SHAPES INSIDE THE 221
+  on a traveller path (/journeys, /plans, /trips, /travellers): 132
+  carrying internal vocabulary: 45
+  carrying a bare identifier slot: 36
+COVERAGE_LIMIT ranking is static: it cannot say which of these a traveller reaches first in a real session, only which would read worst if reached.
