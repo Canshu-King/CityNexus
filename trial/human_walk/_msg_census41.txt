@@ -1,0 +1,4 @@
+census r301 re-run: 41 of this shift's blocks landed, 0 red
+
+Blocks 368, 369, 370 and 371 joined the roll since the last count (39). The census reads the ledger itself through the landing gate for each heading and still proves the gate bites: an unseen title reads RED. Instrument fault: no, which is the exit class added after my own tuple-return change made this ruler report 36 delivered blocks as lost.
+Receipt trial/results/20261026_gozero/bw301-this-sessions-blocks-landed.txt. 0 product bytes.
