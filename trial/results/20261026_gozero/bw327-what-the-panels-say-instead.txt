@@ -1,0 +1,21 @@
+WHAT THE PANELS SAY INSTEAD bw327
+SAME-SOURCE CHECK catch bodies read here = 64, equal to bw326's published catch=64 (the 25 mounted files of trial/results/20261026_gozero/bw326-what-the-panels-do-with-a-refusal.txt:28)
+TALLY catch=64 says_zh=19 says_en_only=6 says_nothing=39 bilingual_shape=19 into_state=40 into_console=0 nowhere=24 retry_shaped=9 reads_the_error=1
+REVERSE_CHECK zh-without-the-`zh ?`-shape = 0 and shape-without-any-Chinese = 0; the two counts above being equal is only meaningful because both reverse sets read empty
+SENTENCE_DISTINCT 24 different Chinese sentences across 25 occurrences; 2 of those occurrences are a sentence already used somewhere else, so the same words are re-asked rather than re-answered per failure
+MOST_REUSED 2 处 · 连不上服务器，请重试。（首见 frontend/src/features/planning/PlanComparison.tsx:114）
+  「连不上服务器，请重试。」 出现在 2 处：frontend/src/features/planning/PlanComparison.tsx:114, frontend/src/features/stay/HotelsPanel.tsx:132
+  「这项变更暂时无法批准。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:316
+  「这次选择已过期或暂时无法提交。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:354
+  「请切换到自己的行程成员账号。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:822
+  「请先登录后确认这一步。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:939
+  「行程或成员状态已更新，当前会合信息已刷新。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:822
+  「暂时无法调整这趟行程，请稍后再试。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:240
+  「暂时无法记录会合确认，请刷新后重试。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:822
+  「暂时无法计算会合路线。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:862
+  「暂时无法确认出发。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:479
+  「暂时无法检查这段路线。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:438
+  「暂时无法开启行程托管。」 出现在 1 处：frontend/src/features/execution/LiveRecovery.tsx:222
+CONTROLS the LiveRecovery handler at `frontend/src/features/execution/LiveRecovery.tsx:281` read as Chinese + `zh ?` shape + into_state + retry-shaped (the ruler aborts otherwise); a body with no literal at all and no setter read as says_nothing + nowhere, as the axes claim
+COUNTING_RULE a body says_zh when it carries a string literal with at least one CJK character; bilingual_shape is the `zh ?` conditional; into_state means a setXxx(...) call appears in the same body, into_console a console.* call; retry_shaped matches 重试/再试/刷新/try again/refresh
+COVERAGE_LIMIT into_state proves the sentence reaches component state, not that anything renders it, and a body can hold both a state setter and an unrelated literal. Whether a sentence names the actual blocker is left to the sentences printed above - this ruler does not proxy that judgement with a keyword test.
