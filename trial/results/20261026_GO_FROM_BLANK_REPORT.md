@@ -3242,3 +3242,7 @@ runner 上也仍在咬。宽的这步是加闸不是放闸：窄的那步（只�
   `current_activity_id` 见 `backend/app/agent/gateway.py:1278`），所以只能说「这一条答复里没带这个键」，
   不能说「产品没这个字段」—— 要定到哪一头，得逐枚把那一条门的分支读一遍，这一条仍未做。
 
+14.10 勘误（同班次）：那行「回执 bw194-unattributed-inventory.txt:1」的坐标写偏了一格 —— 三个数各自在
+`trial/results/20261026_gozero/bw194-unattributed-inventory.txt:2`（桶里的枚数）、`:4`（分组数）、`:5`（文件数），
+`:1` 只是标题行。正文照旧不改，勘误另起一行。
+

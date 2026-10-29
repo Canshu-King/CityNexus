@@ -1,0 +1,6 @@
+Erratum for section 14.10: three numbers were cited against the receipt's header line.
+
+The inventory receipt puts the bucket count on its own line, the group count on another and the file
+count on a third; the section pointed all three at line one. Appended as a separate dated line, the
+same way every other wrong coordinate in this report has been handled, with the appender asserting
+that the bytes before the insertion point are untouched.
