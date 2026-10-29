@@ -1,0 +1,4 @@
+proxy guard: {'guard': 'cmdr_net_env_guard_r2', 'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7890', 'HTTP_PROXY': 'http://127.0.0.1:7890'}, 'proxy_endpoints': ['127.0.0.1:7890', '127.0.0.1:7890'], 'proxy_ok': True, 'direct_ok': True, 'refused': [], 'action': 'PROXY_OK', 'detail': {'direct': '200 166474 B', 'proxy': 'HTTP 403'}}
+inbox blocks: 0 (0 pending after dedupe) | mode=APPLY | at 15:23:15
+tally {'inserted': 0, 'refused': 0, 'skipped': 0, 'dry': 0}
+NOTICE-NOTHING 这一轮没有新被拒的块
