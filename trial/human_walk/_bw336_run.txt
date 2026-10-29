@@ -1,0 +1,4 @@
+LIVE ANCHORS {'same_source': 2, 'controls': 3, 'tally': 23, 'counting': 24, 'coverage': 25, 'tally_327': 3, 'rows_head_327': 20, 'ruler': 62, 'section': 3808, 'prev_section': 3798, 'plan_cmp': 270, 'live_msg': 2136}
+LIVE NUMBERS rows=19 rendered=19 not_rendered=0 no_setter=0 pairs=25 only_327=0 only_328=0 states=4 top=message:15 says_zh_327=19
+PENDING_INBOX_BEFORE_WRITE 0
+WROTE D:/moodle/_qoder_ledger_inbox\494abfd7_2334.md bytes=8244

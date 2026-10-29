@@ -1,0 +1,7 @@
+block 372: the closed chain, site by site - 19 catch lines, their state names, the markup lines
+
+Landed in the ledger at 23:34 as 494abfd7_2334.md.inserted_233424 after the Q43 gate read 80 claims with
+0 findings. Rows are parsed from the bw328 receipt and reconciled three ways: parsed rows equal its TALLY,
+its TALLY equals bw327's says_zh, and the (file,line) sets of the two receipts differ in neither direction.
+The generator now checks the block text before writing it, so an aborted run can no longer leave a draft
+sitting in the inbox for the next round to trip over - that fault bit twice tonight. 0 product bytes.
