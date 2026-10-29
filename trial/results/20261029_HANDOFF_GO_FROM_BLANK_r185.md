@@ -44,8 +44,12 @@
 ## 四、在场栈与库（别按端口猜代次）
 
 - 干净树 `E:/_cmdr_tip_113` 在 `dea0328e0b`（旧代次，屏证用它要注明代次），vite `:14464`、后端 `:60364`，
-  库 `E:/_cmdr_tip_113_data/citynexus_v3_rescue_113.db`；课堂树 `E:/_cmdr_clean_1028` 在 `:14462/:60362`。
-  2026-10-29 09:22 现读四个端口都在 LISTENING。
+  库 `E:/_cmdr_tip_113_data/citynexus_v3_rescue_113.db`；课堂树 `E:/_cmdr_clean_1028` 已在
+  `c89f4a5ad6`（本班 09:02 挪上去的，porcelain 现读 0 行），vite `:14462`、后端 `:60362`。
+  2026-10-29 10:02 现读：两枚 vite 都回 200、两枚 `/api/v1/health` 都 `status=ok`（`ai_state=CONFIGURED_UNVERIFIED`），
+  且只有课堂那枚把 `WorkspaceActions.tsx` 编到带 `rev-agent-tool-source` 的版本（回执
+  `trial/results/20261026_gozero/bz187-stack-generation.txt:5`）—— 所以主人要亲自走平板验收，走的是课堂 `:14462`，
+  它才是最新代次；vite 从磁盘改编译，挪树不用重起进程。尺：`trial/human_walk/_cmdr_stack_generation_r187.py:43`。
 - 高德键只从 User 级环境变量 `CITYNEXUS_AMAP_WEB_KEY` 进进程，不打印、不落盘。
 - 旅客 bearer 在 sessionStorage（设计如此，不是缺陷）；行程指针在 localStorage 带 `ownerTravelerId`。
 

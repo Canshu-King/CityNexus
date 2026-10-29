@@ -1,0 +1,8 @@
+Put the classroom stack on the newest generation and prove it is the one the tablet will hit.
+
+The operator's own verification is the only thing that can close the tablet row, so it has to run
+against current code. The classroom worktree sat sixty-four commits behind the tip; moving it needed
+no process restart, because vite transforms from disk, which is measurable by asking both dev servers
+for the same module and seeing that only the classroom one now answers with this shift's disclosure
+string. Both APIs answer health as ok with ai_state CONFIGURED_UNVERIFIED, and the receipt names port,
+worktree commit and byte counts so the next shift does not guess which generation a port serves.
