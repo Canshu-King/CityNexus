@@ -8,6 +8,13 @@ RED is named.
 Selftest: the census must also be able to call a title that nobody ever posted RED, otherwise a whole
 sheet of GREENs would mean nothing.
 
+The window is a run of days, not a calendar day: crossing midnight must not drop the hours logged before
+it, so a block counts while its archive stamp falls on today or yesterday.  A gap cutoff alone was tried
+and it cut the shift in two at a real five-and-a-half hour break, which is a rest, not a new session -
+so the receipt also prints every stretch wider than STRETCH_MINUTES, with the block counts on both sides,
+instead of pretending the shift ran without a pause.  The first excluded block is named too: a boundary
+with no visible neighbour on the far side is not a boundary.
+
 Exit codes: 0 every block landed, 7 some claim has no ledger hit, 8 every single block read RED at once.
 That third one is not a delivery verdict - rc=8 fired once when the landing gate grew a second return
 value and this census was still comparing a tuple to zero.  A uniformly red sheet is an instrument fault,
@@ -26,6 +33,8 @@ import _cmdr_ledger_landing_check_r300 as gate  # noqa: E402
 
 PROCESSED = gate.PROCESSED
 SESSION = "494abfd7"
+DAYS_BACK = 1
+STRETCH_MINUTES = 60
 RECEIPT = os.path.join(ROOT, "trial", "results", "20261026_gozero",
                        "bw301-this-sessions-blocks-landed.txt")
 
@@ -37,25 +46,72 @@ def heading_of(path):
     return ""
 
 
-def main(receipt=RECEIPT) -> int:
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    today = datetime.date.today().isoformat()
+def archived():
+    """Every archived block of this flower name, newest first, stamped to the second."""
     rows = []
-    for name in sorted(os.listdir(PROCESSED)):
+    for name in os.listdir(PROCESSED):
         if not name.startswith(SESSION) or ".inserted_" not in name:
             continue
         path = os.path.join(PROCESSED, name)
-        stamp = datetime.date.fromtimestamp(os.path.getmtime(path)).isoformat()
-        if stamp != today:
-            continue
-        rows.append((name, stamp, heading_of(path)))
+        rows.append((os.path.getmtime(path), name, heading_of(path)))
+    rows.sort(key=lambda row: row[0], reverse=True)
+    if not rows:
+        raise SystemExit("ABORT no archived block carries this session's name - nothing to re-read")
+    return rows
 
+
+def session_window(rows):
+    """Blocks whose archive stamp lands on today or the day before, plus the first one left outside."""
+    now = datetime.datetime.now()
+    days = {(now - datetime.timedelta(days=offset)).date() for offset in range(0, DAYS_BACK + 1)}
+    kept = [row for row in rows if datetime.date.fromtimestamp(row[0]) in days]
+    if not kept:
+        raise SystemExit("ABORT the %s-day window holds zero archived blocks - the boundary is wrong, "
+                         "widen DAYS_BACK before believing an empty sheet" % (DAYS_BACK + 1))
+    excluded = rows[len(kept)] if len(kept) < len(rows) else None
+    if excluded is not None:
+        older_day = datetime.date.fromtimestamp(excluded[0])
+        oldest_kept = min(datetime.date.fromtimestamp(row[0]) for row in kept)
+        if (oldest_kept - older_day).days <= 1:
+            raise SystemExit("ABORT the block just outside the window (%s, %s) sits a day away from the "
+                             "oldest kept block (%s) - that reads like a shift cut in half, widen "
+                             "DAYS_BACK before trusting this count"
+                             % (excluded[1], older_day, oldest_kept))
+    return kept, excluded
+
+
+def stretches(rows):
+    """Runs of blocks separated by less than STRETCH_MINUTES, newest first, so a pause stays visible."""
+    runs = [[rows[0]]]
+    for newer, older in zip(rows, rows[1:]):
+        if (newer[0] - older[0]) / 60.0 > STRETCH_MINUTES:
+            runs.append([older])
+        else:
+            runs[-1].append(older)
+    return runs
+
+
+def stamp_of(seconds):
+    return datetime.datetime.fromtimestamp(seconds).strftime("%m-%d %H:%M:%S")
+
+
+def main(receipt=RECEIPT) -> int:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    rows, excluded = session_window(archived())
     out = ["BLOCKS THIS SESSION REPORTED AS INSERTED - RE-READ AGAINST THE LEDGER bw301",
            "LEDGER %s" % gate.LEDGER,
-           "SESSION %s | archive files dated %s: %d" % (SESSION, today, len(rows))]
+           "SESSION %s | window = today and the %d day(s) before it, %s .. %s = %d blocks"
+           % (SESSION, DAYS_BACK, stamp_of(rows[-1][0]), stamp_of(rows[0][0]), len(rows))]
+    for index, run in enumerate(stretches(rows), start=1):
+        out.append("  stretch %d: %s .. %s = %d blocks"
+                   % (index, stamp_of(run[-1][0]), stamp_of(run[0][0]), len(run)))
+    if excluded is None:
+        out.append("WINDOW_EDGE no older block exists at all - the window is the whole archive")
+    else:
+        out.append("WINDOW_EDGE first block excluded: %s  (%s)" % (excluded[1], stamp_of(excluded[0])))
     red = []
-    for name, stamp, heading in rows:
-        out.append("  %s  (%s)" % (name, stamp))
+    for seconds, name, heading in rows:
+        out.append("  %s  (archived %s)" % (name, stamp_of(seconds)))
         out.append("      heading %r" % heading[:90])
         printed = io.StringIO()
         real, sys.stdout = sys.stdout, printed
@@ -112,11 +168,7 @@ def main(receipt=RECEIPT) -> int:
 def selftest():
     """The fault sentinel has to bite, or a real loss would read the same as a broken call."""
     import tempfile
-    rows = [name for name in os.listdir(PROCESSED)
-            if name.startswith(SESSION) and ".inserted_" in name]
-    if not rows:
-        print("SELFTEST_RED no archived blocks to test against")
-        return 9
+    rows, _excluded = session_window(archived())
     box = tempfile.mkdtemp()
     empty = os.path.join(box, "empty_ledger.md")
     io.open(empty, "w", encoding="utf-8").write("# a ledger that holds nothing\n")
