@@ -152,6 +152,15 @@ def main() -> int:
                "%s" % ("a body with no literal at all and no setter read as says_nothing + nowhere, as "
                        "the axes claim" if control_none else
                        "no body in this set reads as says_nothing, so that class is untested here"))
+    out.append("SAYS_ZH_ROWS the %d bodies that write a Chinese sentence, one line each, with the words "
+               "they chose and where they put them:" % zh)
+    for item in rows:
+        if not item["zh"]:
+            continue
+        out.append("  %s:%d  「%s」  交state=%s  重试句=%s  双语形=%s"
+                   % (item["rel"], item["line"], " / ".join(item["sentences"])[:60],
+                      "是" if item["state"] else "否", "是" if item["retry"] else "否",
+                      "是" if item["shape"] else "否"))
     out.append("COUNTING_RULE a body says_zh when it carries a string literal with at least one CJK "
                 "character; bilingual_shape is the `zh ?` conditional; into_state means a setXxx(...) call "
                 "appears in the same body, into_console a console.* call; retry_shaped matches "

@@ -1,0 +1,4 @@
+LIVE ANCHORS {'same_source': 2, 'tally': 3, 'reverse': 4, 'distinct': 5, 'reused': 6, 'rows_head': 20, 'counting': 40, 'coverage': 41, 'tally_326': 28, 'ruler': 61, 'section': 3785, 'prev_section': 3774}
+LIVE NUMBERS catch=64 says_zh=19 shape=19 into_state=40 nowhere=24 retry=9 distinct=24 occurrences=25
+PENDING_INBOX_BEFORE_WRITE 0
+WROTE D:/moodle/_qoder_ledger_inbox\494abfd7_2213.md bytes=7681
