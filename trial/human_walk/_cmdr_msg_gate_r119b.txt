@@ -1,0 +1,4 @@
+提交门 r119：COMMIT_PATHS 改为全量列出（原先只印前四枚，五枚交付被读成少了一枚）
+
+git show --stat 现读确认提交本身没缺件，缺的是读数；selftest 重跑 rc=0，回执 _cmdr_gate_r119_selftest.txt。
+0 改产品字节。

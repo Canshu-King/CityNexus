@@ -1,0 +1,17 @@
+ROOT_ARM True
+HEAD 3d50f256c9e413f509a3f89127b7d43ecd660368
+COMMIT_PATHS 1 ['mine.txt']
+FOREIGN_STAGED before=1 after=1
+OK foreign index untouched
+REFUSE path not present ['no-such-file.txt']
+SELFTEST_CONTROL_TWO rc=2 expected=2
+REFUSE these paths import a module that exists in neither the index nor HEAD:
+    broken.tsx imports ./absent
+     add the module itself to the same delivery, or drop the importer.
+SELFTEST_CONTROL_FOUR_REFUSE rc=6 expected=6
+HEAD fe3687f4bd8d84e67d218e74e25cd73b547f90e3
+COMMIT_PATHS 2 ['absent.ts', 'broken.tsx']
+FOREIGN_STAGED before=1 after=1
+OK foreign index untouched
+SELFTEST_CONTROL_FOUR_ACCEPT rc=0 expected=0
+SELFTEST_OK control swept theirs.tsx into the commit; the gate committed only mine.txt, left theirs.tsx staged, refused a path that is not in the tree, refused an unresolvable import, and accepted it once the module was named too

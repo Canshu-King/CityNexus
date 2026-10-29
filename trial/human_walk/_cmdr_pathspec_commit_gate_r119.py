@@ -129,7 +129,7 @@ def land(message_file, paths, cwd, expect_clean=False):
     got = committed_paths(sha, cwd)
     foreign_after = staged(cwd)
     print("HEAD", sha)
-    print("COMMIT_PATHS", len(got), sorted(got)[:4])
+    print("COMMIT_PATHS", len(got), sorted(got))
     print("FOREIGN_STAGED before=%d after=%d" % (len(foreign_before), len(foreign_after)))
     extra = got - mine
     if extra:
