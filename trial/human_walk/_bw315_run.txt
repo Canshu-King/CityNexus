@@ -1,0 +1,4 @@
+LIVE ANCHORS {'same_source': 2, 'intersection': 3, 'rest': 68, 'case': 69, 'counting': 70, 'control': 71, 'ruler': 27, 'section': 3757, 'prev_section': 3746, 'bw307_shapes': 62, 'bw310_case': 32}
+LIVE NUMBERS reachable=221 traveller=132 jargon=45 intersection=21 outside=24 rows=21
+PENDING_INBOX_BEFORE_WRITE 1
+WROTE D:/moodle/_qoder_ledger_inbox\494abfd7_1516.md bytes=6009
