@@ -3,8 +3,9 @@ SUITE bw163-backend-full-tbline.txt failed=231 passed=2569 errors=12
 DISTINCT_NODE_IDS 231 (must equal failed, enforced above)
 BUCKETS 18 sum=231 (enforced equal failed above)
 FIXTURE_SIDE_TOTAL 130 rows across 7 buckets
-PRODUCT_OR_SEED_SIDE_TOTAL 101 rows across 11 buckets
-BUCKET not yet attributed | 39 rows | product/seed-side
+PRODUCT_OR_SEED_SIDE_TOTAL 62 rows across 10 buckets (identified cause, product or seed side)
+SIDE_UNKNOWN_TOTAL 39 rows across 1 buckets -- no cause was measured for these, so they are not counted as a product defect either
+BUCKET not yet attributed | 39 rows | side unknown
     tests/test_agent_runtime_gate.py::test_agt16_accept_time_gate_remains_authoritative
     tests/test_guardian_model_evidence.py::test_live_context_conflict_refuses_deterministic_guardian_fallback
     tests/test_guardian_model_evidence.py::test_model_path_evidence_names_the_accepted_proposal

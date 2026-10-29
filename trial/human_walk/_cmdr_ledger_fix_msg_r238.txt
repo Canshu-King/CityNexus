@@ -1,0 +1,7 @@
+Correct the node ledger's side split: unidentified rows are not product defects.
+ 
+The first version of the red-node ledger put the still-unattributed rows on the product/seed side by
+elimination, which reads as a cause claim nobody measured. The ruler now reports three sides --
+fixture 130, identified product/seed 62, side unknown 39 -- and the sums still close against pytest's own
+failed number. The process note is included too: the first patch raised before writing, so the receipt
+on disk was never left half-updated.

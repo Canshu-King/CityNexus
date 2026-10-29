@@ -74,6 +74,7 @@ def main():
     fixture_side = [name for name in buckets if name.startswith(("bearer-less", "door answers 401",
                   "body iterated", "answer lacks a key", "classroom/demo", "fake settings",
                   "credential refused"))]
+    unknown = [name for name in buckets if name.startswith("not yet attributed")]
     lines = [
         "RED NODE LEDGER bw234",
         "SUITE %s failed=%d passed=%d errors=%d" % (os.path.basename(census.SUITE_OUT), failed, passed, errors),
@@ -81,12 +82,21 @@ def main():
         "BUCKETS %d sum=%d (enforced equal failed above)" % (len(buckets), sum(len(v) for v in buckets.values())),
         "FIXTURE_SIDE_TOTAL %d rows across %d buckets" % (
             sum(len(buckets[name]) for name in fixture_side), len(fixture_side)),
-        "PRODUCT_OR_SEED_SIDE_TOTAL %d rows across %d buckets" % (
-            failed - sum(len(buckets[name]) for name in fixture_side), len(buckets) - len(fixture_side)),
+        "PRODUCT_OR_SEED_SIDE_TOTAL %d rows across %d buckets (identified cause, product or seed side)" % (
+            failed - sum(len(buckets[n]) for n in fixture_side) - sum(len(buckets[n]) for n in unknown),
+            len(buckets) - len(fixture_side) - len(unknown)),
+        "SIDE_UNKNOWN_TOTAL %d rows across %d buckets -- no cause was measured for these, so they are"
+        " not counted as a product defect either" % (
+            sum(len(buckets[n]) for n in unknown), len(unknown)),
     ]
     for name in sorted(buckets, key=lambda key: -len(buckets[key])):
         members = sorted(buckets[name])
-        tag = "fixture-side" if name in fixture_side else "product/seed-side"
+        if name in fixture_side:
+            tag = "fixture-side"
+        elif name in unknown:
+            tag = "side unknown"
+        else:
+            tag = "product/seed-side"
         lines.append("BUCKET %s | %d rows | %s" % (name, len(members), tag))
         lines += ["    %s" % node for node in members]
     io.open(RECEIPT, "w", encoding="utf-8", newline="\n").write("\n".join(lines) + "\n")
