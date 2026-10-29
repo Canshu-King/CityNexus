@@ -3727,3 +3727,11 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 顺带钉住另一处同源误读：先前一段截断输出看着像 backend/app/services.py 的 141-148 行把拒语句粘进了 docstring。按字节现读三棵现役树（trial/results/20261026_gozero/bw295-services-across-trees.txt:4、:18、:32 三行同为 sha256 前缀 8de56c8e981f、126757 字节）：拒语句只在 746/782/787/789/799，141-148 行是表名字符串，三棵都能 ast 编译。文件没坏、也没被本班动过一个字节。
 - 待裁与先前那条并成一串（本班 0 改产品字节、不代裁）：除了 §14.27 那三件，多一件——要不要让这 333 处英文句在 raise 处就带上各自的具名键（带上才谈得上中文；现状是按码拼键，同码不同句共用一键）。
 
+14.29 补（10-29 午后）：那 333 处英文句按「谁的面」拆开——旅客真能撞到的是 221 处
+
+- §14.28 报了句子的总数，总数不能当成屏的问题：同一桶里混着旅客点得到的路由、只有 Agent 走的工具面、以及找不到路由的内部函数。尺 trial/human_walk/_cmdr_surface_of_english_refusals_r302.py:44 按「这处 raise 所在函数自己带不带 @app/@router 装饰器」分面，回执 trial/results/20261026_gozero/bw302-which-surface-says-it-in-english.txt:3。
+- 分面读数：英文句 330 处里 ROUTE_REACHABLE 221 处、AGENT_SURFACE 91 处、INTERNAL 18 处（trial/results/20261026_gozero/bw302-which-surface-says-it-in-english.txt:3）。221 处再按绑定方式分：自带路由装饰器 145 处、函数自己没有装饰器但同模块挂着路由 76 处（同回执 :4）。给主人的一句话：**要修屏上中文，先修这 221 处，不是 333 处**。
+- 两把尺的分母不同，写进回执不含糊：本尺读 1113 处（只数函数体内、且 detail 是字面文本的），trial/results/20261026_gozero/bw293-bare-english-refusals.txt:4 那把读 1187 处（还走模块级与 lambda，并记下运行时拼出来的 detail）。差的 3 处**没有逐枚对账**，这句是边界不是结论（同回执 :2）。
+- 标注诚实性（本班在这格上错过一次，改掉）：第一版把 `_trip_studio_context` 里那句英文标成「绑在 /api/v1/health 上」——那是同模块的第一条路由，不是这句话的入口。现在具名对照写清「helper 自己无装饰器、其模块挂 288 条路由、不替它认领某一条 URL」（trial/results/20261026_gozero/bw302-which-surface-says-it-in-english.txt:5）。
+- 承 §14.28 待裁那条：要让这 221 处在 raise 处带上各自具名键，才谈得上中文；现状是统一出口 backend/app/main.py:784 按状态码拼键，同码不同句共用一枚。本班 0 改产品字节、不代裁。
+
