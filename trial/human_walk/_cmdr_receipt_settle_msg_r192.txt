@@ -1,0 +1,9 @@
+Leave the classroom tree where the receipt can describe it truthfully.
+
+Chasing the tip generation by generation only ages the receipt by one commit every time it is
+refreshed, so the classroom worktree now stays at the generation whose reading this artifact
+carries. The commits above it (this one included) touch trial/ documents and the receipt itself, not
+a product byte, which is why the served module is byte-identical to the one measured before the
+move. The
+positive and negative arms still discriminate: the classroom vite compiles the module carrying the
+disclosure string, the older-generation vite does not.
