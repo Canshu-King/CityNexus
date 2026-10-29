@@ -1,0 +1,566 @@
+FFFF.FFFFFF.................F...............F...........FF............FF [  2%]
+.........F.......FF.............................................F....... [  5%]
+...............F.......F................................................ [  7%]
+........................................................................ [ 10%]
+................................F....................................... [ 12%]
+.......FF.......F....................................................... [ 15%]
+.............F.......................................................... [ 17%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+............................................................F........... [ 25%]
+...................................................................s.... [ 28%]
+........................................................................ [ 30%]
+....................FF......FF............................FFF.....F..... [ 33%]
+..F...FFF....F.F.FFFF...F...........F................................... [ 35%]
+.............EEEEE...................................................... [ 38%]
+..............F................................................FFFFFFF.. [ 40%]
+.....EEEEEEE............................................................ [ 43%]
+...........................F.............F......................F....... [ 45%]
+.........................................FF....F...................F...F [ 48%]
+..FFFFF.FF........FF.FFFFF...x.......................................... [ 50%]
+........................................................F............... [ 53%]
+...FF.FFF.....................................FFF..FF.FFFFF............. [ 56%]
+..............F.................F.............F......................... [ 58%]
+.................F...................................................... [ 61%]
+........................................................................ [ 63%]
+..............................FFFFFFFFFFFFFFFFFFFF.....F................ [ 66%]
+.FFFFFFF.F.................FFFFF.F...F.........FFFFFFFFFFFFFFFFFFFF..... [ 68%]
+.............................................FFFFFFF....F............... [ 71%]
+.........................................................F.............. [ 73%]
+....FF.............................................FFFFFF.......FF.F.... [ 76%]
+F............F.......................................................... [ 78%]
+..............F...FF..........F.........FFFFFFFFFFFFFFFFFFFF............ [ 81%]
+....F................................................................... [ 84%]
+........................................................................ [ 86%]
+.........................................................sssssssssssss.. [ 89%]
+................................F........FFFFF..F........FFFF........... [ 91%]
+.........................................................FF............. [ 94%]
+.........................F..FFF...F..FF..s.............FF............... [ 96%]
+........................F.......F........................F.............F [ 99%]
+..F...F..F.......F..                                                     [100%]
+=================================== ERRORS ====================================
+__ ERROR at setup of test_the_current_plan_is_named_and_is_not_the_last_row ___
+E   KeyError: 'journey_id'
+----------------------------- Captured log setup ------------------------------
+WARNING  app.main:main.py:803 error_receipt_id=CNX-CE25J5A2 code=REQUEST_ERROR status=503 route=GET /api/v1/demo/scene trace_id=1e0d3068-1dda-4842-9ab6-b2a6f4bd2e4c
+_ ERROR at setup of test_selecting_another_candidate_moves_the_answer_not_the_order _
+E   KeyError: 'journey_id'
+----------------------------- Captured log setup ------------------------------
+WARNING  app.main:main.py:803 error_receipt_id=CNX-CE25J5A2 code=REQUEST_ERROR status=503 route=GET /api/v1/demo/scene trace_id=4b514fbb-9fd1-454d-89f6-1d4b46525ba6
+_ ERROR at setup of test_switching_while_a_plan_is_executing_still_supersedes_it _
+E   KeyError: 'journey_id'
+----------------------------- Captured log setup ------------------------------
+WARNING  app.main:main.py:803 error_receipt_id=CNX-CE25J5A2 code=REQUEST_ERROR status=503 route=GET /api/v1/demo/scene trace_id=7d9673fb-4d52-4a41-85e3-abf52bdf1db4
+_ ERROR at setup of test_a_journey_without_a_pointer_names_nothing_rather_than_the_first_row _
+E   KeyError: 'journey_id'
+----------------------------- Captured log setup ------------------------------
+WARNING  app.main:main.py:803 error_receipt_id=CNX-CE25J5A2 code=REQUEST_ERROR status=503 route=GET /api/v1/demo/scene trace_id=22400683-6577-4810-8c37-f67032b2d81d
+_ ERROR at setup of test_the_field_adds_nothing_else_and_costs_the_list_no_extra_queries _
+E   KeyError: 'journey_id'
+----------------------------- Captured log setup ------------------------------
+WARNING  app.main:main.py:803 error_receipt_id=CNX-CE25J5A2 code=REQUEST_ERROR status=503 route=GET /api/v1/demo/scene trace_id=d4b55b09-b877-4954-8e11-5350a95a9c9b
+_ ERROR at setup of test_the_selected_plan_carries_sealed_evidence_and_select_does_not_swap_the_pointer _
+E   AssertionError: {"error":{"code":"DEMO_START_REFUSED","message":"journey must be PLANNED with a selected plan","message_key":"demo.start_refused","trace_id":"241d77d6-e156-4bac-8d56-80c9164d8f11","details":{"journey_id":"22222222-2222-4222-8222-222222222222"},"error_receipt_id":"CNX-MDTZY3V9"}}
+    assert 409 == 200
+     +  where 409 = <Response [409 Conflict]>.status_code
+_ ERROR at setup of test_a_plan_without_a_declared_ttl_is_frozen_evidence_not_absent_evidence _
+E   AssertionError: {"error":{"code":"DEMO_START_REFUSED","message":"journey must be PLANNED with a selected plan","message_key":"demo.start_refused","trace_id":"dc5c60ff-ee65-4204-b488-d0cb08428b7e","details":{"journey_id":"22222222-2222-4222-8222-222222222222"},"error_receipt_id":"CNX-MDTZY3V9"}}
+    assert 409 == 200
+     +  where 409 = <Response [409 Conflict]>.status_code
+_ ERROR at setup of test_route_evidence_before_any_proposal_reads_the_proposal_supply_not_the_plan _
+E   AssertionError: {"error":{"code":"DEMO_START_REFUSED","message":"journey must be PLANNED with a selected plan","message_key":"demo.start_refused","trace_id":"2922f5e3-ae99-4d21-8249-41500d56a3a5","details":{"journey_id":"22222222-2222-4222-8222-222222222222"},"error_receipt_id":"CNX-MDTZY3V9"}}
+    assert 409 == 200
+     +  where 409 = <Response [409 Conflict]>.status_code
+____ ERROR at setup of test_the_m3_slice_completes_on_the_sealed_evidence _____
+E   AssertionError: {"error":{"code":"DEMO_START_REFUSED","message":"journey must be PLANNED with a selected plan","message_key":"demo.start_refused","trace_id":"b8524ef9-ef99-42eb-96a2-9dd2ddde568c","details":{"journey_id":"22222222-2222-4222-8222-222222222222"},"error_receipt_id":"CNX-MDTZY3V9"}}
+    assert 409 == 200
+     +  where 409 = <Response [409 Conflict]>.status_code
+_ ERROR at setup of test_a_recovery_refused_for_a_missing_target_is_not_blamed_on_mobility _
+E   AssertionError: {"error":{"code":"DEMO_START_REFUSED","message":"journey must be PLANNED with a selected plan","message_key":"demo.start_refused","trace_id":"5473b999-5f37-4ca0-b975-bc2c16296778","details":{"journey_id":"22222222-2222-4222-8222-222222222222"},"error_receipt_id":"CNX-MDTZY3V9"}}
+    assert 409 == 200
+     +  where 409 = <Response [409 Conflict]>.status_code
+_ ERROR at setup of test_the_read_fails_closed_when_the_plan_really_has_nothing _
+E   AssertionError: {"error":{"code":"DEMO_START_REFUSED","message":"journey must be PLANNED with a selected plan","message_key":"demo.start_refused","trace_id":"8768775e-a7f9-46b8-8b73-0b912b180ee6","details":{"journey_id":"22222222-2222-4222-8222-222222222222"},"error_receipt_id":"CNX-MDTZY3V9"}}
+    assert 409 == 200
+     +  where 409 = <Response [409 Conflict]>.status_code
+_ ERROR at setup of test_a_pointer_that_disagrees_with_its_own_payload_is_reported_as_inconsistent _
+E   AssertionError: {"error":{"code":"DEMO_START_REFUSED","message":"journey must be PLANNED with a selected plan","message_key":"demo.start_refused","trace_id":"d72e1c78-8dad-4e3a-9d5a-657925e5a7ca","details":{"journey_id":"22222222-2222-4222-8222-222222222222"},"error_receipt_id":"CNX-MDTZY3V9"}}
+    assert 409 == 200
+     +  where 409 = <Response [409 Conflict]>.status_code
+================================== FAILURES ===================================
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\stateful\test_journey_truth_state_machine.py:267: AttributeError: 'str' object has no attribute 'get'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_agent_mission_runtime.py:448: KeyError: 'current_activity_id'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_agent_mission_runtime.py:1238: KeyError: 'budget'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_agent_runtime_gate.py:114: AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_agent_runtime_gate.py:146: AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_agent_runtime_gate.py:374: assert 200 == 409
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_agent_runtime_gate.py:403: AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_backend_connected_golden_contract.py:127: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"22ecf2d3-f893-4336-8580-130e3c4f0f67","details":null,"error_receipt_id":"CNX-Z43D3VKA"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\agent\goal_artifacts.py:33: AttributeError: 'types.SimpleNamespace' object has no attribute 'traveler_id'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\agent\goal_artifacts.py:33: AttributeError: 'types.SimpleNamespace' object has no attribute 'traveler_id'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_contract.py:73: AttributeError: '_IncludedRouter' object has no attribute 'path'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_dsh_list_replans_bound.py:124: AssertionError: ordinary reads must keep the 12-field contract: []
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_event_resolution_projection.py:38: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"db02a5f4-8cf1-4f58-939c-a22ff180d3c2","details":null,"error_receipt_id":"CNX-8GR37PMP"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_gpt_adversarial_provider_hardening.py:154: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"81dac014-8c46-4d85-96ca-c12c82618da6","details":null,"error_receipt_id":"CNX-Z43D3VKA"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_guardian_model_evidence.py:227: AttributeError: <module 'app.agent.guardian' from 'D:\\moodle\\_cmdr_rescue_v3_1022\\backend\\app\\agent\\guardian.py'> has no attribute 'configured_journey_agent'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_guardian_model_evidence.py:263: AttributeError: <module 'app.agent.guardian' from 'D:\\moodle\\_cmdr_rescue_v3_1022\\backend\\app\\agent\\guardian.py'> has no attribute 'configured_journey_agent'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_guardian_v4.py:89: AssertionError: assert 'REQUIRE_CONFIRMATION' == 'EXECUTED'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\main.py:28442: AttributeError: 'types.SimpleNamespace' object has no attribute 'simulation_enabled'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\agent\journey_intent.py:391: AttributeError: 'types.SimpleNamespace' object has no attribute 'intent_kind'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_provider_runtime_gate.py:295: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"2157ff22-ad89-4c0b-9f71-8df17529fa7c","details":null,"error_receipt_id":"CNX-Z43D3VKA"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_provider_runtime_gate.py:339: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"a86e295f-1138-4399-8efe-b9540c59f3dc","details":null,"error_receipt_id":"CNX-ZY2EWQX6"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_activity_identity_contract.py:103: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_activity_identity_contract.py:189: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_discovery_truth.py:167: AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_discovery_truth.py:167: AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_discovery_truth.py:167: AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_gates.py:104: AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503 / {'error': {'code': 'REQUEST_ERROR', 'message': 'DEMO_DATABASE_NOT_ISOLATED', 'message_key': 'error.request_error', 'trace_id': '574507e0-2cc0-44df-a284-836715aeeaba', 'details': None, 'error_receipt_id': 'CNX-CE25J5A2'}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_gates.py:104: AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503 / {'error': {'code': 'REQUEST_ERROR', 'message': 'DEMO_DATABASE_NOT_ISOLATED', 'message_key': 'error.request_error', 'trace_id': '9e5ea82f-8694-4102-b167-bb05a14a2ed3', 'details': None, 'error_receipt_id': 'CNX-CE25J5A2'}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_lock_duration.py:193: AssertionError: SETUP 失败：reset 之后 scene 里没有 journey_id
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_lock_duration.py:193: AssertionError: SETUP 失败：reset 之后 scene 里没有 journey_id
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_lock_duration.py:193: AssertionError: SETUP 失败：reset 之后 scene 里没有 journey_id
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_matrix_truth.py:375: AssertionError: 期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，那样这条门什么都能通过）；实际：CAPTURED
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_matrix_truth.py:466: KeyError: 'error_type'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_matrix_truth.py:786: AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_matrix_truth.py:786: AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_matrix_truth.py:786: AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_provider_independence.py:70: AssertionError: 期望：backend/tests/** 里没有对 provider 域名的真实调用（§17C，live 只能走 backend/live_checks/ 的 opt-in smoke）；实际：backend\tests\test_qoder_catalog_hydration.py:609: httpx.get("https://photon.komoot.io/api/?q=instrument-selftest", timeout=1.0) ; backend\tests\test_qoder_provider_identity.py:363: status, headers, body = transport.get("https://photon.komoot.io/api/", {"q": "x"})
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_anywhere_provider_truth.py:78: AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_key', 'destination_resolution', 'destination_state', 'fingerprint', 'hard_gaps', 'malformed_candidates']
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_catalog_hydration.py:289: AssertionError: SETUP 失败：种子里没有 journey，实际 {'error': {'code': 'REQUEST_ERROR', 'message': 'DEMO_DATABASE_NOT_ISOLATED', 'message_key': 'error.request_error', 'trace_id': '4e147b6d-cfe8-49e8-bae6-56d99eb241c1', 'details': None, 'error_receipt_id': 'CNX-CE25J5A2'}}
+C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\urllib\request.py:1347: urllib.error.URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0296_write_deadline.py:212: AssertionError: {'app\\catalog_hydration_operations.py': ['session.execute(text("PRAGMA busy_timeout = 500"))'], 'app\\core\\config.py...settings.write_busy_timeout_ms)', 'def busy_timeout_seconds() -> float:', 'return busy_timeout_ms() / 1000', ...], ...}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0307_credential_gate.py:187: AssertionError: {'env_present': 0, 'expect': 'CREDENTIAL_GATE_CLEAR', 'verdict': 'CREDENTIAL_LITERAL_OUTSIDE_PRODUCT_PATH'}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0332_error_receipt.py:207: AssertionError: 回执不落库是设计：失败的写会回滚，同事务存的号会跟着一起消失
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0383_journey_soft_delete.py:122: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"e386159c-9074-4635-a1fe-38a572f89385","details":null,"error_receipt_id":"CNX-7BD7YCVG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0383_journey_soft_delete.py:403: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"c4e80384-ffb2-4b06-9020-26dfd3643da8","details":null,"error_receipt_id":"CNX-6DP3ZV4R"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0383_undelete_write_lock.py:295: TypeError: string indices must be integers, not 'str'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0399_journey_undelete.py:121: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"d1501282-e8ab-43a9-a2b9-6143a3a93db1","details":null,"error_receipt_id":"CNX-7BD7YCVG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0399_journey_undelete.py:121: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"d12132c3-a096-4e6d-b4ad-e88fb74430cb","details":null,"error_receipt_id":"CNX-7BD7YCVG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:160: AssertionError: list_journeys moved - the order forbids changing this door
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:103: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"d0e6bf58-b3a7-4b13-9477-b4644be61d11","details":null,"error_receipt_id":"CNX-KG4QSDHR"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:115: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"8984e0ce-f956-468f-a0d0-3f45ccf40c46","details":null,"error_receipt_id":"CNX-7BD7YCVG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:103: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"c1e61396-0f34-4aa9-a88c-634d0f392d5e","details":null,"error_receipt_id":"CNX-KG4QSDHR"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:103: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"58ee4d05-9988-4120-964f-32ba86852f57","details":null,"error_receipt_id":"CNX-KG4QSDHR"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:295: AssertionError: 6 contract operations are absent from api.ts: ['accept_unknown_price_route_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__accept_unknown_price_post', 'answerJourneyClarification', 'freeze_plan_routes_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__freeze_routes_post', 'read_travel_gaps_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__travel_gaps_get', 'research_goal_places', 'resumeJourneyMission']
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0402_recycle_bin.py:103: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"26f51faa-7d9f-4f8d-8243-50d39836496d","details":null,"error_receipt_id":"CNX-KG4QSDHR"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0434_share_grants.py:238: AssertionError: ORD-0434 promised the anonymous read would not move one word; it moved
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0434_share_grants.py:249: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0434_share_grants.py:305: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","message_key":"error.request_error","trace_id":"974f190e-2ba3-404f-ac12-9775b36ff4de","details":null,"error_receipt_id":"CNX-W22ZSD42"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0434_share_grants.py:305: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","message_key":"error.request_error","trace_id":"ae45b8ca-3a63-46ab-a11b-d0f444a5d23d","details":null,"error_receipt_id":"CNX-8JNMDDFY"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0434_share_grants.py:305: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED","message_key":"error.request_error","trace_id":"1bf28f1b-4dd4-4a0a-bb2d-b47b1822d850","details":null,"error_receipt_id":"CNX-VC4XHXTP"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0434_share_grants.py:377: AssertionError: assert {'JOURNEY_EXE...GRANT_MANAGE'} == {'JOURNEY_REA...GRANT_MANAGE'}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_ord0434_share_grants.py:402: TypeError: string indices must be integers, not 'str'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_rejection_message_keys.py:75: AssertionError: 401 {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"03bce712-9041-4541-9ed4-355e931480b2","details":null,"error
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_simulation_mode.py:57: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.request_error","trace_id":"47d6cdd2-8cb2-4ff5-a7ce-30e03ab0bbb0","details":null,"error_receipt_id":"CNX-CE25J5A2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_simulation_mode.py:57: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.request_error","trace_id":"63c02fa7-5af2-4134-a9ae-582fbfb1428a","details":null,"error_receipt_id":"CNX-CE25J5A2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_simulation_mode.py:57: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.request_error","trace_id":"90da16f2-6e55-447f-818a-6c4bb2591d79","details":null,"error_receipt_id":"CNX-CE25J5A2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_simulation_mode.py:293: AssertionError: {'advance': {'journey_status': 'DRAFT', 'selected_plan_version_id': None, 'steps': [{'ms': 21.7, 'ok': True, 'step': '...: 21.7}, 'journey_id': '22222222-2222-4222-8222-222222222222', 'journey_status': 'DRAFT', 'plan_version_id': None, ...}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_simulation_mode.py:57: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"DEMO_DATABASE_NOT_ISOLATED","message_key":"error.request_error","trace_id":"2e9cb7e2-963e-4e31-86e5-4587af794b97","details":null,"error_receipt_id":"CNX-CE25J5A2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"27700ca4-8510-478a-ba9e-df815f72d91b","details":null,"error_receipt_id":"CNX-N6KKVV3R"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"879ab00f-e9d7-4e13-8f00-44442be4c115","details":null,"error_receipt_id":"CNX-RTET3DW5"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"adcab8d2-4ec0-402e-b07d-3e616b7e7247","details":null,"error_receipt_id":"CNX-3M79YTPV"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"22a45171-64c9-4857-843d-c4a01abd5970","details":null,"error_receipt_id":"CNX-54AEP834"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"8fd7e92d-20e4-41e9-ad18-42001a968e75","details":null,"error_receipt_id":"CNX-RZZ3YQWR"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"0e5787bd-a840-492f-8256-6fcdcf6d222b","details":null,"error_receipt_id":"CNX-74SSVS76"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"63862a18-5572-4db5-8fec-41719e954f25","details":null,"error_receipt_id":"CNX-A7DM66JC"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"a42b3cf5-920f-4a6b-a741-21a3f3d8b3f8","details":null,"error_receipt_id":"CNX-2WTPETY9"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"40660c90-eb03-451a-b1bd-b0bbb11facaa","details":null,"error_receipt_id":"CNX-J5SEM4FA"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_qoder_trip_shape_and_budget_reference.py:95: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"57c5512c-baea-4e17-80b6-5fc1b4cc2b3c","details":null,"error_receipt_id":"CNX-FD74J5EB"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\agent\goal_artifacts.py:33: AttributeError: 'types.SimpleNamespace' object has no attribute 'traveler_id'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r14_terminal_disruption_recovery.py:69: KeyError: 'current_activity_id'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\agent\runtime.py:454: AttributeError: 'types.SimpleNamespace' object has no attribute 'objective_codes_json'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\agent\gateway.py:683: AttributeError: 'types.SimpleNamespace' object has no attribute 'objective_codes_json'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r51_live_journey_intent.py:31: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r52_decision_inbox.py:30: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r53_journey_inbox_product.py:31: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r54_reality_reconciliation_product.py:39: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r55_live_progress_drift_product.py:92: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"f468a4ab-10b5-47f5-bb22-eeeae341b44b","details":null,"error_receipt_id":"CNX-X3XSNZA7"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r57_group_presence_operator.py:44: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r60_collective_recovery_apply.py:511: assert 401 == 409
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r63_planned_separation.py:59: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r63_planned_separation.py:59: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r63_planned_separation.py:59: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r63_planned_separation.py:59: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r63_planned_separation.py:59: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r63_planned_separation.py:59: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r63_planned_separation.py:59: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r64_member_side_quest.py:338: AssertionError: assert 'PAST' == 'AVAILABLE'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r64_member_side_quest.py:1553: AssertionError: {"error":{"code":"CONFLICT","message":"LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED","message_key":"request.conflict","trace_id":"dadcc8f8-3d18-4fe4-99c3-ba8745235b21","details":null,"error_receipt_id":"CNX-X2J2YQ6T"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r64_member_side_quest.py:1631: AssertionError: {"error":{"code":"CONFLICT","message":"LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED","message_key":"request.conflict","trace_id":"ad54e5c2-f951-4426-9747-58a0e3913cce","details":null,"error_receipt_id":"CNX-X2J2YQ6T"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r64_member_side_quest.py:1647: AssertionError: {"error":{"code":"CONFLICT","message":"LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED","message_key":"request.conflict","trace_id":"e381013a-9170-47e8-ad64-6ca0bdbfcb3f","details":null,"error_receipt_id":"CNX-X2J2YQ6T"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r64_member_side_quest.py:1707: AssertionError: {"error":{"code":"CONFLICT","message":"LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED","message_key":"request.conflict","trace_id":"20041912-3820-4421-85c1-832f02a56f90","details":null,"error_receipt_id":"CNX-X2J2YQ6T"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r64_member_side_quest.py:1840: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r64_member_side_quest.py:2063: KeyError: 'active_plan'
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r88_real_poi_exploration.py:139: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"aa3a55ce-c6e2-4776-b98f-a85e59361d71","details":{"errors":[{"loc":["body","consented_provider"],"msg":"Field required","type":"missing","message_key":"validation.field_missing"}]},"error_receipt_id":"CNX-4D9VV24T"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r88_real_poi_exploration.py:302: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"86ac78eb-890b-48be-91cb-5f176323b8ce","details":{"errors":[{"loc":["body","consented_provider"],"msg":"Field required","type":"missing","message_key":"validation.field_missing"}]},"error_receipt_id":"CNX-EQD65G9T"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r89_member_shared_osm_identity.py:131: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"546fb448-ddb2-45f0-a696-bcb3d373cc83","details":{"errors":[{"loc":["body","consented_provider"],"msg":"Field required","type":"missing","message_key":"validation.field_missing"}]},"error_receipt_id":"CNX-2C6YMEXF"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r90_private_exploration_board.py:121: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"85e43dae-8378-4362-b69d-81a4bb42abd1","details":{"errors":[{"loc":["body","consented_provider"],"msg":"Field required","type":"missing","message_key":"validation.field_missing"}]},"error_receipt_id":"CNX-ZBFH9D2A"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r90_private_exploration_board.py:304: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"0bcc852a-cbfd-43a1-a0de-03e51850644b","details":{"errors":[{"loc":["body","consented_provider"],"msg":"Field required","type":"missing","message_key":"validation.field_missing"}]},"error_receipt_id":"CNX-MVBFWJZX"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r90_private_exploration_board.py:464: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"981bd52c-102d-458d-97b0-d214b9c078be","details":{"errors":[{"loc":["body","consented_provider"],"msg":"Field required","type":"missing","message_key":"validation.field_missing"}]},"error_receipt_id":"CNX-S6NNBCEF"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r93_explicit_city_center_and_private_session.py:114: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"76221d4c-e5d4-420b-b190-2db840920342","details":{"errors":[{"loc":["body","consented_provider"],"msg":"Field required","type":"missing","message_key":"validation.field_missing"}]},"error_receipt_id":"CNX-5AMFRG5A"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_r96_intent_driven_first_outing.py:172: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"c2ea6c55-5b7b-4fe8-a98e-f6969880ae1a","details":{"errors":[{"loc":["body","consented_provider"],"msg":"Field required","type":"missing","message_key":"validation.field_missing"}]},"error_receipt_id":"CNX-QW5QJVKN"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_revolution_r77_recovery.py:1333: assert 500 == 50000
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\mobility\runtime.py:174: AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_concurrency_and_remap.py:1005: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_execution_cursor.py:272: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_sol_plan_handover.py:83: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v12_authoritative_trip_execution.py:249: KeyError: 'context'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_1_2_structural_anchor_integrity.py:97: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion c834c354-d9cc-4ba5-b6f1-2d72d718da29 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"038af0c6-a306-4603-a0d0-c9abf2a35659","details":{"plan_id":"c834c354-d9cc-4ba5-b6f1-2d72d718da29","unresolved_facts":[],"used_place_ids":["v12:f14bf21a-3d71-450b-9ec7-01da2f745c78:arrival-anchor","v12:f14bf21a-3d71-450b-9ec7-01da2f745c78:check-in","v12-test-place-0","v12-test-place-3","v12:f14bf21a-3d71-450b-9ec7-01da2f745c78:stay-night-1","v12-test-place-1","v12-test-place-4","v12:f14bf21a-3d71-450b-9ec7-01da2f745c78:stay-night-2","v12-test-place-2","v12-test-place-5","v12:f14bf21a-3d71-450b-9ec7-01da2f745c78:check-out","v12:f14bf21a-3d71-450b-9ec7-01da2f745c78:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-4N86XZ85"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_1_2_structural_anchor_integrity.py:97: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 9c9cf7e8-9720-43a8-9c81-c819338d5817 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"2e1b171a-38e9-40c6-bf66-a8bbe0a29ab4","details":{"plan_id":"9c9cf7e8-9720-43a8-9c81-c819338d5817","unresolved_facts":[],"used_place_ids":["v12:c8c8755f-1ae4-4c56-aa3c-37d7cd1d29b4:arrival-anchor","v12:c8c8755f-1ae4-4c56-aa3c-37d7cd1d29b4:check-in","v12-test-place-0","v12-test-place-3","v12:c8c8755f-1ae4-4c56-aa3c-37d7cd1d29b4:stay-night-1","v12-test-place-1","v12-test-place-4","v12:c8c8755f-1ae4-4c56-aa3c-37d7cd1d29b4:stay-night-2","v12-test-place-2","v12-test-place-5","v12:c8c8755f-1ae4-4c56-aa3c-37d7cd1d29b4:check-out","v12:c8c8755f-1ae4-4c56-aa3c-37d7cd1d29b4:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-8S5YGKZV"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\main.py:18146: AttributeError: 'Depends' object has no attribute 'scalar'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:269: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 1854fdc6-dec3-4b19-ae0e-daa09a42a02f is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"4862bb2c-6cbd-4c9a-a9bf-c2e6df7c3835","details":{"plan_id":"1854fdc6-dec3-4b19-ae0e-daa09a42a02f","unresolved_facts":[],"used_place_ids":["v12:3fbc0b84-8ce5-43d3-a6b7-011dd84f36f7:arrival-anchor","v12:3fbc0b84-8ce5-43d3-a6b7-011dd84f36f7:check-in","v12-test-place-0","v12-test-place-3","v12:3fbc0b84-8ce5-43d3-a6b7-011dd84f36f7:stay-night-1","v12-test-place-1","v12-test-place-4","v12:3fbc0b84-8ce5-43d3-a6b7-011dd84f36f7:stay-night-2","v12-test-place-2","v12-test-place-5","v12:3fbc0b84-8ce5-43d3-a6b7-011dd84f36f7:check-out","v12:3fbc0b84-8ce5-43d3-a6b7-011dd84f36f7:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-DYF835QX"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\planning\authoritative_v12.py:1057: ValueError: V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER:v12-test-place-2
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\planning\authoritative_v12.py:1335: ValueError: V13_C4_ANCHOR_NOT_IN_INPUT:v12-test-place-not-selected
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion c0344654-69cf-48f9-9a38-2fe542ef0147 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"522a5e7a-a1e6-4032-b27e-a96f1697879b","details":{"plan_id":"c0344654-69cf-48f9-9a38-2fe542ef0147","unresolved_facts":[],"used_place_ids":["v12:fdba4ad4-e6bf-416d-b254-4bd60d361e1d:arrival-anchor","v12:fdba4ad4-e6bf-416d-b254-4bd60d361e1d:check-in","v12-test-place-0","v12-test-place-3","v12:fdba4ad4-e6bf-416d-b254-4bd60d361e1d:stay-night-1","v12-test-place-1","v12-test-place-4","v12:fdba4ad4-e6bf-416d-b254-4bd60d361e1d:stay-night-2","v12-test-place-2","v12-test-place-5","v12:fdba4ad4-e6bf-416d-b254-4bd60d361e1d:check-out","v12:fdba4ad4-e6bf-416d-b254-4bd60d361e1d:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-3XSTNDP3"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 51260cfc-008b-40b6-989f-ff2e3e4426f6 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"657ed374-4254-45df-a499-3c78b25586c6","details":{"plan_id":"51260cfc-008b-40b6-989f-ff2e3e4426f6","unresolved_facts":[],"used_place_ids":["v12:19795b42-8b90-4ae8-a1dd-e9ae8caef190:arrival-anchor","v12:19795b42-8b90-4ae8-a1dd-e9ae8caef190:check-in","v12-test-place-0","v12-test-place-3","v12:19795b42-8b90-4ae8-a1dd-e9ae8caef190:stay-night-1","v12-test-place-1","v12-test-place-4","v12:19795b42-8b90-4ae8-a1dd-e9ae8caef190:stay-night-2","v12-test-place-2","v12-test-place-5","v12:19795b42-8b90-4ae8-a1dd-e9ae8caef190:check-out","v12:19795b42-8b90-4ae8-a1dd-e9ae8caef190:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-3TS28GTG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 27fb53d7-ff8a-43c7-a904-d7f606d8753f is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"081f88cb-2605-4c68-b31f-03b6e0d61338","details":{"plan_id":"27fb53d7-ff8a-43c7-a904-d7f606d8753f","unresolved_facts":[],"used_place_ids":["v12:cef611ce-081d-408a-990a-b773e6ceff51:arrival-anchor","v12:cef611ce-081d-408a-990a-b773e6ceff51:check-in","v12-test-place-0","v12-test-place-3","v12:cef611ce-081d-408a-990a-b773e6ceff51:stay-night-1","v12-test-place-1","v12-test-place-4","v12:cef611ce-081d-408a-990a-b773e6ceff51:stay-night-2","v12-test-place-2","v12-test-place-5","v12:cef611ce-081d-408a-990a-b773e6ceff51:check-out","v12:cef611ce-081d-408a-990a-b773e6ceff51:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-2EX45JK2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 891baaea-e940-49d4-9b37-0887faabf8d5 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"29e2fe88-b7e9-4899-9a38-c8e2e26dbd9e","details":{"plan_id":"891baaea-e940-49d4-9b37-0887faabf8d5","unresolved_facts":[],"used_place_ids":["v12:63e7dc5c-dcb3-4591-8201-3e57fef23340:arrival-anchor","v12:63e7dc5c-dcb3-4591-8201-3e57fef23340:check-in","v12-test-place-0","v12-test-place-3","v12:63e7dc5c-dcb3-4591-8201-3e57fef23340:stay-night-1","v12-test-place-1","v12-test-place-4","v12:63e7dc5c-dcb3-4591-8201-3e57fef23340:stay-night-2","v12-test-place-2","v12-test-place-5","v12:63e7dc5c-dcb3-4591-8201-3e57fef23340:check-out","v12:63e7dc5c-dcb3-4591-8201-3e57fef23340:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-WWEDJM5Y"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 3e904750-2d3a-4dbc-9a03-3ffa0cd8a712 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"e138357f-56ab-4b1f-8032-0bf5e0992009","details":{"plan_id":"3e904750-2d3a-4dbc-9a03-3ffa0cd8a712","unresolved_facts":[],"used_place_ids":["v12:a90de430-d55f-40b3-807c-3c45c0ed246c:arrival-anchor","v12:a90de430-d55f-40b3-807c-3c45c0ed246c:check-in","v12-test-place-0","v12-test-place-3","v12:a90de430-d55f-40b3-807c-3c45c0ed246c:stay-night-1","v12-test-place-1","v12-test-place-4","v12:a90de430-d55f-40b3-807c-3c45c0ed246c:stay-night-2","v12-test-place-2","v12-test-place-5","v12:a90de430-d55f-40b3-807c-3c45c0ed246c:check-out","v12:a90de430-d55f-40b3-807c-3c45c0ed246c:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-8FWGWKN7"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion af455fbd-569c-4050-b27b-594d0da07e39 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"8e7e0a94-79c4-4909-b008-986698148047","details":{"plan_id":"af455fbd-569c-4050-b27b-594d0da07e39","unresolved_facts":[],"used_place_ids":["v12:7e4aa06d-f3a2-4153-a838-4b36a58f1cbd:arrival-anchor","v12:7e4aa06d-f3a2-4153-a838-4b36a58f1cbd:check-in","v12-test-place-0","v12-test-place-3","v12:7e4aa06d-f3a2-4153-a838-4b36a58f1cbd:stay-night-1","v12-test-place-1","v12-test-place-4","v12:7e4aa06d-f3a2-4153-a838-4b36a58f1cbd:stay-night-2","v12-test-place-2","v12-test-place-5","v12:7e4aa06d-f3a2-4153-a838-4b36a58f1cbd:check-out","v12:7e4aa06d-f3a2-4153-a838-4b36a58f1cbd:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-8267QQ6Z"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion ba7a2a36-4aae-465a-9fff-facd52654ea8 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"57da4244-928a-4448-b55a-30e0c97141f9","details":{"plan_id":"ba7a2a36-4aae-465a-9fff-facd52654ea8","unresolved_facts":[],"used_place_ids":["v12:26002d85-427e-4eb4-8eda-e0354192509f:arrival-anchor","v12:26002d85-427e-4eb4-8eda-e0354192509f:check-in","v12-test-place-0","v12-test-place-3","v12:26002d85-427e-4eb4-8eda-e0354192509f:stay-night-1","v12-test-place-1","v12-test-place-4","v12:26002d85-427e-4eb4-8eda-e0354192509f:stay-night-2","v12-test-place-2","v12-test-place-5","v12:26002d85-427e-4eb4-8eda-e0354192509f:check-out","v12:26002d85-427e-4eb4-8eda-e0354192509f:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-YFQ5XE5H"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 9f2add94-ebc4-4bf1-96da-add886b2b2d1 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"81c8526f-acd7-4518-a5af-985fb7a721a9","details":{"plan_id":"9f2add94-ebc4-4bf1-96da-add886b2b2d1","unresolved_facts":[],"used_place_ids":["v12:31d536cb-97b1-4b0b-a2e0-c5b6be2cb9d9:arrival-anchor","v12:31d536cb-97b1-4b0b-a2e0-c5b6be2cb9d9:check-in","v12-test-place-0","v12-test-place-3","v12:31d536cb-97b1-4b0b-a2e0-c5b6be2cb9d9:stay-night-1","v12-test-place-1","v12-test-place-4","v12:31d536cb-97b1-4b0b-a2e0-c5b6be2cb9d9:stay-night-2","v12-test-place-2","v12-test-place-5","v12:31d536cb-97b1-4b0b-a2e0-c5b6be2cb9d9:check-out","v12:31d536cb-97b1-4b0b-a2e0-c5b6be2cb9d9:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-N8BZDG6Y"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion ad913892-beb5-4fc6-a869-7283c2ff59d0 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"aea27675-37ea-4308-87dc-6d47829b89a7","details":{"plan_id":"ad913892-beb5-4fc6-a869-7283c2ff59d0","unresolved_facts":[],"used_place_ids":["v12:2afcf955-2e67-4cc8-9eef-ca871be4b5f9:arrival-anchor","v12:2afcf955-2e67-4cc8-9eef-ca871be4b5f9:check-in","v12-test-place-0","v12-test-place-3","v12:2afcf955-2e67-4cc8-9eef-ca871be4b5f9:stay-night-1","v12-test-place-1","v12-test-place-4","v12:2afcf955-2e67-4cc8-9eef-ca871be4b5f9:stay-night-2","v12-test-place-2","v12-test-place-5","v12:2afcf955-2e67-4cc8-9eef-ca871be4b5f9:check-out","v12:2afcf955-2e67-4cc8-9eef-ca871be4b5f9:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-SB4A94YB"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:624: AssertionError: assert 409 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 08527d9b-5bd3-496a-ae86-b2d791a5705e is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"62c059fc-91f8-408d-b210-01b447042da9","details":{"plan_id":"08527d9b-5bd3-496a-ae86-b2d791a5705e","unresolved_facts":[],"used_place_ids":["v12:6cb10362-f6e2-4bd5-ae59-b5ff554eb6f4:arrival-anchor","v12:6cb10362-f6e2-4bd5-ae59-b5ff554eb6f4:check-in","v12-test-place-0","v12-test-place-3","v12:6cb10362-f6e2-4bd5-ae59-b5ff554eb6f4:stay-night-1","v12-test-place-1","v12-test-place-4","v12:6cb10362-f6e2-4bd5-ae59-b5ff554eb6f4:stay-night-2","v12-test-place-2","v12-test-place-5","v12:6cb10362-f6e2-4bd5-ae59-b5ff554eb6f4:check-out","v12:6cb10362-f6e2-4bd5-ae59-b5ff554eb6f4:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-GY6MREBA"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion b991db18-53f1-4311-89a2-ee30f77a1794 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"7a875165-f5f3-48d1-837c-d88b4001e3ab","details":{"plan_id":"b991db18-53f1-4311-89a2-ee30f77a1794","unresolved_facts":[],"used_place_ids":["v12:fd44d69a-ea20-4a6d-9d0c-d8ae67930cf6:arrival-anchor","v12:fd44d69a-ea20-4a6d-9d0c-d8ae67930cf6:check-in","v12-test-place-0","v12-test-place-3","v12:fd44d69a-ea20-4a6d-9d0c-d8ae67930cf6:stay-night-1","v12-test-place-1","v12-test-place-4","v12:fd44d69a-ea20-4a6d-9d0c-d8ae67930cf6:stay-night-2","v12-test-place-2","v12-test-place-5","v12:fd44d69a-ea20-4a6d-9d0c-d8ae67930cf6:check-out","v12:fd44d69a-ea20-4a6d-9d0c-d8ae67930cf6:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-94CD6WYP"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v13_integrity.py:50: AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion 15cfd842-caec-44e7-aca5-ba6390605608 is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"cb6333ac-e602-4028-bee8-45cdd105b582","details":{"plan_id":"15cfd842-caec-44e7-aca5-ba6390605608","unresolved_facts":[],"used_place_ids":["v12:391a6e01-8cb8-4101-bfed-84e2f1ce9cff:arrival-anchor","v12:391a6e01-8cb8-4101-bfed-84e2f1ce9cff:check-in","v12-test-place-0","v12-test-place-3","v12:391a6e01-8cb8-4101-bfed-84e2f1ce9cff:stay-night-1","v12-test-place-1","v12-test-place-4","v12:391a6e01-8cb8-4101-bfed-84e2f1ce9cff:stay-night-2","v12-test-place-2","v12-test-place-5","v12:391a6e01-8cb8-4101-bfed-84e2f1ce9cff:check-out","v12:391a6e01-8cb8-4101-bfed-84e2f1ce9cff:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-JEJWB36D"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\main.py:18146: AttributeError: 'Depends' object has no attribute 'scalar'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\main.py:18146: AttributeError: 'Depends' object has no attribute 'scalar'
+D:\moodle\_cmdr_rescue_v3_1022\backend\app\integrations\discovery\real_city.py:1747: ValueError: CAPTURED_REPLAY_CITY_MISMATCH: Tianjin replay cannot be used for CN-FUZHOU
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v14_trial_readiness.py:71: AssertionError: assert 'NOT_CALLED' == 'UNAVAILABLE'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v16_integration.py:282: KeyError: 'trip'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v1922_six_fix_regressions.py:231: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"GENERIC_COMPOSE_INFEASIBLE:GENERIC_COMPOSE_UNKNOWN_COST:gen-491f3182-0","message_key":"request.invalid","trace_id":"9755a61d-188c-4764-ae79-8859f589e8b8","details":{"place_ids":["gen-491f3182-0"],"scopes_tried":1,"city_code":"CNX-GEN-F41C243C1F","journey_budget_minor":300000},"reason_code":"PLACE_COST_UNVERIFIED","error_receipt_id":"CNX-B26WAMD3"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:200: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"c4bc88e2-7143-4d92-a367-6ad2120fb90a","details":null,"error_receipt_id":"CNX-HRDHGNGG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:200: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"4b0e16c6-a22d-4fb1-94db-4189cda1ce62","details":null,"error_receipt_id":"CNX-HRDHGNGG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:200: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"bc4c177c-94f8-46b4-81ba-ffa8009bc61a","details":null,"error_receipt_id":"CNX-HRDHGNGG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:148: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"9bbbadd7-7e64-4464-a720-a03356ac2627","details":null,"error_receipt_id":"CNX-XQ2JCXP2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:200: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"67361dce-c671-412f-a8b5-4606acc3c914","details":null,"error_receipt_id":"CNX-HRDHGNGG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:148: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"de6697e5-56e3-4ba0-ae14-290edc4cd37b","details":null,"error_receipt_id":"CNX-XQ2JCXP2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v1924_final_truth_gate.py:274: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:200: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"a9fe06b3-0f94-47a6-9cf2-a1eb58d32d46","details":null,"error_receipt_id":"CNX-HRDHGNGG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:200: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"1e775104-1169-4cfc-9525-739fc7e59cfb","details":null,"error_receipt_id":"CNX-HRDHGNGG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:148: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"5ad29a7e-4b4e-408e-9ce8-3856442251be","details":null,"error_receipt_id":"CNX-XQ2JCXP2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:148: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"6b28f1e8-6f06-4c2f-a384-1717b11d6bc5","details":null,"error_receipt_id":"CNX-XQ2JCXP2"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\v192_harness.py:200: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"5b22977d-f73d-4873-a354-f381da58ea8a","details":null,"error_receipt_id":"CNX-HRDHGNGG"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v5_autopilot.py:104: assert None is not None
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v6_predictive_real_city.py:141: AssertionError: assert 'REQUIRE_CONFIRMATION' == 'EXECUTED'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v7_traveler_twin.py:74: AssertionError: assert 409 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v7_traveler_twin.py:275: AssertionError: assert 0.0 > 0.0
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v8_stay_mobility.py:177: AssertionError: {"error":{"code":"REQUEST_ERROR","message":"authenticated traveler credentials are required","message_key":"error.request_error","trace_id":"ea02d7b0-6189-4862-bcd9-81d05e989b32","details":null,"error_receipt_id":"CNX-8THZZ6J6"}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v9_real_trip_operations.py:117: KeyError: 'active_plan'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_v9_real_trip_operations.py:234: assert 'Temple of Heaven' in '{"error": {"code": "REQUEST_ERROR", "message": "authenticated traveler credentials are required", "message_key": "err...uest_error", "trace_id": "6b6de6c9-c667-4ec6-842d-fb89018b2193", "details": null, "error_receipt_id": "CNX-4YG75AJ7"}}'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_weather_runtime_gate_gpt.py:409: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_weather_runtime_gate_gpt.py:438: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_wp04_endpoints.py:221: KeyError: 'traveler_id'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_wp04_hardening_wp05.py:118: AssertionError: assert 401 == 200
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_wp04a0_bridge.py:116: AssertionError: assert {'error': {'c...quired', ...}} == {'error': {'c...quired', ...}}
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_wp06_followup_assist.py:223: AssertionError: assert 'amap_walking' == 'mock-mobility'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_wp06_postgate_hardening_next.py:90: AssertionError: assert 'RESOLVED' == 'ACKNOWLEDGED'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_wp06_postgate_hardening_next.py:171: KeyError: 'projection_status'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_wp06_twin_v2_gate.py:58: KeyError: 'context'
+D:\moodle\_cmdr_rescue_v3_1022\backend\tests\test_wp07_foundation_assist.py:144: KeyError: 'projection_status'
+=========================== short test summary info ===========================
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[0]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[1]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[2]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[3]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[5]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[6]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[7]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[8]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[9]
+FAILED tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[10]
+FAILED tests/test_agent_mission_runtime.py::test_agent_command_reuses_existing_actionable_event_for_same_current_activity
+FAILED tests/test_agent_mission_runtime.py::test_estimate_place_facts_is_explicitly_non_authoritative
+FAILED tests/test_agent_runtime_gate.py::test_agt04_assisted_low_risk_auto_accept_and_agt24_refreshes_twin_preserving_c4
+FAILED tests/test_agent_runtime_gate.py::test_agt04b_ai_only_semantic_target_can_auto_execute_inside_safe_envelope
+FAILED tests/test_agent_runtime_gate.py::test_agt16_accept_time_gate_remains_authoritative
+FAILED tests/test_agent_runtime_gate.py::test_agt17_idempotent_accept_and_agt18_ai_audit
+FAILED tests/test_backend_connected_golden_contract.py::test_backend_connected_golden_scenario_contract
+FAILED tests/test_bootstrap_photon_draft_exploration.py::test_unknown_photon_cost_cannot_materialize_formal_candidate
+FAILED tests/test_bootstrap_photon_draft_exploration.py::test_single_photon_candidate_returns_partial_live_result_without_fabricating_another
+FAILED tests/test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface
+FAILED tests/test_dsh_list_replans_bound.py::test_list_replans_on_an_ordinary_journey_keeps_the_full_shape
+FAILED tests/test_event_resolution_projection.py::test_event_api_exposes_server_resolution_time_and_reason
+FAILED tests/test_gpt_adversarial_provider_hardening.py::test_twin_reports_effective_provider_for_fallback_pair
+FAILED tests/test_guardian_model_evidence.py::test_live_context_conflict_refuses_deterministic_guardian_fallback
+FAILED tests/test_guardian_model_evidence.py::test_model_path_evidence_names_the_accepted_proposal
+FAILED tests/test_guardian_v4.py::test_guardian_flagship_executes_once_and_survives_reload
+FAILED tests/test_in_transit_reroute.py::test_reroute_endpoint_uses_current_observation_and_keeps_active_plan
+FAILED tests/test_journey_intent.py::test_next_stop_scope_expires_when_its_server_resolved_target_is_terminal
+FAILED tests/test_provider_runtime_gate.py::test_prt06_twin_reads_persisted_snapshot_without_runtime_capture
+FAILED tests/test_provider_runtime_gate.py::test_prt09_twin_reports_selected_plan_frozen_mobility_without_c4_commitment
+FAILED tests/test_qoder_activity_identity_contract.py::test_experience_and_canonical_plan_agree_on_activity_identity
+FAILED tests/test_qoder_activity_identity_contract.py::test_replacement_activity_is_not_left_anonymous
+FAILED tests/test_qoder_anywhere_discovery_truth.py::test_g16a_the_counting_client_sees_every_outbound_call_or_the_zero_proves_nothing
+FAILED tests/test_qoder_anywhere_discovery_truth.py::test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside
+FAILED tests/test_qoder_anywhere_discovery_truth.py::test_g16c_an_expired_candidate_set_must_go_back_to_the_provider
+FAILED tests/test_qoder_anywhere_gates.py::test_g2_an_existing_journey_becomes_plannable_without_being_recreated
+FAILED tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9c_hydration_network_does_not_starve_a_concurrent_plan_generate
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g15a_a_leg_with_no_sourced_fact_has_no_number_at_any_door
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g15c_coverage_counts_the_unusable_leg_instead_of_guessing_it
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g15d_the_scene_read_reports_the_same_two_counts
+FAILED tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+FAILED tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+FAILED tests/test_qoder_catalog_hydration.py::test_the_projection_carries_the_lifecycle_and_never_a_percentage
+FAILED tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+FAILED tests/test_qoder_live_hard_fallback.py::test_live_configured_hard_capture_does_not_fall_back_to_mock
+FAILED tests/test_qoder_live_hard_fallback.py::test_live_configured_soft_capture_still_degrades_to_mock
+FAILED tests/test_qoder_live_replans_endpoint.py::test_live_provider_healthy_control_produces_proposal
+FAILED tests/test_qoder_live_replans_endpoint.py::test_L1_live_failure_on_mock_explicit_leg_is_not_rescued
+FAILED tests/test_qoder_live_replans_endpoint.py::test_L3_all_candidates_unavailable_reports_data_not_no_alternative
+FAILED tests/test_qoder_live_replans_endpoint.py::test_L2_fully_live_candidate_survives_when_another_is_live_failed
+FAILED tests/test_qoder_live_replans_endpoint.py::test_L4_accepted_hard_evidence_contains_no_mock_fallback
+FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
+FAILED tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today
+FAILED tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table
+FAILED tests/test_qoder_ord0383_journey_soft_delete.py::test_the_list_answers_with_exactly_the_rows_the_store_calls_not_deleted
+FAILED tests/test_qoder_ord0383_journey_soft_delete.py::test_a_deleted_trip_is_still_readable_because_the_row_is_the_bin_s_content
+FAILED tests/test_qoder_ord0383_undelete_write_lock.py::test_the_single_tap_path_is_unchanged_by_the_predicate
+FAILED tests/test_qoder_ord0399_journey_undelete.py::test_bringing_a_trip_back_puts_it_in_the_list_without_moving_any_content_row
+FAILED tests/test_qoder_ord0399_journey_undelete.py::test_a_replayed_tap_is_the_refusal_and_cannot_undo_the_first_undelete
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_the_bin_answers_with_the_stored_moment_and_one_named_state
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_live_rows_and_bin_rows_partition_the_whole_store
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_the_bin_orders_newest_deletion_first
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_undeleting_moves_the_row_out_of_the_bin_and_back_into_the_list
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_the_generated_client_carries_every_operation_the_contract_declares
+FAILED tests/test_qoder_ord0402_recycle_bin.py::test_the_panels_one_constant_and_field_names_match_the_route_that_was_landed
+FAILED tests/test_qoder_ord0434_share_grants.py::test_the_anonymous_read_bytes_are_unchanged_from_the_base_tip
+FAILED tests/test_qoder_ord0434_share_grants.py::test_a_revoked_grant_does_not_change_what_the_anonymous_read_answers
+FAILED tests/test_qoder_ord0434_share_grants.py::test_the_member_set_is_one_row_per_traveller_and_says_so_by_name
+FAILED tests/test_qoder_ord0434_share_grants.py::test_withdrawal_is_immediate_and_not_repeatable
+FAILED tests/test_qoder_ord0434_share_grants.py::test_an_in_force_member_reads_an_invitees_only_grant
+FAILED tests/test_qoder_ord0434_share_grants.py::test_the_acl_table_answers_the_product_own_question_about_a_role
+FAILED tests/test_qoder_ord0434_share_grants.py::test_the_bin_scopes_to_an_owner_and_answers_the_same_without_one
+FAILED tests/test_qoder_rejection_message_keys.py::test_a_missing_resource_is_named_without_baking_its_id_into_the_key
+FAILED tests/test_qoder_simulation_mode.py::test_the_scene_read_reports_the_scenario_clock_and_not_this_machine
+FAILED tests/test_qoder_simulation_mode.py::test_reset_leaves_a_bookable_stage_and_start_scenario_makes_it_executable
+FAILED tests/test_qoder_simulation_mode.py::test_the_scene_clock_moves_with_the_scenario_and_never_with_the_device
+FAILED tests/test_qoder_simulation_mode.py::test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set
+FAILED tests/test_qoder_simulation_mode.py::test_a_naive_projection_instant_is_refused_by_name_instead_of_500
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_a_same_day_trip_is_one_day_and_the_allowance_is_budget_over_party
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_cross_midnight_and_multi_day_windows_use_the_documented_rule
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_the_projection_and_the_pricing_path_return_the_same_shape_object
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_a_non_cny_budget_keeps_its_own_currency_and_loses_the_cny_floor
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_a_cny_budget_is_still_compared_against_the_floor
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_a_stored_trip_over_the_window_is_disclosed_instead_of_500_or_truncated
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_naive_against_offset_anchors_reports_no_count_rather_than_one_day
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_an_inverted_window_is_named_as_invalid_rather_than_one_day
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_a_journey_with_no_budget_says_so_instead_of_sharing_zero
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_the_journey_schema_still_carries_the_raw_window_it_always_carried
+FAILED tests/test_r102_shared_city_outing.py::test_r102_native_selection_reads_member_scope_not_first_shared_row
+FAILED tests/test_r14_terminal_disruption_recovery.py::test_active_closure_can_accept_terminal_prefix_replan
+FAILED tests/test_r21_autonomous_future_synthesis.py::test_r21_model_context_does_not_leak_trigger_identity_or_strategy_hint
+FAILED tests/test_r26_decision_critical_clarification.py::test_r26_take_now_is_rejected_when_reality_moved_since_answer
+FAILED tests/test_r51_live_journey_intent.py::test_authenticated_live_steering_persists_temporary_intent_without_mutating_twin
+FAILED tests/test_r52_decision_inbox.py::test_one_bounded_intent_answer_resumes_the_same_lineage
+FAILED tests/test_r53_journey_inbox_product.py::test_r53_exact_pasted_schedule_change_updates_truth_and_replay_is_idempotent
+FAILED tests/test_r54_reality_reconciliation_product.py::test_r54_fresh_reservation_time_conflict_pauses_until_one_user_resolution
+FAILED tests/test_r55_live_progress_drift_product.py::test_r55_one_authenticated_late_completion_flows_to_protected_commitment
+FAILED tests/test_r57_group_presence_operator.py::test_r57_location_rows_bind_to_signed_members_and_operator_hides_coordinates
+FAILED tests/test_r57_group_presence_operator.py::test_r57_location_identity_cannot_be_claimed_in_body_and_route_is_member_bound
+FAILED tests/test_r57_group_presence_operator.py::test_r57_operator_does_not_infer_presence_for_unidentified_viewer
+FAILED tests/test_r57_group_presence_operator.py::test_r57_missing_member_location_is_unknown_not_a_split
+FAILED tests/test_r57_group_presence_operator.py::test_r57_expired_members_and_historical_unbound_locations_are_not_projected
+FAILED tests/test_r57_group_presence_operator.py::test_r57_stale_member_location_is_visible_as_stale_but_cannot_start_route
+FAILED tests/test_r57_group_presence_operator.py::test_r57_close_member_locations_are_together_and_other_journey_observation_is_rejected
+FAILED tests/test_r57_group_presence_operator.py::test_r57_without_an_exact_active_plan_place_has_no_invented_rendezvous
+FAILED tests/test_r57_group_presence_operator.py::test_r57_advisory_member_risk_never_creates_guardian_event
+FAILED tests/test_r57_group_presence_operator.py::test_r57_trusted_member_risk_is_one_event_and_one_guardian_handoff
+FAILED tests/test_r57_group_presence_operator.py::test_r58_trusted_location_row_projects_trusted_authority_not_browser_advisory
+FAILED tests/test_r57_group_presence_operator.py::test_r58_replay_eta_is_visible_with_exact_non_live_provenance
+FAILED tests/test_r57_group_presence_operator.py::test_r58_mock_route_cannot_become_member_eta_or_recovery_truth
+FAILED tests/test_r57_group_presence_operator.py::test_r58_advisory_adjust_is_one_plan_only_hermes_run_and_not_a_gps_disruption
+FAILED tests/test_r57_group_presence_operator.py::test_r58_unavailable_native_agent_is_durable_blocked_without_plan_mutation
+FAILED tests/test_r60_collective_recovery_apply.py::test_r60_signed_apply_spends_only_server_selected_recovery_once
+FAILED tests/test_r63_planned_separation.py::test_signed_member_can_create_only_their_own_plan_bound_side_trip
+FAILED tests/test_r63_planned_separation.py::test_ending_member_intent_does_not_claim_reunion_or_cancel_another_member_intent
+FAILED tests/test_r63_planned_separation.py::test_replacing_one_members_split_does_not_supersede_another_members_intent
+FAILED tests/test_r63_planned_separation.py::test_changed_parent_or_completed_rendezvous_stops_claiming_current_split
+FAILED tests/test_r63_planned_separation.py::test_planned_route_uses_member_rendezvous_and_trusted_live_risk_hands_off_to_guardian
+FAILED tests/test_r63_planned_separation.py::test_advisory_planned_route_does_not_request_group_recovery
+FAILED tests/test_r63_planned_separation.py::test_grounded_safe_return_projects_on_track_without_recovery_or_mutation
+FAILED tests/test_r64_member_side_quest.py::test_r66_moment_scout_is_private_read_only_and_revalidates_explicit_selection
+FAILED tests/test_r64_member_side_quest.py::test_r67_live_zero_and_provider_failure_are_distinct_and_unnamed_osm_is_not_actionable
+FAILED tests/test_r64_member_side_quest.py::test_r67_live_scout_excludes_shared_plan_stops_and_rendezvous
+FAILED tests/test_r64_member_side_quest.py::test_r67_live_scout_cannot_select_after_shared_rendezvous_has_passed
+FAILED tests/test_r64_member_side_quest.py::test_r67_live_osm_selection_materializes_only_after_owner_confirmation_and_is_idempotent
+FAILED tests/test_r64_member_side_quest.py::test_r69_meetup_handshake_requires_peer_and_ends_only_the_owners_split
+FAILED tests/test_r64_member_side_quest.py::test_r69_one_peer_ack_in_three_person_journey_does_not_claim_group_together
+FAILED tests/test_r64_member_side_quest.py::test_r72_invited_micro_group_progress_is_opt_in_member_bound_and_persistent
+FAILED tests/test_r64_member_side_quest.py::test_r71_missing_origin_is_unknown_and_preview_is_recipient_scoped
+FAILED tests/test_r64_member_side_quest.py::test_r71_reuses_captured_route_and_protected_commitment_evaluators[5-5-90-False-CAN_MAKE_IT]
+FAILED tests/test_r64_member_side_quest.py::test_r71_reuses_captured_route_and_protected_commitment_evaluators[10-55-60-False-AT_RISK]
+FAILED tests/test_r64_member_side_quest.py::test_r71_reuses_captured_route_and_protected_commitment_evaluators[10-55-60-True-BLOCKED]
+FAILED tests/test_r64_member_side_quest.py::test_r71_feasibility_token_is_invalidated_by_rendezvous_change
+FAILED tests/test_r64_member_side_quest.py::test_r71_stale_captured_routes_remain_unknown
+FAILED tests/test_r64_member_side_quest.py::test_r71_preview_token_expires_and_withdrawal_invalidates_acceptance
+FAILED tests/test_r64_member_side_quest.py::test_r71_acceptance_cas_blocks_fresh_duplicate_and_recovers_after_lease
+FAILED tests/test_r64_member_side_quest.py::test_r72_joined_member_can_share_after_inviter_finishes_own_split
+FAILED tests/test_r64_member_side_quest.py::test_r72_late_joiner_does_not_inherit_prior_opt_in_status
+FAILED tests/test_r64_member_side_quest.py::test_r73_shared_stop_without_grounded_route_evidence_stays_blocked
+FAILED tests/test_r64_member_side_quest.py::test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_successor
+FAILED tests/test_r64_member_side_quest.py::test_r73_read_only_collaborator_sees_no_fake_promote_authority
+FAILED tests/test_r64_member_side_quest.py::test_r75_source_consent_gates_grants_projection_and_withdrawal
+FAILED tests/test_r64_member_side_quest.py::test_r75_group_share_confirm_rejects_audience_plan_and_source_drift
+FAILED tests/test_r64_member_side_quest.py::test_r75_group_share_confirm_rejects_member_leave_after_preview
+FAILED tests/test_r64_member_side_quest.py::test_r75_source_split_change_invalidates_preview_confirmation
+FAILED tests/test_r64_member_side_quest.py::test_r75_withdrawal_before_sponsor_offer_keeps_uninvited_member_blind
+FAILED tests/test_r64_member_side_quest.py::test_r75_uninvited_admin_cannot_sponsor_or_learn_source_place
+FAILED tests/test_r64_member_side_quest.py::test_r75_expired_group_share_receipt_cannot_offer_or_project_a_place
+FAILED tests/test_r88_real_poi_exploration.py::test_r88_unknown_opening_has_consent_bound_public_map_preview
+FAILED tests/test_r88_real_poi_exploration.py::test_r88_overpass_504_is_recorded_as_failure_not_database_500
+FAILED tests/test_r89_member_shared_osm_identity.py::test_r89_same_public_osm_identity_gets_private_member_scopes
+FAILED tests/test_r90_private_exploration_board.py::test_r90_shortlist_is_private_persistent_and_reauthorizes_after_receipt_expiry
+FAILED tests/test_r90_private_exploration_board.py::test_r91_shortlist_limit_is_serialized_under_concurrent_saves
+FAILED tests/test_r90_private_exploration_board.py::test_r92_resume_intent_is_member_private_and_clears_after_saved_place_removal
+FAILED tests/test_r93_explicit_city_center_and_private_session.py::test_r93_requires_an_explicit_public_center_and_keeps_signed_shortlists_private
+FAILED tests/test_r96_intent_driven_first_outing.py::test_r96_shared_osm_identity_keeps_member_request_grade
+FAILED tests/test_revolution_r77_recovery.py::test_japanese_admission_does_not_budget_rental_hours_or_headcounts
+FAILED tests/test_rx2_mock_hard_laundering_gate.py::test_hard_capture_has_no_mock_fallback_for_an_explicit_fixture_leg
+FAILED tests/test_rx2_mock_hard_laundering_gate.py::test_soft_capture_may_still_degrade_to_the_explicit_fixture_leg
+FAILED tests/test_sol_concurrency_and_remap.py::test_concurrent_acceptance_of_the_same_proposal_produces_one_transition
+FAILED tests/test_sol_concurrency_and_remap.py::test_replaying_the_same_idempotency_key_never_transitions_twice
+FAILED tests/test_sol_concurrency_and_remap.py::test_competing_proposals_can_never_both_become_active
+FAILED tests/test_sol_concurrency_and_remap.py::test_capture_after_an_accept_does_not_promote_a_stale_pointer
+FAILED tests/test_sol_concurrency_and_remap.py::test_capture_and_accept_racing_leave_no_stranded_commitment
+FAILED tests/test_sol_concurrency_and_remap.py::test_accept_then_capture_keeps_the_c4_on_the_active_plan
+FAILED tests/test_sol_concurrency_and_remap.py::test_a_recovery_cannot_be_accepted_over_a_duplicated_protected_anchor
+FAILED tests/test_sol_concurrency_and_remap.py::test_two_sessions_without_the_lock_still_cannot_produce_two_active_plans
+FAILED tests/test_sol_concurrency_and_remap.py::test_one_idempotency_key_across_two_sessions_replays_without_the_lock
+FAILED tests/test_sol_execution_cursor.py::test_experience_projection_reports_the_cursor_state_next_to_the_cursor
+FAILED tests/test_sol_plan_handover.py::test_selecting_a_replacement_retires_the_plan_being_executed
+FAILED tests/test_v12_authoritative_trip_execution.py::test_v12_autonomous_recovery_uses_preauthorized_envelope
+FAILED tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor]
+FAILED tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[DEPARTURE-departure-anchor]
+FAILED tests/test_v13_3_real_city_intelligence.py::test_v133_golden_real_city_intelligence_replay_preserves_cruise
+FAILED tests/test_v13_integrity.py::test_v13_mid_trip_c4_is_fixed_and_bound_to_selected_activity_via_inbox_api
+FAILED tests/test_v13_integrity.py::test_v13_impossible_mid_trip_c4_is_a_deterministic_compose_conflict[v12-test-place-2-2026-10-03T06:00:00+00:00-V13_COMMITMENT_ANCHOR]
+FAILED tests/test_v13_integrity.py::test_v13_impossible_mid_trip_c4_is_a_deterministic_compose_conflict[v12-test-place-not-selected-2026-10-03T17:30:00+00:00-V13_C4_ANCHOR_NOT_IN_INPUT]
+FAILED tests/test_v13_integrity.py::test_v13_execution_rejects_illegal_transitions_without_mutation
+FAILED tests/test_v13_integrity.py::test_v13_protected_current_activity_cannot_be_skipped
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_replays_frozen_evidence_and_preserves_progress
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_rejects_stale_preview_without_creating_plan
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_repeated_noop_accept_is_idempotent
+FAILED tests/test_v13_integrity.py::test_v13_repeated_non_noop_accept_cannot_create_a_second_plan
+FAILED tests/test_v13_integrity.py::test_v13_concurrent_accepts_have_one_authoritative_winner
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_rejects_mutated_or_expired_frozen_evidence_on_accept
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_rejects_a_missing_frozen_matrix_pair
+FAILED tests/test_v13_integrity.py::test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth
+FAILED tests/test_v13_integrity.py::test_v13_guardian_reuses_a_signal_only_with_its_matching_mobility_pair
+FAILED tests/test_v13_integrity.py::test_v13_guardian_model_failure_is_persisted_as_retryable
+FAILED tests/test_v13_integrity.py::test_v13_execution_rejects_terminal_wrong_activity_and_old_plan_mutation
+FAILED tests/test_v14_grounded_adaptive_recovery.py::test_v14_weather_recovery_freezes_incident_evidence_and_child_plan
+FAILED tests/test_v14_grounded_adaptive_recovery.py::test_v14_traffic_recovery_uses_separate_incident_matrix
+FAILED tests/test_v14_trial_readiness.py::test_non_tianjin_captured_replay_is_rejected
+FAILED tests/test_v14_trial_readiness.py::test_non_tianjin_live_unavailable_never_injects_tianjin_replay
+FAILED tests/test_v16_integration.py::test_v16_creation_suggests_rooms_but_respects_an_explicit_override
+FAILED tests/test_v1922_six_fix_regressions.py::test_generic_compose_spreads_multi_day_stops_across_days
+FAILED tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_never_resolves_or_hides_recovery
+FAILED tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable
+FAILED tests/test_v1923_final_code_gate.py::test_v1923_feasible_replacement_resolves_recovery
+FAILED tests/test_v1923_final_code_gate.py::test_v1923_infeasible_plan_cannot_be_reselected_to_fake_resolution
+FAILED tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative
+FAILED tests/test_v1923_final_code_gate.py::test_v1923_stale_start_stays_blocked
+FAILED tests/test_v1924_final_truth_gate.py::test_v1924_experience_get_does_not_resolve_recovery
+FAILED tests/test_v1924_final_truth_gate.py::test_v1924_unvalidated_candidates_are_not_advertised
+FAILED tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised
+FAILED tests/test_v1924_final_truth_gate.py::test_v1924_feasible_replacement_still_resolves_recovery
+FAILED tests/test_v192_shadow_trial_gate.py::test_v192_defect_start_refuses_expired_evidence
+FAILED tests/test_v192_shadow_trial_gate.py::test_v192_defect_midtrip_hard_need_produces_a_review
+FAILED tests/test_v5_autopilot.py::test_v5_provider_fixture_wakes_autopilot_and_semantically_deduplicates
+FAILED tests/test_v6_predictive_real_city.py::test_v6_predictive_real_city_twin_prevents_failure_before_hard_break
+FAILED tests/test_v7_traveler_twin.py::test_v7_flagship_journey_a_to_b_to_c_traveler_twin_loop
+FAILED tests/test_v7_traveler_twin.py::test_v7_second_cross_journey_dimension_learns_low_walking_soft_evidence
+FAILED tests/test_v8_stay_mobility.py::test_v8_flagship_stay_aware_multimodal_lifecycle
+FAILED tests/test_v9_real_trip_operations.py::test_v9_flagship_real_world_trip_operations_e2e
+FAILED tests/test_v9_real_trip_operations.py::test_v9_generic_city_graph_unknown_cost_and_expiry_gates
+FAILED tests/test_weather_runtime_gate_gpt.py::test_wrt09_provider_failure_records_one_degradation_and_no_fake_weather_event
+FAILED tests/test_weather_runtime_gate_gpt.py::test_wrt10_clean_poll_after_outage_resolves_degradation_and_twin_returns_ready
+FAILED tests/test_wp04_endpoints.py::test_wp04_cross_journey_targets_and_draft_precondition_fail_before_provider
+FAILED tests/test_wp04_hardening_wp05.py::test_journey_twin_start_and_activity_completion_projection
+FAILED tests/test_wp04a0_bridge.py::test_planned_journey_currency_change_is_rejected_without_hard_budget_constraint
+FAILED tests/test_wp06_followup_assist.py::test_f3_family_is_backed_by_next_c4_window_evidence
+FAILED tests/test_wp06_postgate_hardening_next.py::test_replan_accept_requires_header_and_same_key_replay_is_audit_idempotent
+FAILED tests/test_wp06_postgate_hardening_next.py::test_twin_aggregates_unresolved_provider_degradation_and_marks_projection_degraded
+FAILED tests/test_wp06_twin_v2_gate.py::test_twin_v2_derives_envelope_opportunity_and_degradation_at_injected_time
+FAILED tests/test_wp07_foundation_assist.py::test_provider_recovery_resolves_outage_and_restores_twin_ready_projection
+ERROR tests/test_qoder_current_plan_is_named.py::test_the_current_plan_is_named_and_is_not_the_last_row
+ERROR tests/test_qoder_current_plan_is_named.py::test_selecting_another_candidate_moves_the_answer_not_the_order
+ERROR tests/test_qoder_current_plan_is_named.py::test_switching_while_a_plan_is_executing_still_supersedes_it
+ERROR tests/test_qoder_current_plan_is_named.py::test_a_journey_without_a_pointer_names_nothing_rather_than_the_first_row
+ERROR tests/test_qoder_current_plan_is_named.py::test_the_field_adds_nothing_else_and_costs_the_list_no_extra_queries
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_the_selected_plan_carries_sealed_evidence_and_select_does_not_swap_the_pointer
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_a_plan_without_a_declared_ttl_is_frozen_evidence_not_absent_evidence
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_route_evidence_before_any_proposal_reads_the_proposal_supply_not_the_plan
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_the_m3_slice_completes_on_the_sealed_evidence
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_a_recovery_refused_for_a_missing_target_is_not_blamed_on_mobility
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_the_read_fails_closed_when_the_plan_really_has_nothing
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_a_pointer_that_disagrees_with_its_own_payload_is_reported_as_inconsistent
+231 failed, 2569 passed, 15 skipped, 1 xfailed, 12 errors in 283.21s (0:04:43)

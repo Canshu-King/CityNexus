@@ -1,0 +1,44 @@
+WHOLE-SUITE RED CENSUS r164
+SOURCE bw163-backend-full-tbline.txt
+SUMMARY failed=231 passed=2569 errors=12
+STACK_TAIL_RECORDS 231 (must equal failed, enforced above)
+OUTSIDE_REPO_FRAMES 22
+DISTINCT_TAIL_GROUPS 156
+RED BY CAUSE {"bearer-less private read (measured this shift)": 55, "body iterated as a list (the measured 401 shape)": 10, "crash lands in library code, not repo code": 1, "demo scene setup refused": 11, "door answers 401 where the test expects 200": 32, "fake settings missing a field": 16, "not yet attributed": 76, "route function called with dependencies unbound": 3, "seeded clock expired": 26, "stale field-list contract": 1}
+TOP GROUPS
+   21 x (library) D:/moodle/CityNexus/.venv/Lib/site-packages/sqlalchemy/engine/default.py:952 [seeded clock expired] sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: end_at > start_at
+   15 x tests/test_r57_group_presence_operator.py:44 [door answers 401 where the test expects 200] AssertionError: assert 401 == 200
+   10 x tests/stateful/test_journey_truth_state_machine.py:267 [body iterated as a list (the measured 401 shape)] AttributeError: 'str' object has no attribute 'get'
+    9 x app/integrations/mobility/runtime.py:174 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'live_valhalla_test_provider'
+    9 x tests/test_sol_concurrency_and_remap.py:1005 [bearer-less private read (measured this shift)] KeyError: 'active_plan'
+    7 x tests/test_r63_planned_separation.py:59 [door answers 401 where the test expects 200] AssertionError: assert 401 == 200
+    3 x app/agent/goal_artifacts.py:33 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'traveler_id'
+    3 x app/main.py:18146 [route function called with dependencies unbound] AttributeError: 'Depends' object has no attribute 'scalar'
+    3 x tests/test_qoder_anywhere_discovery_truth.py:167 [demo scene setup refused] AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+    3 x tests/test_qoder_anywhere_lock_duration.py:193 [demo scene setup refused] AssertionError: SETUP 失败：reset 之后 scene 里没有 journey_id
+    3 x tests/test_qoder_anywhere_matrix_truth.py:786 [demo scene setup refused] AssertionError: SETUP 失败：/api/v1/demo/scene 实际 503
+    1 x (library) C:/Users/仓鼠王/AppData/Roaming/uv/python/cpython-3.12.14-windows-x86_64-none/Lib/urllib/request.py:1347 [crash lands in library code, not repo code] urllib.error.URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>
+    1 x app/agent/gateway.py:683 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'objective_codes_json'
+    1 x app/agent/journey_intent.py:391 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'intent_kind'
+    1 x app/agent/runtime.py:454 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'objective_codes_json'
+    1 x app/integrations/discovery/real_city.py:1747 [not yet attributed] ValueError: CAPTURED_REPLAY_CITY_MISMATCH: Tianjin replay cannot be used for CN-FUZHOU
+    1 x app/main.py:28442 [fake settings missing a field] AttributeError: 'types.SimpleNamespace' object has no attribute 'simulation_enabled'
+    1 x app/planning/authoritative_v12.py:1057 [not yet attributed] ValueError: V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER:v12-test-place-2
+    1 x app/planning/authoritative_v12.py:1335 [not yet attributed] ValueError: V13_C4_ANCHOR_NOT_IN_INPUT:v12-test-place-not-selected
+    1 x tests/test_agent_mission_runtime.py:448 [not yet attributed] KeyError: 'current_activity_id'
+    1 x tests/test_agent_mission_runtime.py:1238 [not yet attributed] KeyError: 'budget'
+    1 x tests/test_agent_runtime_gate.py:114 [not yet attributed] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+    1 x tests/test_agent_runtime_gate.py:146 [not yet attributed] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+    1 x tests/test_agent_runtime_gate.py:374 [not yet attributed] assert 200 == 409
+    1 x tests/test_agent_runtime_gate.py:403 [not yet attributed] AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+TOP NOT-ATTRIBUTED GROUPS
+    1 x app/integrations/discovery/real_city.py:1747 ValueError: CAPTURED_REPLAY_CITY_MISMATCH: Tianjin replay cannot be used for CN-FUZHOU
+    1 x app/planning/authoritative_v12.py:1057 ValueError: V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER:v12-test-place-2
+    1 x app/planning/authoritative_v12.py:1335 ValueError: V13_C4_ANCHOR_NOT_IN_INPUT:v12-test-place-not-selected
+    1 x tests/test_agent_mission_runtime.py:448 KeyError: 'current_activity_id'
+    1 x tests/test_agent_mission_runtime.py:1238 KeyError: 'budget'
+    1 x tests/test_agent_runtime_gate.py:114 AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+    1 x tests/test_agent_runtime_gate.py:146 AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+    1 x tests/test_agent_runtime_gate.py:374 assert 200 == 409
+    1 x tests/test_agent_runtime_gate.py:403 AssertionError: assert 'REQUIRE_CONFIRMATION' == 'ALLOW_AUTO'
+    1 x tests/test_contract.py:73 AttributeError: '_IncludedRouter' object has no attribute 'path'
