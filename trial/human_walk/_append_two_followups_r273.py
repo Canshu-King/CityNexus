@@ -7,7 +7,7 @@ REPORT = r"D:\moodle\_cmdr_rescue_v3_1022\trial\results\20261026_GO_FROM_BLANK_R
 HANDOFF = r"D:\moodle\_cmdr_rescue_v3_1022\trial\results\20261029_HANDOFF_GO_FROM_BLANK_r185.md"
 
 REPORT_BLOCK = """
-14.22 补（同一拍）：那捌 次 503 罩的是两个入口，不是一条
+14.22 补二（同一拍）：那捌 次 503 罩的是两个入口，不是一条
 
 backend/app/main.py:19060 与 backend/app/main.py:19061 两枚路由装饰器（trip-studio/accept 与
 plans/accept-reorder）挂的是同一个函数体 backend/app/main.py:19062，其内部只有一处实现入口
@@ -60,7 +60,7 @@ def append(path, block, marker, crlf):
 
 def main():
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    rc = append(REPORT, REPORT_BLOCK, "14.22 补", True)
+    rc = append(REPORT, REPORT_BLOCK, "14.22 补二", True)
     if rc:
         return rc
     return append(HANDOFF, HANDOFF_BLOCK, "14.23 与 14.24 的交接句", False)

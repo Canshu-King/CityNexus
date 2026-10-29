@@ -3634,3 +3634,10 @@ runner 上也仍在咬。宽的这步是加闸不是放闸：窄的那步（只�
 - 本班没有替别人 add 那柒 枚模块（那是当事人的写面），也没提交那玖 枚 staged 组件；
   要谁补、什么时候补，请号令者对当事人点一句。
 
+14.22 补二（同一拍）：那捌 次 503 罩的是两个入口，不是一条
+
+backend/app/main.py:19060 与 backend/app/main.py:19061 两枚路由装饰器（trip-studio/accept 与
+plans/accept-reorder）挂的是同一个函数体 backend/app/main.py:19062，其内部只有一处实现入口
+backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 —— 说清楚这是"共用同一实现"的
+推及，不是我把第二条 URL 又真跑了一遍。
+
