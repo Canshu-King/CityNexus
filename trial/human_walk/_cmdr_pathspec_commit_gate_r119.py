@@ -51,6 +51,53 @@ def committed_paths(sha, cwd):
     return {l.strip() for l in git("show", "--name-only", "--format=", sha, cwd=cwd).splitlines() if l.strip()}
 
 
+def in_index_or_head(path, cwd):
+    """Answer whether git already knows this module, in the index or in HEAD."""
+    here = subprocess.run(["git", "ls-files", "--error-unmatch", path], cwd=cwd,
+                          capture_output=True, text=True, encoding="utf-8",
+                          errors="replace")
+    if here.returncode == 0:
+        return True
+    there = subprocess.run(["git", "cat-file", "-e", "HEAD:%s" % path], cwd=cwd,
+                           capture_output=True, text=True, encoding="utf-8",
+                           errors="replace")
+    return there.returncode == 0
+
+
+def unresolved_module_imports(paths, cwd):
+    """Refuse a commit that ships a component whose relative import resolves to nothing.
+
+    bw267/bw270 measured seven modules that exist only as untracked files while nine
+    staged components already import them.  A pathspec commit of those components would
+    publish a tree that cannot build, and the door -- not my memory -- has to stop it.
+    The resolution rules come from the census ruler itself, so one definition of a module
+    path serves both.  A module that this very delivery names counts as resolvable: the
+    check runs before git add, so otherwise the gate refuses a complete delivery.
+    """
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import _cmdr_imported_but_untracked_r267 as census
+
+    delivered = {p.replace("\\", "/") for p in paths}
+    bad = []
+    for rel in sorted(paths):
+        if not rel.endswith(census.EXTS):
+            continue
+        full = os.path.join(cwd, rel)
+        if not os.path.isfile(full):
+            continue
+        text = io.open(full, encoding="utf-8", errors="replace").read()
+        for spec in census.IMPORT_RE.findall(text):
+            if spec.lower().endswith((".css", ".scss", ".json", ".svg", ".png",
+                                      ".jpg", ".webp", ".gif", ".woff", ".woff2")):
+                continue
+            candidates = census.resolve(rel, spec, cwd)
+            if delivered & set(candidates):
+                continue
+            if not any(in_index_or_head(c, cwd) for c in candidates):
+                bad.append("%s imports %s" % (rel, spec))
+    return bad
+
+
 def land(message_file, paths, cwd, expect_clean=False):
     mine = {p.replace("\\", "/") for p in paths}
     if not mine:
@@ -61,6 +108,13 @@ def land(message_file, paths, cwd, expect_clean=False):
         print("REFUSE path not present", missing)
         return 2
     base = git("rev-parse", "HEAD", cwd=cwd).strip()
+    unresolved = unresolved_module_imports(mine, cwd)
+    if unresolved:
+        print("REFUSE these paths import a module that exists in neither the index nor HEAD:")
+        for item in unresolved[:8]:
+            print("   ", item)
+        print("     add the module itself to the same delivery, or drop the importer.")
+        return 6
     foreign_before = staged(cwd) - mine
     git("add", "--", *sorted(mine), cwd=cwd)
     if expect_clean:
@@ -137,8 +191,23 @@ def selftest():
     print("SELFTEST_CONTROL_TWO rc=%d expected=2" % rc2)
     if rc2 != 2:
         print("SELFTEST_RED gate accepted a path that does not exist"); return 4
+    # Control four: a component whose relative import resolves to nothing must be refused,
+    # and the very same delivery passes once the module itself is named with it.
+    io.open(os.path.join(box, "broken.tsx"), "w", encoding="utf-8").write(
+        'import { thing } from "./absent";\nexport const broken = thing;\n')
+    rc3 = land(msg, ["broken.tsx"], box)
+    print("SELFTEST_CONTROL_FOUR_REFUSE rc=%d expected=6" % rc3)
+    if rc3 != 6:
+        print("SELFTEST_RED the gate shipped an import that resolves to no module"); return 5
+    io.open(os.path.join(box, "absent.ts"), "w", encoding="utf-8").write(
+        "export const thing = 1;\n")
+    rc4 = land(msg, ["broken.tsx", "absent.ts"], box)
+    print("SELFTEST_CONTROL_FOUR_ACCEPT rc=%d expected=0" % rc4)
+    if rc4 != 0:
+        print("SELFTEST_RED the gate refused a delivery that named its own module"); return 6
     print("SELFTEST_OK control swept theirs.tsx into the commit; the gate committed only mine.txt, "
-          "left theirs.tsx staged, and refused a path that is not in the tree")
+          "left theirs.tsx staged, refused a path that is not in the tree, refused an unresolvable "
+          "import, and accepted it once the module was named too")
     return 0
 
 

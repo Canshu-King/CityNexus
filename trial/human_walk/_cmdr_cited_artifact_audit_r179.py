@@ -71,7 +71,10 @@ def main():
     bad = []
     shortened = 0
     for name in sorted(citations):
-        if NON_CITATION.search(os.path.basename(name)):
+        # NON_CITATION markers usually sit in the directory part of a citation
+        # (${DIR}/x.png, */.mjs), so searching only the basename let shell templates and
+        # globs fall through into "no file answers to the name".
+        if NON_CITATION.search(name):
             states["not-a-citation-template-or-glob"] = states.get("not-a-citation-template-or-glob", 0) + 1
             continue
         if name in tracked_set:

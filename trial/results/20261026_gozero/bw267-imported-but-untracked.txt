@@ -1,0 +1,29 @@
+IMPORTED-BUT-UNTRACKED MODULE CENSUS bw267
+TIP 6f9debd48f665678e213afd65e03edfe8fc35eea
+IMPORT_SPECS_CHECKED 415
+OFFENDERS 12 (a tracked or staged file imports a module that only exists as an untracked file)
+  frontend/src/app/V8Experience.tsx
+      imports ../features/inbox/bookingFieldLabels     -> frontend/src/features/inbox/bookingFieldLabels.ts  [not-gitignored]
+  frontend/src/app/V8Experience.tsx
+      imports ../features/setup/trialDateTime          -> frontend/src/features/setup/trialDateTime.ts  [not-gitignored]
+  frontend/src/features/discovery/BootstrapDiscoveryPanel.tsx
+      imports ./publicMapLink                          -> frontend/src/features/discovery/publicMapLink.ts  [not-gitignored]
+  frontend/src/features/inbox/JourneyInboxWorkbench.tsx
+      imports ./bookingFieldLabels                     -> frontend/src/features/inbox/bookingFieldLabels.ts  [not-gitignored]
+  frontend/src/features/planning/PlanAiRunStrip.tsx
+      imports ./planAiStatus                           -> frontend/src/features/planning/planAiStatus.ts  [not-gitignored]
+  frontend/src/features/planning/PlanWithAiSheet.tsx
+      imports ./planAiStatus                           -> frontend/src/features/planning/planAiStatus.ts  [not-gitignored]
+  frontend/src/features/setup/JourneyTrialSetup.tsx
+      imports ./cityNamed                              -> frontend/src/features/setup/cityNamed.ts  [not-gitignored]
+  frontend/src/main.tsx
+      imports ./lib/journeyReference                   -> frontend/src/lib/journeyReference.ts  [not-gitignored]
+  frontend/src/trial/RevolutionFirstLook.tsx
+      imports ../features/setup/cityNamed              -> frontend/src/features/setup/cityNamed.ts  [not-gitignored]
+  frontend/src/trial/RevolutionMobileNav.tsx
+      imports ./mobile/missionBus                      -> frontend/src/trial/mobile/missionBus.ts  [not-gitignored]
+  frontend/src/trial/RevolutionQuickExplore.tsx
+      imports ../features/discovery/publicMapLink      -> frontend/src/features/discovery/publicMapLink.ts  [not-gitignored]
+  frontend/src/trial/mobile/MissionCockpit.tsx
+      imports ./missionBus                             -> frontend/src/trial/mobile/missionBus.ts  [not-gitignored]
+SELFTEST the known offender (cityNamed.ts, cited in 14.21) appears: True

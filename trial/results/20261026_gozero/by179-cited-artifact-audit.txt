@@ -1,19 +1,17 @@
 CITED ARTIFACT RETRIEVABILITY AUDIT by179
-TIP a2763a0843d19c09db799c7866f5d80fd119be5a
+TIP 6f9debd48f665678e213afd65e03edfe8fc35eea
 DOCS_SCANNED 5
-TRACKED_FILES_IN_REPO 11690
-DISTINCT_CITED_NAMES 402
-BY_STATE gitignored-so-never-committed=2, no-file-answers-to-the-name=12, not-a-citation-template-or-glob=13, present-but-untracked=33, tracked-at-cited-path=169, tracked-under-a-different-path=173
-SHORT_FORM_CITATIONS 173 (retrievable, but the document names no directory)
+TRACKED_FILES_IN_REPO 11775
+DISTINCT_CITED_NAMES 497
+BY_STATE gitignored-so-never-committed=2, no-file-answers-to-the-name=12, not-a-citation-template-or-glob=17, present-but-untracked=33, tracked-at-cited-path=228, tracked-under-a-different-path=205
+SHORT_FORM_CITATIONS 205 (retrievable, but the document names no directory)
 NOT_RETRIEVABLE 47
-  no-file-answers-to-the-name  ${DIR}/x.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  no-file-answers-to-the-name  */.mjs  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   present-but-untracked  390-go-cold.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   present-but-untracked  430-r54-plan-blocked.png  (cited by 20261026_GO_FROM_BLANK_REPORT.md,20261027_GO_FROM_BLANK_DELIVERY.md)
   present-but-untracked  LegacyApp.tsx  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   no-file-answers-to-the-name  _arm_collision_ruler_r109.py  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   present-but-untracked  _go_to_active_chrome_r6.mjs  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
-  no-file-answers-to-the-name  bf110…-r4.txt  (cited by 20261027_GO_FROM_BLANK_DELIVERY.md)
+  no-file-answers-to-the-name  bf110…-r4.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md,20261027_GO_FROM_BLANK_DELIVERY.md)
   no-file-answers-to-the-name  bj115….txt  (cited by 20261027_GO_FROM_BLANK_DELIVERY.md)
   no-file-answers-to-the-name  bn122…390.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   present-but-untracked  cityNamed.ts  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
@@ -53,3 +51,5 @@ NOT_RETRIEVABLE 47
   present-but-untracked  trial/results/20261026_gozero/aq3-clean-chain-430-r92.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   present-but-untracked  trial/results/20261026_gozero/half-day-390.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
   present-but-untracked  trial/results/20261026_gozero/plan-open-hand-390-r54.txt  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
+  no-file-answers-to-the-name  ts  (cited by 20261026_GO_FROM_BLANK_REPORT.md)
+  no-file-answers-to-the-name  tsx  (cited by 20261026_GO_FROM_BLANK_REPORT.md)

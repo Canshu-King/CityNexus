@@ -1,0 +1,28 @@
+WHICH VERSION ALREADY CARRIES THE IMPORT bw270
+PAIRS 12
+ALREADY_IN_HEAD 0 (the committed line cannot resolve these modules)
+IN_INDEX_NOT_HEAD 9 (the next commit would break the line)
+WORK_TREE_ONLY 3 (nothing published yet)
+ALREADY_IN_HEAD
+IN_INDEX_NOT_HEAD
+  frontend/src/app/V8Experience.tsx                    ../features/inbox/bookingFieldLabels missing=frontend/src/features/inbox/bookingFieldLabels.ts head=False index=True work=True
+  frontend/src/app/V8Experience.tsx                    ../features/setup/trialDateTime    missing=frontend/src/features/setup/trialDateTime.ts head=False index=True work=True
+  frontend/src/features/discovery/BootstrapDiscoveryPanel.tsx ./publicMapLink                    missing=frontend/src/features/discovery/publicMapLink.ts head=False index=True work=True
+  frontend/src/features/inbox/JourneyInboxWorkbench.tsx ./bookingFieldLabels               missing=frontend/src/features/inbox/bookingFieldLabels.ts head=False index=True work=True
+  frontend/src/features/planning/PlanAiRunStrip.tsx    ./planAiStatus                     missing=frontend/src/features/planning/planAiStatus.ts head=False index=True work=True
+  frontend/src/features/planning/PlanWithAiSheet.tsx   ./planAiStatus                     missing=frontend/src/features/planning/planAiStatus.ts head=False index=True work=True
+  frontend/src/features/setup/JourneyTrialSetup.tsx    ./cityNamed                        missing=frontend/src/features/setup/cityNamed.ts head=False index=True work=True
+  frontend/src/main.tsx                                ./lib/journeyReference             missing=frontend/src/lib/journeyReference.ts head=False index=True work=True
+  frontend/src/trial/RevolutionQuickExplore.tsx        ../features/discovery/publicMapLink missing=frontend/src/features/discovery/publicMapLink.ts head=False index=True work=True
+WORK_TREE_ONLY
+  frontend/src/trial/RevolutionFirstLook.tsx           ../features/setup/cityNamed        missing=frontend/src/features/setup/cityNamed.ts head=False index=False work=True
+  frontend/src/trial/RevolutionMobileNav.tsx           ./mobile/missionBus                missing=frontend/src/trial/mobile/missionBus.ts head=False index=False work=True
+  frontend/src/trial/mobile/MissionCockpit.tsx         ./missionBus                       missing=frontend/src/trial/mobile/missionBus.ts head=False index=False work=True
+DISTINCT_MISSING_MODULES 7
+  frontend/src/features/discovery/publicMapLink.ts
+  frontend/src/features/inbox/bookingFieldLabels.ts
+  frontend/src/features/planning/planAiStatus.ts
+  frontend/src/features/setup/cityNamed.ts
+  frontend/src/features/setup/trialDateTime.ts
+  frontend/src/lib/journeyReference.ts
+  frontend/src/trial/mobile/missionBus.ts
