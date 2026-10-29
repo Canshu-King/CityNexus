@@ -1,0 +1,12 @@
+Put measured facts in front of two rulings that were being argued from hypotheses.
+
+The over-budget matrix guard looked like a door that failed to bite.  Reading the product's own
+capture path shows it was rewritten to sub-chunk requests so the provider's 100-cell cap is never
+crossed, which makes a 121-cell capture legitimately succeed -- the guard's premise is the older
+measurement its own docstring records.  So the red is a superseded premise, not a missing gate.
+
+For the seeded-clock family, the cheap argument is "just bump the fixture dates", so the surface was
+counted first: over a thousand absolute datetime literals spread across hundreds of test files.  The
+other path -- one injectable reference time -- already has product precedent and is in use through
+the twin door's own query parameter, so the decision can be made against those two numbers instead
+of against a vibe.  No fix was taken on either side in this shift.
