@@ -1,0 +1,14 @@
+CLASSROOM COLD SCREEN - WHERE THE BACK LINK GOES, AND WHAT THE CIRCLE IS  bw345
+loaded http://127.0.0.1:14462/ in a real browser at 390x844; the only interaction is a click on a control a traveller would see
+
+BEFORE: 9 controls; the small ones (<=64px) are:
+  {"tag":"button","cls":"v8-outline-button","text":"EN","aria":"Switch language","title":null,"box":[20,169,47,44],"radius":"8px","hitSelf":true}
+  {"tag":"button","cls":"cn-sim-ball","text":"","aria":"模拟舞台（暂无场景）：场景状态没读到：REQUEST_ERROR","title":null,"box":[330,704,48,48],"radius":"50%","hitSelf":true}
+UNLABELLED controls (no text, no aria-label, no title): 0
+
+CLICK button.trial-back-link labelled 「高级设置」
+  url     http://127.0.0.1:14462/  ->  http://127.0.0.1:14462/
+  body    196 chars -> 210 chars; changed=true
+  after   "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 国家/地区代码 时区 货币 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步 同行者加入 加入正在进行的行程 刷新 目前没"
+  controls 9 -> 9
+  details[open] after the click: 1

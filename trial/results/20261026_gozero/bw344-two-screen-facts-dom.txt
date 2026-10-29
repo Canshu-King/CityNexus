@@ -1,0 +1,37 @@
+ADVANCED_SETTINGS_NODES 2
+  {"tag":"summary","cls":"","role":null,"aria":null,"parentTag":"details","parentIsDetails":true,"underlined":"none","cursor":"pointer","box":[21,651,348,44],"clickable":true}
+  {"tag":"button","cls":"trial-back-link","role":null,"aria":null,"parentTag":"div","parentIsDetails":false,"underlined":"underline","cursor":"pointer","box":[21,719,348,44],"clickable":true}
+BOTTOM_RIGHT_NODES 46
+  {"tag":"div","cls":"","role":null,"aria":null,"title":null,"text":"用你自己的城市试用 CITYNEXUS 新建行程","radius":"0px","box":[0,0,390,1013],"hitTestSelf":true}
+  {"tag":"section","cls":"v8-page cn-onboarding","role":null,"aria":null,"title":null,"text":"用你自己的城市试用 CITYNEXUS 新建行程","radius":"0px","box":[0,0,390,844],"hitTestSelf":true}
+  {"tag":"div","cls":"cn-onboarding__scroll","role":null,"aria":null,"title":null,"text":"用你自己的城市试用 CITYNEXUS 新建行程","radius":"0px","box":[0,32,390,732],"hitTestSelf":true}
+  {"tag":"div","cls":"v8-card trial-card","role":null,"aria":null,"title":null,"text":"目的地 看支持的目的地 抵达地点 离开地点 抵达","radius":"16px","box":[20,278,350,486],"hitTestSelf":true}
+  {"tag":"section","cls":"trial-supported-group","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,569,348,330],"hitTestSelf":false}
+  {"tag":"ul","cls":"trial-supported-list","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,618,348,280],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,671,348,18],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,697,348,18],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,723,348,18],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,749,348,18],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,776,348,18],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,802,348,18],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,828,348,18],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,854,348,18],"hitTestSelf":false}
+  {"tag":"li","cls":"trial-supported-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,880,348,18],"hitTestSelf":false}
+  {"tag":"span","cls":"trial-supported-fields","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[253,880,58,18],"hitTestSelf":false}
+  {"tag":"details","cls":"trial-advanced","role":null,"aria":null,"title":null,"text":"高级设置","radius":"0px","box":[21,651,348,44],"hitTestSelf":true}
+  {"tag":"summary","cls":"","role":null,"aria":null,"title":null,"text":"高级设置","radius":"0px","box":[21,651,348,44],"hitTestSelf":true}
+  {"tag":"div","cls":"trial-row","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,695,348,138],"hitTestSelf":false}
+  {"tag":"label","cls":"trial-field","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[200,695,169,64],"hitTestSelf":false}
+  {"tag":"span","cls":"","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[200,695,169,16],"hitTestSelf":false}
+  {"tag":"input","cls":"","role":null,"aria":null,"title":null,"text":"","radius":"12px","box":[200,715,169,44],"hitTestSelf":false}
+  {"tag":"label","cls":"trial-field","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,769,348,64],"hitTestSelf":false}
+  {"tag":"span","cls":"","role":null,"aria":null,"title":null,"text":"","radius":"0px","box":[21,769,348,16],"hitTestSelf":false}
+  {"tag":"input","cls":"","role":null,"aria":null,"title":null,"text":"","radius":"12px","box":[21,789,348,44],"hitTestSelf":false}
+  {"tag":"button","cls":"trial-back-link","role":null,"aria":null,"title":null,"text":"高级设置","radius":"10px","box":[21,719,348,44],"hitTestSelf":true}
+  {"tag":"p","cls":"trial-required-hint","role":"status","aria":null,"title":null,"text":"还需要填写：目的地、抵达地点、离开地点","radius":"12px","box":[20,764,350,218],"hitTestSelf":false}
+  {"tag":"span","cls":"","role":null,"aria":null,"title":null,"text":"目的地","radius":"0px","box":[35,806,323,21],"hitTestSelf":false}
+  {"tag":"button","cls":"trial-missing-jump","role":null,"aria":null,"title":null,"text":"目的地","radius":"10px","box":[35,795,323,44],"hitTestSelf":false}
+  {"tag":"span","cls":"","role":null,"aria":null,"title":null,"text":"、抵达地点","radius":"0px","box":[35,840,323,55],"hitTestSelf":false}
+  {"tag":"button","cls":"trial-missing-jump","role":null,"aria":null,"title":null,"text":"抵达地点","radius":"10px","box":[35,862,323,44],"hitTestSelf":false}
+  {"tag":"span","cls":"","role":null,"aria":null,"title":null,"text":"、离开地点","radius":"0px","box":[35,907,323,55],"hitTestSelf":false}
+  {"tag":"button","cls":"trial-missing-jump","role":null,"aria":null,"title":null,"text":"离开地点","radius":"10px","box":[35,929,323,44],"hitTestSelf":fal
