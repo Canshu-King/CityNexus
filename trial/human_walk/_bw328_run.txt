@@ -1,0 +1,4 @@
+LIVE ANCHORS {'tally_325': 24, 'split_325': 25, 'controls_325': 3, 'counting_325': 26, 'coverage_325': 28, 'denom_326': 2, 'tally_326': 28, 'site_326': 29, 'drops_326': 30, 'wide_326': 31, 'nocatch_326': 33, 'coverage_326': 36, 'hook_site': 2599, 'ruler_325': 133, 'ruler_326': 40, 'own_words': 281, 'shell_throw': 309, 'section': 3785, 'prev_section': 3774}
+LIVE NUMBERS rows=20 shows=0 owns=16 nocatch=4 | panels=25 catch=64 reads=1 hides=63 no_catch_files=11 busiest=frontend/src/features/execution/LiveRecovery.tsx
+PENDING_INBOX_BEFORE_WRITE 0
+WROTE D:/moodle/_qoder_ledger_inbox\494abfd7_2203.md bytes=12276
