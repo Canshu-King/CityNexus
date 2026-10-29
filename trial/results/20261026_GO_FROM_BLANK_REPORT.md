@@ -3718,3 +3718,12 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
   （不统一则任何住下生成的方案都冻不出证据，「按这一版安排」这类操作对旅客永久不可达）；
   三，409 那句英文原句与内部术语是否端给旅客。
 
+14.28 补（10-29 午）：「屏上拿到英文原句」有了分母，而那条键根本不是给句子配的
+
+- 分母（回执 trial/results/20261026_gozero/bw293-bare-english-refusals.txt:3、同回执 :4 分桶为纯码 738 处、英文句 333 处、码＋句混写 32 处、运行时拼装 77 处、其它 7 处）：backend/app 下 238 枚模块、HTTPException 共 1187 处；尺 trial/human_walk/_cmdr_bare_english_refusals_r293.py 用 ast 逐枚解析、不靠字面 grep。
+- 载荷形状那一格（trial/results/20261026_gozero/bw293-bare-english-refusals.txt:5 与 :6）：明文串 1110 处、dict 但没带 message_key 6 处、运行时拼 71 处，**带自己键的 0 处**；333 处英文句里带键的也是 0 处（:6）。§14.27 那一格只是这 333 处里被真按到的一例。
+- 屏上那条 key 的真实产地（尺 trial/human_walk/_cmdr_message_key_origin_r296.py:24）：统一出口 backend/app/main.py:784 写的是 `message_key or f"error.{code.lower()}"` —— raise 处不传键时按 HTTP 码**拼一个通用键**。回执 trial/results/20261026_gozero/bw296-where-the-message-key-comes-from.txt:3 列出这类拼键点共 23 行、trial/results/20261026_gozero/bw296-where-the-message-key-comes-from.txt:43 判「键写在 raise 之外的地方」。后果是前端可本地化的粒度等于状态码，不等于这条拒绝：光 409 就把好几句不同的话并成同一个 request.conflict（trial/results/20261026_gozero/bw293-bare-english-refusals.txt:9 是本机真读到的那一例）。
+- 一处撤回，按口径发新条不改旧文：本班先前在会话里报过「全库带 message_key 的只有 30 处」，那个数从未落进任何回执——它来自一段被截断的终端回显。落盘重算的真读数是 0 处（trial/results/20261026_gozero/bw293-bare-english-refusals.txt:5 与 :7），先前那句作废。同一段回显还让我把「尺算了却没打印」当成「尺已发布」：第一版入库的尺确实算了形状却没输出行，补上输出重跑才落成现在这份回执（输出闸在 trial/human_walk/_cmdr_bare_english_refusals_r293.py:152，分辨不出三桶就不发布数字）。
+- 顺带钉住另一处同源误读：先前一段截断输出看着像 backend/app/services.py 的 141-148 行把拒语句粘进了 docstring。按字节现读三棵现役树（trial/results/20261026_gozero/bw295-services-across-trees.txt:4、:18、:32 三行同为 sha256 前缀 8de56c8e981f、126757 字节）：拒语句只在 746/782/787/789/799，141-148 行是表名字符串，三棵都能 ast 编译。文件没坏、也没被本班动过一个字节。
+- 待裁与先前那条并成一串（本班 0 改产品字节、不代裁）：除了 §14.27 那三件，多一件——要不要让这 333 处英文句在 raise 处就带上各自的具名键（带上才谈得上中文；现状是按码拼键，同码不同句共用一键）。
+
