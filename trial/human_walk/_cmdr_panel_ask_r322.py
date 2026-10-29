@@ -6,10 +6,11 @@ walks one more hop - the function that builds the path, who imports or calls tha
 that caller is a panel the registry mounts - and keeps five answers apart:
 
   ON_A_MOUNTED_PANEL   the registry imports and renders a component that builds or uses the function
-  USED_BY_APP_SHELL    only a file under app/ uses it and the registry renders none of them
+  USED_BY_APP_SHELL    a file under app/ uses it, or builds the path itself, and the registry mounts none
   USED_OFF_PANEL       a component uses it, but the registry never imports and renders that component
   SHARED_API_ONLY      only the shared api layer mentions the function - no component yet
-  NO_USER_FOUND        nothing outside the defining file mentions the function
+  NO_USER_FOUND        nothing outside the defining file mentions the function, and that file is a module
+                       another file could have imported, so the silence means something
 
 Rows come from bw318 through that ruler's own regex, and the row count must equal bw318's published
 caller_found, so this cannot quietly describe a different set than the ruler above it.
@@ -142,6 +143,7 @@ def main() -> int:
     seen_names = []
     rows_by_file = {}
     keys_considered = set()
+    inline_shell_rows = []
     for row in rows:
         name = function_at(files, row["file"], row["line"])
         if name:
@@ -179,6 +181,11 @@ def main() -> int:
             verdict = "USED_OFF_PANEL"
         elif users:
             verdict = "SHARED_API_ONLY"
+        elif module_key(row["file"]).startswith("app/"):
+            # the path is built inline inside a shell file, so no other module could mention the name and
+            # "no user found" would be an artifact of where the code lives, not of nobody asking
+            verdict = "USED_BY_APP_SHELL"
+            inline_shell_rows.append(row["rank"])
         else:
             verdict = "NO_USER_FOUND"
         counts[verdict] += 1
@@ -214,13 +221,16 @@ def main() -> int:
                "a panel - v1 counted the second kind, v2 would have counted the first"
                % (len(not_rendered), ", ".join(not_rendered) or "none", len(comment_only),
                   ", ".join(comment_only) or "none"))
-    out.append("REVISION this ruler was published three times and the count moved: v1 called any text in "
-               "the registry a mount and read 16, v2 required an import edge but ignored components the "
-               "registry renders themselves and read 12, this one requires import plus JSX and also "
-               "accepts a building file that is itself mounted, reading %d. v1's receipt is committed at "
-               "e329db4b2c; v2 never left the working tree. The moving number is the point: the answer "
-               "depends on how strictly 'mounted panel' is defined, so the definition is printed above."
-               % counts["ON_A_MOUNTED_PANEL"])
+    out.append("REVISION this ruler was published four times and the count moved each time: v1 called "
+               "any text in the registry a mount and read 16; v2 required an import edge but ignored "
+               "components the registry renders themselves and read 12; v3 required import plus JSX and "
+               "also accepted a building file that is itself mounted, reading %d; v4 moved row(s) %s out "
+               "of NO_USER_FOUND, because a path built inside a shell file could never be mentioned by "
+               "another module - 'no user found' there measured where the code lives, not whether anyone "
+               "asks. v1's receipt is committed at e329db4b2c; v2 and v3 never left the working tree. The "
+               "moving number is the point: the answer depends on how strictly a mounted panel is "
+               "defined, so the definition is printed above rather than assumed."
+               % (counts["ON_A_MOUNTED_PANEL"], ", ".join(str(rank) for rank in inline_shell_rows)))
     most = max(seen_names, key=seen_names.count) if seen_names else ""
     repeated = seen_names.count(most) if seen_names else 0
     out.append("NAME_UNIQUENESS %d of %d resolved rows name %r - %s"
@@ -240,7 +250,8 @@ def main() -> int:
                 "function name as a whole word; the api layer and the registry itself are users but not "
                 "screens; a file is on a panel only when the registry both imports its module path and "
                 "renders it as a JSX component; a row whose own building file passes that test is "
-                "mounted without needing an importer; a user under app/ that fails the test is the shell")
+                "mounted without needing an importer; a user under app/ that fails the test is the shell, "
+                "as is a row with no user at all whose building file sits under app/")
     out.append("COVERAGE_LIMIT a registry entry is not proof a traveller opens that panel, and a "
                 "whole-word mention is not proof of a call - comments and re-exports count. "
                 "This narrows which screens could show the sentence; it does not replace walking one.")

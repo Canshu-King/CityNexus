@@ -1,0 +1,15 @@
+bw322 v4: all 20 caller rows now have an answer - 13 mounted panel, 5 app shell, 2 off panel
+
+v3 left row 11 (/stay-options/{option_id}/mode, built at frontend/src/app/V8Experience.tsx:4935) as
+NO_USER_FOUND. That was my counting rule measuring the wrong thing: the path is built inline inside a
+shell file, so no other module could ever mention the local name and "nobody mentions it" said nothing
+about whether a screen asks. A row with no user whose building file sits under app/ is now read as
+USED_BY_APP_SHELL, the same class the four V8Experience-importing rows already fell into.
+
+Recomputed from the scan: 13 on a registry-rendered panel, 5 issued from inside the app shell, 2 by a
+component the registry never imports and renders, 0 shared-api-only, 0 unaccounted, over 20 rows.
+
+REVISION is printed in the receipt and records all four readings (16, 12, 13, and the reclassified row)
+with the reason each moved, so the number cannot be quoted without its definition. MOUNT_TABLE (25
+imported, 25 rendered) and MOUNTED_CONCENTRATION (the 13 rest on LiveRecovery 10 and JourneyTrashPanel 3)
+carry over from v3. 0 product bytes.
