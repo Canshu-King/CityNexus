@@ -50,6 +50,13 @@
   且只有课堂那枚把 `WorkspaceActions.tsx` 编到带 `rev-agent-tool-source` 的版本（回执
   `trial/results/20261026_gozero/bz187-stack-generation.txt:5`）—— 所以主人要亲自走平板验收，走的是课堂 `:14462`，
   它才是最新代次；vite 从磁盘改编译，挪树不用重起进程。尺：`trial/human_walk/_cmdr_stack_generation_r187.py:43`。
+- 2026-10-29 10:08 现读（同一把尺重跑一次，回执已刷新）：课堂树 `E:/_cmdr_clean_1028` 现在
+  `93f15989b5`、porcelain 现读零行，课堂 vite 仍把同一枚模块编到带披露串的那版
+  （`trial/results/20261026_gozero/bz187-stack-generation.txt:3` 与 `trial/results/20261026_gozero/bz187-stack-generation.txt:5`）；
+  `:14464` 那只仍停在 `dea0328e0b`，同一枚模块 `serves_disclosure=False`
+  （`trial/results/20261026_gozero/bz187-stack-generation.txt:6`）—— 正反两面都还在，所以"课堂＝最新代"是量出来的。
+  **接班的人别信本文档里的静态代次**：这一行落进仓库时它自己就又把课堂树顶旧了一代，
+  现读用 `git -C E:/_cmdr_clean_1028 rev-parse --short HEAD`，或重跑那把尺。
 - 高德键只从 User 级环境变量 `CITYNEXUS_AMAP_WEB_KEY` 进进程，不打印、不落盘。
 - 旅客 bearer 在 sessionStorage（设计如此，不是缺陷）；行程指针在 localStorage 带 `ownerTravelerId`。
 
