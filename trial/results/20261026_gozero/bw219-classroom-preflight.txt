@@ -1,0 +1,8 @@
+CLASSROOM PRE-FLIGHT bw219
+DATABASE E:\_cmdr_clean_1028_data\citynexus_v3_clean_1028.db (opened with mode=ro; no write is possible on this URI)
+JOURNEYS_BY_STATUS [('ACTIVE', 2), ('DRAFT', 36), ('PLANNED', 1)]
+PLAN_VERSIONS_BY_STATUS [('ACTIVE', 2), ('CANDIDATE', 20), ('SELECTED', 1)]
+PLANNED_JOURNEYS 1 listed below
+  journey=d44da3bc city=CN-RV-01A815A96E65 window=2026-12-03T09:00:00+08:00..2026-12-04T21:00:00+08:00 active_plan=7a05ed66 plan_status=SELECTED
+EVIDENCE_TABLE mobility_facts rows_total=0 rows_for_planned_journey=0
+EVIDENCE_TABLE route_acquisition_operations rows_total=0 rows_for_planned_journey=0

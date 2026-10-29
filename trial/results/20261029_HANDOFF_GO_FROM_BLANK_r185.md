@@ -63,6 +63,16 @@
   `bytes=215557` 且 `serves_disclosure=True`
   （`trial/results/20261026_gozero/bz187-stack-generation.txt:5`）。要主人踩的产品代码＝这一代；
   `USER_VERIFIED` 仍空着，等主人亲测。
+- 2026-10-29 10:43 只读预检（尺的 URI 带 `mode=ro`，路径不是课堂 canary 目录就 ABORT，写不进去）：
+  出发门的先决条件在库上已成立 —— 一枚 `PLANNED` 行程（城市 `CN-RV-01A815A96E65`，窗口
+  2026-12-03T09:00 → 2026-12-04T21:00 +08），其 `active_plan_version_id` 指向一枚 `SELECTED` 方案
+  （回执 `trial/results/20261026_gozero/bw219-classroom-preflight.txt:6`）；库里另有 ACTIVE 两枚、DRAFT 三十六枚、
+  CANDIDATE 方案二十枚（`:3` 与 `:4`）。
+  **但这一栈上没有任何冻好的移动事实**：`mobility_facts` 与 `route_acquisition_operations` 两张表总行数现读为零
+  （`trial/results/20261026_gozero/bw219-classroom-preflight.txt:7`、`trial/results/20261026_gozero/bw219-classroom-preflight.txt:8`）
+  ⇒ 主人按「每段步行不超过 1 公里」那一格时，屏上只能靠当场真捕获、或走「未知／估算」那句；
+  那是库里没证据，不是屏坏了。要带真路线进课堂得先让那一栈真捕一次（要有键且 provider 可达），
+  这一条按口径没代跑 —— 尺：`trial/human_walk/_cmdr_classroom_preflight_r219.py`。
 - 高德键只从 User 级环境变量 `CITYNEXUS_AMAP_WEB_KEY` 进进程，不打印、不落盘。
 - 旅客 bearer 在 sessionStorage（设计如此，不是缺陷）；行程指针在 localStorage 带 `ownerTravelerId`。
 
