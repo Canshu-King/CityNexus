@@ -3805,3 +3805,13 @@ backend/app/main.py:19071。所以 §14.22 的读数对两条 URL 同样成立 �
 - 待裁（不代裁）：#369 那三档里的甲，靶面就是上面这 19 行（每行一枚 catch、一句话、一个坐标）。本班 0 改产品字节。
 - 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3785。
 
+14.37 补（10-29 夜）：链闭上了——这 19 句面板自造的话句句被标记读到，屏上显的就是它
+
+- 还差哪一环：§14.36 说 19 处 catch 各写了一句中文。写进 state 不等于显在屏上。尺 trial/human_walk/_cmdr_render_check_r328.py:62 从该 catch body 里逐枚取字面量，找到包着它的那次 setXxx(...) 调用、推出 state 名，再在该文件里找这个名字出现在 `{…}` 内或 `&&`/`?`/`||` 条件位的行。
+- 读数（回执 trial/results/20261026_gozero/bw328-is-that-sentence-on-screen.txt:23，行数与 trial/results/20261026_gozero/bw327-what-the-panels-say-instead.txt:20 列出的 19 处逐一对账）：19 处全部 RENDERED，存了没人读 0 处，句子不在任何 setter 里 0 处。
+- 两处手工复核（不靠正则自证）：frontend/src/features/execution/LiveRecovery.tsx:2136 的 `{message && (<p className="role-alert" role="status" data-testid="live-message">{message}</p>)}`；frontend/src/features/planning/PlanComparison.tsx:270 的 `{error && (<p className="plan-cmp-error" role="alert" data-testid="plan-cmp-error">{error}</p>)}`。两枚都带 role，是给人看的东西，不是调试残留。
+- 判别力在两处控制上：控制点解析出 LiveRecovery 那句交给 state `message`，读它在 trial/results/20261026_gozero/bw328-is-that-sentence-on-screen.txt:3；而一个谁都没定义的 state 名必须给 0 个渲染点——第一版我没给交替加分组，正则把全文每个 "message" 都数成渲染点（一处代码报出 44 个渲染点），这条反控就是为它装的。另有一处我自己造出来的假阴性也已修：我拿 bw327 的*显示串*去匹配，而它把同一 body 的多枚字面量用 ` / ` 并成一串，于是 0 处被误判「不在 setter 里」；改成直接从 catch body 取字面量后，那 0 处变 RENDERED——动的是我的量具，不是代码。
+- 这把尺不能说的那句话：被标记读到 ≠ 旅客当时就站在那一屏；句子若经共用组件当 prop 传下去，本尺只走同文件的 state 这条路。极限写在回执 trial/results/20261026_gozero/bw328-is-that-sentence-on-screen.txt:25，判据写在 trial/results/20261026_gozero/bw328-is-that-sentence-on-screen.txt:24。
+- 这条链现在完整了：服务端英文拒绝 → catch 不读 error（63/64 处）→ 面板自写一句中文 → 该句被 role 标记渲染。所以旅客在屏上看到的从来不是「英文」，是「一句与本次失败无关的中文」。§14.32 那三档文案刀与 #370 那 19 行甲单，动的是这条链上的不同两节，请点。本班 0 改产品字节。
+- 上一节正文在 trial/results/20261026_GO_FROM_BLANK_REPORT.md:3798。
+
