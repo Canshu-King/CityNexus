@@ -1,0 +1,33 @@
+ACCEPT WALK AGAINST THE SHARED AUTHORITY GATE bw260
+DATABASE sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_r260_ucnan11z/probe.db (temporary, reached only through the product's own POST routes)
+GATE_ANSWERS_RECORDED 1 (refused 1, passed 0)
+MEASURED YES
+POSITIVE_CONTROL asked=True seen_by_trace=True direct_answer=UNRESOLVED_ACTIVITY_FACTS
+PLAN STATUSES ON THIS JOURNEY {"ACTIVE": 1}
+OPENING WORDS ON THE ACTIVE PLAN {"citynexus-v9-domain | opening=NORMALIZED": 9}
+EVERY ANSWER BY STEP
+  control: ask the shared gate directly        line=799  content_places=9   REFUSED
+STEPS
+  POST /api/v1/demo/reset -> http_status=200
+  POST /api/v1/journeys -> http_status=201
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/stays/offers/capture -> http_status=200
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/stay-options/generate -> http_status=200
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/stay-options/2ac43cd6-c01a-417b-8cd4-e38bd7d98a92/select -> http_status=200
+  JOURNEY_STATUS_RIGHT_AFTER_STAY_SELECT ACTIVE
+  ACTIVITY_IDS_TAKEN_TO_ACCEPT 9 (from plan 74656ca7-f6ec-4507-bd85-77f82c94d700)
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/trip-studio/accept -> http_status=503
+  ACCEPT_SWAP 1 http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for e0192143-838e-51fa-a1f5-88f97f3d8eef|e2fa09d2-a4f5-5062-813d-2503692bdb00: KeyError","message_key":"error.request_error","trace_id":"0b31a650-917d-
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/trip-studio/accept -> http_status=503
+  ACCEPT_SWAP 2 http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for 160022ba-d830-53ca-970a-f38b0e42fb1c|e0192143-838e-51fa-a1f5-88f97f3d8eef: KeyError","message_key":"error.request_error","trace_id":"52113ab8-9cf0-
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/trip-studio/accept -> http_status=503
+  ACCEPT_SWAP 3 http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for 160022ba-d830-53ca-970a-f38b0e42fb1c|4569fcff-5e78-5b9c-809c-68e3756cf439: KeyError","message_key":"error.request_error","trace_id":"1f364d4a-31bb-
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/trip-studio/accept -> http_status=503
+  ACCEPT_SWAP 4 http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for 160022ba-d830-53ca-970a-f38b0e42fb1c|4569fcff-5e78-5b9c-809c-68e3756cf439: KeyError","message_key":"error.request_error","trace_id":"977b81e2-26a0-
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/trip-studio/accept -> http_status=503
+  ACCEPT_SWAP 5 http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for 160022ba-d830-53ca-970a-f38b0e42fb1c|4569fcff-5e78-5b9c-809c-68e3756cf439: KeyError","message_key":"error.request_error","trace_id":"25a8dc26-2e2c-
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/trip-studio/accept -> http_status=503
+  ACCEPT_SWAP 6 http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for 160022ba-d830-53ca-970a-f38b0e42fb1c|4569fcff-5e78-5b9c-809c-68e3756cf439: KeyError","message_key":"error.request_error","trace_id":"44471f40-eee2-
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/trip-studio/accept -> http_status=503
+  ACCEPT_SWAP 7 http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for 160022ba-d830-53ca-970a-f38b0e42fb1c|4569fcff-5e78-5b9c-809c-68e3756cf439: KeyError","message_key":"error.request_error","trace_id":"93ec7418-cee4-
+  POST /api/v1/journeys/d1775366-4ac2-433c-8ac5-40e914d26ac3/trip-studio/accept -> http_status=503
+  ACCEPT_SWAP 8 http_status=503 body={"error":{"code":"REQUEST_ERROR","message":"preview mobility evidence unavailable: mobility fact unavailable for 506e1f97-d236-5a15-919b-08627c2f696c|f84544d8-2f2c-5457-9366-62017e1e36f1: KeyError","message_key":"error.request_error","trace_id":"6ebb2934-8a98-
