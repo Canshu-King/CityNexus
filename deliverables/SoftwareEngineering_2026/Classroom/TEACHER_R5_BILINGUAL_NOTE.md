@@ -46,9 +46,9 @@ R4.2 补的回环箭头。投影只放第 1 页；备查时翻第 2 页或看形
 
 | 文件 | sha256/16 |
 |---|---|
-| `Teacher_01_System_Overview.vsdx` | `447e710744df5ec3` |
+| `Teacher_01_System_Overview.vsdx` | `b3d319b5404411c2` |
 | `Teacher_02_Agent_User_Flow.vsdx` | `03bc9e138a62ef38` |
-| `Teacher_01_System_Overview_EN.vsdx` | `f6e233083b473a7d` |
+| `Teacher_01_System_Overview_EN.vsdx` | `0e19ffe25fd379aa` |
 | `Teacher_02_Agent_User_Flow_EN.vsdx` | `8997b1ef9f262868` |
 | `Teacher_03_Project_Overview_R4.mpp`（冻结） | `30af900a34a46f0d` |
 | `Teacher_03_Project_Overview_R4_EN.mpp` | `5eb7b1e7122c7fc6` |
@@ -87,3 +87,10 @@ R4.2 补的回环箭头。投影只放第 1 页；备查时翻第 2 页或看形
    中英文件用的都是"项"表这一事实也已写进脚本注释。
 4. 全套门禁复跑：cross_check 4/4、loop proof 中英 2/2、roundtrip 中英 2/2、
    eye 6/6、EN mpp 保真 0 差异、冻结脚本（se_r43_freeze_r1.py）随下笔提交复跑。
+
+## 七、R7 追加（08:30-08:50，操作者点名"谁让你停"）
+
+Teacher_01 中英补横向六色图例（底条一行排开，11/10.5pt）——"一列放不下"
+的原判不成立，lib 加 legendLayout="horizontal" 后一行就装下了。至此
+四张课堂图全部带图例、全部实底标签。门禁：cross_check 2/2、eye 6/6。
+SHA 轮换：Teacher_01 zh `b3d319b5404411c2`、EN `0e19ffe25fd379aa`，其余不变。
