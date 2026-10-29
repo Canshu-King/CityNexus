@@ -1,0 +1,8 @@
+Refresh the stack-generation receipt after the classroom move, so the tracked artifact carries the same reading the ledger block cites.
+
+The ruler was run before the worktree moved, so the committed receipt still named the previous
+generation for the classroom tree. Re-ran it after the move and after the push: the authoritative
+tip line and the classroom worktree line now agree, the classroom vite still compiles the module
+carrying the disclosure string, and the second vite on the older generation still answers without
+it. The receipt is the artifact the ledger block points at, so it has to carry the reading the
+block reports rather than an older one.
