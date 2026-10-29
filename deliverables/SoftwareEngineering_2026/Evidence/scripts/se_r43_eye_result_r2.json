@@ -8,9 +8,9 @@
    2416,
    1048
   ],
-  "bytes": 208961,
-  "ink_whole": 0.5987,
-  "ink_body": 0.5703
+  "bytes": 213207,
+  "ink_whole": 0.6006,
+  "ink_body": 0.5728
  },
  {
   "file": "Teacher_02_Agent_User_Flow",
@@ -21,7 +21,7 @@
    2416,
    1048
   ],
-  "bytes": 211916,
+  "bytes": 211914,
   "ink_whole": 0.5766,
   "ink_body": 0.5407
  },
@@ -34,9 +34,9 @@
    2416,
    1048
   ],
-  "bytes": 205277,
-  "ink_whole": 0.5994,
-  "ink_body": 0.5713
+  "bytes": 211836,
+  "ink_whole": 0.6013,
+  "ink_body": 0.5739
  },
  {
   "file": "Teacher_02_Agent_User_Flow_EN",
@@ -47,7 +47,7 @@
    2416,
    1048
   ],
-  "bytes": 215867,
+  "bytes": 215865,
   "ink_whole": 0.5767,
   "ink_body": 0.5409
  },
@@ -60,7 +60,7 @@
    2416,
    1048
   ],
-  "bytes": 164977,
+  "bytes": 165753,
   "ink_whole": 0.1919,
   "ink_body": 0.0678,
   "ink_chart_half": 0.0552,

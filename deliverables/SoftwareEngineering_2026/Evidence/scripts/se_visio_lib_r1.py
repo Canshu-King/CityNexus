@@ -787,10 +787,35 @@ class Builder:
                        or self.spec.get("legendTitleSize") or 8.5)
         t_body = float(self.cur.get("legendTextSize")
                        or self.spec.get("legendTextSize") or 7.2)
+        layout = (self.cur.get("legendLayout")
+                  or self.spec.get("legendLayout") or "vertical")
         pitch = max(0.235, t_body * 1.55 / 72.0)
         self._text(x, y, 2.0, title, size=t_size, bold=True, color="#12263F",
                    align="0")
         cy = y + t_size * 1.4 / 72.0 + 0.06
+        if layout == "horizontal":
+            # R7: a one-row legend along the page bottom for sheets with too
+            # many colours for a vertical block (Teacher_01 has six states).
+            gap = 0.22
+            cx = x
+            for it in items:
+                fill, line = PALETTE.get(it["state"], PALETTE["verified"])
+                sw = self.page.DrawRectangle(cx, self._flip_y(cy, 0.15) - 0.075,
+                                             cx + 0.34,
+                                             self._flip_y(cy, 0.15) + 0.075)
+                self._cell(sw, "FillForegnd", _rgb(fill))
+                self._cell(sw, "LineColor", _rgb(line))
+                self._cell(sw, "LineWeight", "0.013in")
+                self._cell(sw, "LinePattern",
+                           DASH if it["state"] == "planned" else SOLID)
+                self._cell(sw, "Rounding", "0.03in")
+                tw = it.get("w") or self.text_width_in(it["text"], t_body)
+                self._text(cx + 0.40, cy - 0.02, tw + 0.1, it["text"],
+                           size=t_body, color="#22323F")
+                cx += 0.40 + tw + gap
+            self.chrome.append({"kind": "legend", "x": x, "y": y - 0.06,
+                                "w": (cx - x) + 0.1, "h": pitch + 0.14})
+            return cy
         for it in items:
             fill, line = PALETTE.get(it["state"], PALETTE["verified"])
             sw = self.page.DrawRectangle(x, self._flip_y(cy, 0.15) - 0.075,

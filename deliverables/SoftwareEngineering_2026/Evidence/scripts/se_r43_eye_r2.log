@@ -1,19 +1,19 @@
-[   0.0s] Teacher_01_System_Overview.vsdx 26509 bytes sha256/16 447e710744df5ec3
+[   0.0s] Teacher_01_System_Overview.vsdx 28057 bytes sha256/16 b3d319b5404411c2
 [   0.0s] Teacher_02_Agent_User_Flow.vsdx 32474 bytes sha256/16 03bc9e138a62ef38
-[   0.0s] Teacher_01_System_Overview_EN.vsdx 26065 bytes sha256/16 f6e233083b473a7d
+[   0.0s] Teacher_01_System_Overview_EN.vsdx 27462 bytes sha256/16 0e19ffe25fd379aa
 [   0.0s] Teacher_02_Agent_User_Flow_EN.vsdx 32256 bytes sha256/16 8997b1ef9f262868
 [   0.0s] Teacher_03_Project_Overview_R4.mpp 475136 bytes sha256/16 30af900a34a46f0d
 [   0.0s] Teacher_03_Project_Overview_R4_EN.mpp 477184 bytes sha256/16 5eb7b1e7122c7fc6
-[   1.2s] Teacher_01_System_Overview opened as 'Teacher_01_System_Overview.vsdx', page has 19 shapes
-[   4.2s] Teacher_01_System_Overview frame 2416x1048 ink whole=0.5987 body=0.5703 
-[   4.5s] Teacher_02_Agent_User_Flow opened as 'Teacher_02_Agent_User_Flow.vsdx', page has 34 shapes
-[   7.4s] Teacher_02_Agent_User_Flow frame 2416x1048 ink whole=0.5766 body=0.5407 
-[   7.8s] Teacher_01_System_Overview_EN opened as 'Teacher_01_System_Overview_EN.vsdx', page has 19 shapes
-[  10.8s] Teacher_01_System_Overview_EN frame 2416x1048 ink whole=0.5994 body=0.5713 
-[  11.4s] Teacher_02_Agent_User_Flow_EN opened as 'Teacher_02_Agent_User_Flow_EN.vsdx', page has 34 shapes
-[  14.4s] Teacher_02_Agent_User_Flow_EN frame 2416x1048 ink whole=0.5767 body=0.5409 
-[  22.4s] Teacher_03_Project_Overview_R4 frame 2416x1048 ink whole=0.1919 body=0.0678 chart=0.0552 table=0.1035
-[  22.9s] plan copy digest 30af900a34a4 -> 30af900a34a4 (unchanged=True)
-[  30.9s] Teacher_03_Project_Overview_R4_EN frame 2416x1048 ink whole=0.1952 body=0.0718 chart=0.0540 table=0.1135
-[  31.1s] plan copy digest 5eb7b1e7122c -> 5eb7b1e7122c (unchanged=True)
-[  34.1s] R43 EYE PASS R2 OK (6 frames)
+[   1.5s] Teacher_01_System_Overview opened as 'Teacher_01_System_Overview.vsdx', page has 32 shapes
+[   4.5s] Teacher_01_System_Overview frame 2416x1048 ink whole=0.6006 body=0.5728 
+[   4.9s] Teacher_02_Agent_User_Flow opened as 'Teacher_02_Agent_User_Flow.vsdx', page has 34 shapes
+[   7.9s] Teacher_02_Agent_User_Flow frame 2416x1048 ink whole=0.5766 body=0.5407 
+[   8.4s] Teacher_01_System_Overview_EN opened as 'Teacher_01_System_Overview_EN.vsdx', page has 32 shapes
+[  11.3s] Teacher_01_System_Overview_EN frame 2416x1048 ink whole=0.6013 body=0.5739 
+[  11.7s] Teacher_02_Agent_User_Flow_EN opened as 'Teacher_02_Agent_User_Flow_EN.vsdx', page has 34 shapes
+[  14.7s] Teacher_02_Agent_User_Flow_EN frame 2416x1048 ink whole=0.5767 body=0.5409 
+[  23.3s] Teacher_03_Project_Overview_R4 frame 2416x1048 ink whole=0.1919 body=0.0678 chart=0.0552 table=0.1035
+[  23.7s] plan copy digest 30af900a34a4 -> 30af900a34a4 (unchanged=True)
+[  31.4s] Teacher_03_Project_Overview_R4_EN frame 2416x1048 ink whole=0.1952 body=0.0718 chart=0.0540 table=0.1135
+[  31.8s] plan copy digest 5eb7b1e7122c -> 5eb7b1e7122c (unchanged=True)
+[  34.2s] R43 EYE PASS R2 OK (6 frames)

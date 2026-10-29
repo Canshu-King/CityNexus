@@ -279,6 +279,7 @@ def _spec(stem_en, state, page_name, page_title, subtitle, docid, nodes, edges,
         page1["legendTitle"] = legend["title"]
         page1["legendTitleSize"] = legend.get("legendTitleSize", 8.5)
         page1["legendTextSize"] = legend.get("legendTextSize", 7.2)
+        page1["legendLayout"] = legend.get("legendLayout", "vertical")
     return {
         "file": stem_en,
         "pageW": PW, "pageH": PH,
@@ -310,6 +311,37 @@ n01e, e01e = _t1("en")
 n02, e02 = _t2("zh")
 n02e, e02e = _t2("en")
 
+LEGEND_T1_ZH = {
+    "title": "图例",
+    "origin": (0.50, 6.72),
+    "legendLayout": "horizontal",
+    "legendTextSize": 11.0,
+    "legendTitleSize": 12.0,
+    "items": [
+        {"state": "user", "text": "用户入口"},
+        {"state": "agent", "text": "Agent 规划与调用"},
+        {"state": "external", "text": "外部数据服务"},
+        {"state": "built", "text": "生成的方案"},
+        {"state": "verified", "text": "展示与确认"},
+        {"state": "data", "text": "写入与审计"},
+    ],
+}
+LEGEND_T1_EN = {
+    "title": "Legend",
+    "origin": (0.50, 6.72),
+    "legendLayout": "horizontal",
+    "legendTextSize": 10.5,
+    "legendTitleSize": 12.0,
+    "items": [
+        {"state": "user", "text": "User entry"},
+        {"state": "agent", "text": "Agent planning & tools"},
+        {"state": "external", "text": "External services"},
+        {"state": "built", "text": "Built options"},
+        {"state": "verified", "text": "Display & confirm"},
+        {"state": "data", "text": "Write & audit"},
+    ],
+}
+
 spec01 = _spec(
     "Teacher_01_System_Overview.vsdx", "zh", "系统总览",
     "CityNexus 城市出行助手   |   系统总览",
@@ -318,7 +350,7 @@ spec01 = _spec(
     n01, e01,
     "CityNexus 城市出行助手   |   附注（不投屏）",
     "课堂页左下的小字技术说明移到本页；主图版面一个坐标都没动。",
-    NOTES_T1_ZH, BODY)
+    NOTES_T1_ZH, BODY, legend=LEGEND_T1_ZH)
 
 spec01e = _spec(
     "Teacher_01_System_Overview_EN.vsdx", "en", "System Overview",
@@ -328,7 +360,7 @@ spec01e = _spec(
     n01e, e01e,
     "CityNexus   |   Appendix (not projected)",
     "Notes moved off the classroom page; the main layout is untouched.",
-    NOTES_T1_EN, BODY_EN_MIN)
+    NOTES_T1_EN, BODY_EN_MIN, legend=LEGEND_T1_EN)
 
 LEGEND_T2_ZH = {
     "title": "图例",
