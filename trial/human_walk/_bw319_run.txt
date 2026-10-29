@@ -1,0 +1,3 @@
+LIVE ANCHORS {'denominator': 2, 'tally': 70, 'negative': 71, 'counting': 72, 'coverage': 73, 'no_caller': 34, 'first_caller': 4, 'ruler': 69, 'prev_section': 3757, 'bw313_intersection': 3}
+LIVE NUMBERS rows=21 scanned=163 caller_found=20 no_caller=1
+APPENDED bytes_added=2123 heading_hits=1
