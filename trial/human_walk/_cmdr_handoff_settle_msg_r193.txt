@@ -1,0 +1,7 @@
+Settle the classroom stack in the handoff: name the generation the operator will actually walk.
+
+The fourth section carried a running list of dated reads, and the newest one had already been aged
+by the commit that recorded it. Added the settling entry — the classroom worktree stays at the
+generation the tracked receipt describes, every commit above it is trial-only documentation, the
+served module is unchanged, and USER_VERIFIED is left open for the operator instead of being
+inferred from the port or from the doc.

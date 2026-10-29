@@ -57,6 +57,12 @@
   （`trial/results/20261026_gozero/bz187-stack-generation.txt:6`）—— 正反两面都还在，所以"课堂＝最新代"是量出来的。
   **接班的人别信本文档里的静态代次**：这一行落进仓库时它自己就又把课堂树顶旧了一代，
   现读用 `git -C E:/_cmdr_clean_1028 rev-parse --short HEAD`，或重跑那把尺。
+- 2026-10-29 10:11 定档：课堂树不再逐代追尖，停在 `88b891d22c`（回执
+  `trial/results/20261026_gozero/bz187-stack-generation.txt:3` 记的就是它，porcelain 现读零行）。
+  它之上的提交只动 `trial/` 文档与回执本身、没动一枚产品字节，所以课堂 vite 交出的模块仍是
+  `bytes=215557` 且 `serves_disclosure=True`
+  （`trial/results/20261026_gozero/bz187-stack-generation.txt:5`）。要主人踩的产品代码＝这一代；
+  `USER_VERIFIED` 仍空着，等主人亲测。
 - 高德键只从 User 级环境变量 `CITYNEXUS_AMAP_WEB_KEY` 进进程，不打印、不落盘。
 - 旅客 bearer 在 sessionStorage（设计如此，不是缺陷）；行程指针在 localStorage 带 `ownerTravelerId`。
 
