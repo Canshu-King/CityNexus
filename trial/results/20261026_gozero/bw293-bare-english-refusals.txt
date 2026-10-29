@@ -2,6 +2,9 @@ BARE ENGLISH REFUSALS HANDED TO A TRAVELLER bw293
 SCOPE every module under backend/app (files=238), parsed with ast, read-only
 HTTPException RAISES FOUND 1187 (this is the denominator)
 BUCKETS CODE_ONLY=738, ENGLISH_SENTENCE=333, MIXED=32, NOT_LITERAL=77, OTHER=7
+PAYLOAD SHAPES DICT_NO_MESSAGE_KEY=6, PLAIN_STRING=1110, UNKNOWN_SHAPE=71
+ENGLISH SENTENCE BY PAYLOAD SHAPE plain-string=333 with-message-key=0 dict-no-message-key=0 (a plain string is what the screen has to show verbatim)
+CONCLUSION of these 1187 raises, none carries its own message_key; the key a client sees is synthesised by the response wrapper (backend/app/main.py:784 `message_key or f"error.{code.lower()}"`), so its granularity is the HTTP status rather than the refusal - different sentences under one status share one key
 NAMED CONTROLS
   'Trip Studio requires an active plan' -> ENGLISH_SENTENCE at backend/app/main.py:18394
   'TRIP_STUDIO_BASE_PLAN_STALE' -> CODE_ONLY at backend/app/main.py:18400

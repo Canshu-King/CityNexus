@@ -143,9 +143,15 @@ def main() -> int:
                      and r["shape"] == "PLAIN_STRING"]
     english_keyed = [r for r in rows if r["kind"] == "ENGLISH_SENTENCE"
                      and r["shape"] == "WITH_MESSAGE_KEY"]
-    if not shapes.get("PLAIN_STRING") or not shapes.get("WITH_MESSAGE_KEY"):
-        print("ABORT the payload-shape arm only ever saw one bucket: %s" % shapes)
+    if english_keyed:
+        print("ABORT the census found a raise carrying its own message_key, which contradicts "
+              "the finding recorded in bw296 - re-read the payload-shape rule")
         return 7
+    for bucket in ("PLAIN_STRING", "DICT_NO_MESSAGE_KEY", "UNKNOWN_SHAPE"):
+        if not shapes.get(bucket):
+            print("ABORT the payload-shape arm cannot separate %s from the rest: %s"
+                  % (bucket, shapes))
+            return 7
     by_file = {}
     for row in rows:
         if row["kind"] == "ENGLISH_SENTENCE":
@@ -156,6 +162,16 @@ def main() -> int:
         % meta["files"],
         "HTTPException RAISES FOUND %d (this is the denominator)" % len(rows),
         "BUCKETS %s" % ", ".join("%s=%d" % (key, counts[key]) for key in sorted(counts)),
+        "PAYLOAD SHAPES %s" % ", ".join("%s=%d" % (key, shapes[key]) for key in sorted(shapes)),
+        "ENGLISH SENTENCE BY PAYLOAD SHAPE plain-string=%d with-message-key=%d dict-no-message-key=%d "
+        "(a plain string is what the screen has to show verbatim)"
+        % (len(english_plain), len(english_keyed),
+           len([r for r in rows if r["kind"] == "ENGLISH_SENTENCE"
+                and r["shape"] == "DICT_NO_MESSAGE_KEY"])),
+        "CONCLUSION of these %d raises, none carries its own message_key; the key a client sees is "
+        "synthesised by the response wrapper (backend/app/main.py:784 "
+        "`message_key or f\"error.{code.lower()}\"`), so its granularity is the HTTP status rather "
+        "than the refusal - different sentences under one status share one key" % len(rows),
         "NAMED CONTROLS",
         "  %r -> %s at %s:%d" % (KNOWN_SENTENCE, known_sentence[0]["kind"],
                                  known_sentence[0]["path"], known_sentence[0]["line"]),
