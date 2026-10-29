@@ -1,0 +1,71 @@
+SHOT 390-g7-cold t=5.0
+HIT continue true t=5.9
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.5
+HIT open-settings true t=11.7
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.7
+HIT send true t=15.1
+HTTP POST 201 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/run
+HIT skip-questions true t=31.2
+SKIP t=31.9
+SKIPPED true
+DRAFT t=194.3
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=194.4
+HIT tab-chat true t=194.7
+HTTP POST 200 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume
+COMPOSER_ENABLED true t=204.7
+HIT send-fix true t=205.1
+FIX_SENT t=205.8
+HTTP POST 200 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume
+FIX_IDLE true t=351.1
+SHOT 390-g7-after-fix t=351.3
+HIT journey-tab true t=351.6
+DRAFT_SLOTS 6
+REMOVED "晚上\n· 什刹海 / 南锣鼓巷 胡同晚餐（京誉南门涮肉）\n点击编辑"
+HTTP PUT 200 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/draft
+DRAFT_SAVE "草案已保存到这趟旅行"
+HIT save-1-0 true t=359.4
+HTTP POST 201 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/prepare-plan
+HIT price-1-1 true t=366.5
+HTTP POST 200 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/plans/6ca97944-76c7-420b-a266-b6de913f5883/accept-unknown-price
+HIT refresh-after-price-1 true t=371.6
+HIT freeze-1-2 true t=376.6
+HTTP POST 200 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/plans/6ca97944-76c7-420b-a266-b6de913f5883/freeze-routes
+HIT refresh-after-freeze-1 true t=383.7
+SELECT_STATE count=1 visible=true enabled=true {"disabled":false,"cls":"","parent":"rev-plan-option"} t=388.4
+SHOT 390-g7-plans-1 t=388.5
+HIT select-1 true t=388.9
+HTTP POST 200 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/departure/commit
+SELECT_REFUSAL ["这次有一部分还没完成，你可以继续告诉我想怎么调整。"]
+HIT ask-refusal-1 true t=394.9
+HTTP POST 409 /api/v1/journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume
+ASK_REFUSAL_SENT 1 t=395.7
+SHOT 390-g7-selected-1 t=440.9
+HIT journey-tab true t=441.3
+HIT refresh-start-2 true t=444.6
+LOOP 2/0 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/1 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/2 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/3 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/4 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/5 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/6 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/7 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/8 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/9 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/10 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/11 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/12 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/13 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/14 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/15 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/16 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/17 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/18 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/19 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]
+LOOP 2/20 GATE ["可以确认出发\n\n5 项正式安排"] GAPS_ALL ["这 5 项费用你已经确认先不计入预算（总价不含这些项）。"] ALERT ["CityNexus API 409: /journeys/89615b8f-ad2f-4977-be30-7703326e58e3/agent/goal-tasks/108706d8-c2f4-405f-b99b-61d19c98bca4/resume"]

@@ -1,0 +1,31 @@
+SHOT 390-cold t=5.4
+HIT continue true t=5.8
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=9.1
+HIT open-settings true t=11.3
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=13.2
+HIT send true t=14.6
+HTTP POST 201 /api/v1/journeys/d62fc603-37cc-4514-9436-a1da4c856e6f/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/d62fc603-37cc-4514-9436-a1da4c856e6f/agent/goal-tasks/d49a10f4-db4e-4947-9f3a-b03f0a0153af/run
+ROUND 1 labels=["经典古迹打卡","胡同老城慢游","博物馆艺术","现代地标购物"] pick="胡同老城慢游"
+HIT answer-1 true t=43.3
+HTTP POST 200 /api/v1/journeys/d62fc603-37cc-4514-9436-a1da4c856e6f/agent/goal-tasks/d49a10f4-db4e-4947-9f3a-b03f0a0153af/resume
+SHOT 390-round1-after t=74.2
+ROUND 2 labels=["纯胡同漫游","胡同+一座地标","胡同+美食茶馆"] pick="纯胡同漫游"
+HIT answer-2 true t=74.6
+HTTP POST 200 /api/v1/journeys/d62fc603-37cc-4514-9436-a1da4c856e6f/agent/goal-tasks/d49a10f4-db4e-4947-9f3a-b03f0a0153af/resume
+SHOT 390-round2-after t=103.0
+ROUND 3 labels=["北城水岸胡同","南城历史商街","东四安静住区","国子监文艺线"] pick="北城水岸胡同"
+HIT answer-3 true t=103.3
+HTTP POST 200 /api/v1/journeys/d62fc603-37cc-4514-9436-a1da4c856e6f/agent/goal-tasks/d49a10f4-db4e-4947-9f3a-b03f0a0153af/resume
+SHOT 390-round3-after t=189.3
+ROUND 4 labels=["纯漫步+茶馆咖啡","漫步+1个文化点位","漫步+在地小吃"] pick="漫步+1个文化点位"
+HIT answer-4 true t=189.7
+HTTP POST 200 /api/v1/journeys/d62fc603-37cc-4514-9436-a1da4c856e6f/agent/goal-tasks/d49a10f4-db4e-4947-9f3a-b03f0a0153af/resume
+SHOT 390-round4-after t=250.7
+ROUND 5 labels=["恭王府","钟鼓楼","郭沫若故居","宋庆龄故居"] pick="恭王府"
+HIT answer-5 true t=251.0
+HTTP POST 200 /api/v1/journeys/d62fc603-37cc-4514-9436-a1da4c856e6f/agent/goal-tasks/d49a10f4-db4e-4947-9f3a-b03f0a0153af/resume

@@ -1,0 +1,137 @@
+SHOT 390-cold t=7.2
+HIT continue true t=8.1
+HTTP POST 201 /api/v1/journeys
+JOURNEY null
+HIT tab-chat true t=11.8
+HIT open-settings true t=14.0
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=15.8
+HIT send true t=17.3
+HTTP POST 201 /api/v1/journeys/11392c28-8f91-43fb-a842-0c8c2e337261/agent/goal-tasks
+SENT
+HIT research-1 false t=18.3
+WAIT cycle=1 t=18.3 headline="旅行研究 · 已接收"
+WAIT cycle=2 t=24.4 headline="旅行研究 · 正在研究"
+HTTP POST 200 /api/v1/journeys/11392c28-8f91-43fb-a842-0c8c2e337261/agent/goal-tasks/a9b2bbf8-d9a9-4c23-8df8-98896919e7de/run
+SHOT 390-pending-question t=60.5
+QUESTION ""
+HIT skip-questions true t=60.8
+SKIP_PRESSED cycle=3 t=61.5
+WAIT cycle=4 t=64.5 headline="旅行研究 · 正在研究"
+SHOT 390-wait-4 t=64.6
+WAIT cycle=5 t=70.6 headline="旅行研究 · 正在研究"
+WAIT cycle=6 t=76.6 headline="旅行研究 · 正在研究"
+WAIT cycle=7 t=82.6 headline="旅行研究 · 正在研究"
+WAIT cycle=8 t=88.6 headline="旅行研究 · 正在研究"
+SHOT 390-wait-8 t=88.7
+WAIT cycle=9 t=94.7 headline="旅行研究 · 正在研究"
+WAIT cycle=10 t=100.7 headline="旅行研究 · 正在研究"
+WAIT cycle=11 t=106.7 headline="旅行研究 · 正在研究"
+WAIT cycle=12 t=112.7 headline="旅行研究 · 正在研究"
+SHOT 390-wait-12 t=112.8
+WAIT cycle=13 t=118.8 headline="旅行研究 · 正在研究"
+WAIT cycle=14 t=124.8 headline="旅行研究 · 正在研究"
+WAIT cycle=15 t=130.8 headline="旅行研究 · 正在研究"
+WAIT cycle=16 t=136.8 headline="旅行研究 · 正在研究"
+SHOT 390-wait-16 t=136.9
+WAIT cycle=17 t=142.9 headline="旅行研究 · 正在研究"
+WAIT cycle=18 t=148.9 headline="旅行研究 · 正在研究"
+WAIT cycle=19 t=154.9 headline="旅行研究 · 正在研究"
+WAIT cycle=20 t=160.9 headline="旅行研究 · 正在研究"
+SHOT 390-wait-20 t=161.0
+WAIT cycle=21 t=167.0 headline="旅行研究 · 正在研究"
+WAIT cycle=22 t=173.0 headline="旅行研究 · 正在研究"
+WAIT cycle=23 t=179.0 headline="旅行研究 · 正在研究"
+WAIT cycle=24 t=185.0 headline="旅行研究 · 正在研究"
+SHOT 390-wait-24 t=192.3
+HTTP POST 200 /api/v1/journeys/11392c28-8f91-43fb-a842-0c8c2e337261/agent/goal-tasks/a9b2bbf8-d9a9-4c23-8df8-98896919e7de/resume
+HIT research-25 true t=198.6
+RESEARCH_PRESSED cycle=25 t=199.4
+WAIT cycle=26 t=203.4 headline="旅行研究 · 正在研究"
+WAIT cycle=27 t=209.4 headline="旅行研究 · 正在研究"
+WAIT cycle=28 t=215.4 headline="旅行研究 · 正在研究"
+SHOT 390-wait-28 t=215.5
+WAIT cycle=29 t=221.5 headline="旅行研究 · 正在研究"
+WAIT cycle=30 t=227.5 headline="旅行研究 · 正在研究"
+WAIT cycle=31 t=233.5 headline="旅行研究 · 正在研究"
+WAIT cycle=32 t=239.5 headline="旅行研究 · 正在研究"
+SHOT 390-wait-32 t=239.7
+WAIT cycle=33 t=245.7 headline="旅行研究 · 正在研究"
+WAIT cycle=34 t=251.7 headline="旅行研究 · 正在研究"
+WAIT cycle=35 t=257.7 headline="旅行研究 · 正在研究"
+WAIT cycle=36 t=263.7 headline="旅行研究 · 正在研究"
+SHOT 390-wait-36 t=263.8
+WAIT cycle=37 t=269.8 headline="旅行研究 · 正在研究"
+WAIT cycle=38 t=275.8 headline="旅行研究 · 正在研究"
+WAIT cycle=39 t=281.9 headline="旅行研究 · 正在研究"
+WAIT cycle=40 t=288.0 headline="旅行研究 · 正在研究"
+SHOT 390-wait-40 t=288.1
+WAIT cycle=41 t=294.1 headline="旅行研究 · 正在研究"
+WAIT cycle=42 t=300.1 headline="旅行研究 · 正在研究"
+WAIT cycle=43 t=306.1 headline="旅行研究 · 正在研究"
+WAIT cycle=44 t=312.2 headline="旅行研究 · 正在研究"
+SHOT 390-wait-44 t=312.2
+WAIT cycle=45 t=318.2 headline="旅行研究 · 正在研究"
+WAIT cycle=46 t=324.2 headline="旅行研究 · 正在研究"
+WAIT cycle=47 t=330.2 headline="旅行研究 · 正在研究"
+WAIT cycle=48 t=336.3 headline="旅行研究 · 正在研究"
+SHOT 390-wait-48 t=336.3
+WAIT cycle=49 t=342.3 headline="旅行研究 · 正在研究"
+WAIT cycle=50 t=348.3 headline="旅行研究 · 正在研究"
+WAIT cycle=51 t=354.4 headline="旅行研究 · 正在研究"
+WAIT cycle=52 t=360.4 headline="旅行研究 · 正在研究"
+SHOT 390-wait-52 t=360.4
+WAIT cycle=53 t=366.4 headline="旅行研究 · 正在研究"
+WAIT cycle=54 t=372.4 headline="旅行研究 · 正在研究"
+WAIT cycle=55 t=378.5 headline="旅行研究 · 正在研究"
+HIT research-56 true t=384.8
+RESEARCH_PRESSED cycle=56 t=385.7
+WAIT cycle=57 t=389.7 headline="旅行研究 · 正在研究"
+WAIT cycle=58 t=395.7 headline="旅行研究 · 正在研究"
+WAIT cycle=59 t=401.7 headline="旅行研究 · 正在研究"
+WAIT cycle=60 t=407.7 headline="旅行研究 · 正在研究"
+SHOT 390-wait-60 t=407.8
+WAIT cycle=61 t=413.8 headline="旅行研究 · 正在研究"
+WAIT cycle=62 t=419.8 headline="旅行研究 · 正在研究"
+WAIT cycle=63 t=425.8 headline="旅行研究 · 正在研究"
+WAIT cycle=64 t=431.9 headline="旅行研究 · 正在研究"
+SHOT 390-wait-64 t=432.0
+WAIT cycle=65 t=438.0 headline="旅行研究 · 正在研究"
+WAIT cycle=66 t=444.0 headline="旅行研究 · 正在研究"
+WAIT cycle=67 t=450.0 headline="旅行研究 · 正在研究"
+WAIT cycle=68 t=456.0 headline="旅行研究 · 正在研究"
+SHOT 390-wait-68 t=456.5
+WAIT cycle=69 t=462.5 headline="旅行研究 · 正在研究"
+WAIT cycle=70 t=468.5 headline="旅行研究 · 正在研究"
+WAIT cycle=71 t=474.6 headline="旅行研究 · 正在研究"
+WAIT cycle=72 t=480.6 headline="旅行研究 · 正在研究"
+SHOT 390-wait-72 t=480.6
+WAIT cycle=73 t=486.7 headline="旅行研究 · 正在研究"
+WAIT cycle=74 t=492.7 headline="旅行研究 · 正在研究"
+WAIT cycle=75 t=498.7 headline="旅行研究 · 正在研究"
+WAIT cycle=76 t=504.7 headline="旅行研究 · 正在研究"
+SHOT 390-wait-76 t=504.8
+WAIT cycle=77 t=510.8 headline="旅行研究 · 正在研究"
+WAIT cycle=78 t=516.8 headline="旅行研究 · 正在研究"
+WAIT cycle=79 t=522.9 headline="旅行研究 · 正在研究"
+WAIT cycle=80 t=528.9 headline="旅行研究 · 正在研究"
+SHOT 390-wait-80 t=529.0
+WAIT cycle=81 t=535.0 headline="旅行研究 · 正在研究"
+WAIT cycle=82 t=541.0 headline="旅行研究 · 正在研究"
+WAIT cycle=83 t=547.0 headline="旅行研究 · 正在研究"
+WAIT cycle=84 t=553.0 headline="旅行研究 · 正在研究"
+SHOT 390-wait-84 t=553.1
+WAIT cycle=85 t=559.2 headline="旅行研究 · 正在研究"
+WAIT cycle=86 t=565.2 headline="旅行研究 · 正在研究"
+HIT research-87 true t=571.7
+RESEARCH_PRESSED cycle=87 t=572.5
+WAIT cycle=88 t=576.5 headline="旅行研究 · 正在研究"
+SHOT 390-wait-88 t=576.7
+WAIT cycle=89 t=582.7 headline="旅行研究 · 正在研究"
+WAIT cycle=90 t=588.7 headline="旅行研究 · 正在研究"
+WAIT cycle=91 t=594.7 headline="旅行研究 · 正在研究"
+WAIT cycle=92 t=600.7 headline="旅行研究 · 正在研究"
+SHOT 390-wait-92 t=600.9
+WAIT cycle=93 t=606.9 headline="旅行研究 · 正在研究"
+WAIT cycle=94 t=613.0 headline="旅行研究 · 正在研究"

@@ -1,0 +1,8 @@
+HIT journey-tab true
+TRIPS_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\nTRIPS\n行程\n北京 · 2日行程继续这趟\n\n开始探索一个地区后，你保存的路线和出发进度会显示在这里。\n\n开始探索 →\nAI 服务\nAI 已配置 · 未验证\n\n选好地点并确认行程后，Agent 就会开始工作。\n\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认"
+SHOT my-trips-430-list
+HIT continue-trip true
+BEFORE_RELOAD {"first":"第一站：故宫博物院（午门入，中轴线慢走） · 12月3日 09:00","next":"下一站准备情况","now":"现在：故宫博物院（午门入，中轴线慢走）","running":true,"plan":[]}
+SHOT my-trips-430-plan
+AFTER_RELOAD {"first":"第一站：故宫博物院（午门入，中轴线慢走） · 12月3日 09:00","next":"下一站准备情况","now":"现在：故宫博物院（午门入，中轴线慢走）","running":true,"plan":[]}
+SHOT my-trips-430-reloaded

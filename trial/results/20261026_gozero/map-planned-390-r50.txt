@@ -1,0 +1,200 @@
+SHOT 390-g7-cold t=5.6
+HIT continue true t=6.5
+HTTP POST 201 /api/v1/journeys
+HIT tab-chat true t=10.2
+HIT open-settings true t=12.4
+CONSENT /本次允许 AI 处理旅行目标/ true
+CONSENT /本次允许查询公开地图和地点来源/ true
+HIT close-settings true t=14.3
+HIT send true t=15.8
+HTTP POST 201 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks
+SENT
+HTTP POST 200 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/run
+HIT skip-questions true t=34.9
+SKIP t=35.6
+SKIPPED true
+DRAFT t=252.1
+DRAFT_SEEN true
+SHOT 390-g7-after-research t=256.9
+HIT tab-chat true t=257.3
+COMPOSER_ENABLED true t=261.0
+HIT send-fix false t=261.5
+FIX_SENT t=261.5
+FIX_IDLE true t=266.6
+SHOT 390-g7-after-fix t=270.1
+HIT journey-tab true t=270.4
+DRAFT_SLOTS 9
+REMOVED "晚上\n· 南锣鼓巷逛街 + 什刹海散步\n点击编辑"
+HTTP PUT 200 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/draft
+DRAFT_SAVE "草案已保存到这趟旅行"
+HIT save-1-0 true t=291.6
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-1 true t=300.3
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-2 true t=309.1
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-3 true t=317.9
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-4 true t=326.7
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-5 true t=335.5
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-6 true t=344.4
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-7 true t=353.1
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-8 true t=361.9
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-9 true t=370.7
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-10 true t=379.5
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-11 true t=388.3
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-12 true t=397.1
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-13 true t=405.9
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-14 true t=414.7
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-15 true t=423.4
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-16 true t=432.2
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-17 true t=441.1
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-18 true t=449.9
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-19 true t=458.7
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-20 true t=467.5
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-21 true t=476.3
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-22 true t=485.0
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-1-23 true t=493.9
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-0 true t=502.7
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-1 true t=511.6
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-2 true t=520.3
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-3 true t=529.1
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-4 true t=537.9
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-5 true t=546.6
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-6 true t=555.4
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-7 true t=564.2
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-8 true t=572.9
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-9 true t=581.7
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-10 true t=590.5
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-11 true t=599.3
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-12 true t=608.1
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-13 true t=616.8
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-14 true t=625.6
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-15 true t=634.4
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-16 true t=643.2
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-17 true t=652.0
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-18 true t=660.8
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-19 true t=669.5
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-20 true t=678.3
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-21 true t=687.0
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-22 true t=695.8
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-2-23 true t=704.6
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-0 true t=713.3
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-1 true t=722.1
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-2 true t=730.9
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-3 true t=739.7
+HTTP POST 422 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-4 true t=748.5
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-5 true t=757.2
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-6 true t=766.0
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-7 true t=774.7
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-8 true t=783.5
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-9 true t=792.3
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-10 true t=801.1
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-11 true t=809.8
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-12 true t=818.6
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-13 true t=827.3
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-14 true t=836.1
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-15 true t=844.8
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-16 true t=853.6
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-17 true t=862.4
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-18 true t=871.1
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-19 true t=879.9
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-20 true t=888.7
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-21 true t=897.5
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-22 true t=906.2
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+HIT save-3-23 true t=915.0
+HTTP POST 409 /api/v1/journeys/6d653155-12e2-4a3a-8e6a-46d7461708c1/agent/goal-tasks/62242c23-6c26-4aa0-a78a-b8bfb22ccdac/prepare-plan
+STATE t=923.4 {"inUse":false,"next":null}
+SHOT 390-g7-final t=1016.7
+FINAL_BODY "C\nCityNexus\n你的智能旅行伙伴\nAI 已配置 · 未验证\n北京\n把想去变成出发。\n换地区 ›\n故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0\n已有阶段性成果\n地图\n日程\n对话\n按天调整行程\n\n8 项安排 · 2 天\n\n你的旅行草案\n\n草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。\n\nDay 1\n12-03\nDay 2\n12-04\n2026-12-03 · 4 项安排\n故宫博物院（建议9:30前入园）\nuser:kallgan · CC BY-SA 3.0\n景山公园·俯瞰故宫全景\nN509FZ · CC BY-SA 4.0\n上午\n· 故宫博物院（建议9:30前入园）\n点击编辑\n时间灵活\n· 午餐：河沿肉饼（故宫店）\n点击编辑\n下午\n· 景山公园·俯瞰故宫全景\n点击编辑\n晚上\n· 晚餐：百年卤煮（老门楼6分店）\n点击编辑\n时段\n上午\n下午\n晚上\n时间灵活\n安排\n备注\n移除这项安排\n＋ 添加安排\n检查草案保存状态\n\n草案已保存到这趟旅行，刷新页面也可以找回。\n\n准备出发 · 正式计划与待办\n从这份安排继续\n\n保留已选地点和日期；时间可以稍后调整。\n\n编辑行程时间（可选）\n按以上时间准备方案\n保存为正式候选方案\n\n这次未能保存，时间仍留在这里，可以重试。\n\n按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。\n\n和 Agent 补齐出发资料\nTRAVEL PLAN\n你的行程方案\n刷新方案\n等待正式计划\n\n0 份正式候选方案\n\n准备出发\n行程守护\n同行决策\nYOUR TRIP\n我的行程\n\n还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。\n\n去发现地点 →\nAI 助手\nAI 工作动态\nAI 服务\nAI 已配置 · 未验证\n本次行程\n暂无运行记录\n\n选定真实地点后，在上方确认正式行程。\n\n正式行程开始且 AI 可用时，实际工作记录会显示在这里。\n\n探索\n我的旅程\n我的\nCityNexus · 地点来源见卡片，到达状态由你确认\n⚙\n继续和当前 Agent 对话\n发送 ↑\n\n消息还在确认中，刷新任务查看最新进度。"
+ERRORS []
+HIT map-layer true t=1017.0
+MAP_PANE 1
+MAP_CALLS []
+MAP_READS_EVERY ["{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}"]
+MAP_HEAD "地图"
+MAP_PLANNED_TAGS 0
+MAP_LIST_ITEMS 0
+MAP_COUNT_LINE "地图地点 0 处 · 高德地点 8 处"
+MAP_AMAP_LINKS 79
+SHOT 390-g8-map-preview t=1025.8
+MISS load-map
+MAP_CANVAS 0
+MAP_PINS 0
+MAP_AFTER_CONSENT "地图"
+SHOT 390-g8-map-loaded t=1046.9
+MAP_CALLS_AFTER []
+ERRORS_MAP []
+HIT map-layer-after-reload true t=1059.8
+RELOAD_MAP_COUNT_LINE "地图地点 0 处 · 高德地点 8 处"
+RELOAD_PLANNED_TAGS 0
+RELOAD_LIST_ITEMS 0
+RELOAD_MAP_READS ["{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}","{\"http_status\":200,\"candidates\":0,\"first\":null}"]
+SHOT 390-g8-map-reloaded t=1066.5
