@@ -1,3 +1,9 @@
-[   0.0s] EN mpp before be589cc49be39c92 (477184 bytes)
+[   0.0s] EN mpp before 9cecfb166b680bf5 (477184 bytes)
 [   3.0s] before: tasks=65 links=61 assignments=61
-[   3.0s] named create failed (com_error: (-2147352567, '发生意外。', (1004, 'Microsoft Project', '名称出错。', 'C:\\Program Files\\); positional fallback
+[   3.0s] TableApply live table (heals the dangling view reference) -> True
+[   3.1s] TableEditEx resize Name=32 -> True
+[   3.1s] TableApply -> True
+[   4.1s] M1-M8 renamed to EN: 8
+[   4.2s] saved (589824 bytes)
+[  14.8s] after: tasks=65 links=61 assignments=61 (unchanged=True)
+[  14.8s] EN TABLE RESIZE OK - run fidelity + eye next

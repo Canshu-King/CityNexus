@@ -51,7 +51,7 @@ R4.2 补的回环箭头。投影只放第 1 页；备查时翻第 2 页或看形
 | `Teacher_01_System_Overview_EN.vsdx` | `0e19ffe25fd379aa` |
 | `Teacher_02_Agent_User_Flow_EN.vsdx` | `8997b1ef9f262868` |
 | `Teacher_03_Project_Overview_R4.mpp`（冻结） | `30af900a34a46f0d` |
-| `Teacher_03_Project_Overview_R4_EN.mpp` | `5eb7b1e7122c7fc6` |
+| `Teacher_03_Project_Overview_R4_EN.mpp` | `76c2a60bc76d49f7` |
 
 （R6 更新：R5 首发的 SHA 是 069929aa/b5f9392370d22f05/7ea95c28576f5a83/1044e869d607d097
 与 deeb1500b4cd257d，R6 加图例与列宽后全部轮换，见下节。）
@@ -94,3 +94,11 @@ Teacher_01 中英补横向六色图例（底条一行排开，11/10.5pt）——
 的原判不成立，lib 加 legendLayout="horizontal" 后一行就装下了。至此
 四张课堂图全部带图例、全部实底标签。门禁：cross_check 2/2、eye 6/6。
 SHA 轮换：Teacher_01 zh `b3d319b5404411c2`、EN `0e19ffe25fd379aa`，其余不变。
+
+## 八、R7 收尾追加（08:55）
+
+英文甘特的 M1-M8 里程碑补齐英文名（计划原名是中文，R4 当年只改了 M9-M13），
+中文原名保留在行备注；65×10 保真 0 差异，结构 65/61/61 不变。
+SHA 轮换：`Teacher_03_Project_Overview_R4_EN.mpp` → **`76c2a60bc76d49f7`**。
+新增全展开里程碑视图截图 `previews/Teacher_03_Project_R4_EN_expanded.png`
+（明细任务 + 全英文里程碑 + 资源标注同屏）。
