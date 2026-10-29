@@ -1,6 +1,6 @@
 BLOCKS THIS SESSION REPORTED AS INSERTED - RE-READ AGAINST THE LEDGER bw301
 LEDGER D:\moodle\CITYNEXUS_AGENT_CONTROL.md
-SESSION 494abfd7 | archive files dated 2026-10-29: 42
+SESSION 494abfd7 | archive files dated 2026-10-29: 43
   494abfd7_0055.md.inserted_085947  (2026-10-29)
       heading '号令者 · 第二刀 2a 交齐、提交门装闸、本班后端证书与最大红块归因'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_0055.md.inserted_085947'] | STILL_IN_INBOX none | VERDICT GREEN
@@ -127,14 +127,17 @@ SESSION 494abfd7 | archive files dated 2026-10-29: 42
   494abfd7_2334.md.inserted_233424  (2026-10-29)
       heading '494abfd7 交「面板自造的话句句被标记读到」的逐枚闭链：十九处 catch 各自的 state 与渲染行（#372，接 #370）'
       gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2334.md.inserted_233424'] | STILL_IN_INBOX none | VERDICT GREEN
+  494abfd7_2354.md.inserted_235528  (2026-10-29)
+      heading '494abfd7 勘误：前两格交靶面与闭链时用的「十九处」读数作废，改口为廿六处（本块源于三把我自己的尺量错过）'
+      gate: GREEN  LEDGER_HITS 1 | ARCHIVED ['494abfd7_2354.md.inserted_235528'] | STILL_IN_INBOX none | VERDICT GREEN
 NEGATIVE_CONTROL unseen title reads RED as required (LEDGER_HITS 0 | ARCHIVED none | STILL_IN_INBOX none | VERDICT RED
 HINT the title matched nothing in the ledger; these are the 5 most recent landed blocks (a wrong --title reads as a typo, not as an accident):
+     ### 494abfd7 勘误：前两格交靶面与闭链时用的「十九处」读数作废，改口为廿六处（本块源于三把我自己的尺量错过）  <- 494abfd7_2354.md.inserted_235528
      ### 494abfd7 交「面板自造的话句句被标记读到」的逐枚闭链：十九处 catch 各自的 state 与渲染行（#372，接 #370）  <- 494abfd7_2334.md.inserted_233424
      ### 494abfd7 勘误：把「屏上改写成什么话」那格的正文坐标从 §14.35 挪到 §14.36（#371）  <- 494abfd7_2217.md.inserted_221722
      ### 494abfd7 交「屏上改写成什么话」的逐枚靶面：十九处自造句子的 catch（#370，接 #369）  <- 494abfd7_2213.md.inserted_221414
-     ### 494abfd7 交「旅客面英文拒绝句到不了屏：面板层把话换掉了」的逐枚读数（#369，接 §14.35）  <- 494abfd7_2203.md.inserted_220343
-     ### 494abfd7 交「会问的那二十处里哪几处真挂在面板上」的逐枚归属（#368，接 §14.34）  <- 494abfd7_2145.md.inserted_214617)
-TALLY checked=42 green=42 red=0
+     ### 494abfd7 交「旅客面英文拒绝句到不了屏：面板层把话换掉了」的逐枚读数（#369，接 §14.35）  <- 494abfd7_2203.md.inserted_220343)
+TALLY checked=43 green=43 red=0
 BLOCKS_THAT_DID_NOT_LAND none
 VERDICT every block this session claimed as delivered is in the ledger, and the gate can still see a red
-INSTRUMENT_FAULT no - 0 of 42 blocks read RED, nothing to chase
+INSTRUMENT_FAULT no - 0 of 43 blocks read RED, nothing to chase

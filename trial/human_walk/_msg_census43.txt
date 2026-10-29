@@ -1,0 +1,3 @@
+census after block 373: 43 of 43 landed
+
+Re-run of the landed-blocks ruler after the correction went in: checked=43 green=43 red=0, nothing left un-inserted, and the negative control still reads RED on an unseen title. Receipt rewritten in-tree. 0 product bytes.
