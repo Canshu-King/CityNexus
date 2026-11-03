@@ -50,8 +50,8 @@ R4.2 补的回环箭头。投影只放第 1 页；备查时翻第 2 页或看形
 | `Teacher_02_Agent_User_Flow.vsdx` | `03bc9e138a62ef38` |
 | `Teacher_01_System_Overview_EN.vsdx` | `0e19ffe25fd379aa` |
 | `Teacher_02_Agent_User_Flow_EN.vsdx` | `8997b1ef9f262868` |
-| `Teacher_03_Project_Overview_R4.mpp`（冻结） | `30af900a34a46f0d` |
-| `Teacher_03_Project_Overview_R4_EN.mpp` | `76c2a60bc76d49f7` |
+| `Teacher_03_Project_Overview_R4.mpp` | `1fafd400d2c3ce92` |
+| `Teacher_03_Project_Overview_R4_EN.mpp` | `be5dc77f327cb23c` |
 
 （R6 更新：R5 首发的 SHA 是 069929aa/b5f9392370d22f05/7ea95c28576f5a83/1044e869d607d097
 与 deeb1500b4cd257d，R6 加图例与列宽后全部轮换，见下节。）
@@ -102,3 +102,22 @@ SHA 轮换：Teacher_01 zh `b3d319b5404411c2`、EN `0e19ffe25fd379aa`，其余�
 SHA 轮换：`Teacher_03_Project_Overview_R4_EN.mpp` → **`76c2a60bc76d49f7`**。
 新增全展开里程碑视图截图 `previews/Teacher_03_Project_R4_EN_expanded.png`
 （明细任务 + 全英文里程碑 + 资源标注同屏）。
+
+## 九、R8（2026-11-04，操作者质问"甘特图你自己看得懂吗"之后）
+
+老师视角复检发现两处硬伤并当场处理：
+
+1. **两根"细缝"列消失**——前置任务/资源名称被压到 2 字宽，看着像渲染错误。
+   实测 `SelectColumn(列号) + ColumnDelete()` 可用（按列名报"参数值无效"，
+   按列号 7/8 成功），两份 mpp 均已删除这两列并保存。纯视图层操作：
+   65×10 保真 0 差异（zh `1fafd400d2c3ce92`、EN `be5dc77f327cb23c`），
+   65 任务/61 依赖/61 分配不变，数据一字未删（前置/资源在展开明细与
+   表格定义里仍在）。
+2. **甘特条颜色三种 API 全部实测无效**（GanttBarEditEx 类型级 / GanttBarFormat
+   行级 ×早晚绑定 / GanttBarFormatEx 行级，含 VARIANT 强制类型、色值域二分）——
+   全部"返回 True 而画面不跟随"或"参数值无效"。灰斜纹条是这台中文
+   Project 安装的 COM 上限；要在真机换彩色需在 Project 界面手工
+   （格式 → 甘特图条形图 → 条形图样式）。完整证据链在 CHECKPOINT.md。
+
+顶部"将带有日期的任务添加到日程表"横幅是 Project 自带的新任务占位行，
+软件自带 UI，讲的时候一句带过。
