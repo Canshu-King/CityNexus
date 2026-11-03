@@ -54,3 +54,8 @@
 - 已知遗留（需主人/GPT 点头或下轮做）：见 `D:\moodle\_se_handoff_20261029.md`
   "留给主人"区（EN 里程碑视图截图、MANIFEST 随下次打包刷新、两个 mpp 的
   彩色条在имого安装上渲染不跟随的历史结论）。
+
+### 2026-11-04 补测：甘特条颜色三种 API 全部无效（结论坐实）
+
+R4.1 的「颜色渲染不跟随」今日补齐完整证据链：类型级 GanttBarEditEx（R4.1 实测，返回 True 画面不变）；行级 GanttBarFormat —— 晚期绑定具名参数被静默丢弃导致挂起一次，早绑定 + typelib 真签名（TaskID/MiddleShape/MiddlePattern/MiddleColor）逐参二分，MiddlePattern=1 报「参数值无效」，=2 后整组仍报同错；FileOpen 后 Project 弹异常恢复面板还会卡死 COM 会话。结论：这台中文安装上甘特条颜色无法通过 COM 跟随渲染，灰色实底条是当前安装的交付上限，不是没做。
+细缝列（前置任务/资源名称压 2 字宽）可用 SelectColumn + ColumnDelete 隐藏，留给下一次干净会话执行。
