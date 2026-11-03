@@ -28,7 +28,16 @@ Shape Data 里，选中任意框按 `Ctrl+1` 就能看到它对应的文件与�
 `backend/app/agent/gateway.py:358` 是工具白名单闸门，`:41` 是 Idempotency-Key；
 完整对照在 `Classroom/Teacher_Source_Map.md`。
 
-### ③ `Teacher_03_Project_Overview.mpp` — 60 秒：做到哪了，还差什么
+### ③′ `previews/Teacher_03_Gantt_Presentation_zh.png` — 投影主视觉（可选替换 ③）
+
+> 「这张图 3 秒读完：**绿条是做完的，蓝条深的部分是干到哪了、浅色是还剩多少，**
+> **红虚线是三个硬日子**——Part1 截止、中期会面、Part2 截止 11-06；下方一排
+> **菱形是 13 个里程碑**。它和 Project 文件是同一份数据，现场要展开明细就用 ③。」
+
+数据由 `Evidence/scripts/se_r8_gantt_export_r1.py` 从原生 mpp 导出、
+`se_r8_gantt_draw_r1.py` 绘制，未重排。原生文件仍是可编辑交付物。
+
+### ③ `Teacher_03_Project_Overview_R4.mpp` — 60 秒：做到哪了，还差什么
 
 > 「11 个阶段折成 11 行，加 5 个带日期的里程碑。蓝条是计划工期，
 > 条里的深色是完成度。**M10 那个 10 月 2 日的课程截止已经过了**（里程碑上写着 missed），

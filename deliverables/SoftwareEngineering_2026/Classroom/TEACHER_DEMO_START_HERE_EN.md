@@ -33,6 +33,18 @@ lives in Shape Data (select a box, press `Ctrl+1`).
 The appendix page (page 2) holds the code-level evidence for that loop; it is
 not projected.
 
+### ③′ `previews/Teacher_03_Gantt_Presentation_EN.png` — the projector visual (optional replacement for ③)
+
+> "Read in three seconds: **green = finished, the dark part of a blue 
+> bar is where we are and the light tail is what remains, the red dashed 
+> lines are the three hard dates** (Part 1, mid-term, Part 2 on 11-06), 
+> and the diamond lane is the 13 milestones. Same data as the Project 
+> file — expand details live with ③."
+
+Drawn by `Evidence/scripts/se_r8_gantt_draw_r1.py` from data exported by 
+`se_r8_gantt_export_r1.py`; nothing rescheduled. The native file stays 
+the editable deliverable.
+
 ### ③ `Teacher_03_Project_Overview_R4_EN.mpp` — 60 s: the plan behind it
 
 Opens on a collapsed Gantt: 11 English work-package rows with full dates,

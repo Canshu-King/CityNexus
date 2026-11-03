@@ -19,6 +19,6 @@
 [   0.0s]   fact late rows at the status date (engine dates) ['14'] AGREE
 [   0.0s]   fact student hours                      ['220.9'] AGREE
 [   0.0s]   fact over-allocated person-weeks        ['0'] AGREE
-[   0.1s] cited paths: 84, unresolvable: 0
+[   0.1s] cited paths: 87, unresolvable: 0
 [   0.1s] wrote Evidence/EVIDENCE_INDEX.md (50 lines)
 [   0.1s] EVIDENCE INDEX OK

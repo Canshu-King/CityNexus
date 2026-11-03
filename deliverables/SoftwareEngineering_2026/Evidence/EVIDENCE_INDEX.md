@@ -1,6 +1,6 @@
 # CityNexus SE2026 - evidence index
 
-Generated 2026-10-29 02:35 by `live_checks/se_evidence_index_r1.py`. This page exists because round 2 shipped an evidence file from an older generation than the plan it described, and pointed a reader at two files that were not in the package. Both are now checked by machine.
+Generated 2026-11-04 01:50 by `live_checks/se_evidence_index_r1.py`. This page exists because round 2 shipped an evidence file from an older generation than the plan it described, and pointed a reader at two files that were not in the package. Both are now checked by machine.
 
 Shipped plan: `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`, sha256 `6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee`.
 
@@ -42,7 +42,7 @@ A claimed digest that does not start with the digest of the file on disk is stal
 
 ## Cited paths
 
-84 relative paths are cited by the markdown in this delivery. Unresolvable: **0**.
+87 relative paths are cited by the markdown in this delivery. Unresolvable: **0**.
 
 Documents excluded from the citation check, by name: `CLASSROOM_20261023_NOON_PRIORITY.md`, `CLASSROOM_QODER_CONTINUOUS_UNTIL_NOON_20261023.md`, `CLASSROOM_R3_LAST_MILE_20261023.md`, `EVIDENCE_INDEX.md`, `INDEPENDENT_R2_REVIEW_20261022.md`, `R3_RESULT.md`, `TEACHER_READABILITY_CORRECTION_20261023.md`. Two kinds: received external reviews and instruction notes, which are quoted as they arrived and are not allowed to be edited into agreement; and this report plus `R3_RESULT.md`, which name the findings they are checking, so scanning them would make the checker cite itself.
 
