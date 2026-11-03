@@ -59,3 +59,7 @@
 
 R4.1 的「颜色渲染不跟随」今日补齐完整证据链：类型级 GanttBarEditEx（R4.1 实测，返回 True 画面不变）；行级 GanttBarFormat —— 晚期绑定具名参数被静默丢弃导致挂起一次，早绑定 + typelib 真签名（TaskID/MiddleShape/MiddlePattern/MiddleColor）逐参二分，MiddlePattern=1 报「参数值无效」，=2 后整组仍报同错；FileOpen 后 Project 弹异常恢复面板还会卡死 COM 会话。结论：这台中文安装上甘特条颜色无法通过 COM 跟随渲染，灰色实底条是当前安装的交付上限，不是没做。
 细缝列（前置任务/资源名称压 2 字宽）可用 SelectColumn + ColumnDelete 隐藏，留给下一次干净会话执行。
+
+
+### 2026-11-04 补测 2：Project COM 的 PDF 导出同样不可用
+q.ExportAsFixedFormat(Filename=..., FileType=0..4 全枚举) 全部报「参数值无效」（typelib 里 PjDocExportType 的 pjPDF=0 也不行；且Application 对象上无此方法，必须挂 Project 对象）。两份 mpp 的PDF 预览需求由讲述版甘特的 matplotlib 直出 PDF 覆盖（previews/Teacher_03_Gantt_Presentation_{zh,_EN}.pdf）。
