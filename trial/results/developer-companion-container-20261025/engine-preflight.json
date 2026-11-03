@@ -1,0 +1,13 @@
+{
+  "checked_at_epoch": 1792937498.6795194,
+  "stage": "CONTAINER_ENGINE_PREFLIGHT",
+  "worker_started": false,
+  "credential_read": false,
+  "live_model_requests": 0,
+  "container_read_escape_probe": "NOT_RUN",
+  "container_image_build": "NOT_RUN",
+  "local_upstream_test": "TEST_UPSTREAM_ONLY",
+  "status": "BLOCKED_EXTERNAL_AGENT",
+  "error_code": "CONTAINER_ENGINE_UNAVAILABLE",
+  "docker_observation": "Normal startup and restart failed. Docker logs report sailor-ingest.sock AF_UNIX bind address in use; no stale file was present. No volumes, images, data-root mapping or databases changed."
+}

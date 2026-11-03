@@ -1,0 +1,104 @@
+{
+  "issue": 51,
+  "base_sha": "ead51d6cdf3fce6e463dcef6a847b106d0fc9ffb",
+  "execution_kind": "DSH_SDK",
+  "task_id": "c13fe1a3aab8438f92dbc2b9",
+  "requested_provider": "workbuddy2api",
+  "requested_model": "cn:deepseek-v4.1-flash",
+  "tool_calls": 121,
+  "tool_errors": 2,
+  "sanitized_event_count": 245,
+  "executor_seconds": 668.15,
+  "model_error_codes": [],
+  "model_proposal_commit": "982840466809c10460e696645919240572ef501c",
+  "reviewed_source_commit": "f7edd9a5d8fcfcf7a8b9cb5a53632afc6d1ca3a4",
+  "controller_commits": [
+    "982840466809c10460e696645919240572ef501c",
+    "c1eaf5e7854a5c4ee60acb7b3ebe0e09c4341af8",
+    "f7edd9a5d8fcfcf7a8b9cb5a53632afc6d1ca3a4"
+  ],
+  "changed_paths": [
+    "backend/app/agent/guardian_stream.py",
+    "backend/tests/test_guardian_card_after_accepted_replan.py"
+  ],
+  "scope_violations": [],
+  "patch_sha256": "8c1654edf9741e05cdd3dc0feb5566c163e53394284ac73c85fd16b0cf1daeab",
+  "verification": {
+    "evidence": "ISOLATED_LOCAL_COMMANDS",
+    "source_sha": "f7edd9a5d8fcfcf7a8b9cb5a53632afc6d1ca3a4",
+    "argv": [
+      "py",
+      "-3.13",
+      "-m",
+      "pytest",
+      "backend/tests/test_guardian_card_after_accepted_replan.py",
+      "backend/tests/test_mobile_guardian_stream_routes.py",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "exit_code": 0,
+    "tests_passed": 9,
+    "source_status_after": "",
+    "original_private_log_sha256": "3caf98d82150ab588c14812836fbcf6a45b6fe6f38c8da9039551f4669ec7449",
+    "published_log_sha256": "a92ee08c46b21c9e70b7cf7982c15849452a412a7a94b31b511d99614b1a9ce3",
+    "published_log_transform": "USER_HOME redacted and trailing whitespace normalized; original private log preserved"
+  },
+  "bridge_tests": {
+    "argv": [
+      "py",
+      "-3.13",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/developer_companion/tests",
+      "-v"
+    ],
+    "exit_code": 0,
+    "tests_passed": 12,
+    "sha256": "44cf5985f69695e7b0cf036109d30cd2e3ff796b4c2250d888262cb3200c95a6"
+  },
+  "rollback": {
+    "status": "APPLIED_AND_TREE_MATCHES_BASE",
+    "rollback_sha": "22403c5b393d2121f96005089c87cc87958e04e4",
+    "tree_matches_base": true,
+    "preserved_fix_in_delivery": true
+  },
+  "browser": {
+    "evidence": "ISOLATED_TEST_FIXTURE_REAL_HTTP_SQLITE",
+    "viewport": [
+      390,
+      844
+    ],
+    "accept_driver": "chrome-use native selector click",
+    "review_driver": "Chrome DevTools after chrome-use EOF",
+    "same_event_and_proposal": true,
+    "before": "RESOLVED with stale current impact",
+    "after_event_text": "地点或路段暂停服务 / 重要 / 已处理 / 行程记录 · 模拟记录",
+    "screenshots": "Native screenshots attached in Codex conversation; file export denied by Chrome tool workspace policy; no PNG asset claimed in this PR",
+    "physical_phone": false,
+    "live_travel_model_or_provider": false
+  },
+  "isolation": "private-git-snapshot + DSH-workspace-write + caller-identity",
+  "remaining": [
+    "Separate OS execution identity/host read confinement",
+    "Screenshots exported as repository assets",
+    "Current empty recovery epoch still displayed as in progress; not changed in Qoder-owned UI"
+  ],
+  "source_sha256": {
+    "backend/app/agent/guardian_stream.py": "f8267f27b82cbefee4c6123dcc9d1375ada8e3710ca4d6c7d71853b68b1da07a",
+    "backend/tests/test_guardian_card_after_accepted_replan.py": "76b1f1b5a7b9ee0c5fd30beb6a52f5a6d97c1a15c65518bc1a89dbe079797428",
+    "tools/developer_companion/demo_fix.py": "a49da18374079ae4205091e4f4493fa099469d99f0a0d7b37352c2e2612d5c4c",
+    "tools/developer_companion/dsh_sdk.py": "840ad23bdb770dc992f2c859cd7bbbc1e92e15b81535cbb14e94cc1c9391926f",
+    "tools/developer_companion/process_scope.py": "979edc28a60e5c4209bada9dd150863625ff8900a956e98357928540af920ecd",
+    "tools/developer_companion/README.md": "148a0cba6909d6ce581c29e4c9c7b2150e897b454410ed998d4997a318655f11",
+    "tools/developer_companion/runtime.py": "74f7d30ded04cb323eecde920a39f59f7c7bdcd9c6260bbab27e51057443af58",
+    "tools/developer_companion/service.py": "10bb51cfee38ea74fc6db16ce54527ae7d5fcbb3b95d06f81af315bee2116111",
+    "tools/developer_companion/__main__.py": "767236d6cbd34670ee79a8bd949e3acc6bb169b4a2bbe558020516841fdf47e7",
+    "tools/developer_companion/tests/guardian_browser_stage.py": "18609a198c8d95a9e84dae41c0b6db14d00b6257abd9a822867daa07b3c4bdf5",
+    "tools/developer_companion/tests/test_dsh_sdk.py": "51d229f15b2ce3efa46743351af3365f5c58a80816e296c2ac2aa46c5fc72bf8",
+    "tools/developer_companion/tests/test_process_scope.py": "b39f767fafb34e0e2256118c817436b34b8ce8e51fcda5d3b5621923e9a657b7",
+    "tools/developer_companion/tests/test_service.py": "5aca6175c5f6c2792384283ec532e5991dd5bd92357170c07b2cc27c0118ca78"
+  }
+}

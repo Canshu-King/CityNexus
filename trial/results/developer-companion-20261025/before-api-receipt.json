@@ -1,0 +1,11 @@
+{
+  "base_sha": "ead51d6cdf3fce6e463dcef6a847b106d0fc9ffb",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "event_id": "2fa280f7-5982-41e0-af5e-23f7137459f7",
+  "proposal_id": "b3979d97-6f6d-4901-a976-68f323f9fa45",
+  "proposal_status": "ACCEPTED",
+  "event_status": "RESOLVED",
+  "resolution_present": false,
+  "open_events": 0,
+  "impact_status": "VALIDATED"
+}

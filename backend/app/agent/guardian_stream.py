@@ -76,6 +76,31 @@ def _recovery_epoch(session: Session, journey_id: str) -> dict[str, Any] | None:
     }
 
 
+def _resolution(event: Event) -> dict[str, Any] | None:
+    """How this observation was closed, or None while it still stands.
+
+    Only a server-persisted resolution counts: the Event row must say RESOLVED
+    *and* carry the `resolved_at` this server wrote when it closed the record.
+    Payload text is never the basis -- a client can submit arbitrary payload keys
+    on a DETECTED event, so trusting `payload.resolution_reason` there would let
+    a report hide that the issue is still open.  The reason code is therefore
+    read only after the column timestamp has already established closure.
+    """
+    status = _stable_code(event.status)
+    resolved_at = event.resolved_at
+    if status != "RESOLVED" or not isinstance(resolved_at, str) or not resolved_at:
+        return None
+    try:
+        payload = json.loads(event.payload_json or "{}")
+        reason = payload.get("resolution_reason") if isinstance(payload, dict) else None
+    except (TypeError, json.JSONDecodeError):
+        reason = None
+    return {
+        "reason": _stable_code(reason),
+        "decided_at": resolved_at,
+    }
+
+
 def _observation(event: Event) -> dict[str, Any]:
     return {
         "id": _structural_id(event.id),
@@ -86,6 +111,7 @@ def _observation(event: Event) -> dict[str, Any]:
         "provenance": _stable_code(event.provenance),
         "detected_at": event.detected_at,
         "affected_activity_id": _structural_id(event.affected_activity_id),
+        "resolution": _resolution(event),
     }
 
 
@@ -174,8 +200,14 @@ def guardian_stream(
     stream = [
         {
             "observation": _observation(event),
-            "impact": _impact(impact_by_event.get(event.id)),
-            "proposed_action": _proposed_action(action_by_event.get(event.id)),
+            # The traveller card reads these as current work, not past history.
+            # An accepted adjustment must not retain an old UNRESOLVED action.
+            "impact": None if _resolution(event) else _impact(impact_by_event.get(event.id)),
+            "proposed_action": None if _resolution(event) else _proposed_action(action_by_event.get(event.id)),
+            "history": {
+                "impact": _impact(impact_by_event.get(event.id)),
+                "proposed_action": _proposed_action(action_by_event.get(event.id)),
+            } if _resolution(event) else None,
         }
         for event in events
     ]

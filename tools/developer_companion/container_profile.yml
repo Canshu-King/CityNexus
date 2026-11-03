@@ -1,0 +1,37 @@
+- id: session-telemetry-otel
+  disabled: true
+- id: tool-web
+  disabled: true
+- id: tool-subagent-fork
+  disabled: true
+- id: tool-ralph
+  disabled: true
+- id: credentials
+  disabled: true
+- id: sandbox-policy
+  config:
+    mode: workspace-write
+    workspaceRoot: /workspace
+- id: session-persistence-jsonl
+  config:
+    root: /workspace/.developer-companion/runtime/sessions
+- id: storage-json
+  config:
+    root: /workspace/.developer-companion/runtime/storage
+- id: shell-env
+  config:
+    dshHome: /workspace/.developer-companion/shell-home
+- id: llm-pi-ai
+  config:
+    providers:
+      companion-broker:
+        api: openai-completions
+        baseURL: http://127.0.0.1:19091/v1
+        apiKeyEnv: COMPANION_MAILBOX_TOKEN
+        retryPolicy:
+          maxRetries: 0
+        models:
+          - id: cn:deepseek-v4.1-flash
+            name: companion-task-model
+            contextWindow: 131072
+            maxTokens: 8192
