@@ -120,8 +120,10 @@ try {
   Write-Warning 'Manually check binary PDF/Visio/Project metadata, student details, licenses, code literals and test fixtures before publishing.'
   $ok = Read-Host 'After reviewing files, type PUBLIC to publish a NEW public repository'
   if ($ok -cne 'PUBLIC') { throw 'Cancelled. Nothing was made public.' }
-  gh repo view "$owner/$PublicRepoName" *> $null
-  if ($LASTEXITCODE -eq 0) { throw 'Target repository already exists; refusing to overwrite.' }
+  # gh repo view exits nonzero for a non-existent repository; PowerShell can treat
+  # its stderr as a terminating error even when redirecting output.
+  # Let gh repo create enforce "must not already exist": it refuses to overwrite.
+  Write-Host ('Creating NEW public repository ' + $owner + '/' + $PublicRepoName + ' (existing repositories will not be overwritten).')
   git checkout --orphan public-root
   if ($LASTEXITCODE -ne 0) { throw 'Could not create a history-free commit.' }
   git add -A
