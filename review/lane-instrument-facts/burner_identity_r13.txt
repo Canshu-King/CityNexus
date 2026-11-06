@@ -1,7 +1,0 @@
-os.cpu_count()=32
-interpreter running this probe: ['3.12.14', 'D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe']
-lingering burner processes right now: ['count=0']
-stub pid=83332 -> ['children_of_stub=1', 'pid=38504|name=python.exe']
-CPU seconds per burning pid: ['n=2', 'pid=83332|cpu=0.00', 'pid=38504|cpu=4.48']
-after cleanup: ['count=0']
-wrote burner_identity_r13.json

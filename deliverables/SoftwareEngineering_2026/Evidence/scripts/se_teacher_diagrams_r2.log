@@ -1,6 +1,0 @@
-[   0.0s] building only: Teacher_01_System_Overview.vsdx, Teacher_01_System_Overview_EN.vsdx
-[  12.2s] active-page fix Teacher_01_System_Overview.vsdx: reopened on '系统总览' (OK)
-[  14.4s] Teacher_01_System_Overview: 0 failures, 8 nodes, 7 edges, pages=['系统总览', '附注']
-[  24.0s] active-page fix Teacher_01_System_Overview_EN.vsdx: reopened on 'System Overview' (OK)
-[  26.2s] Teacher_01_System_Overview_EN: 0 failures, 8 nodes, 7 edges, pages=['System Overview', 'Appendix']
-[  26.2s] TEACHER DIAGRAMS R2 OK (2 built, 0 refused)

@@ -1,5 +1,0 @@
-
-> typecheck:all
-> tsc -p tsconfig.typecheck.json --noEmit
-
-TSC_RC=0

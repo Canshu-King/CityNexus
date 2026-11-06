@@ -1,8 +1,0 @@
-TOTAL api routes: 164
-multi-bound: 0
-  POST /api/v1/journeys/{journey_id}/plans/accept-reorder -> ['trip_studio_accept']
-  POST /api/v1/journeys/{journey_id}/plans/preview-reorder -> ['trip_studio_preview']
-  POST /api/v1/journeys/{journey_id}/poi-import/add -> ['poi_import_add']
-  POST /api/v1/journeys/{journey_id}/poi-import/parse -> ['poi_import_parse']
-  POST /api/v1/journeys/{journey_id}/trip-studio/accept -> ['trip_studio_accept']
-  POST /api/v1/journeys/{journey_id}/trip-studio/preview -> ['trip_studio_preview']

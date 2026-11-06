@@ -1,5 +1,0 @@
-TIP_dc9dc10f_zh exit=None notices=None cjk=None marks=None/None labels=None
-TIP_dc9dc10f_en exit=None notices=None cjk=None marks=None/None labels=None
-O0500_R6_zh exit=0 notices=None cjk=None marks=None/None labels=[]
-O0500_R6_en exit=0 notices=None cjk=None marks=None/None labels=['Check in']
-WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\sweep_r6.json

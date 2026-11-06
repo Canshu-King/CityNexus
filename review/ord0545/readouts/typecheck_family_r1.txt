@@ -1,9 +1,0 @@
-command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit  (run in frontend/, exit code taken without a pipe)
-result: exit 0, diagnostics_lines = 0
-base: refs/heads/mirror/integration-frontend-apple-pass1 read back as 00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9
-scope: the family file and the panel are inside that program (reached through src/app/v8PanelRegistry.tsx), so the
-  retyped FAILURE_SENTENCE really is compiled -- which is what mutation M1 turns into a build failure rather than a
-  missing sentence on the glass.
-not covered: this slice's own e2e spec and config; those run under review/ord0545/readouts/report_family_r1.json.
-naming: this file is the family slice's receipt. review/ord0545/readouts/typecheck_r1.txt is slice 1's, published
-  when the badge moved, and stays exactly as it was -- a re-run writes a new name rather than overwriting evidence.

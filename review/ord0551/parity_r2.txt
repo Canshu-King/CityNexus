@@ -1,3 +1,0 @@
-OpenAPI 3.1.0; formal 175; runtime 175; missing 0; extra 0
-schemas formal 87; generated 87; missing 0; extra 0
-parity rc=0

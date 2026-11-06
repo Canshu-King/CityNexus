@@ -1,4 +1,0 @@
-1433 tests collected in 7.24s
-collect_exit=0
-31 passed, 2 warnings in 5.75s
-gates_exit=0

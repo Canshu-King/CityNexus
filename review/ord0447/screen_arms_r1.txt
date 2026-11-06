@@ -1,7 +1,0 @@
-zh-CN door_list_http=200 rows=0
-zh-CN no_grant="行程链接已复制到本机剪贴板。服务端这份行程下没有分享授权，所以这里不主张别人能打开。"
-zh-CN create_http=201 visibility=LINK_READ expires_at=null
-zh-CN standing="行程链接已复制到本机剪贴板。服务端这份行程下没有分享授权，所以这里不主张别人能打开。"
-en door_list_http=200 rows=1
-en no_grant="Journey link copied to this device's clipboard. The server's grant here is access.visLinkRead, and it records no expiry instant for it."
-derivation unknown=UNKNOWN_TIER absent=NOT_ANSWERED closed=TIER_CLOSED

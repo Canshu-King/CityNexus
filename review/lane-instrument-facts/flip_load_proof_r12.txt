@@ -1,7 +1,0 @@
-tree HEAD=d107131c6f6e65d9f207f6bf1b563d1cc8877f89
-IDLE module run    exit=0 tail=6 passed, 1 xfailed, 2 warnings in 2.68s
-LOADED module run  exit=0 wall=2.95s tail=6 passed, 1 xfailed, 2 warnings in 2.37s
-BURNER CPU         pids_alive=6->6 cpu_seconds 0.03 -> 0.03 (grew 0.00 s over the 2.95s run)
-AFTER kill         pids still listed=0
-VERDICT LOAD_NOT_PROVEN
-wrote flip_load_proof_r12.json

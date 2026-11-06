@@ -1,6 +1,0 @@
-ORD-0447 first cut: a machine word reached the traveller's screen.
-verbatim reading from the first arms run (screen_arms_r1.txt line 6):
-en no_grant="Journey link copied to this device's clipboard. The server's grant here is access.visLinkRead, and it records no expiry instant for it."
-cause=the tier word was looked up with t(), which hands back the key when a table does not hold it; access.visLinkRead lives in features/access/accessCopy.ts, not in LocaleContext
-fix=claimCopy resolves tier and consequence through accessCopyFor(locale, key) -- see frontend/src/features/inbox/JourneyLinkAction.tsx:3 and :54
-guard=the spec asserts the rendered sentence does not contain the literal visLinkRead -- see frontend/e2e/qoder-ord0447-share-copy.spec.ts:192

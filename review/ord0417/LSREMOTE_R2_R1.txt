@@ -1,7 +1,0 @@
-branch=refs/heads/review/R-ord0417-tap-names-stop-r2
-local=6020871f0452cc4b1844dd8cc78b4acbeb294595
-remote=6020871f0452cc4b1844dd8cc78b4acbeb294595	refs/heads/review/R-ord0417-tap-names-stop-r2
-r1_local=1c642c68df93514d1254142f1f011c3a9dac65b0
-r1_remote=1c642c68df93514d1254142f1f011c3a9dac65b0	refs/heads/review/R-ord0417-tap-names-stop-r1
-authoritative_line_remote=fb6131f359e85deb18a2194494dc9a96e328cdee	refs/heads/mirror/integration-frontend-apple-pass1
-merge_tree_prediction_exit=0 conflict_lines=0 (git merge-tree --write-tree 3d28da7d... r1)

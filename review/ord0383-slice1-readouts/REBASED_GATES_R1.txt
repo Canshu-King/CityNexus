@@ -1,7 +1,0 @@
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-1419 tests collected in 6.00s
-collect_exit=0
-
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-20 passed, 2 warnings in 4.73s
-gates_exit=0

@@ -1,9 +1,0 @@
-97d9bfdc8028ad2356c0953e6c68496dd5ba8783
-100644 f7d2646ac9232a1c34c3fcf6303dae51d5c355c5 1	backend/app/main.py
-100644 466a0e60e7f2c0547dd5ff2d0df12238be8d714e 2	backend/app/main.py
-100644 d647614a64311ebadbcf91f365c676784320f0d2 3	backend/app/main.py
-
-Auto-merging backend/app/main.py
-CONFLICT (content): Merge conflict in backend/app/main.py
-Auto-merging contracts/openapi.yaml
-Auto-merging frontend/src/generated/api.ts

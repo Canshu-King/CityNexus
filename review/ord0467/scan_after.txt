@@ -1,2 +1,0 @@
-clean-env scan: CREDENTIAL_GATE_CLEAR hits 2 undeclared 0 in_product 0 contract_named 0 env_present 0 policy report
-those three vars present now? {'CITYNEXUS_AI_API_KEY': False, 'DEEPSEEK_API_KEY': False, 'CITYNEXUS_HERMES_API_KEY': False}

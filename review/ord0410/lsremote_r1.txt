@@ -1,2 +1,0 @@
-06d99e55178ce1fd6509867e8cd3178f8fd3415c	refs/heads/mirror/integration-frontend-apple-pass1
-3552c56f4fdde241e38d726f73171212caf94032	refs/heads/review/R-ord0410-recenter-active-r1

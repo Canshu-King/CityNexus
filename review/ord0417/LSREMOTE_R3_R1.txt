@@ -1,6 +1,0 @@
-branch=refs/heads/review/R-ord0417-tap-names-stop-r3
-code_and_spec_commit=93a3ff5c79edf51bdb1307b219468ff632b0cb58
-head_local=f6456642c7d1ed8e0053f055e23edb401f130e2b
-head_remote=f6456642c7d1ed8e0053f055e23edb401f130e2b	refs/heads/review/R-ord0417-tap-names-stop-r3
-authoritative_line_remote_now=f662905ec4cafe05687d33a05dcbc7ca8031de43	refs/heads/mirror/integration-frontend-apple-pass1
-product_paths_touched_by_r3=0  (3 code + 1 new spec)

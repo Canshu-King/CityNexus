@@ -1,8 +1,0 @@
-command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit   (run in frontend/, exit code taken without a pipe)
-result: exit 0, diagnostics_lines = 0
-base: refs/heads/mirror/integration-frontend-apple-pass1 read back as 5a4cdbd26d4a58d6ed6b277480e766ac08b15ded
-new file in this lane: frontend/e2e/qoder-ord0525-entry-reachability-r3.spec.ts -- e2e specs are not inside
-  that program (the project does not typecheck them), so this receipt covers the product tree only; the
-  spec is exercised by the run recorded in report_ord0525_r3.json.
-deps caveat: node_modules from a sibling tree whose package.json is byte-identical (package-lock.json on
-  this line is out of sync -- review/ord0525/readouts/npm_ci_failure_r1.txt); typescript 5.9.3.

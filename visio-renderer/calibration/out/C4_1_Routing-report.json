@@ -1,7 +1,0 @@
-{
-  "calibration": "C4.1",
-  "status": "FAIL",
-  "failures": [
-    "missing C4.1 artifacts"
-  ]
-}

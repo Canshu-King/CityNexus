@@ -1,9 +1,0 @@
-{
- "trip_locale_union": "\"en\" | \"zh-CN\"",
- "locale_arms": [
-  "en",
-  "zh-CN"
- ],
- "dictionary_arms": "en, \"zh-CN\": zhCN",
- "german_arm_present": false
-}

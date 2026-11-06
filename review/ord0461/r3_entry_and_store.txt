@@ -1,2 +1,0 @@
-entry_asset=assets/index-Cyj1_cOI.js
-resolved_test_database=sqlite:///C:/Users/<user>/AppData/Local/Temp/cnx_pytest_xf9hhuxt/suite.db

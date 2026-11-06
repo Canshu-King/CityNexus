@@ -1,1 +1,0 @@
-{"tip": "4b825dc642cb6eb9a060e54bf8d69288fbee4904", "files": 0, "sites": 0, "by_form": {"frozen_key_collection": 0, "line_number_as_argument": 0, "index_through_tracked_variable": 0}, "stale_or_unresolved": 0, "collections": 0, "on_derived_inventory": 0, "file_name_lists": 0, "worth_opening": 0}

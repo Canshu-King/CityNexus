@@ -1,7 +1,0 @@
-declared by backend/db/schema.sql: 59
-present in store:                  55
-missing:                           4 ['journey_checkins', 'journey_members', 'journey_role_capabilities', 'journey_share_grants']
-present but not declared:          0 []
-catch-up created:                  4 ['journey_checkins', 'journey_members', 'journey_role_capabilities', 'journey_share_grants']
-still missing after --apply:       0 []
-VERDICT: COMPLETE

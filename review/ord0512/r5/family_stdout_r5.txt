@@ -1,3 +1,0 @@
-RC=1 RUN=ord0512fam_day35_r5 SUMMARY=['14 failed', '102 passed'] RED=51 RESTORED={}
-REPORT=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\family\ord0512fam_day35_r5.json
-FAMILY_RC=0

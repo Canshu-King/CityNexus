@@ -1,4 +1,0 @@
-command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit  (exit code taken without a pipe)
-result: diagnostics_lines = 0, meaning the tree typechecks including this lane three new frontend files
-tool: typescript 5.9.3 as installed in this lane node_modules (see node_modules_copy_robocopy_failure_r1.txt for how deps were restored)
-caveat: node_modules came from a sibling tree because package-lock.json on this line is out of sync (npm_ci_failure_r1.txt); the versions satisfy package.json ranges

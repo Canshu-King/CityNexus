@@ -1,7 +1,0 @@
-day_count None -> None through the doors: day_count not on this payload; see precondition
-candidate   build=0 entry=index-Dhk8P_IO.js served==built:True rc=0 passed=5 failed=0 5 passed
-mutant_x2   build=0 entry=index-vKo6_BsK.js served==built:True rc=1 passed=2 failed=3 3 failed 2 passed
-LEFTOVER_DB D:/moodle/_qoder_newlane_ord0444_20260929/wt2\backend\ord0528_day15_29414.db
-LEFTOVER_DB D:/moodle/_qoder_newlane_ord0444_20260929/wt2\backend\ord0528_day15_29414.db-wal
-LEFTOVER_DB D:/moodle/_qoder_newlane_ord0444_20260929/wt2\backend\ord0528_day15_29414.db-shm
-WROTE D:/moodle/_qoder_newlane_ord0444_20260929/scratch\ord0528_day15_r1.json 3657 bytes

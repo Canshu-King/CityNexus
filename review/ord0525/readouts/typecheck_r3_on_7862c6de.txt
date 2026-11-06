@@ -1,2 +1,0 @@
-command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit  (exit code taken without a pipe)
-result: exit 0, diagnostics_lines = 0 at base 7862c6de5565c02ec0ec2dccaa9da18960603e06 after the r2 re-cut of LocaleContext.tsx

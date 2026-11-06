@@ -1,9 +1,0 @@
-ORD-0520 glass candidate -- read-only prediction against the authoritative tip
-tip 8f8281f547c2e60d2c4c3349322565b1104107ce
-candidate 7de4d423e24984da56edfe5713dcd764565daa29
-candidate 7de4d423e24984da56edfe5713dcd764565daa29 descends from 702a4c7247cd9ba636711696232eccd2adb1cd96: yes
-upstream path count since base: 133
-candidate path count: 28
-intersection with the candidate write set: 0  [ ]
---- git merge-tree --write-tree --name-only (no file was merged or written)
-32079f2ab0abf2a7b8fab934b320c385d17c48ff

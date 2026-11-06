@@ -1,5 +1,0 @@
-receipt=D:\moodle\_qoder_newlane_ord0525_data\ord0525_counterarms_receipt_r1.json
-K1_entry_removed             killed=True red_arms=1 restored=True
-K2_counts_disagree           killed=True red_arms=1 restored=True
-K3_per_day_counts_disagree   killed=True red_arms=1 restored=True
-full gate on the restored tree: 5 passed (27.5s) rc= 0

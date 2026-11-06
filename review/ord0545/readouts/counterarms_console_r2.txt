@@ -1,2 +1,0 @@
-receipt=D:\moodle\_qoder_newlane_ord0545_data\counterarms_receipt_ord0545r2.json
-control_before arms=4 rc=0 | M1 tsc rc=2 names_key=True errors=1 screen rc=1 | M2 screen rc=1 key_name_rendered=True | restored=True | control_after arms=4 rc=0 summary=4 passed (3.7s)

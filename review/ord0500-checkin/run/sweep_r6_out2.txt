@@ -1,5 +1,0 @@
-TIP_dc9dc10f_zh exit=0 notices=6 cjk=364 marks=1/0 labels=['已打卡', '打卡'] ident=True
-TIP_dc9dc10f_en exit=0 notices=6 cjk=2 marks=0/1 labels=['Checked in', 'Check in'] ident=True
-O0500_R6_zh exit=0 notices=1 cjk=201 marks=1/0 labels=['已打卡', '打卡'] ident=True
-O0500_R6_en exit=0 notices=1 cjk=2 marks=0/1 labels=['Checked in', 'Check in'] ident=True
-WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\sweep_r6.json

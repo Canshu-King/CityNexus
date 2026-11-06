@@ -1,2 +1,0 @@
-BUILD rc=0 dist=True index=True assets=2
-out=D:/moodle/_qoder_cmdr_ref_20260921/live_checks\_build_mut2e766_info.json

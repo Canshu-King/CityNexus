@@ -1,5 +1,0 @@
-branch=refs/heads/review/R-ord0417-tap-names-stop-r4
-head_local=2a732fb465a56ebe62094809faaefc33809c4c36
-head_remote_line=2a732fb465a56ebe62094809faaefc33809c4c36	refs/heads/review/R-ord0417-tap-names-stop-r4
-authoritative_line_at_readback=dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808
-match=YES

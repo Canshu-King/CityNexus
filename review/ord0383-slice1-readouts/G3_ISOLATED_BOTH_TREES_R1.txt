@@ -1,7 +1,0 @@
-the one arm that separates the candidate's full run (9 red) from the tip's full run (8 red), run alone on each tree
-
---- tree=/d/moodle/_qoder_lane_ord0383_slice1 head=3bcfd7c1c7bcce6aee8c2a3c233c69d005aee5bf ---
-  1 passed, 4 warnings in 5.92s
-
---- tree=/d/moodle/_qoder_lane_ord0383_slice1_base head=1f8d7061f9edd66652c198db983722cdd237f2b7 ---
-  1 passed, 4 warnings in 5.93s

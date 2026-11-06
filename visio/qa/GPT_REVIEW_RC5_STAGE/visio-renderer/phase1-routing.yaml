@@ -1,4 +1,0 @@
-routes: {}
-policy:
-  type: right-angle
-  maxCrossingsPerPage: 2

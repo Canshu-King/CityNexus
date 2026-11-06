@@ -1,4 +1,0 @@
-refused=True exit_code=2
-guard_said=REFUSE: the refusal arms recorded over HTTP is empty, so any verdict over it would be vacuously true
-control_arms_recorded=ABORT_ACTOR_NOT_OWNER, ABORT_JOURNEY_IN_RECYCLE_BIN, JOURNEY_ALREADY_ABORTED, JOURNEY_NOT_FOUND control_verdict=PASSED
-VERDICT ABNORMAL_REFUSES_AND_CONTROL_PASSES

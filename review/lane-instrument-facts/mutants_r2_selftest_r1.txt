@@ -1,7 +1,0 @@
-leg1 malformed argv length = 109 args (one per character of the node id)
-leg1 shape=INVALID_no_summary exit=4 summary='(none)'
-
-leg2 normalised argv = ['tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at'] (one argument)
-leg2 shape=GREEN exit=0 summary='1 passed, 2 warnings in 11.80s'
-
-VERDICT INVALID_LEG_BITES

@@ -1,8 +1,0 @@
-
-Running 3 tests using 1 worker
-
-  ok 1 e2e\qoder-ord0545s3-refusal-on-glass-r1.spec.ts:218:3 › ORD-0545 slice 3 a family-table refusal, read off real glass › R1 中文那一屏：没排程的行程点"加入"，上屏的就是表里那句 zh (1.3s)
-  ok 2 e2e\qoder-ord0545s3-refusal-on-glass-r1.spec.ts:233:3 › ORD-0545 slice 3 a family-table refusal, read off real glass › R2 英文那一屏：同一趟走法拿到表里的 en 半，不是中文半也不是键名 (840ms)
-  ok 3 e2e\qoder-ord0545s3-refusal-on-glass-r1.spec.ts:245:3 › ORD-0545 slice 3 a family-table refusal, read off real glass › R3 那句说"什么都没改动"，就用服务端回读证它 (893ms)
-
-  3 passed (4.3s)

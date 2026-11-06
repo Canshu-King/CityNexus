@@ -1,1 +1,0 @@
-[{"scenario": "catalog_empty", "server_code": "COVERAGE_INCOMPLETE", "server_missing": 6, "body": "这里还什么都没有。"}, {"scenario": "no_canonical_identity", "server_code": "NO_CANONICAL_IDENTITY", "server_missing": 0, "body": "没认出这个名字，换一个吧。"}]

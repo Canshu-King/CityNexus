@@ -1,6 +1,0 @@
-read-only merge prediction, run after the candidate was pushed (no rebase, nothing moved)
-  git merge-tree --write-tree --name-only e5a571f89e5d210e3616bd6752b3c90746f9e588 f174e7904849e28e314d09937501de346c3001ca
-  merge_tree_exit=0
-  first line (merged tree) = f5bab65199227dc55dd161eeb0e829de8e8a15ac
-  conflicted paths listed after the tree line: 0 lines
-  overlap of those 4 commits with the 5 files this slice touches = 0 (git diff --name-only 8f4ddfa9feffe4233b48cbf608caf8e1bbb76291 e5a571f89e5d210e3616bd6752b3c90746f9e588 | grep -c ...)

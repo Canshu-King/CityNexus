@@ -1,6 +1,0 @@
-"ΑΣ" python="ασ" js="ας" agree=false
-"ΟΔΥΣΣΕΑΣ" python="οδυσσεασ" js="οδυσσεας" agree=false
-"ΣΣ" python="σσ" js="σς" agree=false
-"ΣA" python="σa" js="σa" agree=true
-"AΣ" python="aσ" js="aς" agree=false
-"ΣΡΟΥ" python="σρου" js="σρου" agree=true

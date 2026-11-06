@@ -1,7 +1,0 @@
-Running 4 tests using 1 worker
-[1/4] [real-seed] 鈥?e2e\_qoderRealSeed.setup.ts:110:1 鈥?seed a real journey through the product API
-[real-seed] 鈥?e2e\_qoderRealSeed.setup.ts:110:1 鈥?seed a real journey through the product API
-[qoder-real-seed] journey=46ea1cdc-fc83-4d65-a54f-8e28c8e227b5 options=4 chosen=5cb34885-cfc6-4bb7-a591-1c9951cef0f0 (Haihe Riverside Hotel)
-[qoder-real-seed] trialWizard=false live-journey-current=true
-  4 passed (55.2s)
-demo_reset_substrings_in_this_log=0
