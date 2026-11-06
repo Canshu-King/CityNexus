@@ -39,10 +39,84 @@ try {
     }
   }
   if ($hits.Count -gt 0) { throw ('Potential secret patterns detected: ' + ($hits -join '; ')) }
-  if (Get-Command gitleaks -ErrorAction SilentlyContinue) {
-    gitleaks dir . --no-banner
-    if ($LASTEXITCODE -ne 0) { throw 'Gitleaks scan failed. Review before publishing.' }
-  } else { Write-Warning 'Gitleaks is not installed. Automated scanning is incomplete.' }
+  if (-not (Get-Command gitleaks -ErrorAction SilentlyContinue)) {
+    throw 'Gitleaks is required for public release. Install with: winget install --id Gitleaks.Gitleaks -e'
+  }
+  # Redact exact Gitleaks matches ONLY in the isolated public clone.
+  # Store reports outside the repo to avoid accidentally publishing the original findings.
+  $redactionCount = 0
+  $omitted = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+  $touched = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+  $root = [IO.Path]::GetFullPath($dir).TrimEnd([char]'\\', [char]'/') + [IO.Path]::DirectorySeparatorChar
+  $utf8 = [Text.UTF8Encoding]::new($false)
+  for ($round = 1; $round -le 4; $round++) {
+    $reportFile = Join-Path ([IO.Path]::GetTempPath()) ('cnx-gitleaks-' + [guid]::NewGuid().ToString('N') + '.json')
+    try {
+      & gitleaks dir . --no-banner --report-format json --report-path $reportFile
+      $scanCode = $LASTEXITCODE
+      if ($scanCode -eq 0) { break }
+      if ($scanCode -ne 1) { throw ('Gitleaks scanner error (exit ' + $scanCode + '). Nothing published.') }
+      if (-not (Test-Path -LiteralPath $reportFile)) { throw 'Missing Gitleaks report. Nothing published.' }
+      $findings = @((Get-Content -LiteralPath $reportFile -Raw -Encoding UTF8 | ConvertFrom-Json))
+      if ($findings.Count -eq 0) { throw 'Gitleaks flagged findings but returned an empty report.' }
+      $roundChanged = 0
+      foreach ($finding in $findings) {
+        $relative = [string]$finding.File
+        $secret = [string]$finding.Secret
+        if ([string]::IsNullOrWhiteSpace($relative)) { throw 'Gitleaks finding has no file path. Nothing published.' }
+        $absolute = [IO.Path]::GetFullPath((Join-Path $dir $relative))
+        if (-not $absolute.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) {
+          throw 'Gitleaks reported a path outside the temporary public snapshot.'
+        }
+        if (-not (Test-Path -LiteralPath $absolute -PathType Leaf)) { continue }
+        # Unsafe or unusually short exact matches cannot be reliably replaced.
+        # Omit the offending file from the public copy instead of suppressing the finding.
+        if ([string]::IsNullOrEmpty($secret) -or $secret.Length -lt 12) {
+          Remove-Item -LiteralPath $absolute -Force
+          [void]$omitted.Add($relative)
+          $roundChanged++
+          continue
+        }
+        try {
+          $original = [IO.File]::ReadAllText($absolute, [Text.Encoding]::UTF8)
+          if (-not $original.Contains($secret)) {
+            Remove-Item -LiteralPath $absolute -Force
+            [void]$omitted.Add($relative)
+            $roundChanged++
+            continue
+          }
+          $changed = $original.Replace($secret, 'REDACTED_FOR_PUBLIC_RELEASE')
+          [IO.File]::WriteAllText($absolute, $changed, $utf8)
+          [void]$touched.Add($relative)
+          $redactionCount++
+          $roundChanged++
+        } catch {
+          throw ('Could not safely redact ' + $relative + '. Nothing published.')
+        }
+      }
+      if ($roundChanged -eq 0) { throw 'No progress in redacting findings; nothing published.' }
+    } finally {
+      Remove-Item -LiteralPath $reportFile -Force -ErrorAction SilentlyContinue
+    }
+  }
+  # The final explicit scan is mandatory, including after the maximum rounds.
+  & gitleaks dir . --no-banner
+  if ($LASTEXITCODE -ne 0) { throw 'Public clone still contains possible secrets; NOTHING published.' }
+  $summary = @(
+    '# Automated public-release redaction summary',
+    '',
+    'This is a curated public copy. Exact Gitleaks matches were replaced only in this temporary publication copy.',
+    'Redacted matches (number of operations): ' + $redactionCount,
+    'Source files changed: ' + $touched.Count,
+    'Files omitted because a safe exact replacement was not possible: ' + $omitted.Count,
+    '',
+    'Redaction can alter source examples and tests. This export was NOT freshly verified to build or run after redaction.',
+    'Keep the original private source repository for unredacted development files.',
+    ''
+  ) -join [Environment]::NewLine
+  [IO.File]::WriteAllText((Join-Path $dir 'PUBLIC_REDACTION_SUMMARY.md'), $summary, $utf8)
+  Write-Host ('Public clone sanitized: ' + $redactionCount + ' redaction operations, ' + $touched.Count + ' files touched, ' + $omitted.Count + ' files omitted.')
+  if ($omitted.Count -gt 0) { Write-Warning ('Omitted files: ' + (($omitted | Sort-Object) -join '; ')) }
   Write-Warning 'Manually check binary PDF/Visio/Project metadata, student details, licenses, code literals and test fixtures before publishing.'
   $ok = Read-Host 'After reviewing files, type PUBLIC to publish a NEW public repository'
   if ($ok -cne 'PUBLIC') { throw 'Cancelled. Nothing was made public.' }
