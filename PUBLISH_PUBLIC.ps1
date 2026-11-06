@@ -47,7 +47,7 @@ try {
   $redactionCount = 0
   $omitted = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
   $touched = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
-  $root = [IO.Path]::GetFullPath($dir).TrimEnd([char]'\\', [char]'/') + [IO.Path]::DirectorySeparatorChar
+  $root = [IO.Path]::GetFullPath($dir).TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
   $utf8 = [Text.UTF8Encoding]::new($false)
   for ($round = 1; $round -le 4; $round++) {
     $reportFile = Join-Path ([IO.Path]::GetTempPath()) ('cnx-gitleaks-' + [guid]::NewGuid().ToString('N') + '.json')
